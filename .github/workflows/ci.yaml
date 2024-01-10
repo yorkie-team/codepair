@@ -1,0 +1,21 @@
+name: CI
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+    paths: 
+      - 'frontend/**'
+
+jobs:
+  test:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install packages
+        run: npm ci
+      # - name: Prettier
+        # run: npm run format
+      - name: Lint
+        run: npm run lint
