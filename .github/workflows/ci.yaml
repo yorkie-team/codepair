@@ -1,6 +1,5 @@
 name: CI
 on:
-  push:
   pull_request:
     branches:
       - main
@@ -21,3 +20,5 @@ jobs:
         run: npm run prettier
       - name: Lint
         run: npm run lint
+
+  
