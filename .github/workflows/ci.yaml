@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+    branches: main
+    paths:
+      - "frontend/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+
+jobs:
+  test:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    env:
+      working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install packages
+        run: npm ci
+        working-directory: ${{ env.working-directory }}
+      - name: Prettier
+        run: npm run prettier
+        working-directory: ${{ env.working-directory }}
+      - name: Lint
+        run: npm run lint
+        working-directory: ${{ env.working-directory }}
