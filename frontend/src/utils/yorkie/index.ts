@@ -1,27 +1,17 @@
-import { YRange } from "./y-range.js";
 import { ySync, ySyncFacet, YSyncConfig } from "./y-sync.js";
 import { yRemoteSelections, yRemoteSelectionsTheme } from "./y-remote-selections.js";
-import { yUndoManagerKeymap } from "./y-undomanager.js";
 import * as yorkie from "yorkie-js-sdk";
 
-export {
-	YRange,
-	yRemoteSelections,
-	yRemoteSelectionsTheme,
-	ySync,
-	ySyncFacet,
-	YSyncConfig,
-	yUndoManagerKeymap,
-};
+export { ySync, ySyncFacet, YSyncConfig };
 
 export function yorkieCodeMirror<T, P extends yorkie.Indexable>(
 	doc: yorkie.Document<T, P>,
-	awareness
+	client: yorkie.Client
 ) {
-	const ySyncConfig = new YSyncConfig(doc, awareness);
+	const ySyncConfig = new YSyncConfig(doc, client);
 	const plugins = [ySyncFacet.of(ySyncConfig), ySync];
 
-	if (awareness) {
+	if (client) {
 		plugins.push(yRemoteSelectionsTheme, yRemoteSelections);
 	}
 

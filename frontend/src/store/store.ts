@@ -7,6 +7,15 @@ export const store = configureStore({
 		editor: editorSlice,
 		config: configSlice,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: {
+				ignoredPaths: ["editor.doc", "editor.client"],
+			},
+			immutableCheck: {
+				ignoredPaths: ["editor.doc", "editor.client"],
+			},
+		}),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

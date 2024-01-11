@@ -2,9 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { EditorState } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 import { markdown } from "@codemirror/lang-markdown";
+import { useSelector } from "react-redux";
+import { selectEditor } from "../../store/editorSlice";
+import { yorkieCodeMirror } from "../../utils/yorkie";
 
 function Editor() {
 	const [element, setElement] = useState<HTMLElement>();
+	const editorStore = useSelector(selectEditor);
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
 		setElement(node);
@@ -13,13 +17,17 @@ function Editor() {
 	useEffect(() => {
 		let view: EditorView | undefined = undefined;
 
-		if (!element) {
+		if (!element || !editorStore.doc || !editorStore.client) {
 			return;
 		}
 
 		const state = EditorState.create({
-			doc: "123",
-			extensions: [basicSetup, markdown()],
+			doc: editorStore.doc.getRoot().content?.toString() ?? "",
+			extensions: [
+				basicSetup,
+				markdown(),
+				yorkieCodeMirror(editorStore.doc, editorStore.client),
+			],
 		});
 
 		view = new EditorView({
@@ -30,7 +38,7 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [element]);
+	}, [editorStore.doc, element]);
 
 	return <div ref={ref}></div>;
 }
