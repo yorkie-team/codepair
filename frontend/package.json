@@ -22,7 +22,8 @@
 		"react": "^17.0.0 || ^18.0.0",
 		"react-dom": "^17.0.0 || ^18.0.0",
 		"react-redux": "^9.0.4",
-		"react-router-dom": "^6.21.1"
+		"react-router-dom": "^6.21.1",
+		"yorkie-js-sdk": "^0.4.13-rc"
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.43",
