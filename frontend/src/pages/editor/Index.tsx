@@ -1,5 +1,7 @@
+import Editor from "../../components/editor/Editor";
+
 function EditorIndex() {
-	return <div>Hi</div>;
+	return <Editor />;
 }
 
 export default EditorIndex;
