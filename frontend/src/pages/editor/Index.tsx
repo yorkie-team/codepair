@@ -39,7 +39,6 @@ function EditorIndex() {
 
 		return () => {
 			const cleanUp = async () => {
-				await client.detach(doc);
 				await client?.deactivate();
 				dispatch(setDoc(null));
 				dispatch(setClient(null));
