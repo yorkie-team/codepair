@@ -2,8 +2,8 @@ name: GitHub Page Publish
 on:
   push:
     branches: main
-    paths:
-      - "frontend/**"
+    # paths:
+    #   - "frontend/**"
   pull_request:
     branches:
       - main
