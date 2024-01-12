@@ -84,7 +84,7 @@ function EditorIndex() {
 							style={{ width: `calc(100% - ${width}px)`, overflow: "auto" }}
 						>
 							<div className="wmde-markdown-var" />
-							<Box sx={{ p: 2 }} height="100%">
+							<Box sx={{ p: 4 }} height="100%">
 								<Preview />
 							</Box>
 						</div>
