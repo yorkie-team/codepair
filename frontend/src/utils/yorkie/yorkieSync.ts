@@ -14,7 +14,7 @@ export type YorkieCodeMirrorPresenceType = {
 
 export class YorkieSyncConfig<
 	T extends YorkieCodeMirrorDocType,
-	P extends YorkieCodeMirrorPresenceType
+	P extends YorkieCodeMirrorPresenceType,
 > {
 	doc: yorkie.Document<T, P>;
 	client: yorkie.Client;
