@@ -12,7 +12,7 @@ export { yorkieSync, yorkieSyncFacet, YorkieSyncConfig };
 
 export function yorkieCodeMirror<
 	T extends YorkieCodeMirrorDocType,
-	P extends YorkieCodeMirrorPresenceType
+	P extends YorkieCodeMirrorPresenceType,
 >(doc: yorkie.Document<T, P>, client: yorkie.Client) {
 	const yorkieSyncConfig = new YorkieSyncConfig(doc, client);
 	const plugins = [yorkieSyncFacet.of(yorkieSyncConfig), yorkieSync];
