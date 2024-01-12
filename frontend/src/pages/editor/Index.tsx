@@ -14,17 +14,17 @@ function EditorIndex() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		let client: yorkie.Client;
+		let doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+
 		const initializeYorkie = async () => {
-			const client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
+			client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
 				apiKey: import.meta.env.VITE_YORKIE_API_KEY,
 			});
 			await client.activate();
 
-			const doc = new yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>(
-				"my-first-document"
-			);
+			doc = new yorkie.Document("my-first-document");
 
-			console.log(Color(randomColor()).fade(0.15).toString());
 			await client.attach(doc, {
 				initialPresence: {
 					name: "Yorkie",
@@ -36,6 +36,17 @@ function EditorIndex() {
 			dispatch(setClient(client));
 		};
 		initializeYorkie();
+
+		return () => {
+			const cleanUp = async () => {
+				await client.detach(doc);
+				await client?.deactivate();
+				dispatch(setDoc(null));
+				dispatch(setClient(null));
+			};
+
+			cleanUp();
+		};
 	}, [dispatch]);
 
 	return <Editor />;
