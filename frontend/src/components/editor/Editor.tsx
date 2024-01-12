@@ -5,6 +5,7 @@ import { markdown } from "@codemirror/lang-markdown";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
+import toolbar, { markdownItems } from "codemirror-toolbar";
 
 function Editor() {
 	const [element, setElement] = useState<HTMLElement>();
@@ -27,6 +28,9 @@ function Editor() {
 				basicSetup,
 				markdown(),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
+				toolbar({
+					items: markdownItems,
+				}),
 			],
 		});
 

@@ -208,7 +208,6 @@ export class YorkieRemoteSelectionsPluginValue {
 				if (decorations.length > 0) {
 					view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
 				}
-				console.log(decorations);
 			}
 		});
 		this.decorations = cmState.RangeSet.of([]);
