@@ -6,15 +6,14 @@ import * as pair from "lib0/pair";
 import * as yorkie from "yorkie-js-sdk";
 import randomColor from "randomcolor";
 
-// import * as Y from "yjs";
 import {
-	YSyncConfig,
+	YorkieSyncConfig,
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType,
-	ySyncFacet,
-} from "./y-sync.js";
+	yorkieSyncFacet,
+} from "./yorkieSync.js";
 
-export const yRemoteSelectionsTheme = cmView.EditorView.baseTheme({
+export const yorkieRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	".cm-ySelection": {},
 	".cm-yLineSelection": {
 		padding: 0,
@@ -65,11 +64,8 @@ export const yRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	},
 });
 
-/**
- * @todo specify the users that actually changed. Currently, we recalculate positions for every user.
- * @type {cmState.AnnotationType<Array<number>>}
- */
-const yRemoteSelectionsAnnotation = cmState.Annotation.define();
+const yorkieRemoteSelectionsAnnotation: cmState.AnnotationType<Array<number>> =
+	cmState.Annotation.define();
 
 class YRemoteCaretWidget extends cmView.WidgetType {
 	color: string;
@@ -126,13 +122,13 @@ class YRemoteCaretWidget extends cmView.WidgetType {
 	}
 }
 
-export class YRemoteSelectionsPluginValue {
-	conf: YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+export class YorkieRemoteSelectionsPluginValue {
+	conf: YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 	decorations: cmView.DecorationSet;
 	unsubscribe: yorkie.Unsubscribe;
 
 	constructor(view: cmView.EditorView) {
-		this.conf = view.state.facet(ySyncFacet);
+		this.conf = view.state.facet(yorkieSyncFacet);
 
 		this.unsubscribe = this.conf.doc.subscribe("others", (event) => {
 			const decorations: Array<cmState.Range<cmView.Decoration>> = [];
@@ -211,7 +207,7 @@ export class YRemoteSelectionsPluginValue {
 				this.decorations = cmView.Decoration.set(decorations, true);
 
 				if (decorations.length > 0) {
-					view.dispatch({ annotations: [yRemoteSelectionsAnnotation.of([])] });
+					view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
 				}
 			}
 		});
@@ -241,6 +237,9 @@ export class YRemoteSelectionsPluginValue {
 	}
 }
 
-export const yRemoteSelections = cmView.ViewPlugin.fromClass(YRemoteSelectionsPluginValue, {
-	decorations: (v) => v.decorations,
-});
+export const yorkieRemoteSelections = cmView.ViewPlugin.fromClass(
+	YorkieRemoteSelectionsPluginValue,
+	{
+		decorations: (v) => v.decorations,
+	}
+);

@@ -1,24 +1,24 @@
 import {
-	ySync,
-	ySyncFacet,
-	YSyncConfig,
+	yorkieSync,
+	yorkieSyncFacet,
+	YorkieSyncConfig,
 	YorkieCodeMirrorPresenceType,
 	YorkieCodeMirrorDocType,
-} from "./y-sync.js";
-import { yRemoteSelections, yRemoteSelectionsTheme } from "./y-remote-selections.js";
+} from "./yorkieSync";
+import { yorkieRemoteSelections, yorkieRemoteSelectionsTheme } from "./remoteSelection";
 import * as yorkie from "yorkie-js-sdk";
 
-export { ySync, ySyncFacet, YSyncConfig };
+export { yorkieSync, yorkieSyncFacet, YorkieSyncConfig };
 
 export function yorkieCodeMirror<
 	T extends YorkieCodeMirrorDocType,
 	P extends YorkieCodeMirrorPresenceType,
 >(doc: yorkie.Document<T, P>, client: yorkie.Client) {
-	const ySyncConfig = new YSyncConfig(doc, client);
-	const plugins = [ySyncFacet.of(ySyncConfig), ySync];
+	const yorkieSyncConfig = new YorkieSyncConfig(doc, client);
+	const plugins = [yorkieSyncFacet.of(yorkieSyncConfig), yorkieSync];
 
 	if (client) {
-		plugins.push(yRemoteSelectionsTheme, yRemoteSelections);
+		plugins.push(yorkieRemoteSelectionsTheme, yorkieRemoteSelections);
 	}
 
 	return plugins;

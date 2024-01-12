@@ -10,7 +10,7 @@ export type YorkieCodeMirrorPresenceType = {
 	selection: yorkie.TextPosStructRange | null;
 };
 
-export class YSyncConfig<
+export class YorkieSyncConfig<
 	T extends YorkieCodeMirrorDocType,
 	P extends YorkieCodeMirrorPresenceType,
 > {
@@ -22,9 +22,9 @@ export class YSyncConfig<
 	}
 }
 
-export const ySyncFacet: cmState.Facet<
-	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>,
-	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+export const yorkieSyncFacet: cmState.Facet<
+	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>,
+	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
 > = cmState.Facet.define({
 	combine(inputs) {
 		return inputs[inputs.length - 1];
@@ -32,19 +32,19 @@ export const ySyncFacet: cmState.Facet<
 });
 
 export const yorkieSyncAnnotation: cmState.AnnotationType<
-	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
 > = cmState.Annotation.define();
 
-class YSyncPluginValue implements cmView.PluginValue {
+class YorkieSyncPluginValue implements cmView.PluginValue {
 	view: cmView.EditorView;
-	conf: YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	conf: YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 	_doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 	_observer: yorkie.NextFn<yorkie.DocEvent<YorkieCodeMirrorPresenceType>>;
 	_unsubscribe: yorkie.Unsubscribe;
 
 	constructor(view: cmView.EditorView) {
 		this.view = view;
-		this.conf = view.state.facet(ySyncFacet);
+		this.conf = view.state.facet(yorkieSyncFacet);
 
 		this._observer = (event) => {
 			if (event.type !== "remote-change") return;
@@ -102,4 +102,4 @@ class YSyncPluginValue implements cmView.PluginValue {
 	}
 }
 
-export const ySync = cmView.ViewPlugin.fromClass(YSyncPluginValue);
+export const yorkieSync = cmView.ViewPlugin.fromClass(YorkieSyncPluginValue);
