@@ -25,7 +25,7 @@ function EditorHeader() {
 	};
 
 	return (
-		<AppBar position="static">
+		<AppBar position="static" sx={{ zIndex: 100 }}>
 			<Toolbar>
 				<Stack width="100%" direction="row" justifyContent="space-between">
 					<Stack direction="row" spacing={1}>

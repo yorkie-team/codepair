@@ -3,7 +3,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./App.css";
-import { ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import EditorLayout from "./components/layouts/EditorLayout";
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-	const config = useSelector(selectConfig)
+	const config = useSelector(selectConfig);
 	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 	const theme = useMemo(() => {
 		const defaultMode = prefersDarkMode ? "dark" : "light";
@@ -39,7 +39,10 @@ function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<RouterProvider router={router} />
+			<CssBaseline />
+			<Box minHeight="100vh">
+				<RouterProvider router={router} />
+			</Box>
 		</ThemeProvider>
 	);
 }

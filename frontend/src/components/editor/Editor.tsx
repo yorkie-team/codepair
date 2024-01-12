@@ -6,8 +6,11 @@ import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import toolbar, { markdownItems } from "codemirror-toolbar";
+import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 
 function Editor() {
+	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
 	const ref = useCallback((node: HTMLElement | null) => {
@@ -31,6 +34,11 @@ function Editor() {
 				toolbar({
 					items: markdownItems,
 				}),
+				themeMode == "light" ? xcodeLight : xcodeDark,
+				EditorView.theme({
+					"&": { width: "100%" },
+				}),
+				EditorView.lineWrapping,
 			],
 		});
 
@@ -42,9 +50,18 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [editorStore.client, editorStore.doc, element]);
+	}, [editorStore.client, editorStore.doc, element, themeMode]);
 
-	return <div ref={ref}></div>;
+	return (
+		<div
+			ref={ref}
+			style={{
+				display: "flex",
+				alignItems: "stretch",
+				height: "100%",
+			}}
+		/>
+	);
 }
 
 export default Editor;

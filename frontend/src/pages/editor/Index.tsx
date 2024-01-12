@@ -9,9 +9,14 @@ import {
 } from "../../utils/yorkie/yorkieSync";
 import randomColor from "randomcolor";
 import Color from "color";
+import { Box, Paper } from "@mui/material";
+import Resizable from "react-resizable-layout";
+import { useWindowWidth } from "@react-hook/window-size";
+import Preview from "../../components/editor/Preview";
 
 function EditorIndex() {
 	const dispatch = useDispatch();
+	const windowWidth = useWindowWidth();
 
 	useEffect(() => {
 		let client: yorkie.Client;
@@ -48,7 +53,46 @@ function EditorIndex() {
 		};
 	}, [dispatch]);
 
-	return <Editor />;
+	return (
+		<Box height="calc(100% - 64px)">
+			<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
+				{({ position: width, separatorProps }) => (
+					<div
+						id="wrapper"
+						style={{
+							display: "flex",
+							height: "100%",
+							overflow: "hidden",
+						}}
+					>
+						<div id="left-block" style={{ width }}>
+							<Editor />
+						</div>
+						<Paper
+							id="splitter"
+							{...separatorProps}
+							sx={{
+								height: "100%",
+								width: 8,
+								borderRadius: 0,
+								cursor: "col-resize",
+								zIndex: 100,
+							}}
+						/>
+						<div
+							className="right-block"
+							style={{ width: `calc(100% - ${width}px)`, overflow: "auto" }}
+						>
+							<div className="wmde-markdown-var" />
+							<Box sx={{ p: 2 }} height="100%">
+								<Preview />
+							</Box>
+						</div>
+					</div>
+				)}
+			</Resizable>
+		</Box>
+	);
 }
 
 export default EditorIndex;
