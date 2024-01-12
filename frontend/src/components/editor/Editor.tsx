@@ -38,7 +38,7 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [editorStore.doc, element]);
+	}, [editorStore.client, editorStore.doc, element]);
 
 	return <div ref={ref}></div>;
 }

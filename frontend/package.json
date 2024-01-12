@@ -19,6 +19,7 @@
 		"@mui/material": "^5.15.3",
 		"@reduxjs/toolkit": "^2.0.1",
 		"codemirror": "^6.0.1",
+		"color": "^4.2.3",
 		"lib0": "^0.2.88",
 		"randomcolor": "^0.6.2",
 		"react": "^17.0.0 || ^18.0.0",
@@ -28,6 +29,7 @@
 		"yorkie-js-sdk": "^0.4.13-rc"
 	},
 	"devDependencies": {
+		"@types/color": "^3.0.6",
 		"@types/randomcolor": "^0.5.9",
 		"@types/react": "^18.2.43",
 		"@types/react-dom": "^18.2.17",

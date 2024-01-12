@@ -2,9 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import * as yorkie from "yorkie-js-sdk";
+import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 
 export type EditorModeType = "view" | "both" | "read";
-export type CodePairDocType = yorkie.Document;
+export type CodePairDocType = yorkie.Document<
+	YorkieCodeMirrorDocType,
+	YorkieCodeMirrorPresenceType
+>;
 
 export interface EditorState {
 	mode: EditorModeType;

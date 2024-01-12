@@ -4,7 +4,6 @@ import * as cmState from "@codemirror/state";
 import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
 import * as yorkie from "yorkie-js-sdk";
-import randomColor from "randomcolor";
 
 import {
 	YorkieSyncConfig,
@@ -143,8 +142,8 @@ export class YorkieRemoteSelectionsPluginValue {
 					const cursor = this.conf.doc
 						.getRoot()
 						.content.posRangeToIndexRange(presence.presence.selection);
-					const color = randomColor();
-					const name = "Anonymous";
+					const color = presence.presence.color;
+					const name = presence.presence.name;
 					const start = Math.min(cursor[0], cursor[1]);
 					const end = Math.max(cursor[0], cursor[1]);
 					const startLine = view.state.doc.lineAt(start);
@@ -209,6 +208,7 @@ export class YorkieRemoteSelectionsPluginValue {
 				if (decorations.length > 0) {
 					view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
 				}
+				console.log(decorations);
 			}
 		});
 		this.decorations = cmState.RangeSet.of([]);
@@ -227,10 +227,6 @@ export class YorkieRemoteSelectionsPluginValue {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
 				presence.set({
 					selection,
-				});
-			} else {
-				presence.set({
-					selection: null,
 				});
 			}
 		});
