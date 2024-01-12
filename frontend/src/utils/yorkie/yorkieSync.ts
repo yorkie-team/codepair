@@ -1,5 +1,5 @@
-import * as cmState from "@codemirror/state"; // eslint-disable-line
-import * as cmView from "@codemirror/view"; // eslint-disable-line
+import * as cmState from "@codemirror/state";
+import * as cmView from "@codemirror/view";
 import * as yorkie from "yorkie-js-sdk";
 
 export type YorkieCodeMirrorDocType = {
