@@ -84,7 +84,7 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 		}
 
 		this._doc.update((root, presence) => {
-			update.changes.iterChanges((fromA, toA, fromB, toB, insert) => {
+			update.changes.iterChanges((fromA, toA, _fromB, _toB, insert) => {
 				if (!root.content) {
 					root.content = new yorkie.Text();
 				}
