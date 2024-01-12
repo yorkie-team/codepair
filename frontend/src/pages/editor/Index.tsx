@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import Editor from "../../components/editor/Editor";
 import * as yorkie from "yorkie-js-sdk";
-import { setClient, setDoc } from "../../store/editorSlice";
-import { useDispatch } from "react-redux";
+import { selectEditor, setClient, setDoc } from "../../store/editorSlice";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType,
@@ -17,6 +17,7 @@ import Preview from "../../components/editor/Preview";
 function EditorIndex() {
 	const dispatch = useDispatch();
 	const windowWidth = useWindowWidth();
+	const editorStore = useSelector(selectEditor);
 
 	useEffect(() => {
 		let client: yorkie.Client;
@@ -55,42 +56,51 @@ function EditorIndex() {
 
 	return (
 		<Box height="calc(100% - 64px)">
-			<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
-				{({ position: width, separatorProps }) => (
-					<div
-						id="wrapper"
-						style={{
-							display: "flex",
-							height: "100%",
-							overflow: "hidden",
-						}}
-					>
-						<div id="left-block" style={{ width }}>
-							<Editor />
-						</div>
-						<Paper
-							id="splitter"
-							{...separatorProps}
-							sx={{
-								height: "100%",
-								width: 8,
-								borderRadius: 0,
-								cursor: "col-resize",
-								zIndex: 100,
-							}}
-						/>
+			{/* For Markdown Preview Theme */}
+			<div className="wmde-markdown-var" />
+			{editorStore.mode === "both" && (
+				<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
+					{({ position: width, separatorProps }) => (
 						<div
-							className="right-block"
-							style={{ width: `calc(100% - ${width}px)`, overflow: "auto" }}
+							id="wrapper"
+							style={{
+								display: "flex",
+								height: "100%",
+								overflow: "hidden",
+							}}
 						>
-							<div className="wmde-markdown-var" />
-							<Box sx={{ p: 4 }} height="100%">
-								<Preview />
-							</Box>
+							<div id="left-block" style={{ width }}>
+								<Editor />
+							</div>
+							<Paper
+								id="splitter"
+								{...separatorProps}
+								sx={{
+									height: "100%",
+									width: 8,
+									borderRadius: 0,
+									cursor: "col-resize",
+									zIndex: 100,
+								}}
+							/>
+							<div
+								className="right-block"
+								style={{ width: `calc(100% - ${width}px)`, overflow: "auto" }}
+							>
+								<Box sx={{ p: 4 }} height="100%">
+									<Preview />
+								</Box>
+							</div>
 						</div>
-					</div>
-				)}
-			</Resizable>
+					)}
+				</Resizable>
+			)}
+			{editorStore.mode === "read" && (
+				<Box sx={{ p: 4, overflow: "auto" }} height="100%">
+					<Preview />
+				</Box>
+			)}
+			{editorStore.mode === "edit" && <Editor />}
 		</Box>
 	);
 }

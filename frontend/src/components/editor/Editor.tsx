@@ -8,6 +8,8 @@ import { yorkieCodeMirror } from "../../utils/yorkie";
 import toolbar, { markdownItems } from "codemirror-toolbar";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { keymap } from "@codemirror/view";
+import { indentWithTab } from "@codemirror/commands";
 
 function Editor() {
 	const themeMode = useCurrentTheme();
@@ -39,6 +41,7 @@ function Editor() {
 					"&": { width: "100%" },
 				}),
 				EditorView.lineWrapping,
+				keymap.of([indentWithTab]),
 			],
 		});
 

@@ -25,7 +25,7 @@ function Preview() {
 		};
 	}, [editorStore.doc]);
 
-	if (!editorStore?.doc) return <CircularProgress sx={{ marginX: "auto" }} />;
+	if (!editorStore?.doc) return <CircularProgress sx={{ marginX: "auto", mt: 4 }} />;
 
 	return (
 		<MarkdownPreview

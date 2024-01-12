@@ -46,8 +46,8 @@ function EditorHeader() {
 										<VerticalSplitIcon />
 									</Tooltip>
 								</ToggleButton>
-								<ToggleButton value="view" aria-label="view">
-									<Tooltip title="View Mode">
+								<ToggleButton value="read" aria-label="read">
+									<Tooltip title="Read Mode">
 										<VisibilityIcon />
 									</Tooltip>
 								</ToggleButton>

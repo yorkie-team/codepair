@@ -4,7 +4,7 @@ import { RootState } from "./store";
 import * as yorkie from "yorkie-js-sdk";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 
-export type EditorModeType = "view" | "both" | "read";
+export type EditorModeType = "edit" | "both" | "read";
 export type CodePairDocType = yorkie.Document<
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType
