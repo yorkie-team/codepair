@@ -10,6 +10,7 @@ export const store = configureStore({
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
 			serializableCheck: {
+				ignoredActions: ["editor/setDoc", "editor/setClient"],
 				ignoredPaths: ["editor.doc", "editor.client"],
 			},
 			immutableCheck: {

@@ -13,7 +13,6 @@ import Color from "color";
 function EditorIndex() {
 	const dispatch = useDispatch();
 
-	console.log(import.meta.env);
 	useEffect(() => {
 		const initializeYorkie = async () => {
 			const client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
