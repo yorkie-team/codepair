@@ -3,12 +3,16 @@ import * as cmView from "@codemirror/view";
 import * as cmState from "@codemirror/state";
 import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
-import * as math from "lib0/math";
 import * as yorkie from "yorkie-js-sdk";
 import randomColor from "randomcolor";
 
 // import * as Y from "yjs";
-import { YSyncConfig, ySyncFacet } from "./y-sync.js";
+import {
+	YSyncConfig,
+	YorkieCodeMirrorDocType,
+	YorkieCodeMirrorPresenceType,
+	ySyncFacet,
+} from "./y-sync.js";
 
 export const yRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	".cm-ySelection": {},
@@ -56,15 +60,9 @@ export const yRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 		zIndex: 101,
 		transition: "opacity .3s ease-in-out",
 		backgroundColor: "inherit",
-		// these should be separate
-		// opacity: 0,
 		transitionDelay: "0s",
 		whiteSpace: "nowrap",
 	},
-	// ".cm-ySelectionCaret:hover > .cm-ySelectionInfo": {
-	// 	opacity: 1,
-	// 	transitionDelay: "0s",
-	// },
 });
 
 /**
@@ -128,12 +126,9 @@ class YRemoteCaretWidget extends cmView.WidgetType {
 	}
 }
 
-export class YRemoteSelectionsPluginValue<
-	T extends { content: yorkie.Text },
-	P extends { selection: any },
-> {
-	conf: YSyncConfig<T, P>;
-	decorations: cmState.RangeSet<any>;
+export class YRemoteSelectionsPluginValue {
+	conf: YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	decorations: cmView.DecorationSet;
 	unsubscribe: yorkie.Unsubscribe;
 
 	constructor(view: cmView.EditorView) {
@@ -191,7 +186,6 @@ export class YRemoteSelectionsPluginValue<
 						for (let i = startLine.number + 1; i < endLine.number; i++) {
 							const linePos = view.state.doc.line(i).from;
 							const linePosTo = view.state.doc.line(i).to;
-							console.log(linePos, linePosTo);
 							decorations.push({
 								from: linePos,
 								to: linePosTo,
@@ -214,7 +208,6 @@ export class YRemoteSelectionsPluginValue<
 						}),
 					});
 				});
-				console.log(decorations);
 				this.decorations = cmView.Decoration.set(decorations, true);
 
 				if (decorations.length > 0) {
@@ -236,7 +229,6 @@ export class YRemoteSelectionsPluginValue<
 
 			if (sel) {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
-				console.log(sel, selection);
 				presence.set({
 					selection,
 				});

@@ -2,7 +2,18 @@ import * as cmState from "@codemirror/state"; // eslint-disable-line
 import * as cmView from "@codemirror/view"; // eslint-disable-line
 import * as yorkie from "yorkie-js-sdk";
 
-export class YSyncConfig<T extends { content: yorkie.Text }, P extends { selection: any }> {
+export type YorkieCodeMirrorDocType = {
+	content: yorkie.Text<yorkie.Indexable>;
+};
+
+export type YorkieCodeMirrorPresenceType = {
+	selection: yorkie.TextPosStructRange | null;
+};
+
+export class YSyncConfig<
+	T extends YorkieCodeMirrorDocType,
+	P extends YorkieCodeMirrorPresenceType,
+> {
 	doc: yorkie.Document<T, P>;
 	client: yorkie.Client;
 	constructor(doc: yorkie.Document<T, P>, client: yorkie.Client) {
@@ -11,29 +22,30 @@ export class YSyncConfig<T extends { content: yorkie.Text }, P extends { selecti
 	}
 }
 
-export const ySyncFacet: cmState.Facet<any, any> = cmState.Facet.define({
+export const ySyncFacet: cmState.Facet<
+	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>,
+	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+> = cmState.Facet.define({
 	combine(inputs) {
 		return inputs[inputs.length - 1];
 	},
 });
 
-export const yorkieSyncAnnotation: cmState.AnnotationType<any> = cmState.Annotation.define();
+export const yorkieSyncAnnotation: cmState.AnnotationType<
+	YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+> = cmState.Annotation.define();
 
-class YSyncPluginValue<T extends { content: yorkie.Text }, P extends { selection: any }>
-	implements cmView.PluginValue
-{
+class YSyncPluginValue implements cmView.PluginValue {
 	view: cmView.EditorView;
-	conf: YSyncConfig<T, P>;
-	_doc: yorkie.Document<T, P>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	_observer: yorkie.NextFn<yorkie.DocEvent<P, any>>;
+	conf: YSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	_doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	_observer: yorkie.NextFn<yorkie.DocEvent<YorkieCodeMirrorPresenceType>>;
 	_unsubscribe: yorkie.Unsubscribe;
 
 	constructor(view: cmView.EditorView) {
 		this.view = view;
 		this.conf = view.state.facet(ySyncFacet);
 
-		// subscribe
 		this._observer = (event) => {
 			if (event.type !== "remote-change") return;
 
@@ -57,8 +69,7 @@ class YSyncPluginValue<T extends { content: yorkie.Text }, P extends { selection
 			});
 		};
 		this._doc = this.conf.doc;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		this._unsubscribe = this._doc.subscribe("$.content" as any, this._observer);
+		this._unsubscribe = this._doc.subscribe("$.content", this._observer);
 	}
 
 	update(update: cmView.ViewUpdate) {
@@ -80,7 +91,7 @@ class YSyncPluginValue<T extends { content: yorkie.Text }, P extends { selection
 				if (updatedIndexRange) {
 					presence.set({
 						selection: root.content.indexRangeToPosRange(updatedIndexRange),
-					} as any);
+					} as unknown as YorkieCodeMirrorPresenceType);
 				}
 			});
 		});
