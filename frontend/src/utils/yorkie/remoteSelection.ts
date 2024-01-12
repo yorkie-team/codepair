@@ -222,7 +222,7 @@ export class YorkieRemoteSelectionsPluginValue {
 			const hasFocus = update.view.hasFocus && update.view.dom.ownerDocument.hasFocus();
 			const sel = hasFocus ? update.state.selection.main : null;
 
-			if (sel) {
+			if (sel && root.content) {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
 				presence.set({
 					selection,
