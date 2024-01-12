@@ -15,13 +15,20 @@ import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import ThemeButton from "../common/ThemeButton";
+import { createDocumentKey } from "../../utils/document";
+import { useNavigate } from "react-router-dom";
 
 function EditorHeader() {
 	const dispatch = useDispatch();
 	const editorState = useSelector(selectEditor);
+	const navigate = useNavigate();
 
 	const handleChangeMode = (newMode: EditorModeType) => {
 		dispatch(setMode(newMode));
+	};
+
+	const handleCreateNewDocument = () => {
+		navigate(`/${createDocumentKey()}`);
 	};
 
 	return (
@@ -54,7 +61,7 @@ function EditorHeader() {
 							</ToggleButtonGroup>
 						</Paper>
 						<Tooltip title="Create New Note">
-							<IconButton color="inherit">
+							<IconButton color="inherit" onClick={handleCreateNewDocument}>
 								<AddIcon />
 							</IconButton>
 						</Tooltip>

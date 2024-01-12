@@ -13,15 +13,19 @@ import { Box, Paper } from "@mui/material";
 import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Preview from "../../components/editor/Preview";
+import { useParams } from "react-router-dom";
 
 function EditorIndex() {
 	const dispatch = useDispatch();
 	const windowWidth = useWindowWidth();
 	const editorStore = useSelector(selectEditor);
+	const params = useParams();
 
 	useEffect(() => {
 		let client: yorkie.Client;
 		let doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+
+		if (!params.documentId) return;
 
 		const initializeYorkie = async () => {
 			client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
@@ -29,7 +33,7 @@ function EditorIndex() {
 			});
 			await client.activate();
 
-			doc = new yorkie.Document("my-first-document");
+			doc = new yorkie.Document(params.documentId as string);
 
 			await client.attach(doc, {
 				initialPresence: {
@@ -52,7 +56,7 @@ function EditorIndex() {
 
 			cleanUp();
 		};
-	}, [dispatch]);
+	}, [dispatch, params.documentId]);
 
 	return (
 		<Box height="calc(100% - 64px)">
