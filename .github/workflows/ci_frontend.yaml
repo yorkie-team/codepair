@@ -1,4 +1,4 @@
-name: CI
+name: CI Frontend
 on:
   push:
     branches: main
@@ -29,7 +29,7 @@ jobs:
         run: npm ci
         working-directory: ${{ env.working-directory }}
       - name: Prettier
-        run: npm run prettier
+        run: npm run format:check
         working-directory: ${{ env.working-directory }}
       - name: Lint
         run: npm run lint
