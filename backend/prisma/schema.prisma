@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  socialUid     String          @unique
+  nickname      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  UserWorkspace UserWorkspace[]
+}
+
+model UserWorkspace {
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@id([userId, workspaceId])
+}
+
+model Workspace {
+  id            Int             @id @default(autoincrement())
+  title         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  documentList  Document[]
+  UserWorkspace UserWorkspace[]
+}
+
+model Document {
+  id               Int       @id @default(autoincrement())
+  yorkieDocumentId String
+  title            String
+  content          String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId      Int
+}
