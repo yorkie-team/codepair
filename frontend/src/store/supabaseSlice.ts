@@ -17,7 +17,8 @@ export const supabaseSlice = createSlice({
 	initialState,
 	reducers: {
 		setClient: (state, action: PayloadAction<SupabaseClient<Database, "public"> | null>) => {
-			state.client = action.payload;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			state.client = action.payload as any;
 		},
 	},
 });
