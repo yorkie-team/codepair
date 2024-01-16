@@ -12,12 +12,17 @@ import { useEffect, useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import { createClient } from "@supabase/supabase-js";
 import { setClient } from "./store/supabaseSlice";
+import Index from "./pages/Index";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <EditorLayout />,
 		children: [
+			{
+				path: "/",
+				element: <Index />,
+			},
 			{
 				path: ":documentId",
 				element: <EditorIndex />,
