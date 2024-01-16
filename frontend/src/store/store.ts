@@ -1,23 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import editorSlice from "./editorSlice";
 import configSlice from "./configSlice";
-import supabaseSlice from "./supabaseSlice";
 
 export const store = configureStore({
 	reducer: {
 		editor: editorSlice,
 		config: configSlice,
-		supabase: supabaseSlice,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
 			serializableCheck: {
-				ignoredActions: ["editor/setDoc", "editor/setClient", "supabase/setClient"],
-				ignoredPaths: ["editor.doc", "editor.client", "supabase.client"],
+				ignoredActions: ["editor/setDoc", "editor/setClient"],
+				ignoredPaths: ["editor.doc", "editor.client"],
 			},
 			immutableCheck: {
-				ignoredActions: ["editor/setDoc", "editor/setClient", "supabase/setClient"],
-				ignoredPaths: ["editor.doc", "editor.client", "supabase.client"],
+				ignoredPaths: ["editor.doc", "editor.client"],
 			},
 		}),
 });
