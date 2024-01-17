@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
-  socialProvider String          @unique @map("social_provider")
+  socialProvider String          @map("social_provider")
   socialUid      String          @unique @map("social_uid")
   nickname       String
   createdAt      DateTime        @default(now()) @map("created_at")
