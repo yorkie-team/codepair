@@ -1,19 +1,24 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../db/prisma.service";
 import { User } from "@prisma/client";
+import { PrismaService } from "src/db/prisma.service";
 
 @Injectable()
-export class AuthService {
+export class UsersService {
 	constructor(private prismaService: PrismaService) {}
 
-	async findOrCreateUser(idToken: string, nickname: string): Promise<User | null> {
-		const socialUid = idToken;
+	async findOrCreate(
+		socialProvider: string,
+		socialUid: string,
+		nickname: string
+	): Promise<User | null> {
 		return this.prismaService.user.upsert({
 			where: {
+				socialProvider,
 				socialUid,
 			},
 			update: {},
 			create: {
+				socialProvider,
 				socialUid,
 				nickname,
 			},
