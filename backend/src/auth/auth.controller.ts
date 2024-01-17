@@ -1,11 +1,13 @@
 import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { LoginRequest } from "./interfaces/LoginRequest";
+import { LoginRequest } from "./types/login-request.type";
 import { JwtService } from "@nestjs/jwt";
-import { LoginResponse } from "./interfaces/LoginResponse";
+import { LoginResponse } from "./types/login-response.type";
 import { UsersService } from "src/users/users.service";
 import { Public } from "src/utils/decorators/auth.decorator";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
 	constructor(
@@ -17,6 +19,11 @@ export class AuthController {
 	@Get("login/github")
 	@Get("callback/github")
 	@UseGuards(AuthGuard("github"))
+	@ApiOperation({
+		summary: "SignUp/LogIn with GitHub",
+		description: "SignUp/Login with GitHub social login",
+	})
+	@ApiResponse({ type: LoginResponse })
 	async login(@Req() req: LoginRequest): Promise<LoginResponse> {
 		const user = await this.usersService.findOrCreate(
 			req.user.socialProvider,
