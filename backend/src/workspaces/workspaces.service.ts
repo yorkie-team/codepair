@@ -17,6 +17,7 @@ export class WorkspacesService {
 			data: {
 				workspaceId: workspace.id,
 				userId,
+				role: "OWNER",
 			},
 		});
 
