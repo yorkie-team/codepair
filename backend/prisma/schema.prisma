@@ -6,46 +6,54 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  socialUid     String          @unique
-  nickname      String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  UserWorkspace UserWorkspace[]
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  socialProvider String          @map("social_provider")
+  socialUid      String          @unique @map("social_uid")
+  nickname       String
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  UserWorkspace  UserWorkspace[]
+
+  @@map("users")
 }
 
 model UserWorkspace {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int
+  userId      String    @map("user_id") @db.ObjectId
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  workspaceId String    @map("workspace_id") @db.ObjectId
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
-  @@id([userId, workspaceId])
+  @@map("user_workspaces")
 }
 
 model Workspace {
-  id            Int             @id @default(autoincrement())
-  title         String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  documentList  Document[]
-  UserWorkspace UserWorkspace[]
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  title             String
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  documentList      Document[]
+  userWorkspaceList UserWorkspace[]
+
+  @@map("workspaces")
 }
 
 model Document {
-  id               Int       @id @default(autoincrement())
-  yorkieDocumentId String
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  yorkieDocumentId String    @map("yorkie_document_id")
   title            String
   content          String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   workspace        Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId      Int
+  workspaceId      String    @map("workspace_id") @db.ObjectId
+
+  @@map("documents")
 }
