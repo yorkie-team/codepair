@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 
@@ -22,5 +22,24 @@ export class WorkspacesService {
 		});
 
 		return workspace;
+	}
+
+	async findOne(userId: string, workspaceId: string) {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException();
+		}
+
+		return await this.prismaService.workspace.findUnique({
+			where: {
+				id: workspaceId,
+			},
+		});
 	}
 }
