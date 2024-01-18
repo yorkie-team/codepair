@@ -33,15 +33,15 @@ export class WorkspacesService {
 					workspaceId,
 				},
 			});
+
+			return this.prismaService.workspace.findUniqueOrThrow({
+				where: {
+					id: workspaceId,
+				},
+			});
 		} catch (e) {
 			throw new NotFoundException();
 		}
-
-		return this.prismaService.workspace.findUnique({
-			where: {
-				id: workspaceId,
-			},
-		});
 	}
 
 	async findMany(
