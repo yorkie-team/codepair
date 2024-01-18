@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { WorkspaceDocumentsService } from "./workspace-documents.service";
-import { WorkspaceDocumentsController } from "./workspace-documents.controller";
-import { PrismaService } from "src/db/prisma.service";
+import { DocumentsController } from "./documents.controller";
+import { DocumentsService } from "./documents.service";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { PrismaService } from "src/db/prisma.service";
 
 @Module({
 	imports: [
@@ -16,7 +16,7 @@ import { ConfigService } from "@nestjs/config";
 			inject: [ConfigService],
 		}),
 	],
-	providers: [WorkspaceDocumentsService, PrismaService],
-	controllers: [WorkspaceDocumentsController],
+	controllers: [DocumentsController],
+	providers: [DocumentsService, PrismaService],
 })
-export class WorkspaceDocumentsModule {}
+export class DocumentsModule {}
