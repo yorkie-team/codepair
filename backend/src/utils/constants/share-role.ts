@@ -1,4 +1,4 @@
-export const WorkspaceRoleConstants = {
-	READ: "READ",
-	EDIT: "EDIT",
-};
+export enum ShareRoleEnum {
+	READ = "READ",
+	EDIT = "EDIT",
+}

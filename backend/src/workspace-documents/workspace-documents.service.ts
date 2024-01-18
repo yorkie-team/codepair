@@ -5,7 +5,6 @@ import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents
 import { JwtService } from "@nestjs/jwt";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
-import ms from "ms";
 
 @Injectable()
 export class WorkspaceDocumentsService {
@@ -127,7 +126,7 @@ export class WorkspaceDocumentsService {
 				role,
 			},
 			{
-				expiresIn: ms(Date.now() - expirationDate.getTime()),
+				expiresIn: Date.now() - expirationDate.getTime(),
 			}
 		);
 

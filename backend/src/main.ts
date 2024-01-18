@@ -19,7 +19,7 @@ async function bootstrap() {
 	SwaggerModule.setup("api", app, document);
 
 	// Auto Validation
-	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
 	await app.listen(3000);
 }
