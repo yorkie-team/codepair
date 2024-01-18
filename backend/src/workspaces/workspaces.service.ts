@@ -1,11 +1,18 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Prisma, Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
+import { JwtService } from "@nestjs/jwt";
+import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
+import { InvitationTokenPayload } from "./types/inviation-token-payload.type";
+import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 
 @Injectable()
 export class WorkspacesService {
-	constructor(private prismaService: PrismaService) {}
+	constructor(
+		private prismaService: PrismaService,
+		private jwtService: JwtService
+	) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
 		const workspace = await this.prismaService.workspace.create({
@@ -18,7 +25,7 @@ export class WorkspacesService {
 			data: {
 				workspaceId: workspace.id,
 				userId,
-				role: "OWNER",
+				role: WorkspaceRoleConstants.OWNER,
 			},
 		});
 
@@ -76,5 +83,79 @@ export class WorkspacesService {
 			workspaces: workspaceList.slice(0, pageSize),
 			cursor: workspaceList.length > pageSize ? workspaceList[pageSize].id : null,
 		};
+	}
+
+	async createInvitationToken(
+		userId: string,
+		workspaceId: string
+	): Promise<CreateInvitationTokenResponse> {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException();
+		}
+
+		const invitationToken = this.jwtService.sign({
+			sub: userId,
+			workspaceId,
+		});
+
+		return {
+			invitationToken,
+		};
+	}
+
+	async join(userId: string, invitationToken: string) {
+		let workspaceId: string;
+
+		try {
+			const payload = this.jwtService.verify<InvitationTokenPayload>(invitationToken);
+
+			workspaceId = payload.workspaceId;
+		} catch (err) {
+			throw new UnauthorizedException("Invitation token is invalid or expired.");
+		}
+
+		try {
+			await this.prismaService.workspace.findUniqueOrThrow({
+				where: {
+					id: workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException("The workspace is deleted.");
+		}
+
+		const userWorkspace = await this.prismaService.userWorkspace.findFirst({
+			where: {
+				userId,
+				workspaceId,
+			},
+			include: {
+				workspace: true,
+			},
+		});
+
+		if (!userWorkspace) {
+			return userWorkspace.workspace;
+		}
+
+		const newUserWorkspace = await this.prismaService.userWorkspace.create({
+			data: {
+				userId,
+				workspaceId,
+				role: WorkspaceRoleConstants.MEMBER,
+			},
+			include: {
+				workspace: true,
+			},
+		});
+
+		return newUserWorkspace.workspace;
 	}
 }
