@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { WorkspaceDocumentDomain } from "./workspace-document-domain.type";
 
-export class FindWorkspaceUsersResponse {
+export class FindWorkspaceDocumentsResponse {
 	@ApiProperty({
 		type: [WorkspaceDocumentDomain],
 		description: "List of found workspace documents",

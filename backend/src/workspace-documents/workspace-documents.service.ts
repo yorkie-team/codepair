@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
-import { FindWorkspaceUsersResponse } from "./types/find-workspace-documents-response.type";
+import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 
 @Injectable()
 export class WorkspaceDocumentsService {
@@ -52,7 +52,7 @@ export class WorkspaceDocumentsService {
 		workspaceId: string,
 		pageSize: number,
 		cursor?: string
-	): Promise<FindWorkspaceUsersResponse> {
+	): Promise<FindWorkspaceDocumentsResponse> {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {
