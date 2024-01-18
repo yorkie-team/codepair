@@ -36,7 +36,7 @@ export class WorkspacesService {
 			throw new NotFoundException();
 		}
 
-		return await this.prismaService.workspace.findUnique({
+		return this.prismaService.workspace.findUnique({
 			where: {
 				id: workspaceId,
 			},
