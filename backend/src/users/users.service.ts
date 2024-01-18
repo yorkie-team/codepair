@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
-import { UserDomain } from "./types/user-domain.type";
+import { FindUserResponse } from "./types/find-user-response.type";
 
 @Injectable()
 export class UsersService {
 	constructor(private prismaService: PrismaService) {}
 
-	async findOne(userId: string): Promise<UserDomain> {
+	async findOne(userId: string): Promise<FindUserResponse> {
 		return await this.prismaService.user.findUnique({
 			select: {
 				id: true,
