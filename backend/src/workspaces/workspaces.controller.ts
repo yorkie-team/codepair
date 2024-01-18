@@ -10,22 +10,28 @@ import {
 	Req,
 } from "@nestjs/common";
 import { WorkspacesService } from "./workspaces.service";
-import { CreateWorkspaceDto } from "./dto/CreateWorkspace.dto";
+import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import {
 	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
 	ApiFoundResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
+	ApiParam,
 	ApiQuery,
 	ApiTags,
+	ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { AuthroizedRequest } from "src/utils/types/req.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
+import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
+import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
+import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth()
@@ -89,5 +95,51 @@ export class WorkspacesController {
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
 	): Promise<FindWorkspacesResponse> {
 		return this.workspacesService.findMany(req.user.id, pageSize, cursor);
+	}
+
+	@Post(":workspace_id/invite-token")
+	@ApiOperation({
+		summary: "Create a Invitation Token",
+		description: "Create a inviation token using JWT.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace to create invitation token",
+	})
+	@ApiOkResponse({
+		type: CreateInvitationTokenResponse,
+	})
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
+	})
+	async createInvitationToken(
+		@Req() req: AuthroizedRequest,
+		@Param("workspace_id") workspaceId: string
+	): Promise<CreateInvitationTokenResponse> {
+		return this.workspacesService.createInvitationToken(req.user.id, workspaceId);
+	}
+
+	@Post("join")
+	@ApiOperation({
+		summary: "Join to the Workspace",
+		description: "Join to the workspace using JWT invitation token.",
+	})
+	@ApiOkResponse({
+		type: JoinWorkspaceResponse,
+	})
+	@ApiUnauthorizedResponse({
+		type: HttpExceptionResponse,
+		description: "Invitation token is invalid or expired.",
+	})
+	@ApiNotFoundResponse({
+		description: "The workspace does not exist.",
+		type: HttpExceptionResponse,
+	})
+	async join(
+		@Req() req: AuthroizedRequest,
+		@Body() joinWorkspaceDto: JoinWorkspaceDto
+	): Promise<JoinWorkspaceResponse> {
+		return this.workspacesService.join(req.user.id, joinWorkspaceDto.invitationToken);
 	}
 }
