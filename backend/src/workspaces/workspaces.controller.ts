@@ -18,6 +18,7 @@ import {
 	ApiFoundResponse,
 	ApiNotFoundResponse,
 	ApiOperation,
+	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
 import { AuthroizedRequest } from "src/utils/types/req.type";
@@ -69,6 +70,19 @@ export class WorkspacesController {
 		description: "Return the user's workspaces. This API supports KeySet pagination.",
 	})
 	@ApiFoundResponse({ type: FindWorkspacesResponse })
+	@ApiQuery({
+		name: "page_size",
+		type: Number,
+		description: "Page size to fetch (Default to 10)",
+		required: false,
+	})
+	@ApiQuery({
+		name: "cursor",
+		type: String,
+		description:
+			"API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
+		required: false,
+	})
 	async findMany(
 		@Req() req: AuthroizedRequest,
 		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
