@@ -6,9 +6,10 @@ import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core/constants";
 import { JwtAuthGuard } from "./auth/jwt.guard";
 import { WorkspacesModule } from "./workspaces/workspaces.module";
+import { WorkspaceUsersModule } from './workspace-users/workspace-users.module';
 
 @Module({
-	imports: [ConfigModule.forRoot({ isGlobal: true }), UsersModule, AuthModule, WorkspacesModule],
+	imports: [ConfigModule.forRoot({ isGlobal: true }), UsersModule, AuthModule, WorkspacesModule, WorkspaceUsersModule],
 	controllers: [],
 	providers: [
 		PrismaService,
