@@ -55,7 +55,7 @@ export class WorkspacesController {
 	@ApiFoundResponse({ type: FindWorkspaceResponse })
 	@ApiNotFoundResponse({
 		type: HttpExceptionResponse,
-		description: "The Workspace does not exist, or the user lacks the appropriate permissions.",
+		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
 	})
 	async findOne(
 		@Req() req: AuthroizedRequest,
