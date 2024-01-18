@@ -17,7 +17,9 @@ import {
 	ApiCreatedResponse,
 	ApiFoundResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
+	ApiParam,
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
@@ -26,6 +28,7 @@ import { CreateWorkspaceResponse } from "./types/create-workspace-response.type"
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
+import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth()
@@ -89,5 +92,28 @@ export class WorkspacesController {
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
 	): Promise<FindWorkspacesResponse> {
 		return this.workspacesService.findMany(req.user.id, pageSize, cursor);
+	}
+
+	@Post(":workspace_id/invite-token")
+	@ApiOperation({
+		summary: "Create a Invitation Token",
+		description: "Create a inviation token using JWT.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace to create invitation token",
+	})
+	@ApiOkResponse({
+		type: CreateInvitationTokenResponse,
+	})
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
+	})
+	async createInvitationToken(
+		@Req() req: AuthroizedRequest,
+		@Param("workspace_id") workspaceId: string
+	): Promise<CreateInvitationTokenResponse> {
+		return this.workspacesService.createInvitationToken(req.user.id, workspaceId);
 	}
 }
