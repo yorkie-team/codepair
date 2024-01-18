@@ -126,7 +126,7 @@ export class WorkspaceDocumentsService {
 				role,
 			},
 			{
-				expiresIn: Date.now() - expirationDate.getTime(),
+				expiresIn: expirationDate.getTime() - Date.now(),
 			}
 		);
 
