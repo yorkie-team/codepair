@@ -16,6 +16,7 @@ import {
 	ApiCreatedResponse,
 	ApiFoundResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiQuery,
 	ApiTags,
@@ -26,6 +27,8 @@ import { CreateWorkspaceDocumentResponse } from "./types/create-workspace-docume
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { FindWorkspaceDocumentResponse } from "./types/find-workspace-document-response.type";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
+import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
+import { CreateWorkspaceDocumentShareTokenDto } from "./dto/create-workspace-document-share-token.dto";
 
 @ApiTags("Workspace.Documents")
 @ApiBearerAuth()
@@ -104,6 +107,33 @@ export class WorkspaceDocumentsController {
 			req.user.id,
 			workspaceId,
 			createWorkspaceDocumentDto.title
+		);
+	}
+
+	@Post(":document_id/share-token")
+	@ApiOperation({
+		summary: "Retrieve a Share Token for the Document",
+		description: "If the user has the access permissions, return a share token.",
+	})
+	@ApiBody({ type: CreateWorkspaceDocumentShareTokenDto })
+	@ApiOkResponse({ type: CreateWorkspaceDocumentShareTokenResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description:
+			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
+	})
+	async createShareToken(
+		@Req() req: AuthroizedRequest,
+		@Param("workspace_id") workspaceId: string,
+		@Param("document_id") documentId: string,
+		@Body() createWorkspaceDocumentShareTokenDto: CreateWorkspaceDocumentShareTokenDto
+	): Promise<CreateWorkspaceDocumentShareTokenResponse> {
+		return this.workspaceDocumentsService.createSharingToken(
+			req.user.id,
+			workspaceId,
+			documentId,
+			createWorkspaceDocumentShareTokenDto.role,
+			createWorkspaceDocumentShareTokenDto.expirationDate
 		);
 	}
 }

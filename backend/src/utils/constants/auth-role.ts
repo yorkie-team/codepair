@@ -1,4 +1,4 @@
-export const WorkspaceRoleConstants = {
-	OWNER: "OWNER",
-	MEMBER: "MEMBER",
-};
+export enum WorkspaceRoleConstants {
+	OWNER = "OWNER",
+	MEMBER = "MEMBER",
+}
