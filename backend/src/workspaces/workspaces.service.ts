@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Prisma, Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JwtService } from "@nestjs/jwt";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
+import { InvitationTokenPayload } from "./types/inviation-token-payload.type";
+import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 
 @Injectable()
 export class WorkspacesService {
@@ -23,7 +25,7 @@ export class WorkspacesService {
 			data: {
 				workspaceId: workspace.id,
 				userId,
-				role: "OWNER",
+				role: WorkspaceRoleConstants.OWNER,
 			},
 		});
 
@@ -106,5 +108,54 @@ export class WorkspacesService {
 		return {
 			invitationToken,
 		};
+	}
+
+	async join(userId: string, invitationToken: string) {
+		let workspaceId: string;
+
+		try {
+			const payload = this.jwtService.verify<InvitationTokenPayload>(invitationToken);
+
+			workspaceId = payload.workspaceId;
+		} catch (err) {
+			throw new UnauthorizedException("Invitation token is invalid or expired.");
+		}
+
+		try {
+			await this.prismaService.workspace.findUniqueOrThrow({
+				where: {
+					id: workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException("The workspace is deleted.");
+		}
+
+		const userWorkspace = await this.prismaService.userWorkspace.findFirst({
+			where: {
+				userId,
+				workspaceId,
+			},
+			include: {
+				workspace: true,
+			},
+		});
+
+		if (!userWorkspace) {
+			return userWorkspace.workspace;
+		}
+
+		const newUserWorkspace = await this.prismaService.userWorkspace.create({
+			data: {
+				userId,
+				workspaceId,
+				role: WorkspaceRoleConstants.MEMBER,
+			},
+			include: {
+				workspace: true,
+			},
+		});
+
+		return newUserWorkspace.workspace;
 	}
 }
