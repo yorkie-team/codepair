@@ -32,6 +32,12 @@ export class WorkspaceUsersService {
 
 		const workspaceUserList = await this.prismaService.user.findMany({
 			take: pageSize + 1,
+			select: {
+				id: true,
+				nickname: true,
+				updatedAt: true,
+				createdAt: true,
+			},
 			where: {
 				userWorkspaceList: {
 					some: {
