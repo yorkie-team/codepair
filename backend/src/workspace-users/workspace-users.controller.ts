@@ -1,8 +1,16 @@
 import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query, Req } from "@nestjs/common";
-import { ApiBearerAuth, ApiFoundResponse, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import {
+	ApiBearerAuth,
+	ApiFoundResponse,
+	ApiNotFoundResponse,
+	ApiOperation,
+	ApiQuery,
+	ApiTags,
+} from "@nestjs/swagger";
 import { FindWorkspaceUsersResponse } from "./types/find-workspace-users-response.type";
 import { AuthroizedRequest } from "src/utils/types/req.type";
 import { WorkspaceUsersService } from "./workspace-users.service";
+import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 
 @ApiTags("Workspace.Users")
 @ApiBearerAuth()
@@ -16,6 +24,10 @@ export class WorkspaceUsersController {
 		description: "Return the users in the workspace. This API supports KeySet pagination.",
 	})
 	@ApiFoundResponse({ type: FindWorkspaceUsersResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
+	})
 	@ApiQuery({
 		name: "page_size",
 		type: Number,
