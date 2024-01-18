@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
+import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -41,5 +42,34 @@ export class WorkspacesService {
 				id: workspaceId,
 			},
 		});
+	}
+
+	async findMany(
+		userId: string,
+		pageSize: number,
+		cursor?: string
+	): Promise<FindWorkspacesResponse> {
+		const userWorkspaceList = await this.prismaService.userWorkspace.findMany({
+			take: pageSize,
+			skip: 1,
+			cursor: {
+				id: cursor,
+			},
+			where: {
+				userId,
+			},
+			orderBy: {
+				id: "desc",
+			},
+			include: {
+				workspace: true,
+			},
+		});
+		const workspaceList = userWorkspaceList.map((userWorkspace) => userWorkspace.workspace);
+
+		return {
+			workspaces: workspaceList,
+			cursor: workspaceList.length > 0 ? workspaceList[workspaceList.length - 1].id : null,
+		};
 	}
 }
