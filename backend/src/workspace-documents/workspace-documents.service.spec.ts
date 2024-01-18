@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { WorkspaceDocumentsService } from './workspace-documents.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { WorkspaceDocumentsService } from "./workspace-documents.service";
 
-describe('WorkspaceDocumentsService', () => {
-  let service: WorkspaceDocumentsService;
+describe("WorkspaceDocumentsService", () => {
+	let service: WorkspaceDocumentsService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [WorkspaceDocumentsService],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			providers: [WorkspaceDocumentsService],
+		}).compile();
 
-    service = module.get<WorkspaceDocumentsService>(WorkspaceDocumentsService);
-  });
+		service = module.get<WorkspaceDocumentsService>(WorkspaceDocumentsService);
+	});
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+	it("should be defined", () => {
+		expect(service).toBeDefined();
+	});
 });
