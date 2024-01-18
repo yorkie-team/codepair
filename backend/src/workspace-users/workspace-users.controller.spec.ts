@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { WorkspaceUsersController } from './workspace-users.controller';
+import { Test, TestingModule } from "@nestjs/testing";
+import { WorkspaceUsersController } from "./workspace-users.controller";
 
-describe('WorkspaceUsersController', () => {
-  let controller: WorkspaceUsersController;
+describe("WorkspaceUsersController", () => {
+	let controller: WorkspaceUsersController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [WorkspaceUsersController],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [WorkspaceUsersController],
+		}).compile();
 
-    controller = module.get<WorkspaceUsersController>(WorkspaceUsersController);
-  });
+		controller = module.get<WorkspaceUsersController>(WorkspaceUsersController);
+	});
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+	it("should be defined", () => {
+		expect(controller).toBeDefined();
+	});
 });
