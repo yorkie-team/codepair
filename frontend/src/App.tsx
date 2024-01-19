@@ -6,40 +6,14 @@ import "./App.css";
 import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import EditorLayout from "./components/layouts/EditorLayout";
-import EditorIndex from "./pages/editor/Index";
 import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
-import MainLayout from "./components/layouts/MainLayout";
-import Index from "./pages/Index";
-import CallbackIndex from "./pages/auth/callback/Index";
+import axios from "axios";
+import { routes } from "./routes";
 
-const router = createBrowserRouter([
-	{
-		path: "",
-		element: <MainLayout />,
-		children: [
-			{
-				path: "",
-				element: <Index />,
-			},
-		],
-	},
-	{
-		path: ":documentId",
-		element: <EditorLayout />,
-		children: [
-			{
-				path: "",
-				element: <EditorIndex />,
-			},
-		],
-	},
-	{
-		path: "auth/callback",
-		element: <CallbackIndex />,
-	},
-]);
+const router = createBrowserRouter(routes);
+
+axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
 
 function App() {
 	const config = useSelector(selectConfig);
