@@ -1,9 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { GetWorkspaceResponse } from "./types/workspace";
+import { GetWorkspaceListResponse, GetWorkspaceResponse } from "./types/workspace";
 
 export const generateGetWorkspaceQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId];
+};
+
+export const generateGetWorkspaceListQueryKey = () => {
+	return ["workspaces"];
 };
 
 export const useGetWorkspaceQuery = (workspaceId?: string) => {
@@ -17,6 +21,25 @@ export const useGetWorkspaceQuery = (workspaceId?: string) => {
 		meta: {
 			errorMessage: "This is a non-existent or unauthorized Workspace.",
 		},
+	});
+
+	return query;
+};
+
+export const useGetWorkspaceListQuery = () => {
+	const query = useInfiniteQuery<GetWorkspaceListResponse>({
+		queryKey: generateGetWorkspaceListQueryKey(),
+		queryFn: async ({ pageParam }) => {
+			const res = await axios.get<GetWorkspaceListResponse>("/workspaces", {
+				params: {
+					cursor: pageParam,
+				},
+			});
+			return res.data;
+		},
+		initialPageParam: undefined,
+		getPreviousPageParam: (firstPage) => firstPage.cursor ?? undefined,
+		getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
 	});
 
 	return query;
