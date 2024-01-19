@@ -8,29 +8,29 @@ import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 
 const codePairRoutes = [
 	{
-		path: "/",
+		path: "",
 		private: false,
 		element: <MainLayout />,
 		children: [
 			{
-				path: "/",
+				path: "",
 				element: <Index />,
 			},
 		],
 	},
 	{
-		path: "/workspace",
+		path: "workspace",
 		private: true,
 		element: <MainLayout />,
 		children: [
 			{
-				path: "/",
+				path: "",
 				element: <WorkspaceLayout />,
 			},
 		],
 	},
 	{
-		path: "/:documentId",
+		path: ":documentId",
 		private: true,
 		element: <EditorLayout />,
 		children: [
