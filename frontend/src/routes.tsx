@@ -3,13 +3,20 @@ import EditorIndex from "./pages/editor/Index";
 import MainLayout from "./components/layouts/MainLayout";
 import Index from "./pages/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
-import ProtectedRoute from "./components/common/ProtectedRoute";
 import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
+import GuestRoute from "./components/common/GuestRoute";
+import PrivateRoute from "./components/common/PrivateRoute";
+
+const enum AccessType {
+	PRIVATE, // Authroized user can access only
+	PUBLIC, // Everyone can access
+	GUEST, // Not authorized user can access only
+}
 
 const codePairRoutes = [
 	{
 		path: "",
-		private: false,
+		accessType: AccessType.GUEST,
 		element: <MainLayout />,
 		children: [
 			{
@@ -20,18 +27,18 @@ const codePairRoutes = [
 	},
 	{
 		path: "workspace",
-		private: true,
+		accessType: AccessType.PRIVATE,
 		element: <MainLayout />,
 		children: [
 			{
-				path: "",
+				path: ":workspaceId",
 				element: <WorkspaceLayout />,
 			},
 		],
 	},
 	{
 		path: ":documentId",
-		private: true,
+		accessType: AccessType.PUBLIC,
 		element: <EditorLayout />,
 		children: [
 			{
@@ -42,15 +49,17 @@ const codePairRoutes = [
 	},
 	{
 		path: "auth/callback",
-		private: false,
+		accessType: AccessType.GUEST,
 		element: <CallbackIndex />,
 	},
 ];
 
 const injectProtectedRoute = (routes: typeof codePairRoutes) => {
 	return routes.map((route) => {
-		if (route.private) {
-			route.element = <ProtectedRoute>{route.element}</ProtectedRoute>;
+		if (route.accessType === AccessType.PRIVATE) {
+			route.element = <PrivateRoute>{route.element}</PrivateRoute>;
+		} else if (route.accessType === AccessType.GUEST) {
+			route.element = <GuestRoute>{route.element}</GuestRoute>;
 		}
 
 		return route;

@@ -3,11 +3,11 @@ import { useLocation, Navigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Backdrop, CircularProgress } from "@mui/material";
 
-interface RequireAuthProps {
+interface PrivateRouteProps {
 	children?: ReactNode;
 }
 
-const ProtectedRoute = (props: RequireAuthProps) => {
+const PrivateRoute = (props: PrivateRouteProps) => {
 	const { children } = props;
 	const { isLoggedIn, isLoading } = useContext(AuthContext);
 	const location = useLocation();
@@ -27,4 +27,4 @@ const ProtectedRoute = (props: RequireAuthProps) => {
 	return children;
 };
 
-export default ProtectedRoute;
+export default PrivateRoute;
