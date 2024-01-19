@@ -4,6 +4,7 @@ import MainLayout from "./components/layouts/MainLayout";
 import Index from "./pages/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 
 const codePairRoutes = [
 	{
@@ -14,6 +15,17 @@ const codePairRoutes = [
 			{
 				path: "/",
 				element: <Index />,
+			},
+		],
+	},
+	{
+		path: "/workspace",
+		private: true,
+		element: <MainLayout />,
+		children: [
+			{
+				path: "/",
+				element: <WorkspaceLayout />,
 			},
 		],
 	},
