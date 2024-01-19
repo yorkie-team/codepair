@@ -6,6 +6,7 @@ import CallbackIndex from "./pages/auth/callback/Index";
 import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
+import WorkspaceIndex from "./pages/workspace/Index";
 
 const enum AccessType {
 	PRIVATE, // Authroized user can access only
@@ -28,11 +29,11 @@ const codePairRoutes = [
 	{
 		path: "workspace",
 		accessType: AccessType.PRIVATE,
-		element: <MainLayout />,
+		element: <WorkspaceLayout />,
 		children: [
 			{
 				path: ":workspaceId",
-				element: <WorkspaceLayout />,
+				element: <WorkspaceIndex />,
 			},
 		],
 	},

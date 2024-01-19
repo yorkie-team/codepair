@@ -1,7 +1,7 @@
-import { Container } from "@mui/material";
+import WorkspaceDrawer from "../../components/drawers/WorkspaceDrawer";
 
 function WorkspaceIndex() {
-	return <Container></Container>;
+	return <WorkspaceDrawer />;
 }
 
 export default WorkspaceIndex;
