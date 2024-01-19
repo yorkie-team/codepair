@@ -44,6 +44,7 @@ function Index() {
 							</Grid>
 							{socialLoginList.map(({ SocailLoginComponent, provider }) => (
 								<SocailLoginComponent
+									key={provider}
 									size="48px"
 									onClick={() => handleLogin(provider)}
 								/>
