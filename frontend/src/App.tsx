@@ -13,6 +13,7 @@ import { selectConfig } from "./store/configSlice";
 import MainLayout from "./components/layouts/MainLayout";
 import Index from "./pages/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
+import axios from "axios";
 
 const router = createBrowserRouter([
 	{
@@ -40,6 +41,8 @@ const router = createBrowserRouter([
 		element: <CallbackIndex />,
 	},
 ]);
+
+axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
 
 function App() {
 	const config = useSelector(selectConfig);

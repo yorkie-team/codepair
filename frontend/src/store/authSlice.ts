@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
-export interface ConfigState {
+export interface AuthState {
 	accessToken: string | null;
 }
 
-const initialState: ConfigState = {
+const initialState: AuthState = {
 	accessToken: null,
 };
 
@@ -22,6 +22,6 @@ export const authSlice = createSlice({
 
 export const { setAccessToken } = authSlice.actions;
 
-export const selectConfig = (state: RootState) => state.config;
+export const selectAuth = (state: RootState) => state.auth;
 
 export default authSlice.reducer;
