@@ -26,7 +26,11 @@ export const store = configureStore({
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
 			serializableCheck: {
-				ignoredActions: ["editor/setDoc", "editor/setClient"],
+				ignoredActions: [
+					"persist/PERSIST", // redux-persist
+					"editor/setDoc",
+					"editor/setClient",
+				],
 				ignoredPaths: ["editor.doc", "editor.client"],
 			},
 			immutableCheck: {
