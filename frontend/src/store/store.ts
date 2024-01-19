@@ -3,16 +3,20 @@ import editorSlice from "./editorSlice";
 import configSlice from "./configSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
+import authSlice from "./authSlice";
 
 const reducers = combineReducers({
-	editor: editorSlice,
+	// Persistence
+	auth: authSlice,
 	config: configSlice,
+	// Volatile
+	editor: editorSlice,
 });
 
 const persistConfig = {
 	key: "root",
 	storage, // Local Storage
-	whitelist: ["auth"],
+	whitelist: ["auth", "config"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
