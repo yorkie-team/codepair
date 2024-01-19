@@ -14,10 +14,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import { MouseEventHandler, useState } from "react";
-import ProfilePopover from "../common/ProfilePopover";
+import ProfilePopover from "../popovers/ProfilePopover";
 import { useParams } from "react-router-dom";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 
 const DRAWER_WIDTH = 240;
 
@@ -26,6 +28,9 @@ function WorkspaceDrawer() {
 	const userStore = useSelector(selectUser);
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceId);
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
+	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
+		(EventTarget & Element) | null
+	>(null);
 
 	const handleOpenProfilePopover: MouseEventHandler = (event) => {
 		setProfileAnchorEl(event.currentTarget);
@@ -33,6 +38,14 @@ function WorkspaceDrawer() {
 
 	const handleCloseProfilePopover = () => {
 		setProfileAnchorEl(null);
+	};
+
+	const handleOpenWorkspacePopover: MouseEventHandler = (event) => {
+		setWorkspaceListAnchorEl(event.currentTarget);
+	};
+
+	const handleCloseWorkspacePopover = () => {
+		setWorkspaceListAnchorEl(null);
 	};
 
 	return (
@@ -50,7 +63,7 @@ function WorkspaceDrawer() {
 			open
 		>
 			<ListItem disablePadding>
-				<ListItemButton>
+				<ListItemButton onClick={handleOpenWorkspacePopover}>
 					<ListItemText
 						primary={workspace?.title}
 						primaryTypographyProps={{
@@ -60,11 +73,22 @@ function WorkspaceDrawer() {
 					/>
 					<ListItemSecondaryAction>
 						<IconButton>
-							<KeyboardArrowDownIcon />
+							{workspaceListAnchorEl ? (
+								<KeyboardArrowUpIcon />
+							) : (
+								<KeyboardArrowDownIcon />
+							)}
 						</IconButton>
 					</ListItemSecondaryAction>
 				</ListItemButton>
+				<WorkspaceListPopover
+					open={Boolean(workspaceListAnchorEl)}
+					anchorEl={workspaceListAnchorEl}
+					onClose={handleCloseWorkspacePopover}
+					width={DRAWER_WIDTH - 32}
+				/>
 			</ListItem>
+			<Divider />
 			<Box sx={{ mt: "auto" }}>
 				<Divider />
 				<ListItem disablePadding>
