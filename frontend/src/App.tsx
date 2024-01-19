@@ -10,17 +10,34 @@ import EditorLayout from "./components/layouts/EditorLayout";
 import EditorIndex from "./pages/editor/Index";
 import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
+import MainLayout from "./components/layouts/MainLayout";
+import Index from "./pages/Index";
+import CallbackIndex from "./pages/auth/callback/Index";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: "",
+		element: <MainLayout />,
+		children: [
+			{
+				path: "",
+				element: <Index />,
+			},
+		],
+	},
+	{
+		path: ":documentId",
 		element: <EditorLayout />,
 		children: [
 			{
-				path: ":documentId",
+				path: "",
 				element: <EditorIndex />,
 			},
 		],
+	},
+	{
+		path: "auth/callback",
+		element: <CallbackIndex />,
 	},
 ]);
 
