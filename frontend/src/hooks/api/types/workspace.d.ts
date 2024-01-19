@@ -1,4 +1,4 @@
-export interface Workspace {
+export class Workspace {
 	id: string;
 	title: string;
 	createdAt: Date;
