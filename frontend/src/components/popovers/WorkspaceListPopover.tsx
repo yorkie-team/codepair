@@ -74,6 +74,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 								<ListItemText
 									primaryTypographyProps={{
 										noWrap: true,
+										variant: "body2",
 									}}
 								>
 									{workspace.title}
