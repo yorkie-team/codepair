@@ -38,6 +38,7 @@
 		"react-redux": "^9.0.4",
 		"react-resizable-layout": "^0.7.2",
 		"react-router-dom": "^6.21.1",
+		"react-social-login-buttons": "^3.9.1",
 		"yorkie-js-sdk": "^0.4.13-rc"
 	},
 	"devDependencies": {
