@@ -10,8 +10,13 @@ import EditorLayout from "./components/layouts/EditorLayout";
 import EditorIndex from "./pages/editor/Index";
 import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
+import MainLayout from "./components/layouts/MainLayout";
 
 const router = createBrowserRouter([
+	{
+		path: "",
+		element: <MainLayout />,
+	},
 	{
 		path: ":documentId",
 		element: <EditorLayout />,
