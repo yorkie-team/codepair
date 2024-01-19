@@ -13,11 +13,11 @@ import { selectConfig } from "./store/configSlice";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: ":documentId",
 		element: <EditorLayout />,
 		children: [
 			{
-				path: ":documentId",
+				path: "",
 				element: <EditorIndex />,
 			},
 		],
