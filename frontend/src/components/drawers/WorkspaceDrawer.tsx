@@ -18,6 +18,7 @@ import ProfilePopover from "../popovers/ProfilePopover";
 import { useParams } from "react-router-dom";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 
 const DRAWER_WIDTH = 240;
@@ -72,7 +73,11 @@ function WorkspaceDrawer() {
 					/>
 					<ListItemSecondaryAction>
 						<IconButton>
-							<KeyboardArrowDownIcon />
+							{workspaceListAnchorEl ? (
+								<KeyboardArrowUpIcon />
+							) : (
+								<KeyboardArrowDownIcon />
+							)}
 						</IconButton>
 					</ListItemSecondaryAction>
 				</ListItemButton>

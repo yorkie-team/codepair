@@ -12,7 +12,7 @@ import { useGetWorkspaceListQuery } from "../../hooks/api/workspace";
 import InfiniteScroll from "react-infinite-scroller";
 import { useMemo } from "react";
 import { Workspace } from "../../hooks/api/types/workspace";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 
 interface WorkspaceListPopoverProps extends PopoverProps {
@@ -21,6 +21,7 @@ interface WorkspaceListPopoverProps extends PopoverProps {
 
 function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const { width, ...popoverProps } = props;
+	const navigate = useNavigate();
 	const params = useParams();
 	const { data: workspacePageList, hasNextPage, fetchNextPage } = useGetWorkspaceListQuery();
 	const workspaceList = useMemo(() => {
@@ -28,6 +29,12 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 			return prev.concat(page.workspaces);
 		}, [] as Array<Workspace>);
 	}, [workspacePageList?.pages]);
+
+	const handleMoveToSelectedWorkspace = (workspaceId: string) => {
+		if (params.workspaceId === workspaceId) return;
+
+		navigate(`/workspace/${workspaceId}`);
+	};
 
 	return (
 		<Popover
@@ -60,7 +67,10 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 				>
 					<MenuList sx={{ width }}>
 						{workspaceList?.map((workspace) => (
-							<MenuItem key={workspace.id}>
+							<MenuItem
+								key={workspace.id}
+								onClick={() => handleMoveToSelectedWorkspace(workspace.id)}
+							>
 								<ListItemText
 									primaryTypographyProps={{
 										noWrap: true,
@@ -70,7 +80,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 								</ListItemText>
 								{params.workspaceId === workspace.id && (
 									<ListItemSecondaryAction>
-										<CheckIcon />
+										<CheckIcon fontSize="small" />
 									</ListItemSecondaryAction>
 								)}
 							</MenuItem>
