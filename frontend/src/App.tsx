@@ -12,6 +12,7 @@ import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import MainLayout from "./components/layouts/MainLayout";
 import Index from "./pages/Index";
+import CallbackIndex from "./pages/auth/callback/Index";
 
 const router = createBrowserRouter([
 	{
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
 				element: <EditorIndex />,
 			},
 		],
+	},
+	{
+		path: "auth/callback",
+		element: <CallbackIndex />,
 	},
 ]);
 

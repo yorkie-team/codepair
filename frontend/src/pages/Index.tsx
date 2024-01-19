@@ -11,7 +11,7 @@ const socialLoginList = [
 
 function Index() {
 	const handleLogin = (provider: string) => {
-		window.location.href = `${import.meta.env.FRONTEND_BASE_URL}/auth/login/${provider}`;
+		window.location.href = `${import.meta.env.VITE_API_ADDR}/auth/login/${provider}`;
 	};
 
 	return (
