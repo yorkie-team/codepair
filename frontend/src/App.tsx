@@ -11,11 +11,18 @@ import EditorIndex from "./pages/editor/Index";
 import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import MainLayout from "./components/layouts/MainLayout";
+import Index from "./pages/Index";
 
 const router = createBrowserRouter([
 	{
 		path: "",
 		element: <MainLayout />,
+		children: [
+			{
+				path: "",
+				element: <Index />,
+			},
+		],
 	},
 	{
 		path: ":documentId",
