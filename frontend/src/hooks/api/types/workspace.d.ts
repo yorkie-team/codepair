@@ -6,3 +6,8 @@ export interface Workspace {
 }
 
 export class GetWorkspaceResponse extends Workspace {}
+
+export class GetWorkspaceListResponse {
+	cursor: string | null;
+	workspaces: Array<Workspace>;
+}
