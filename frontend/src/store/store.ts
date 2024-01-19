@@ -4,12 +4,14 @@ import configSlice from "./configSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 import authSlice from "./authSlice";
+import userSlice from "./userSlice";
 
 const reducers = combineReducers({
 	// Persistence
 	auth: authSlice,
 	config: configSlice,
 	// Volatile
+	user: userSlice,
 	editor: editorSlice,
 });
 
