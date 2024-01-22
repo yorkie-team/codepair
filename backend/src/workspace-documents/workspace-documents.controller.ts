@@ -133,7 +133,7 @@ export class WorkspaceDocumentsController {
 			workspaceId,
 			documentId,
 			createWorkspaceDocumentShareTokenDto.role,
-			createWorkspaceDocumentShareTokenDto.expirationDate
+			createWorkspaceDocumentShareTokenDto.expiredAt
 		);
 	}
 }

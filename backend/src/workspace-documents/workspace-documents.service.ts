@@ -2,17 +2,14 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Document, Prisma } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
-import { JwtService } from "@nestjs/jwt";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
 import slugify from "slugify";
+import { generateRandomKey } from "src/utils/functions/random-string";
 
 @Injectable()
 export class WorkspaceDocumentsService {
-	constructor(
-		private prismaService: PrismaService,
-		private jwtService: JwtService
-	) {}
+	constructor(private prismaService: PrismaService) {}
 
 	async create(userId: string, workspaceId: string, title: string) {
 		try {
@@ -134,18 +131,19 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
-		const sharingToken = this.jwtService.sign(
-			{
+		const token = generateRandomKey();
+
+		await this.prismaService.documentSharingToken.create({
+			data: {
 				documentId: document.id,
+				token,
+				expiredAt: expirationDate,
 				role,
 			},
-			{
-				expiresIn: expirationDate.getTime() - Date.now(),
-			}
-		);
+		});
 
 		return {
-			sharingToken,
+			sharingToken: token,
 		};
 	}
 }
