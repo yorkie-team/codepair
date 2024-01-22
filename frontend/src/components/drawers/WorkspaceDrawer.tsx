@@ -27,6 +27,7 @@ import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 import ThemeButton from "../common/ThemeButton";
 import PeopleIcon from "@mui/icons-material/People";
+import MemberModal from "../modals/MemberModal";
 
 const DRAWER_WIDTH = 240;
 
@@ -156,6 +157,7 @@ function WorkspaceDrawer() {
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateWorkspaceModalOpen}
 			/>
+			<MemberModal />
 		</Drawer>
 	);
 }
