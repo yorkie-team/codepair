@@ -8,8 +8,10 @@ import {
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
+	ListItemIcon,
 	ListItemSecondaryAction,
 	ListItemText,
+	Stack,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useSelector } from "react-redux";
@@ -24,6 +26,8 @@ import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
+import ThemeButton from "../common/ThemeButton";
+import CodePairIcon from "../icons/CodePairIcon";
 
 const DRAWER_WIDTH = 240;
 
@@ -116,25 +120,28 @@ function WorkspaceDrawer() {
 				</Button>
 			</ListItem>
 			<Divider />
-			<Box sx={{ mt: "auto" }}>
-				<Divider />
-				<ListItem disablePadding>
-					<ListItemButton onClick={handleOpenProfilePopover}>
-						<ListItemAvatar>
-							<Avatar>{userStore.data?.nickname.charAt(0)}</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary={userStore.data?.nickname} />
-						<ListItemSecondaryAction>
-							<MoreVertIcon />
-						</ListItemSecondaryAction>
-					</ListItemButton>
-					<ProfilePopover
-						open={Boolean(profileAnchorEl)}
-						anchorEl={profileAnchorEl}
-						onClose={handleCloseProfilePopover}
-					/>
-				</ListItem>
-			</Box>
+			<ListItem sx={{ mt: "auto" }}>
+				<Stack width={1} alignItems="center" justifyContent="flex-end" direction="row">
+					<ThemeButton />
+				</Stack>
+			</ListItem>
+			<Divider />
+			<ListItem disablePadding>
+				<ListItemButton onClick={handleOpenProfilePopover}>
+					<ListItemAvatar>
+						<Avatar>{userStore.data?.nickname.charAt(0)}</Avatar>
+					</ListItemAvatar>
+					<ListItemText primary={userStore.data?.nickname} />
+					<ListItemSecondaryAction>
+						<MoreVertIcon />
+					</ListItemSecondaryAction>
+				</ListItemButton>
+				<ProfilePopover
+					open={Boolean(profileAnchorEl)}
+					anchorEl={profileAnchorEl}
+					onClose={handleCloseProfilePopover}
+				/>
+			</ListItem>
 			<CreateModal
 				open={createWorkspaceModalOpen}
 				title="Note"
