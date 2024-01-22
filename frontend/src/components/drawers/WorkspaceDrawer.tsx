@@ -58,7 +58,7 @@ function WorkspaceDrawer() {
 					boxSizing: "border-box",
 				},
 			}}
-			variant="persistent"
+			variant="permanent"
 			anchor="left"
 			open
 		>

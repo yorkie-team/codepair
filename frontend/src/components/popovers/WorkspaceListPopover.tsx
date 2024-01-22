@@ -30,10 +30,10 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 		}, [] as Array<Workspace>);
 	}, [workspacePageList?.pages]);
 
-	const handleMoveToSelectedWorkspace = (workspaceId: string) => {
-		if (params.workspaceId === workspaceId) return;
+	const handleMoveToSelectedWorkspace = (workspaceSlug: string) => {
+		if (params.workspaceSlug === workspaceSlug) return;
 
-		navigate(`/workspace/${workspaceId}`);
+		navigate(`/workspace/${workspaceSlug}`);
 	};
 
 	return (
@@ -50,7 +50,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 		>
 			<Box
 				style={{
-					height: 300,
+					maxHeight: 300,
 					overflow: "auto",
 				}}
 			>
@@ -69,7 +69,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 						{workspaceList?.map((workspace) => (
 							<MenuItem
 								key={workspace.id}
-								onClick={() => handleMoveToSelectedWorkspace(workspace.id)}
+								onClick={() => handleMoveToSelectedWorkspace(workspace.slug)}
 							>
 								<ListItemText
 									primaryTypographyProps={{
@@ -79,7 +79,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 								>
 									{workspace.title}
 								</ListItemText>
-								{params.workspaceId === workspace.id && (
+								{params.workspaceSlug === workspace.slug && (
 									<ListItemSecondaryAction>
 										<CheckIcon fontSize="small" />
 									</ListItemSecondaryAction>
