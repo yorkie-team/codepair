@@ -43,4 +43,25 @@ export class DocumentsService {
 			role,
 		};
 	}
+
+	async findOneBySlug(userId: string, documentSlug: string) {
+		try {
+			const document = await this.prismaService.document.findFirstOrThrow({
+				where: {
+					slug: documentSlug,
+				},
+			});
+
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId: document.workspaceId,
+				},
+			});
+
+			return document;
+		} catch (e) {
+			throw new NotFoundException();
+		}
+	}
 }

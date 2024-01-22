@@ -7,3 +7,5 @@ export class Document {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export class GetDocumentResponse extends Document {}
