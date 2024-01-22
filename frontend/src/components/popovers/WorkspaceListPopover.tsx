@@ -49,24 +49,24 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 			}}
 			{...popoverProps}
 		>
-			<Box
-				style={{
-					maxHeight: 300,
-					overflow: "auto",
-				}}
-			>
-				<InfiniteScroll
-					pageStart={0}
-					loadMore={() => fetchNextPage()}
-					hasMore={hasNextPage}
-					loader={
-						<Box className="loader" key={0}>
-							<CircularProgress size="sm" />
-						</Box>
-					}
-					useWindow={false}
+			<MenuList sx={{ width }}>
+				<Box
+					style={{
+						maxHeight: 300,
+						overflow: "auto",
+					}}
 				>
-					<MenuList sx={{ width }}>
+					<InfiniteScroll
+						pageStart={0}
+						loadMore={() => fetchNextPage()}
+						hasMore={hasNextPage}
+						loader={
+							<Box className="loader" key={0}>
+								<CircularProgress size="sm" />
+							</Box>
+						}
+						useWindow={false}
+					>
 						{workspaceList?.map((workspace) => (
 							<MenuItem
 								key={workspace.id}
@@ -87,9 +87,9 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 								)}
 							</MenuItem>
 						))}
-					</MenuList>
-				</InfiniteScroll>
-			</Box>
+					</InfiniteScroll>
+				</Box>
+			</MenuList>
 		</Popover>
 	);
 }
