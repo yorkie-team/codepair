@@ -1,6 +1,11 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { GetWorkspaceListResponse, GetWorkspaceResponse } from "./types/workspace";
+import {
+	CreateWorkspaceRequest,
+	CreateWorkspaceResponse,
+	GetWorkspaceListResponse,
+	GetWorkspaceResponse,
+} from "./types/workspace";
 
 export const generateGetWorkspaceQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId];
@@ -43,4 +48,14 @@ export const useGetWorkspaceListQuery = () => {
 	});
 
 	return query;
+};
+
+export const useCreateWorkspaceMutation = () => {
+	return useMutation({
+		mutationFn: async (data: CreateWorkspaceRequest) => {
+			const res = await axios.post<CreateWorkspaceResponse>("/workspaces", data);
+
+			return res.data;
+		},
+	});
 };

@@ -22,7 +22,7 @@ function WorkspaceIndex() {
 	return (
 		<Stack direction="row">
 			<WorkspaceDrawer />
-			<Box p={2}>
+			<Box p={2} width={1}>
 				<Grid
 					container
 					spacing={{ xs: 2, md: 3 }}

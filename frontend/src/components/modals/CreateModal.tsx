@@ -1,13 +1,22 @@
 import { Button, FormControl, Modal, ModalProps, Paper, Stack, Typography } from "@mui/material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 
-interface CreateModalProps extends ModalProps {
+interface CreateRequest {
 	title: string;
-	onSuccess: (data: { title: string }) => Promise<void>;
+}
+
+interface CreateModalProps extends Omit<ModalProps, "children"> {
+	title: string;
+	onSuccess: (data: CreateRequest) => Promise<void>;
 }
 
 function CreateModal(props: CreateModalProps) {
 	const { title, onSuccess, ...modalProps } = props;
+
+	const handleCreate = async (data: CreateRequest) => {
+		await onSuccess(data);
+		modalProps?.onClose?.(new Event("Close Modal"), "escapeKeyDown");
+	};
 
 	return (
 		<Modal disableAutoFocus {...modalProps}>
@@ -24,7 +33,7 @@ function CreateModal(props: CreateModalProps) {
 				<Stack gap={4}>
 					<Typography variant="h5">Create New {title}</Typography>
 					<FormControl>
-						<FormContainer defaultValues={{ title: "" }} onSuccess={onSuccess}>
+						<FormContainer defaultValues={{ title: "" }} onSuccess={handleCreate}>
 							<Stack gap={4} alignItems="flex-end">
 								<TextFieldElement
 									variant="standard"
