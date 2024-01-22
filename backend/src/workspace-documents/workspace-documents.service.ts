@@ -27,7 +27,9 @@ export class WorkspaceDocumentsService {
 
 		const duplicatedDocumentList = await this.prismaService.document.findMany({
 			where: {
-				slug,
+				slug: {
+					startsWith: slug,
+				},
 			},
 		});
 
