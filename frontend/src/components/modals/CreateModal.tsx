@@ -1,5 +1,15 @@
-import { Button, FormControl, Modal, ModalProps, Paper, Stack, Typography } from "@mui/material";
+import {
+	Button,
+	FormControl,
+	IconButton,
+	Modal,
+	ModalProps,
+	Paper,
+	Stack,
+	Typography,
+} from "@mui/material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface CreateRequest {
 	title: string;
@@ -13,9 +23,13 @@ interface CreateModalProps extends Omit<ModalProps, "children"> {
 function CreateModal(props: CreateModalProps) {
 	const { title, onSuccess, ...modalProps } = props;
 
+	const handleCloseModal = () => {
+		modalProps?.onClose?.(new Event("Close Modal"), "escapeKeyDown");
+	};
+
 	const handleCreate = async (data: CreateRequest) => {
 		await onSuccess(data);
-		modalProps?.onClose?.(new Event("Close Modal"), "escapeKeyDown");
+		handleCloseModal();
 	};
 
 	return (
@@ -30,6 +44,16 @@ function CreateModal(props: CreateModalProps) {
 					width: 400,
 				}}
 			>
+				<IconButton
+					sx={{
+						position: "absolute",
+						top: 28,
+						right: 28,
+					}}
+					onClick={handleCloseModal}
+				>
+					<CloseIcon />
+				</IconButton>
 				<Stack gap={4}>
 					<Typography variant="h5">Create New {title}</Typography>
 					<FormControl>
