@@ -73,7 +73,9 @@ export class UsersService {
 
 		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
 			where: {
-				slug,
+				slug: {
+					startsWith: slug,
+				},
 			},
 		});
 
