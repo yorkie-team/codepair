@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindUserResponse } from "./types/find-user-response.type";
 import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import slugify from "slugify";
 
 @Injectable()
 export class UsersService {
@@ -11,7 +12,11 @@ export class UsersService {
 	async findOne(userId: string): Promise<FindUserResponse> {
 		const foundUserWorkspace = await this.prismaService.userWorkspace.findFirst({
 			select: {
-				workspaceId: true,
+				workspace: {
+					select: {
+						slug: true,
+					},
+				},
 			},
 			where: {
 				userId,
@@ -35,7 +40,7 @@ export class UsersService {
 
 		return {
 			...foundUser,
-			lastWorkspaceId: foundUserWorkspace.workspaceId,
+			lastWorkspaceSlug: foundUserWorkspace.workspace.slug,
 		};
 	}
 
@@ -63,9 +68,23 @@ export class UsersService {
 			},
 		});
 
+		const title = `${user.nickname}'s Workspace`;
+		let slug = slugify(title);
+
+		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
+			where: {
+				slug,
+			},
+		});
+
+		if (duplicatedWorkspaceList.length) {
+			slug += `-${duplicatedWorkspaceList.length + 1}`;
+		}
+
 		const workspace = await this.prismaService.workspace.create({
 			data: {
-				title: `${user.nickname}'s Workspace`,
+				title,
+				slug,
 			},
 		});
 
