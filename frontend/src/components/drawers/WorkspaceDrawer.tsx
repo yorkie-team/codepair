@@ -22,6 +22,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import AddIcon from "@mui/icons-material/Add";
+import CreateModal from "../modals/CreateModal";
 
 const DRAWER_WIDTH = 240;
 
@@ -122,6 +123,7 @@ function WorkspaceDrawer() {
 					/>
 				</ListItem>
 			</Box>
+			<CreateModal open title="Note" />
 		</Drawer>
 	);
 }
