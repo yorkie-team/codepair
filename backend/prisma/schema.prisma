@@ -65,7 +65,7 @@ model Document {
 
 model WorkspaceInvitationToken {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  token       String
+  token       String    @unique
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String    @map("workspace_id") @db.ObjectId
   expiredAt   DateTime? @map("expired_at")
@@ -77,7 +77,8 @@ model WorkspaceInvitationToken {
 
 model DocumentSharingToken {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  token      String
+  token      String    @unique
+  role       String
   document   Document  @relation(fields: [documentId], references: [id])
   documentId String    @map("document_id") @db.ObjectId
   expiredAt  DateTime? @map("expired_at")
