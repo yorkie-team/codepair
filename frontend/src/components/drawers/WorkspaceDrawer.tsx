@@ -7,6 +7,7 @@ import {
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
+	ListItemIcon,
 	ListItemSecondaryAction,
 	ListItemText,
 	Stack,
@@ -25,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 import ThemeButton from "../common/ThemeButton";
+import PeopleIcon from "@mui/icons-material/People";
 
 const DRAWER_WIDTH = 240;
 
@@ -115,6 +117,15 @@ function WorkspaceDrawer() {
 				>
 					New Note
 				</Button>
+			</ListItem>
+			<Divider />
+			<ListItem disablePadding>
+				<ListItemButton>
+					<ListItemIcon>
+						<PeopleIcon />
+					</ListItemIcon>
+					<ListItemText primary="Members" />
+				</ListItemButton>
 			</ListItem>
 			<Divider />
 			<ListItem sx={{ mt: "auto" }}>
