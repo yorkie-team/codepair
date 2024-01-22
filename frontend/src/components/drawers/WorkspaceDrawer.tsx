@@ -7,6 +7,7 @@ import {
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
+	ListItemIcon,
 	ListItemSecondaryAction,
 	ListItemText,
 	Stack,
@@ -25,6 +26,8 @@ import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 import ThemeButton from "../common/ThemeButton";
+import PeopleIcon from "@mui/icons-material/People";
+import MemberModal from "../modals/MemberModal";
 
 const DRAWER_WIDTH = 240;
 
@@ -38,6 +41,7 @@ function WorkspaceDrawer() {
 		(EventTarget & Element) | null
 	>(null);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
+	const [memberModalOpen, setMemberModalOpen] = useState(false);
 
 	const handleOpenProfilePopover: MouseEventHandler = (event) => {
 		setProfileAnchorEl(event.currentTarget);
@@ -61,6 +65,10 @@ function WorkspaceDrawer() {
 
 	const handleCreateWorkspaceModalOpen = () => {
 		setCreateWorkspaceModalOpen((prev) => !prev);
+	};
+
+	const handleMemberModalOpen = () => {
+		setMemberModalOpen((prev) => !prev);
 	};
 
 	return (
@@ -117,6 +125,15 @@ function WorkspaceDrawer() {
 				</Button>
 			</ListItem>
 			<Divider />
+			<ListItem disablePadding>
+				<ListItemButton onClick={handleMemberModalOpen}>
+					<ListItemIcon>
+						<PeopleIcon />
+					</ListItemIcon>
+					<ListItemText primary="Members" />
+				</ListItemButton>
+			</ListItem>
+			<Divider />
 			<ListItem sx={{ mt: "auto" }}>
 				<Stack width={1} alignItems="center" justifyContent="flex-end" direction="row">
 					<ThemeButton />
@@ -145,6 +162,7 @@ function WorkspaceDrawer() {
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateWorkspaceModalOpen}
 			/>
+			<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
 		</Drawer>
 	);
 }
