@@ -1,5 +1,5 @@
 import EditorLayout from "./components/layouts/EditorLayout";
-import EditorIndex from "./pages/editor/Index";
+import EditorIndex from "./pages/document/Index";
 import MainLayout from "./components/layouts/MainLayout";
 import Index from "./pages/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
@@ -38,12 +38,12 @@ const codePairRoutes = [
 		],
 	},
 	{
-		path: ":documentId",
-		accessType: AccessType.PUBLIC,
+		path: "document",
+		accessType: AccessType.PRIVATE,
 		element: <EditorLayout />,
 		children: [
 			{
-				path: "",
+				path: ":documentSlug",
 				element: <EditorIndex />,
 			},
 		],

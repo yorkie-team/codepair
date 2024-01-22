@@ -25,7 +25,6 @@ import { AuthroizedRequest } from "src/utils/types/req.type";
 import { CreateWorkspaceDocumentDto } from "./dto/create-workspace-document.dto";
 import { CreateWorkspaceDocumentResponse } from "./types/create-workspace-document-response.type";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
-import { FindWorkspaceDocumentResponse } from "./types/find-workspace-document-response.type";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { CreateWorkspaceDocumentShareTokenDto } from "./dto/create-workspace-document-share-token.dto";
@@ -35,25 +34,6 @@ import { CreateWorkspaceDocumentShareTokenDto } from "./dto/create-workspace-doc
 @Controller("workspaces/:workspace_id/documents")
 export class WorkspaceDocumentsController {
 	constructor(private workspaceDocumentsService: WorkspaceDocumentsService) {}
-
-	@Get(":document_slug")
-	@ApiOperation({
-		summary: "Retrieve a Document in the Workspace",
-		description: "If the user has the access permissions, return a document.",
-	})
-	@ApiFoundResponse({ type: FindWorkspaceDocumentResponse })
-	@ApiNotFoundResponse({
-		type: HttpExceptionResponse,
-		description:
-			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
-	})
-	async findOne(
-		@Req() req: AuthroizedRequest,
-		@Param("workspace_id") workspaceId: string,
-		@Param("document_slug") documentSlug: string
-	): Promise<FindWorkspaceDocumentResponse> {
-		return this.workspaceDocumentsService.findOneBySlug(req.user.id, workspaceId, documentSlug);
-	}
 
 	@Get("")
 	@ApiOperation({

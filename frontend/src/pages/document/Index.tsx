@@ -14,18 +14,20 @@ import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Preview from "../../components/editor/Preview";
 import { useParams } from "react-router-dom";
+import { useGetDocumentQuery } from "../../hooks/api/document";
 
 function EditorIndex() {
+	const params = useParams();
 	const dispatch = useDispatch();
 	const windowWidth = useWindowWidth();
 	const editorStore = useSelector(selectEditor);
-	const params = useParams();
+	const { data: document } = useGetDocumentQuery(params.documentSlug || "");
 
 	useEffect(() => {
 		let client: yorkie.Client;
 		let doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 
-		if (!params.documentId) return;
+		if (!document?.yorkieDocumentId) return;
 
 		const initializeYorkie = async () => {
 			client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
@@ -33,7 +35,7 @@ function EditorIndex() {
 			});
 			await client.activate();
 
-			doc = new yorkie.Document(params.documentId as string);
+			doc = new yorkie.Document(document?.yorkieDocumentId as string);
 
 			await client.attach(doc, {
 				initialPresence: {
@@ -56,7 +58,7 @@ function EditorIndex() {
 
 			cleanUp();
 		};
-	}, [dispatch, params.documentId]);
+	}, [dispatch, document?.yorkieDocumentId]);
 
 	return (
 		<Box height="calc(100% - 64px)">

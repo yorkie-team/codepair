@@ -47,25 +47,6 @@ export class WorkspaceDocumentsService {
 		});
 	}
 
-	async findOneBySlug(userId: string, workspaceId: string, documentSlug: string) {
-		try {
-			await this.prismaService.userWorkspace.findFirstOrThrow({
-				where: {
-					userId,
-					workspaceId,
-				},
-			});
-
-			return this.prismaService.document.findFirstOrThrow({
-				where: {
-					slug: documentSlug,
-				},
-			});
-		} catch (e) {
-			throw new NotFoundException();
-		}
-	}
-
 	async findMany(
 		userId: string,
 		workspaceId: string,

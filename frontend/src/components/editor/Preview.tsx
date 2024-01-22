@@ -5,16 +5,14 @@ import { selectEditor } from "../../store/editorSlice";
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./editor.css";
-import { useParams } from "react-router-dom";
 
 function Preview() {
-	const params = useParams();
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
 
 	useEffect(() => {
-		if (!editorStore.doc || !params.documentId) return;
+		if (!editorStore.doc) return;
 
 		setContent(editorStore.doc?.getRoot().content?.toString() || "");
 
@@ -26,7 +24,7 @@ function Preview() {
 			unsubsribe();
 			setContent("");
 		};
-	}, [editorStore.doc, params.documentId]);
+	}, [editorStore.doc]);
 
 	if (!editorStore?.doc) return <CircularProgress sx={{ marginX: "auto", mt: 4 }} />;
 
