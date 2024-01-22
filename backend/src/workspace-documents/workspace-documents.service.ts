@@ -5,6 +5,7 @@ import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents
 import { JwtService } from "@nestjs/jwt";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
+import slugify from "slugify";
 
 @Injectable()
 export class WorkspaceDocumentsService {
@@ -25,9 +26,22 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
+		let slug = slugify(title);
+
+		const duplicatedDocumentList = await this.prismaService.document.findMany({
+			where: {
+				slug,
+			},
+		});
+
+		if (duplicatedDocumentList.length) {
+			slug += `-${duplicatedDocumentList.length + 1}`;
+		}
+
 		return this.prismaService.document.create({
 			data: {
 				title,
+				slug,
 				workspaceId,
 				yorkieDocumentId: Math.random().toString(36).substring(7),
 			},

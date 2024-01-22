@@ -6,6 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { InvitationTokenPayload } from "./types/inviation-token-payload.type";
 import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import slugify from "slugify";
 
 @Injectable()
 export class WorkspacesService {
@@ -15,9 +16,22 @@ export class WorkspacesService {
 	) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
+		let slug = slugify(title);
+
+		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
+			where: {
+				slug,
+			},
+		});
+
+		if (duplicatedWorkspaceList.length) {
+			slug += `-${duplicatedWorkspaceList.length + 1}`;
+		}
+
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
+				slug,
 			},
 		});
 
