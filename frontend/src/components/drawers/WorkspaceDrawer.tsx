@@ -26,7 +26,7 @@ const DRAWER_WIDTH = 240;
 function WorkspaceDrawer() {
 	const params = useParams();
 	const userStore = useSelector(selectUser);
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceId);
+	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
 	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
 		(EventTarget & Element) | null
