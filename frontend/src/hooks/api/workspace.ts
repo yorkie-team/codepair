@@ -7,8 +7,8 @@ import {
 	GetWorkspaceResponse,
 } from "./types/workspace";
 
-export const generateGetWorkspaceQueryKey = (workspaceId: string) => {
-	return ["workspaces", workspaceId];
+export const generateGetWorkspaceQueryKey = (workspaceSlug: string) => {
+	return ["workspaces", workspaceSlug];
 };
 
 export const generateGetWorkspaceListQueryKey = () => {

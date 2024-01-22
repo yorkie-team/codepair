@@ -30,9 +30,11 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const { data: workspacePageList, hasNextPage, fetchNextPage } = useGetWorkspaceListQuery();
 	const { mutateAsync: createWorkspace } = useCreateWorkspaceMutation();
 	const workspaceList = useMemo(() => {
-		return workspacePageList?.pages.reduce((prev: Array<Workspace>, page) => {
-			return prev.concat(page.workspaces);
-		}, [] as Array<Workspace>);
+		return (
+			workspacePageList?.pages.reduce((prev: Array<Workspace>, page) => {
+				return prev.concat(page.workspaces);
+			}, [] as Array<Workspace>) ?? []
+		);
 	}, [workspacePageList?.pages]);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
 
@@ -91,7 +93,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 							}
 							useWindow={false}
 						>
-							{workspaceList?.map((workspace) => (
+							{workspaceList.map((workspace) => (
 								<MenuItem
 									key={workspace.id}
 									onClick={() => handleMoveToSelectedWorkspace(workspace.slug)}

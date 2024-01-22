@@ -51,8 +51,8 @@ function WorkspaceIndex() {
 							spacing={{ xs: 2, md: 3 }}
 							columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
 						>
-							{documentList.map((document, idx) => (
-								<Grid key={idx} item xs={4} sm={4} md={4} lg={3}>
+							{documentList.map((document) => (
+								<Grid key={document.id} item xs={4} sm={4} md={4} lg={3}>
 									<DocumentCard document={document} />
 								</Grid>
 							))}
