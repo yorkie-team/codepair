@@ -16,7 +16,13 @@ import { useMemo } from "react";
 import { User } from "../../hooks/api/types/user";
 import InfiniteScroll from "react-infinite-scroller";
 
-function MemeberModal() {
+interface MemeberModalProps {
+	open: boolean;
+	onClose: () => void;
+}
+
+function MemeberModal(props: MemeberModalProps) {
+	const { open, onClose } = props;
 	const params = useParams();
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
 	const {
@@ -33,7 +39,7 @@ function MemeberModal() {
 	}, [workspaceUserPageList?.pages]);
 
 	return (
-		<Modal open disableAutoFocus>
+		<Modal open={open} disableAutoFocus onClose={onClose}>
 			<Paper
 				sx={{
 					position: "absolute",
@@ -50,7 +56,7 @@ function MemeberModal() {
 						top: 28,
 						right: 28,
 					}}
-					// onClick={handleCloseModal}
+					onClick={onClose}
 				>
 					<CloseIcon />
 				</IconButton>

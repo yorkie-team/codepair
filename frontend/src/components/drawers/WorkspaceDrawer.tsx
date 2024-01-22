@@ -41,6 +41,7 @@ function WorkspaceDrawer() {
 		(EventTarget & Element) | null
 	>(null);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
+	const [memberModalOpen, setMemberModalOpen] = useState(false);
 
 	const handleOpenProfilePopover: MouseEventHandler = (event) => {
 		setProfileAnchorEl(event.currentTarget);
@@ -64,6 +65,10 @@ function WorkspaceDrawer() {
 
 	const handleCreateWorkspaceModalOpen = () => {
 		setCreateWorkspaceModalOpen((prev) => !prev);
+	};
+
+	const handleMemberModalOpen = () => {
+		setMemberModalOpen((prev) => !prev);
 	};
 
 	return (
@@ -121,7 +126,7 @@ function WorkspaceDrawer() {
 			</ListItem>
 			<Divider />
 			<ListItem disablePadding>
-				<ListItemButton>
+				<ListItemButton onClick={handleMemberModalOpen}>
 					<ListItemIcon>
 						<PeopleIcon />
 					</ListItemIcon>
@@ -157,7 +162,7 @@ function WorkspaceDrawer() {
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateWorkspaceModalOpen}
 			/>
-			<MemberModal />
+			<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
 		</Drawer>
 	);
 }
