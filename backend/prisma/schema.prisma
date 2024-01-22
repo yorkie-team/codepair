@@ -36,27 +36,53 @@ model UserWorkspace {
 }
 
 model Workspace {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
-  title             String
-  slug              String
-  createdAt         DateTime        @default(now()) @map("created_at")
-  updatedAt         DateTime        @updatedAt @map("updated_at")
-  documentList      Document[]
-  userWorkspaceList UserWorkspace[]
+  id                           String                     @id @default(auto()) @map("_id") @db.ObjectId
+  title                        String
+  slug                         String
+  createdAt                    DateTime                   @default(now()) @map("created_at")
+  updatedAt                    DateTime                   @updatedAt @map("updated_at")
+  documentList                 Document[]
+  userWorkspaceList            UserWorkspace[]
+  workspaceInvitationTokenList WorkspaceInvitationToken[]
 
   @@map("workspaces")
 }
 
 model Document {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  yorkieDocumentId String    @map("yorkie_document_id")
-  title            String
-  slug             String
-  content          String?
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  workspace        Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId      String    @map("workspace_id") @db.ObjectId
+  id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
+  yorkieDocumentId         String                 @map("yorkie_document_id")
+  title                    String
+  slug                     String
+  content                  String?
+  createdAt                DateTime               @default(now()) @map("created_at")
+  updatedAt                DateTime               @updatedAt @map("updated_at")
+  workspace                Workspace              @relation(fields: [workspaceId], references: [id])
+  workspaceId              String                 @map("workspace_id") @db.ObjectId
+  documentSharingTokenList DocumentSharingToken[]
 
   @@map("documents")
+}
+
+model WorkspaceInvitationToken {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  token       String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String    @map("workspace_id") @db.ObjectId
+  expiredAt   DateTime? @map("expired_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("workspace_invitation_tokens")
+}
+
+model DocumentSharingToken {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  token      String
+  document   Document  @relation(fields: [documentId], references: [id])
+  documentId String    @map("document_id") @db.ObjectId
+  expiredAt  DateTime? @map("expired_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@map("document_sharing_token")
 }
