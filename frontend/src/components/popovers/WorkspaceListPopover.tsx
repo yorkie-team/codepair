@@ -34,6 +34,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 		if (params.workspaceSlug === workspaceSlug) return;
 
 		navigate(`/workspace/${workspaceSlug}`);
+		popoverProps?.onClose?.(new Event("Close Popover"), "backdropClick");
 	};
 
 	return (
