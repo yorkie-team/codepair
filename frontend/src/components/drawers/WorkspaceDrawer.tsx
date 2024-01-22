@@ -1,6 +1,7 @@
 import {
 	Avatar,
 	Box,
+	Button,
 	Divider,
 	Drawer,
 	IconButton,
@@ -20,6 +21,9 @@ import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
+import AddIcon from "@mui/icons-material/Add";
+import CreateModal from "../modals/CreateModal";
+import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 
 const DRAWER_WIDTH = 240;
 
@@ -27,10 +31,12 @@ function WorkspaceDrawer() {
 	const params = useParams();
 	const userStore = useSelector(selectUser);
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
 	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
 		(EventTarget & Element) | null
 	>(null);
+	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
 
 	const handleOpenProfilePopover: MouseEventHandler = (event) => {
 		setProfileAnchorEl(event.currentTarget);
@@ -46,6 +52,14 @@ function WorkspaceDrawer() {
 
 	const handleCloseWorkspacePopover = () => {
 		setWorkspaceListAnchorEl(null);
+	};
+
+	const handleCreateWorkspace = async (data: { title: string }) => {
+		await createDocument(data);
+	};
+
+	const handleCreateWorkspaceModalOpen = () => {
+		setCreateWorkspaceModalOpen((prev) => !prev);
 	};
 
 	return (
@@ -89,6 +103,19 @@ function WorkspaceDrawer() {
 				/>
 			</ListItem>
 			<Divider />
+			<ListItem>
+				<Button
+					variant="contained"
+					startIcon={<AddIcon />}
+					sx={{
+						width: 1,
+					}}
+					onClick={handleCreateWorkspaceModalOpen}
+				>
+					New Note
+				</Button>
+			</ListItem>
+			<Divider />
 			<Box sx={{ mt: "auto" }}>
 				<Divider />
 				<ListItem disablePadding>
@@ -108,6 +135,12 @@ function WorkspaceDrawer() {
 					/>
 				</ListItem>
 			</Box>
+			<CreateModal
+				open={createWorkspaceModalOpen}
+				title="Note"
+				onSuccess={handleCreateWorkspace}
+				onClose={handleCreateWorkspaceModalOpen}
+			/>
 		</Drawer>
 	);
 }

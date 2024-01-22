@@ -22,6 +22,11 @@ function App() {
 		const defaultMode = prefersDarkMode ? "dark" : "light";
 
 		return createTheme({
+			typography: {
+				button: {
+					textTransform: "none",
+				},
+			},
 			palette: {
 				mode: config.theme == "default" ? defaultMode : config.theme,
 			},

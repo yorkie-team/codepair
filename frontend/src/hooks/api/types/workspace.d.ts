@@ -12,3 +12,9 @@ export class GetWorkspaceListResponse {
 	cursor: string | null;
 	workspaces: Array<Workspace>;
 }
+
+export class CreateWorkspaceRequest {
+	title: string;
+}
+
+export class CreateWorkspaceResponse extends Workspace {}

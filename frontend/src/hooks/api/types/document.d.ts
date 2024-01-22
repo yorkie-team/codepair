@@ -7,8 +7,3 @@ export class Document {
 	createdAt: Date;
 	updatedAt: Date;
 }
-
-export class GetWorkspaceDocumentListResponse {
-	cursor: string | null;
-	documents: Array<Workspace>;
-}
