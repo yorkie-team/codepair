@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { GetWorkspaceDocumentListResponse } from "./types/workspaceDocument";
+import { GetWorkspaceDocumentListResponse } from "./types/document";
 
 export const generateGetWorkspaceDocumentListQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId, "documents"];

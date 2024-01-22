@@ -1,7 +1,8 @@
-export interface Document {
+export class Document {
 	id: string;
 	yorkieDocumentId: string;
 	title: string;
+	slug: string;
 	content?: string;
 	createdAt: Date;
 	updatedAt: Date;
