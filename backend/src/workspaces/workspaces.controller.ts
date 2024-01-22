@@ -32,6 +32,7 @@ import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
+import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth()
@@ -115,9 +116,14 @@ export class WorkspacesController {
 	})
 	async createInvitationToken(
 		@Req() req: AuthroizedRequest,
-		@Param("workspace_id") workspaceId: string
+		@Param("workspace_id") workspaceId: string,
+		@Body() createInvitationTokenDto: CreateInvitationTokenDto
 	): Promise<CreateInvitationTokenResponse> {
-		return this.workspacesService.createInvitationToken(req.user.id, workspaceId);
+		return this.workspacesService.createInvitationToken(
+			req.user.id,
+			workspaceId,
+			createInvitationTokenDto.expiredAt
+		);
 	}
 
 	@Post("join")

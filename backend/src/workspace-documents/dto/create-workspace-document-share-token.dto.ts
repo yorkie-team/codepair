@@ -10,5 +10,5 @@ export class CreateWorkspaceDocumentShareTokenDto {
 	@ApiProperty({ type: Date, description: "Share link expiration date" })
 	@Type(() => Date)
 	@IsDate()
-	expirationDate: Date;
+	expiredAt: Date;
 }
