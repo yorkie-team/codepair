@@ -13,7 +13,6 @@ import { useGetWorkspaceUserListQuery } from "../../hooks/api/workspaceUser";
 import { useParams } from "react-router-dom";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import { useMemo } from "react";
-import { GetWorkspaceUserListResponse } from "../../hooks/api/types/workspaceUser";
 import { User } from "../../hooks/api/types/user";
 import InfiniteScroll from "react-infinite-scroller";
 
