@@ -1,6 +1,5 @@
 import {
 	Avatar,
-	Box,
 	Button,
 	Divider,
 	Drawer,
@@ -8,7 +7,6 @@ import {
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
-	ListItemIcon,
 	ListItemSecondaryAction,
 	ListItemText,
 	Stack,
@@ -27,7 +25,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 import ThemeButton from "../common/ThemeButton";
-import CodePairIcon from "../icons/CodePairIcon";
 
 const DRAWER_WIDTH = 240;
 
