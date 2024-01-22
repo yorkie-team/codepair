@@ -1,6 +1,7 @@
 import {
 	Avatar,
 	Box,
+	Button,
 	Divider,
 	Drawer,
 	IconButton,
@@ -20,6 +21,7 @@ import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
+import AddIcon from "@mui/icons-material/Add";
 
 const DRAWER_WIDTH = 240;
 
@@ -87,6 +89,18 @@ function WorkspaceDrawer() {
 					onClose={handleCloseWorkspacePopover}
 					width={DRAWER_WIDTH - 32}
 				/>
+			</ListItem>
+			<Divider />
+			<ListItem>
+				<Button
+					variant="contained"
+					startIcon={<AddIcon />}
+					sx={{
+						width: 1,
+					}}
+				>
+					New Note
+				</Button>
 			</ListItem>
 			<Divider />
 			<Box sx={{ mt: "auto" }}>
