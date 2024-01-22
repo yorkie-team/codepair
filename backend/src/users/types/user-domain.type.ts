@@ -5,8 +5,8 @@ export class UserDomain {
 	id: string;
 	@ApiProperty({ type: String, description: "Nickname of user" })
 	nickname: string;
-	@ApiProperty({ type: String, description: "Last worksace ID of user" })
-	lastWorkspaceId: string;
+	@ApiProperty({ type: String, description: "Last worksace slug of user" })
+	lastWorkspaceSlug: string;
 	@ApiProperty({ type: Date, description: "Created date of user" })
 	createdAt: Date;
 	@ApiProperty({ type: Date, description: "Updated date of user" })

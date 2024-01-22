@@ -10,12 +10,12 @@ export const generateGetWorkspaceListQueryKey = () => {
 	return ["workspaces"];
 };
 
-export const useGetWorkspaceQuery = (workspaceId?: string) => {
+export const useGetWorkspaceQuery = (workspaceSlug?: string) => {
 	const query = useQuery({
-		queryKey: generateGetWorkspaceQueryKey(workspaceId || ""),
-		enabled: Boolean(workspaceId),
+		queryKey: generateGetWorkspaceQueryKey(workspaceSlug || ""),
+		enabled: Boolean(workspaceSlug),
 		queryFn: async () => {
-			const res = await axios.get<GetWorkspaceResponse>(`/workspaces/${workspaceId}`);
+			const res = await axios.get<GetWorkspaceResponse>(`/workspaces/${workspaceSlug}`);
 			return res.data;
 		},
 		meta: {

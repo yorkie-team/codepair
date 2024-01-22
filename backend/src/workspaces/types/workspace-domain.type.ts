@@ -5,6 +5,8 @@ export class WorkspaceDomain {
 	id: string;
 	@ApiProperty({ type: String, description: "Title of the workspace" })
 	title: string;
+	@ApiProperty({ type: String, description: "Slug of the workspace" })
+	slug: string;
 	@ApiProperty({ type: Date, description: "Created date of the workspace" })
 	createdAt: Date;
 	@ApiProperty({ type: Date, description: "Updated date of the workspace" })
