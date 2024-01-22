@@ -32,6 +32,7 @@ function WorkspaceIndex() {
 					maxHeight: "100vh",
 					overflow: "auto",
 				}}
+				width={1}
 			>
 				<InfiniteScroll
 					pageStart={0}
