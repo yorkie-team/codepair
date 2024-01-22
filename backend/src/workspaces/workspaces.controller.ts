@@ -53,7 +53,7 @@ export class WorkspacesController {
 		return this.workspacesService.create(req.user.id, createWorkspaceDto.title);
 	}
 
-	@Get(":id")
+	@Get(":workspace_slug")
 	@ApiOperation({
 		summary: "Retrieve a Workspace",
 		description: "If the user has the access permissions, return a workspace.",
@@ -65,9 +65,9 @@ export class WorkspacesController {
 	})
 	async findOne(
 		@Req() req: AuthroizedRequest,
-		@Param("id") workspaceId: string
+		@Param("workspace_slug") workspaceSlug: string
 	): Promise<FindWorkspaceResponse> {
-		return this.workspacesService.findOne(req.user.id, workspaceId);
+		return this.workspacesService.findOneBySlug(req.user.id, workspaceSlug);
 	}
 
 	@Get("")

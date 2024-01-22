@@ -48,7 +48,7 @@ export class WorkspaceDocumentsService {
 		});
 	}
 
-	async findOne(userId: string, workspaceId: string, documentId: string) {
+	async findOneBySlug(userId: string, workspaceId: string, documentSlug: string) {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {
@@ -57,9 +57,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 
-			return this.prismaService.document.findUniqueOrThrow({
+			return this.prismaService.document.findFirstOrThrow({
 				where: {
-					id: documentId,
+					slug: documentSlug,
 				},
 			});
 		} catch (e) {

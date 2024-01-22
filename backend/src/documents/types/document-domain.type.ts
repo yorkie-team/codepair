@@ -7,6 +7,8 @@ export class DocumentDomain {
 	yorkieDocumentId: string;
 	@ApiProperty({ type: String, description: "Title of the document" })
 	title: string;
+	@ApiProperty({ type: String, description: "Slug of the document" })
+	slug: string;
 	@ApiProperty({ type: String, description: "Content of the document", required: false })
 	content?: string;
 	@ApiProperty({ type: Date, description: "Created date of the document" })

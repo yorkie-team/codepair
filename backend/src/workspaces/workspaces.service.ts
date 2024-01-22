@@ -46,20 +46,22 @@ export class WorkspacesService {
 		return workspace;
 	}
 
-	async findOne(userId: string, workspaceId: string) {
+	async findOneBySlug(userId: string, workspaceSlug: string) {
 		try {
-			await this.prismaService.userWorkspace.findFirstOrThrow({
+			const foundWorkspace = await this.prismaService.workspace.findFirstOrThrow({
 				where: {
-					userId,
-					workspaceId,
+					slug: workspaceSlug,
 				},
 			});
 
-			return this.prismaService.workspace.findUniqueOrThrow({
+			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {
-					id: workspaceId,
+					userId,
+					workspaceId: foundWorkspace.id,
 				},
 			});
+
+			return foundWorkspace;
 		} catch (e) {
 			throw new NotFoundException();
 		}
