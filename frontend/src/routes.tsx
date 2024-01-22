@@ -32,7 +32,7 @@ const codePairRoutes = [
 		element: <WorkspaceLayout />,
 		children: [
 			{
-				path: ":workspaceId",
+				path: ":workspaceSlug",
 				element: <WorkspaceIndex />,
 			},
 		],

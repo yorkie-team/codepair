@@ -17,7 +17,7 @@ const GuestRoute = (props: RejectLoggedInRouteProps) => {
 	if (isLoggedIn) {
 		return (
 			<Navigate
-				to={`/workspace/${userStore.data?.lastWorkspaceId}`}
+				to={`/workspace/${userStore.data?.lastWorkspaceSlug}`}
 				state={{ from: location }}
 				replace
 			/>

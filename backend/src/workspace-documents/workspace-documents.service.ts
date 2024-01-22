@@ -2,16 +2,14 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Document, Prisma } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
-import { JwtService } from "@nestjs/jwt";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
+import slugify from "slugify";
+import { generateRandomKey } from "src/utils/functions/random-string";
 
 @Injectable()
 export class WorkspaceDocumentsService {
-	constructor(
-		private prismaService: PrismaService,
-		private jwtService: JwtService
-	) {}
+	constructor(private prismaService: PrismaService) {}
 
 	async create(userId: string, workspaceId: string, title: string) {
 		try {
@@ -25,16 +23,29 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
+		let slug = slugify(title);
+
+		const duplicatedDocumentList = await this.prismaService.document.findMany({
+			where: {
+				slug,
+			},
+		});
+
+		if (duplicatedDocumentList.length) {
+			slug += `-${duplicatedDocumentList.length + 1}`;
+		}
+
 		return this.prismaService.document.create({
 			data: {
 				title,
+				slug,
 				workspaceId,
 				yorkieDocumentId: Math.random().toString(36).substring(7),
 			},
 		});
 	}
 
-	async findOne(userId: string, workspaceId: string, documentId: string) {
+	async findOneBySlug(userId: string, workspaceId: string, documentSlug: string) {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {
@@ -43,9 +54,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 
-			return this.prismaService.document.findUniqueOrThrow({
+			return this.prismaService.document.findFirstOrThrow({
 				where: {
-					id: documentId,
+					slug: documentSlug,
 				},
 			});
 		} catch (e) {
@@ -120,18 +131,19 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
-		const sharingToken = this.jwtService.sign(
-			{
+		const token = generateRandomKey();
+
+		await this.prismaService.documentSharingToken.create({
+			data: {
 				documentId: document.id,
+				token,
+				expiredAt: expirationDate,
 				role,
 			},
-			{
-				expiresIn: expirationDate.getTime() - Date.now(),
-			}
-		);
+		});
 
 		return {
-			sharingToken,
+			sharingToken: token,
 		};
 	}
 }

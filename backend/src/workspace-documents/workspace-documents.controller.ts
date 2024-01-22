@@ -36,7 +36,7 @@ import { CreateWorkspaceDocumentShareTokenDto } from "./dto/create-workspace-doc
 export class WorkspaceDocumentsController {
 	constructor(private workspaceDocumentsService: WorkspaceDocumentsService) {}
 
-	@Get(":document_id")
+	@Get(":document_slug")
 	@ApiOperation({
 		summary: "Retrieve a Document in the Workspace",
 		description: "If the user has the access permissions, return a document.",
@@ -50,9 +50,9 @@ export class WorkspaceDocumentsController {
 	async findOne(
 		@Req() req: AuthroizedRequest,
 		@Param("workspace_id") workspaceId: string,
-		@Param("document_id") documentId: string
+		@Param("document_slug") documentSlug: string
 	): Promise<FindWorkspaceDocumentResponse> {
-		return this.workspaceDocumentsService.findOne(req.user.id, workspaceId, documentId);
+		return this.workspaceDocumentsService.findOneBySlug(req.user.id, workspaceId, documentSlug);
 	}
 
 	@Get("")
@@ -133,7 +133,7 @@ export class WorkspaceDocumentsController {
 			workspaceId,
 			documentId,
 			createWorkspaceDocumentShareTokenDto.role,
-			createWorkspaceDocumentShareTokenDto.expirationDate
+			createWorkspaceDocumentShareTokenDto.expiredAt
 		);
 	}
 }

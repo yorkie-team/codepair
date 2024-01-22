@@ -2,22 +2,33 @@ import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/co
 import { Prisma, Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
-import { JwtService } from "@nestjs/jwt";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
-import { InvitationTokenPayload } from "./types/inviation-token-payload.type";
 import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import slugify from "slugify";
+import { generateRandomKey } from "src/utils/functions/random-string";
+import moment from "moment";
 
 @Injectable()
 export class WorkspacesService {
-	constructor(
-		private prismaService: PrismaService,
-		private jwtService: JwtService
-	) {}
+	constructor(private prismaService: PrismaService) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
+		let slug = slugify(title);
+
+		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
+			where: {
+				slug,
+			},
+		});
+
+		if (duplicatedWorkspaceList.length) {
+			slug += `-${duplicatedWorkspaceList.length + 1}`;
+		}
+
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
+				slug,
 			},
 		});
 
@@ -32,20 +43,22 @@ export class WorkspacesService {
 		return workspace;
 	}
 
-	async findOne(userId: string, workspaceId: string) {
+	async findOneBySlug(userId: string, workspaceSlug: string) {
 		try {
-			await this.prismaService.userWorkspace.findFirstOrThrow({
+			const foundWorkspace = await this.prismaService.workspace.findFirstOrThrow({
 				where: {
-					userId,
-					workspaceId,
+					slug: workspaceSlug,
 				},
 			});
 
-			return this.prismaService.workspace.findUniqueOrThrow({
+			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {
-					id: workspaceId,
+					userId,
+					workspaceId: foundWorkspace.id,
 				},
 			});
+
+			return foundWorkspace;
 		} catch (e) {
 			throw new NotFoundException();
 		}
@@ -87,7 +100,8 @@ export class WorkspacesService {
 
 	async createInvitationToken(
 		userId: string,
-		workspaceId: string
+		workspaceId: string,
+		expiredAt: Date
 	): Promise<CreateInvitationTokenResponse> {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
@@ -100,13 +114,18 @@ export class WorkspacesService {
 			throw new NotFoundException();
 		}
 
-		const invitationToken = this.jwtService.sign({
-			sub: userId,
-			workspaceId,
+		const token = generateRandomKey();
+
+		await this.prismaService.workspaceInvitationToken.create({
+			data: {
+				workspaceId,
+				token,
+				expiredAt,
+			},
 		});
 
 		return {
-			invitationToken,
+			invitationToken: token,
 		};
 	}
 
@@ -114,9 +133,21 @@ export class WorkspacesService {
 		let workspaceId: string;
 
 		try {
-			const payload = this.jwtService.verify<InvitationTokenPayload>(invitationToken);
+			const workspaceInvitationToken =
+				await this.prismaService.workspaceInvitationToken.findFirst({
+					where: {
+						token: invitationToken,
+					},
+				});
 
-			workspaceId = payload.workspaceId;
+			workspaceId = workspaceInvitationToken.workspaceId;
+
+			if (
+				workspaceInvitationToken.expiredAt &&
+				moment().isAfter(workspaceInvitationToken.expiredAt)
+			) {
+				throw new Error();
+			}
 		} catch (err) {
 			throw new UnauthorizedException("Invitation token is invalid or expired.");
 		}
