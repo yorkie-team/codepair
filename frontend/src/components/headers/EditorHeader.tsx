@@ -1,5 +1,7 @@
 import {
 	AppBar,
+	Avatar,
+	AvatarGroup,
 	Paper,
 	Stack,
 	ToggleButton,
@@ -63,6 +65,17 @@ function EditorHeader() {
 						</Paper>
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
+						<AvatarGroup max={4}>
+							{editorState.doc?.getPresences()?.map((presence) => (
+								<Avatar
+									key={presence.clientID}
+									alt={presence.presence.name}
+									sx={{ bgcolor: presence.presence.color }}
+								>
+									{presence.presence.name[0]}
+								</Avatar>
+							))}
+						</AvatarGroup>
 						{!editorState.shareRole && <ShareButton />}
 						<ThemeButton />
 					</Stack>
