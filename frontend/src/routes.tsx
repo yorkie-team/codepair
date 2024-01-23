@@ -8,6 +8,7 @@ import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
 import WorkspaceIndex from "./pages/workspace/Index";
 import CodePairError from "./components/common/CodePairError";
+import JoinIndex from "./pages/workspace/join/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -64,6 +65,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 		path: "auth/callback",
 		accessType: AccessType.GUEST,
 		element: <CallbackIndex />,
+	},
+	{
+		path: "join/:invitationToken",
+		accessType: AccessType.PRIVATE,
+		element: <JoinIndex />,
 	},
 ];
 
