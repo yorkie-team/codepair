@@ -1,6 +1,8 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
+	CreateWorkspaceInviteTokenRequest,
+	CreateWorkspaceInviteTokenResponse,
 	CreateWorkspaceRequest,
 	CreateWorkspaceResponse,
 	GetWorkspaceListResponse,
@@ -54,6 +56,19 @@ export const useCreateWorkspaceMutation = () => {
 	return useMutation({
 		mutationFn: async (data: CreateWorkspaceRequest) => {
 			const res = await axios.post<CreateWorkspaceResponse>("/workspaces", data);
+
+			return res.data;
+		},
+	});
+};
+
+export const useCreateWorkspaceInvitationTokenMutation = (workspaceId: string) => {
+	return useMutation({
+		mutationFn: async (data: CreateWorkspaceInviteTokenRequest) => {
+			const res = await axios.post<CreateWorkspaceInviteTokenResponse>(
+				`/workspaces/${workspaceId}/invite-token`,
+				data
+			);
 
 			return res.data;
 		},

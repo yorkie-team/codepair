@@ -29,6 +29,7 @@
 		"@uiw/codemirror-themes": "^4.21.21",
 		"@uiw/react-markdown-preview": "^5.0.7",
 		"axios": "^1.6.5",
+		"clipboardy": "^4.0.0",
 		"codemirror": "^6.0.1",
 		"codemirror-markdown-commands": "^0.0.3",
 		"codemirror-markdown-slug": "^0.0.3",

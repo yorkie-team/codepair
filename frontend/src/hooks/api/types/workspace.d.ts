@@ -18,3 +18,11 @@ export class CreateWorkspaceRequest {
 }
 
 export class CreateWorkspaceResponse extends Workspace {}
+
+export class CreateWorkspaceInviteTokenRequest {
+	expiredAt: Date | null;
+}
+
+export class CreateWorkspaceInviteTokenResponse {
+	invitationToken: string;
+}
