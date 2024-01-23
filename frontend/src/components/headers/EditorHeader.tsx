@@ -24,7 +24,7 @@ function EditorHeader() {
 		if (editorState.shareRole === "READ") {
 			dispatch(setMode("read"));
 		}
-	}, [editorState.shareRole]);
+	}, [dispatch, editorState.shareRole]);
 
 	const handleChangeMode = (newMode: EditorModeType) => {
 		dispatch(setMode(newMode));
