@@ -21,14 +21,18 @@ import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
+import { useSearchParams } from "react-router-dom";
 
 interface ShareModalProps extends Omit<ModalProps, "children"> {}
 
 function ShareModal(props: ShareModalProps) {
 	const { ...modalProps } = props;
 	const params = useParams();
+	const [searchParams] = useSearchParams();
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
-	const { data: document } = useGetDocumentQuery(params.documentSlug || "");
+	const { data: document } = useGetDocumentQuery(
+		searchParams.get("token") ? null : params.documentSlug
+	);
 	const { mutateAsync: createWorkspaceSharingToken } = useCreateWorkspaceSharingTokenMutation(
 		document?.workspaceId || "",
 		document?.id || ""

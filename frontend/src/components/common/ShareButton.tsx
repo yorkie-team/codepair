@@ -12,7 +12,7 @@ function ShareButton() {
 
 	return (
 		<>
-			<IconButton onClick={handleShareModalOpen}>
+			<IconButton onClick={handleShareModalOpen} color="inherit">
 				<ShareIcon />
 			</IconButton>
 			<ShareModal open={shareModalOpen} onClose={handleShareModalOpen} />
