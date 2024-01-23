@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import axios from "axios";
 import { routes } from "./routes";
+import CodePairErrorBoundary from "./components/common/CodePairError";
 
 const router = createBrowserRouter(routes);
 

@@ -7,6 +7,18 @@ import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
 import WorkspaceIndex from "./pages/workspace/Index";
+import CodePairError from "./components/common/CodePairError";
+
+interface CodePairRoute {
+	path: string;
+	accessType: AccessType;
+	element: JSX.Element;
+	errorElement?: JSX.Element;
+	children?: {
+		path: string;
+		element: JSX.Element;
+	}[];
+}
 
 const enum AccessType {
 	PRIVATE, // Authroized user can access only
@@ -14,7 +26,7 @@ const enum AccessType {
 	GUEST, // Not authorized user can access only
 }
 
-const codePairRoutes = [
+const codePairRoutes: Array<CodePairRoute> = [
 	{
 		path: "",
 		accessType: AccessType.GUEST,
@@ -62,6 +74,8 @@ const injectProtectedRoute = (routes: typeof codePairRoutes) => {
 		} else if (route.accessType === AccessType.GUEST) {
 			route.element = <GuestRoute>{route.element}</GuestRoute>;
 		}
+
+		route.errorElement = <CodePairError />;
 
 		return route;
 	});
