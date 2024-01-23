@@ -26,3 +26,9 @@ export class CreateWorkspaceInviteTokenRequest {
 export class CreateWorkspaceInviteTokenResponse {
 	invitationToken: string;
 }
+
+export class JoinWorkspaceRequest {
+	invitationToken: string;
+}
+
+export class JoinWorkspaceResponse extends Workspace {}

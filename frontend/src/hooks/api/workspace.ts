@@ -7,6 +7,8 @@ import {
 	CreateWorkspaceResponse,
 	GetWorkspaceListResponse,
 	GetWorkspaceResponse,
+	JoinWorkspaceRequest,
+	JoinWorkspaceResponse,
 } from "./types/workspace";
 
 export const generateGetWorkspaceQueryKey = (workspaceSlug: string) => {
@@ -69,6 +71,16 @@ export const useCreateWorkspaceInvitationTokenMutation = (workspaceId: string) =
 				`/workspaces/${workspaceId}/invite-token`,
 				data
 			);
+
+			return res.data;
+		},
+	});
+};
+
+export const useJoinWorkspaceMutation = () => {
+	return useMutation({
+		mutationFn: async (data: JoinWorkspaceRequest) => {
+			const res = await axios.post<JoinWorkspaceResponse>("/workspaces/join", data);
 
 			return res.data;
 		},
