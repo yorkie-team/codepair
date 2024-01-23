@@ -74,6 +74,7 @@ function EditorIndex() {
 		document?.yorkieDocumentId,
 		sharedDocument?.yorkieDocumentId,
 		userStore.data?.nickname,
+		searchParams,
 	]);
 
 	useEffect(() => {
