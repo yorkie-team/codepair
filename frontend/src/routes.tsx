@@ -52,7 +52,7 @@ const codePairRoutes: Array<CodePairRoute> = [
 	},
 	{
 		path: "document",
-		accessType: AccessType.PRIVATE,
+		accessType: AccessType.PUBLIC,
 		element: <EditorLayout />,
 		children: [
 			{

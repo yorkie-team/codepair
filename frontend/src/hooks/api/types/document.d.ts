@@ -1,5 +1,8 @@
+import { ShareRole } from "../../../utils/share";
+
 export class Document {
 	id: string;
+	workspaceId: string;
 	yorkieDocumentId: string;
 	title: string;
 	slug: string;
@@ -9,3 +12,7 @@ export class Document {
 }
 
 export class GetDocumentResponse extends Document {}
+
+export class GetDocumentBySharingTokenResponse extends Document {
+	role: ShareRole;
+}

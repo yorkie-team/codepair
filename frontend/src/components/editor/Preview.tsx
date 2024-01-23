@@ -2,7 +2,7 @@ import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./editor.css";
 
@@ -26,7 +26,12 @@ function Preview() {
 		};
 	}, [editorStore.doc]);
 
-	if (!editorStore?.doc) return <CircularProgress sx={{ marginX: "auto", mt: 4 }} />;
+	if (!editorStore?.doc)
+		return (
+			<Stack direction="row" justifyContent="center">
+				<CircularProgress sx={{ mt: 2 }} />
+			</Stack>
+		);
 
 	return (
 		<MarkdownPreview

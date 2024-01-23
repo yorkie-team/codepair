@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Editor from "../../components/editor/Editor";
 import * as yorkie from "yorkie-js-sdk";
-import { selectEditor, setClient, setDoc } from "../../store/editorSlice";
+import { selectEditor, setClient, setDoc, setShareRole } from "../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	YorkieCodeMirrorDocType,
@@ -13,21 +13,29 @@ import { Box, Paper } from "@mui/material";
 import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Preview from "../../components/editor/Preview";
-import { useParams } from "react-router-dom";
-import { useGetDocumentQuery } from "../../hooks/api/document";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
+import { useGetDocumentBySharingTokenQuery, useGetDocumentQuery } from "../../hooks/api/document";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function EditorIndex() {
-	const params = useParams();
 	const dispatch = useDispatch();
+	const params = useParams();
+	const { isLoggedIn } = useContext(AuthContext);
+	const [searchParams] = useSearchParams();
 	const windowWidth = useWindowWidth();
 	const editorStore = useSelector(selectEditor);
-	const { data: document } = useGetDocumentQuery(params.documentSlug || "");
+	const { data: document, isError: isDocumentError } = useGetDocumentQuery(
+		isLoggedIn ? params.documentSlug : null
+	);
+	const { data: sharedDocument, isError: isSharedDocumentError } =
+		useGetDocumentBySharingTokenQuery(searchParams.get("token"));
 
 	useEffect(() => {
 		let client: yorkie.Client;
 		let doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+		const yorkieDocuentId = document?.yorkieDocumentId || sharedDocument?.yorkieDocumentId;
 
-		if (!document?.yorkieDocumentId) return;
+		if (!yorkieDocuentId) return;
 
 		const initializeYorkie = async () => {
 			client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
@@ -35,7 +43,7 @@ function EditorIndex() {
 			});
 			await client.activate();
 
-			doc = new yorkie.Document(document?.yorkieDocumentId as string);
+			doc = new yorkie.Document(yorkieDocuentId as string);
 
 			await client.attach(doc, {
 				initialPresence: {
@@ -58,7 +66,20 @@ function EditorIndex() {
 
 			cleanUp();
 		};
-	}, [dispatch, document?.yorkieDocumentId]);
+	}, [dispatch, document?.yorkieDocumentId, sharedDocument?.yorkieDocumentId]);
+
+	useEffect(() => {
+		if (!sharedDocument) return;
+
+		dispatch(setShareRole(sharedDocument.role));
+
+		return () => {
+			setShareRole(null);
+		};
+	}, [dispatch, sharedDocument, sharedDocument?.role]);
+
+	if (isDocumentError || isSharedDocumentError)
+		return <Navigate to="/" state={{ from: location }} replace />;
 
 	return (
 		<Box height="calc(100% - 64px)">
