@@ -15,7 +15,6 @@ export const useGetDocumentQuery = (documentSlug?: string | null) => {
 		queryKey: generateGetDocumentQueryKey(documentSlug || ""),
 		enabled: Boolean(documentSlug),
 		queryFn: async () => {
-			console.log("zz", documentSlug);
 			const res = await axios.get<GetDocumentResponse>(`/documents/${documentSlug}`);
 			return res.data;
 		},

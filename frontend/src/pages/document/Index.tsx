@@ -13,7 +13,7 @@ import { Box, Paper } from "@mui/material";
 import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Preview from "../../components/editor/Preview";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { useGetDocumentBySharingTokenQuery, useGetDocumentQuery } from "../../hooks/api/document";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -24,8 +24,11 @@ function EditorIndex() {
 	const [searchParams] = useSearchParams();
 	const windowWidth = useWindowWidth();
 	const editorStore = useSelector(selectEditor);
-	const { data: document } = useGetDocumentQuery(isLoggedIn ? params.documentSlug : null);
-	const { data: sharedDocument } = useGetDocumentBySharingTokenQuery(searchParams.get("token"));
+	const { data: document, isError: isDocumentError } = useGetDocumentQuery(
+		isLoggedIn ? params.documentSlug : null
+	);
+	const { data: sharedDocument, isError: isSharedDocumentError } =
+		useGetDocumentBySharingTokenQuery(searchParams.get("token"));
 
 	useEffect(() => {
 		let client: yorkie.Client;
@@ -74,6 +77,9 @@ function EditorIndex() {
 			setShareRole(null);
 		};
 	}, [dispatch, sharedDocument, sharedDocument?.role]);
+
+	if (isDocumentError || isSharedDocumentError)
+		return <Navigate to="/" state={{ from: location }} replace />;
 
 	return (
 		<Box height="calc(100% - 64px)">
