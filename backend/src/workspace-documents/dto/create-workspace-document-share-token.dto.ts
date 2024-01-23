@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsDate } from "class-validator";
 import { ShareRoleEnum } from "src/utils/constants/share-role";
 
 export class CreateWorkspaceDocumentShareTokenDto {
@@ -9,6 +8,5 @@ export class CreateWorkspaceDocumentShareTokenDto {
 
 	@ApiProperty({ type: Date, description: "Share link expiration date" })
 	@Type(() => Date)
-	@IsDate()
 	expiredAt: Date;
 }
