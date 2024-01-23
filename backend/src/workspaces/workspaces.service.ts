@@ -6,7 +6,7 @@ import { CreateInvitationTokenResponse } from "./types/create-inviation-token-re
 import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 import slugify from "slugify";
 import { generateRandomKey } from "src/utils/functions/random-string";
-import moment from "moment";
+import * as moment from "moment";
 
 @Injectable()
 export class WorkspacesService {
@@ -174,7 +174,7 @@ export class WorkspacesService {
 			},
 		});
 
-		if (!userWorkspace) {
+		if (userWorkspace) {
 			return userWorkspace.workspace;
 		}
 
