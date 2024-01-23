@@ -16,10 +16,12 @@ import Preview from "../../components/editor/Preview";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { useGetDocumentBySharingTokenQuery, useGetDocumentQuery } from "../../hooks/api/document";
 import { AuthContext } from "../../contexts/AuthContext";
+import { selectUser } from "../../store/userSlice";
 
 function EditorIndex() {
 	const dispatch = useDispatch();
 	const params = useParams();
+	const userStore = useSelector(selectUser);
 	const { isLoggedIn } = useContext(AuthContext);
 	const [searchParams] = useSearchParams();
 	const windowWidth = useWindowWidth();
@@ -34,8 +36,9 @@ function EditorIndex() {
 		let client: yorkie.Client;
 		let doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 		const yorkieDocuentId = document?.yorkieDocumentId || sharedDocument?.yorkieDocumentId;
+		const name = searchParams.get("token") ? "Anonymous" : userStore.data?.nickname;
 
-		if (!yorkieDocuentId) return;
+		if (!yorkieDocuentId || !name) return;
 
 		const initializeYorkie = async () => {
 			client = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
@@ -47,7 +50,7 @@ function EditorIndex() {
 
 			await client.attach(doc, {
 				initialPresence: {
-					name: "Yorkie",
+					name,
 					color: Color(randomColor()).fade(0.15).toString(),
 					selection: null,
 				},
@@ -66,7 +69,12 @@ function EditorIndex() {
 
 			cleanUp();
 		};
-	}, [dispatch, document?.yorkieDocumentId, sharedDocument?.yorkieDocumentId]);
+	}, [
+		dispatch,
+		document?.yorkieDocumentId,
+		sharedDocument?.yorkieDocumentId,
+		userStore.data?.nickname,
+	]);
 
 	useEffect(() => {
 		if (!sharedDocument) return;
