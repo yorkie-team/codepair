@@ -10,6 +10,9 @@ import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import axios from "axios";
 import { routes } from "./routes";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AuthProvider from "./providers/AuthProvider";
+import { useErrorHandler } from "./hooks/useErrorHandler";
 
 const router = createBrowserRouter(routes);
 
@@ -32,14 +35,31 @@ function App() {
 			},
 		});
 	}, [config.theme, prefersDarkMode]);
+	const handleError = useErrorHandler();
+	const queryClient = useMemo(() => {
+		return new QueryClient({
+			queryCache: new QueryCache({
+				onError: handleError,
+			}),
+			defaultOptions: {
+				mutations: {
+					onError: handleError,
+				},
+			},
+		});
+	}, [handleError]);
 
 	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<Box minHeight="100vh">
-				<RouterProvider router={router} />
-			</Box>
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<AuthProvider>
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
+					<Box minHeight="100vh">
+						<RouterProvider router={router} />
+					</Box>
+				</ThemeProvider>
+			</AuthProvider>
+		</QueryClientProvider>
 	);
 }
 
