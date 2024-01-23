@@ -6,7 +6,7 @@ import "./App.css";
 import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import axios from "axios";
 import { routes } from "./routes";
@@ -47,7 +47,7 @@ function App() {
 				},
 			},
 		});
-	}, []);
+	}, [handleError]);
 
 	return (
 		<QueryClientProvider client={queryClient}>
