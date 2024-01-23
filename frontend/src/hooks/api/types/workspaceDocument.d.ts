@@ -10,3 +10,12 @@ export class CreateDocumentRequest {
 }
 
 export class CreateDocumentResponse extends Document {}
+
+export class CreateDocumentShareTokenRequest {
+	role: ShareRole;
+	expiredAt: Date | null;
+}
+
+export class CreateDocumentShareTokenResponse {
+	sharingToken: string;
+}

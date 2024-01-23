@@ -22,7 +22,7 @@ import { useMemo, useState } from "react";
 import { User } from "../../hooks/api/types/user";
 import InfiniteScroll from "react-infinite-scroller";
 import { FormContainer, SelectElement } from "react-hook-form-mui";
-import { invitationExpiredStringList } from "../../utils/invitation";
+import { invitationExpiredStringList } from "../../utils/expire";
 import moment, { unitOfTime } from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import clipboard from "clipboardy";

@@ -17,6 +17,7 @@ import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import ThemeButton from "../common/ThemeButton";
 import { createDocumentKey } from "../../utils/document";
 import { useNavigate } from "react-router-dom";
+import ShareButton from "../common/ShareButton";
 
 function EditorHeader() {
 	const dispatch = useDispatch();
@@ -66,7 +67,10 @@ function EditorHeader() {
 							</IconButton>
 						</Tooltip>
 					</Stack>
-					<ThemeButton />
+					<Stack direction="row" alignItems="center" gap={1}>
+						<ShareButton />
+						<ThemeButton />
+					</Stack>
 				</Stack>
 			</Toolbar>
 		</AppBar>

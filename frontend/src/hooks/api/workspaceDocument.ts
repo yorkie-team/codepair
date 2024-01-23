@@ -3,6 +3,8 @@ import axios from "axios";
 import {
 	CreateDocumentRequest,
 	CreateDocumentResponse,
+	CreateDocumentShareTokenRequest,
+	CreateDocumentShareTokenResponse,
 	GetWorkspaceDocumentListResponse,
 } from "./types/workspaceDocument";
 
@@ -50,6 +52,19 @@ export const useCreateDocumentMutation = (workspaceId: string) => {
 			queryClient.invalidateQueries({
 				queryKey: generateGetWorkspaceDocumentListQueryKey(workspaceId),
 			});
+		},
+	});
+};
+
+export const useCreateWorkspaceSharingTokenMutation = (workspaceId: string, documentId: string) => {
+	return useMutation({
+		mutationFn: async (data: CreateDocumentShareTokenRequest) => {
+			const res = await axios.post<CreateDocumentShareTokenResponse>(
+				`/workspaces/${workspaceId}/documents/${documentId}/share-token`,
+				data
+			);
+
+			return res.data;
 		},
 	});
 };

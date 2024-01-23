@@ -1,5 +1,6 @@
 export class Document {
 	id: string;
+	workspaceId: string;
 	yorkieDocumentId: string;
 	title: string;
 	slug: string;
