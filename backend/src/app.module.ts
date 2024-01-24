@@ -9,7 +9,7 @@ import { WorkspacesModule } from "./workspaces/workspaces.module";
 import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
 import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
 import { DocumentsModule } from "./documents/documents.module";
-import { CheckModule } from './check/check.module';
+import { CheckModule } from "./check/check.module";
 
 @Module({
 	imports: [
