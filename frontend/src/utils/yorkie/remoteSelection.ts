@@ -131,7 +131,7 @@ export class YorkieRemoteSelectionsPluginValue {
 
 		this.unsubscribe = this.conf.doc.subscribe("others", (event) => {
 			const decorations: Array<cmState.Range<cmView.Decoration>> = [];
-			if (event.type === "presence-changed") {
+			if (["presence-changed", "unwatched"].includes(event.type)) {
 				this.conf.doc.getPresences().forEach((presence) => {
 					if (presence.clientID === this.conf.client.getID()) {
 						return;
@@ -205,9 +205,7 @@ export class YorkieRemoteSelectionsPluginValue {
 				});
 				this.decorations = cmView.Decoration.set(decorations, true);
 
-				if (decorations.length > 0) {
-					view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
-				}
+				view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
 			}
 		});
 		this.decorations = cmState.RangeSet.of([]);
