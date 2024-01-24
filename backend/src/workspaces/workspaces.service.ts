@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+	ConflictException,
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from "@nestjs/common";
 import { Prisma, Workspace } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
@@ -7,30 +12,26 @@ import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 import slugify from "slugify";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import * as moment from "moment";
+import { CheckService } from "src/check/check.service";
 
 @Injectable()
 export class WorkspacesService {
-	constructor(private prismaService: PrismaService) {}
+	constructor(
+		private prismaService: PrismaService,
+		private checkService: CheckService
+	) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
-		let slug = slugify(title, { lower: true });
+		const { conflict } = await this.checkService.checkNameConflict(title);
 
-		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
-			where: {
-				slug: {
-					startsWith: slug,
-				},
-			},
-		});
-
-		if (duplicatedWorkspaceList.length) {
-			slug += `-${duplicatedWorkspaceList.length + 1}`;
+		if (conflict) {
+			throw new ConflictException();
 		}
 
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
-				slug,
+				slug: slugify(title, { lower: true }),
 			},
 		});
 
