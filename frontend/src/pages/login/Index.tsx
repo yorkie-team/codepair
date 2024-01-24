@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
-import CodePairIcon from "../components/icons/CodePairIcon";
+import CodePairIcon from "../../components/icons/CodePairIcon";
 import { GithubLoginButton } from "react-social-login-buttons";
 
 const socialLoginList = [
@@ -9,7 +9,7 @@ const socialLoginList = [
 	},
 ];
 
-function Index() {
+function LoginIndex() {
 	const handleLogin = (provider: string) => {
 		window.location.href = `${import.meta.env.VITE_API_ADDR}/auth/login/${provider}`;
 	};
@@ -57,4 +57,4 @@ function Index() {
 	);
 }
 
-export default Index;
+export default LoginIndex;
