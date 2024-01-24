@@ -18,7 +18,7 @@ import { useGetDocumentBySharingTokenQuery, useGetDocumentQuery } from "../../ho
 import { AuthContext } from "../../contexts/AuthContext";
 import { selectUser } from "../../store/userSlice";
 
-function EditorIndex() {
+function DocumentIndex() {
 	const dispatch = useDispatch();
 	const params = useParams();
 	const userStore = useSelector(selectUser);
@@ -142,4 +142,4 @@ function EditorIndex() {
 	);
 }
 
-export default EditorIndex;
+export default DocumentIndex;

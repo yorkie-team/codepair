@@ -21,7 +21,7 @@ import { useList } from "react-use";
 import { ActorID } from "yorkie-js-sdk";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
 
-function EditorHeader() {
+function DocumentHeader() {
 	const dispatch = useDispatch();
 	const editorState = useSelector(selectEditor);
 	const [
@@ -129,4 +129,4 @@ function EditorHeader() {
 	);
 }
 
-export default EditorHeader;
+export default DocumentHeader;
