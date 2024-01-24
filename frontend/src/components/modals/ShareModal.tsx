@@ -14,8 +14,10 @@ import { invitationExpiredStringList } from "../../utils/expire";
 import { useState } from "react";
 import moment, { unitOfTime } from "moment";
 import { useParams } from "react-router";
-import { useGetDocumentQuery } from "../../hooks/api/document";
-import { useCreateWorkspaceSharingTokenMutation } from "../../hooks/api/workspaceDocument";
+import {
+	useCreateWorkspaceSharingTokenMutation,
+	useGetDocumentQuery,
+} from "../../hooks/api/workspaceDocument";
 import { ShareRole } from "../../utils/share";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";

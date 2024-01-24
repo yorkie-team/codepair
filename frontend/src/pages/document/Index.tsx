@@ -14,8 +14,9 @@ import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Preview from "../../components/editor/Preview";
 import { useParams } from "react-router-dom";
-import { useGetDocumentQuery } from "../../hooks/api/document";
 import { selectUser } from "../../store/userSlice";
+import { useGetDocumentQuery } from "../../hooks/api/workspaceDocument";
+import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 
 function DocumentIndex() {
 	const dispatch = useDispatch();
@@ -23,7 +24,8 @@ function DocumentIndex() {
 	const userStore = useSelector(selectUser);
 	const windowWidth = useWindowWidth();
 	const editorStore = useSelector(selectEditor);
-	const { data: document } = useGetDocumentQuery(params.documentId);
+	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
 
 	useEffect(() => {
 		let client: yorkie.Client;

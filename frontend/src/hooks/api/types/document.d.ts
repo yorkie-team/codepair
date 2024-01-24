@@ -11,8 +11,6 @@ export class Document {
 	updatedAt: Date;
 }
 
-export class GetDocumentResponse extends Document {}
-
 export class GetDocumentBySharingTokenResponse extends Document {
 	role: ShareRole;
 }
