@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import { MouseEventHandler, useState } from "react";
 import ProfilePopover from "../popovers/ProfilePopover";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -32,6 +32,7 @@ import MemberModal from "../modals/MemberModal";
 const DRAWER_WIDTH = 240;
 
 function WorkspaceDrawer() {
+	const navigate = useNavigate();
 	const params = useParams();
 	const userStore = useSelector(selectUser);
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
@@ -60,7 +61,9 @@ function WorkspaceDrawer() {
 	};
 
 	const handleCreateWorkspace = async (data: { title: string }) => {
-		await createDocument(data);
+		const document = await createDocument(data);
+
+		navigate(document.id);
 	};
 
 	const handleCreateWorkspaceModalOpen = () => {
