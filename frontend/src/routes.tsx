@@ -24,8 +24,8 @@ interface CodePairRoute {
 }
 
 const enum AccessType {
+	PUBLIC, // Everyone can access (Default)
 	PRIVATE, // Authroized user can access only
-	PUBLIC, // Everyone can access
 	GUEST, // Not authorized user can access only
 }
 
@@ -61,7 +61,7 @@ const codePairRoutes: Array<CodePairRoute> = [
 		element: <DocumentLayout />,
 		children: [
 			{
-				path: ":documentSlug",
+				path: ":documentId",
 				accessType: AccessType.PRIVATE,
 				element: <DocumentIndex />,
 			},
