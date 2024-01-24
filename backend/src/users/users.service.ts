@@ -69,7 +69,7 @@ export class UsersService {
 		});
 
 		const title = `${user.nickname}'s Workspace`;
-		let slug = slugify(title);
+		let slug = slugify(title, { lower: true });
 
 		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
 			where: {

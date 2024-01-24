@@ -52,7 +52,6 @@ model Document {
   id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
   yorkieDocumentId         String                 @map("yorkie_document_id")
   title                    String
-  slug                     String
   content                  String?
   createdAt                DateTime               @default(now()) @map("created_at")
   updatedAt                DateTime               @updatedAt @map("updated_at")

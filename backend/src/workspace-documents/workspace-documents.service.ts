@@ -23,24 +23,9 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
-		let slug = slugify(title);
-
-		const duplicatedDocumentList = await this.prismaService.document.findMany({
-			where: {
-				slug: {
-					startsWith: slug,
-				},
-			},
-		});
-
-		if (duplicatedDocumentList.length) {
-			slug += `-${duplicatedDocumentList.length + 1}`;
-		}
-
 		return this.prismaService.document.create({
 			data: {
 				title,
-				slug,
 				workspaceId,
 				yorkieDocumentId: Math.random().toString(36).substring(7),
 			},
