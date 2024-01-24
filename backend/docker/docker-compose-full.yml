@@ -9,7 +9,7 @@ services:
             # Environment variables need to be passed to the container
             GITHUB_CLIENT_ID: "GITHUB_CLIENT_ID"
             GITHUB_CLIENT_SECRET: "GITHUB_CLIENT_SECRET"
-            GITHUB_CALLBACK_URL: "GITHUB_CALLBACK_URL"
+            GITHUB_CALLBACK_URL: "<BACKEND_BASE_URL>/auth/login/github"
             JWT_AUTH_SECRET: "JWT_AUTH_SECRET"
             FRONTEND_BASE_URL: "FRONTEND_BASE_URL"
         ports:
