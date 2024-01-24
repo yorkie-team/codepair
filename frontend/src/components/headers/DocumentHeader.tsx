@@ -2,6 +2,7 @@ import {
 	AppBar,
 	Avatar,
 	AvatarGroup,
+	IconButton,
 	Paper,
 	Stack,
 	ToggleButton,
@@ -20,9 +21,12 @@ import { useEffect } from "react";
 import { useList } from "react-use";
 import { ActorID } from "yorkie-js-sdk";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { useNavigate } from "react-router-dom";
 
-function EditorHeader() {
+function DocumentHeader() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const editorState = useSelector(selectEditor);
 	const [
 		presenceList,
@@ -76,11 +80,20 @@ function EditorHeader() {
 		dispatch(setMode(newMode));
 	};
 
+	const handleToPrevious = () => {
+		navigate(-1);
+	};
+
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
 			<Toolbar>
 				<Stack width="100%" direction="row" justifyContent="space-between">
-					<Stack direction="row" spacing={1}>
+					<Stack direction="row" spacing={1} alignItems="center">
+						<Tooltip title="Back to Previous Page">
+							<IconButton color="inherit" onClick={handleToPrevious}>
+								<ArrowBackIosNewIcon />
+							</IconButton>
+						</Tooltip>
 						<Paper>
 							{editorState.shareRole !== "READ" && (
 								<ToggleButtonGroup
@@ -111,13 +124,14 @@ function EditorHeader() {
 					<Stack direction="row" alignItems="center" gap={1}>
 						<AvatarGroup max={4}>
 							{presenceList?.map((presence) => (
-								<Avatar
-									key={presence.clientID}
-									alt={presence.presence.name}
-									sx={{ bgcolor: presence.presence.color }}
-								>
-									{presence.presence.name[0]}
-								</Avatar>
+								<Tooltip key={presence.clientID} title={presence.presence.name}>
+									<Avatar
+										alt={presence.presence.name}
+										sx={{ bgcolor: presence.presence.color }}
+									>
+										{presence.presence.name[0]}
+									</Avatar>
+								</Tooltip>
 							))}
 						</AvatarGroup>
 						{!editorState.shareRole && <ShareButton />}
@@ -129,4 +143,4 @@ function EditorHeader() {
 	);
 }
 
-export default EditorHeader;
+export default DocumentHeader;

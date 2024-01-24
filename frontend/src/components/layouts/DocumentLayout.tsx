@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import EditorHeader from "../headers/EditorHeader";
+import DocumentHeader from "../headers/DocumentHeader";
 
-function EditorLayout() {
+function DocumentLayout() {
 	return (
 		<Box sx={{ flexGrow: 1 }} height="100vh">
-			<EditorHeader />
+			<DocumentHeader />
 			<Outlet />
 		</Box>
 	);
 }
 
-export default EditorLayout;
+export default DocumentLayout;

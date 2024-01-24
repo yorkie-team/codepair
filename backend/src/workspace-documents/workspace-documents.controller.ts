@@ -28,6 +28,7 @@ import { HttpExceptionResponse } from "src/utils/types/http-exception-response.t
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { CreateWorkspaceDocumentShareTokenDto } from "./dto/create-workspace-document-share-token.dto";
+import { FindWorkspaceDocumentResponse } from "./types/find-workspace-document-response.type";
 
 @ApiTags("Workspace.Documents")
 @ApiBearerAuth()
@@ -65,6 +66,25 @@ export class WorkspaceDocumentsController {
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
 	): Promise<FindWorkspaceDocumentsResponse> {
 		return this.workspaceDocumentsService.findMany(req.user.id, workspaceId, pageSize, cursor);
+	}
+
+	@Get(":document_id")
+	@ApiOperation({
+		summary: "Retrieve a Document in the Workspace",
+		description: "If the user has the access permissions, return a document.",
+	})
+	@ApiFoundResponse({ type: FindWorkspaceDocumentResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description:
+			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
+	})
+	async findOne(
+		@Req() req: AuthroizedRequest,
+		@Param("workspace_id") workspaceId: string,
+		@Param("document_id") documentId: string
+	): Promise<FindWorkspaceDocumentResponse> {
+		return this.workspaceDocumentsService.findOne(req.user.id, workspaceId, documentId);
 	}
 
 	@Post()

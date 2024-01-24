@@ -1,34 +1,17 @@
-import {
-	Button,
-	FormControl,
-	IconButton,
-	Modal,
-	ModalProps,
-	Paper,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Button, FormControl, Modal, ModalProps, Paper, Stack, Typography } from "@mui/material";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import CloseIcon from "@mui/icons-material/Close";
-import { useMemo, useState } from "react";
 import { useCheckNameConflictQuery } from "../../hooks/api/check";
+import { useMemo, useState } from "react";
 import { useDebounce } from "react-use";
+import { useUpdateUserNicknmaeMutation } from "../../hooks/api/user";
 
-interface CreateRequest {
-	title: string;
-}
+interface ChangeNicknameModalProps extends Omit<ModalProps, "children"> {}
 
-interface CreateModalProps extends Omit<ModalProps, "children"> {
-	title: string;
-	onSuccess: (data: CreateRequest) => Promise<void>;
-	enableConflictCheck?: boolean;
-}
-
-function CreateModal(props: CreateModalProps) {
-	const { title, onSuccess, enableConflictCheck, ...modalProps } = props;
+function ChangeNicknameModal(props: ChangeNicknameModalProps) {
 	const [nickname, setNickname] = useState("");
 	const [debouncedNickname, setDebouncedNickname] = useState("");
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
+	const { mutateAsync: updateUserNickname } = useUpdateUserNicknmaeMutation();
 	const errorMessage = useMemo(() => {
 		if (conflictResult?.conflict) {
 			return "Already Exists";
@@ -44,22 +27,16 @@ function CreateModal(props: CreateModalProps) {
 		[nickname]
 	);
 
-	const handleCloseModal = () => {
-		modalProps?.onClose?.(new Event("Close Modal"), "escapeKeyDown");
-	};
-
-	const handleCreate = async (data: CreateRequest) => {
-		await onSuccess(data);
-		handleCloseModal();
-	};
-
 	const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		if (!enableConflictCheck) return;
 		setNickname(e.target.value);
 	};
 
+	const handleUpdateUserNickname = async (data: { nickname: string }) => {
+		await updateUserNickname(data);
+	};
+
 	return (
-		<Modal disableAutoFocus {...modalProps}>
+		<Modal disableAutoFocus {...props}>
 			<Paper
 				sx={{
 					position: "absolute",
@@ -70,25 +47,18 @@ function CreateModal(props: CreateModalProps) {
 					width: 400,
 				}}
 			>
-				<IconButton
-					sx={{
-						position: "absolute",
-						top: 28,
-						right: 28,
-					}}
-					onClick={handleCloseModal}
-				>
-					<CloseIcon />
-				</IconButton>
 				<Stack gap={4}>
-					<Typography variant="h5">Create New {title}</Typography>
+					<Typography variant="h5">Create Your Nickname</Typography>
 					<FormControl>
-						<FormContainer defaultValues={{ title: "" }} onSuccess={handleCreate}>
+						<FormContainer
+							defaultValues={{ nickname: "" }}
+							onSuccess={handleUpdateUserNickname}
+						>
 							<Stack gap={4} alignItems="flex-end">
 								<TextFieldElement
 									variant="standard"
-									name="title"
-									label={`Title of New ${title}`}
+									name="nickname"
+									label="Enter your nickname"
 									required
 									fullWidth
 									inputProps={{
@@ -115,4 +85,4 @@ function CreateModal(props: CreateModalProps) {
 	);
 }
 
-export default CreateModal;
+export default ChangeNicknameModal;
