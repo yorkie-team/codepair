@@ -13,12 +13,13 @@ import DocumentLayout from "./components/layouts/DocumentLayout";
 
 interface CodePairRoute {
 	path: string;
-	accessType: AccessType;
+	accessType?: AccessType;
 	element: JSX.Element;
 	errorElement?: JSX.Element;
 	children?: {
 		path: string;
 		element: JSX.Element;
+		accessType?: AccessType;
 	}[];
 }
 
@@ -56,12 +57,12 @@ const codePairRoutes: Array<CodePairRoute> = [
 		],
 	},
 	{
-		path: "document",
-		accessType: AccessType.PUBLIC,
+		path: ":workspaceSlug",
 		element: <DocumentLayout />,
 		children: [
 			{
 				path: ":documentSlug",
+				accessType: AccessType.PRIVATE,
 				element: <DocumentIndex />,
 			},
 		],
@@ -78,12 +79,22 @@ const codePairRoutes: Array<CodePairRoute> = [
 	},
 ];
 
-const injectProtectedRoute = (routes: typeof codePairRoutes) => {
-	return routes.map((route) => {
+const injectProtectedRoute = (routes: Array<CodePairRoute>) => {
+	const injectProtectedComp = (route: CodePairRoute) => {
 		if (route.accessType === AccessType.PRIVATE) {
 			route.element = <PrivateRoute>{route.element}</PrivateRoute>;
 		} else if (route.accessType === AccessType.GUEST) {
 			route.element = <GuestRoute>{route.element}</GuestRoute>;
+		}
+
+		return route;
+	};
+
+	return routes.map((route) => {
+		route = injectProtectedComp(route);
+
+		if (route?.children) {
+			route.children = route.children.map((route) => injectProtectedComp(route));
 		}
 
 		route.errorElement = <CodePairError />;
