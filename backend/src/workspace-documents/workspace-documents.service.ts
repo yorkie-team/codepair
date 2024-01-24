@@ -87,6 +87,25 @@ export class WorkspaceDocumentsService {
 		};
 	}
 
+	async findOne(userId: string, workspaceId: string, documentId: string) {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+
+			return this.prismaService.document.findUniqueOrThrow({
+				where: {
+					id: documentId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException();
+		}
+	}
+
 	async createSharingToken(
 		userId: string,
 		workspaceId: string,
