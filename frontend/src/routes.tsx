@@ -45,12 +45,12 @@ const codePairRoutes: Array<CodePairRoute> = [
 		],
 	},
 	{
-		path: "workspace",
+		path: ":workspaceSlug",
 		accessType: AccessType.PRIVATE,
 		element: <WorkspaceLayout />,
 		children: [
 			{
-				path: ":workspaceSlug",
+				path: "",
 				element: <WorkspaceIndex />,
 			},
 		],
