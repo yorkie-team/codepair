@@ -1,8 +1,7 @@
-import { Controller, Get, Param, Query, Req } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import { DocumentsService } from "./documents.service";
 import { Public } from "src/utils/decorators/auth.decorator";
 import {
-	ApiFoundResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,

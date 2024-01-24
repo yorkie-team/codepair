@@ -4,7 +4,6 @@ import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
-import slugify from "slugify";
 import { generateRandomKey } from "src/utils/functions/random-string";
 
 @Injectable()
