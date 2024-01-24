@@ -12,7 +12,7 @@ function JoinIndex() {
 		if (!params.invitationToken) return;
 
 		joinWorkspace({ invitationToken: params.invitationToken }).then((data) => {
-			navigate(`/workspace/${data.slug}`);
+			navigate(`/${data.slug}`);
 		});
 	}, [joinWorkspace, navigate, params.invitationToken]);
 

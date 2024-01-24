@@ -39,7 +39,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
 
 	const moveToWorkspace = (slug: string) => {
-		navigate(`/workspace/${slug}`);
+		navigate(`/${slug}`);
 	};
 
 	const handleMoveToSelectedWorkspace = (workspaceSlug: string) => {
