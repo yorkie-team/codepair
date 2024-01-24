@@ -30,8 +30,7 @@ export class AuthController {
 	async login(@Req() req: LoginRequest): Promise<HttpRedirectResponse> {
 		const user = await this.usersService.findOrCreate(
 			req.user.socialProvider,
-			req.user.socialUid,
-			req.user.nickname
+			req.user.socialUid
 		);
 
 		const accessToken = this.jwtService.sign({ sub: user.id, nickname: user.nickname });

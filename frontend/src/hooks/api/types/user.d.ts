@@ -1,7 +1,7 @@
 export interface User {
 	id: string;
-	nickname: string;
-	lastWorkspaceSlug: string;
+	nickname?: string | null;
+	lastWorkspaceSlug?: string | null;
 	createdAt: Date;
 	updatedAt: Date;
 }

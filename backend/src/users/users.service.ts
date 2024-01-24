@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindUserResponse } from "./types/find-user-response.type";
-import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
-import slugify from "slugify";
 
 @Injectable()
 export class UsersService {
@@ -40,15 +38,11 @@ export class UsersService {
 
 		return {
 			...foundUser,
-			lastWorkspaceSlug: foundUserWorkspace.workspace.slug,
+			lastWorkspaceSlug: foundUserWorkspace?.workspace?.slug,
 		};
 	}
 
-	async findOrCreate(
-		socialProvider: string,
-		socialUid: string,
-		nickname: string
-	): Promise<User | null> {
+	async findOrCreate(socialProvider: string, socialUid: string): Promise<User | null> {
 		const foundUser = await this.prismaService.user.findFirst({
 			where: {
 				socialProvider,
@@ -64,37 +58,6 @@ export class UsersService {
 			data: {
 				socialProvider,
 				socialUid,
-				nickname,
-			},
-		});
-
-		const title = `${user.nickname}'s Workspace`;
-		let slug = slugify(title, { lower: true });
-
-		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
-			where: {
-				slug: {
-					startsWith: slug,
-				},
-			},
-		});
-
-		if (duplicatedWorkspaceList.length) {
-			slug += `-${duplicatedWorkspaceList.length + 1}`;
-		}
-
-		const workspace = await this.prismaService.workspace.create({
-			data: {
-				title,
-				slug,
-			},
-		});
-
-		await this.prismaService.userWorkspace.create({
-			data: {
-				userId: user.id,
-				workspaceId: workspace.id,
-				role: WorkspaceRoleConstants.OWNER,
 			},
 		});
 

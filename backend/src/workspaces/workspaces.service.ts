@@ -13,7 +13,7 @@ export class WorkspacesService {
 	constructor(private prismaService: PrismaService) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
-		let slug = slugify(title);
+		let slug = slugify(title, { lower: true });
 
 		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
 			where: {
