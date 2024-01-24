@@ -15,8 +15,8 @@ function LoginIndex() {
 	};
 
 	return (
-		<Container>
-			<Stack alignItems="center" justifyContent="center" sx={{ height: "100vh" }}>
+		<Container sx={{ height: 1 }}>
+			<Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
 				<Paper sx={{ p: 5, width: "small", boxShadow: 2, maxWidth: "80%" }}>
 					<Stack gap={4}>
 						<Box>
