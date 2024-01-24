@@ -1,15 +1,20 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
 	CreateDocumentRequest,
 	CreateDocumentResponse,
 	CreateDocumentShareTokenRequest,
 	CreateDocumentShareTokenResponse,
+	GetWorkspaceDocumentResponse,
 	GetWorkspaceDocumentListResponse,
 } from "./types/workspaceDocument";
 
 export const generateGetWorkspaceDocumentListQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId, "documents"];
+};
+
+export const generateGetDocumentQueryKey = (workspaceId: string, documentId: string) => {
+	return ["workpsaces", workspaceId, "documents", documentId];
 };
 
 export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
@@ -31,6 +36,24 @@ export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
 		initialPageParam: undefined,
 		getPreviousPageParam: (firstPage) => firstPage.cursor ?? undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
+	});
+
+	return query;
+};
+
+export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: string | null) => {
+	const query = useQuery({
+		queryKey: generateGetDocumentQueryKey(workspaceId || "", documentId || ""),
+		enabled: Boolean(workspaceId && documentId),
+		queryFn: async () => {
+			const res = await axios.get<GetWorkspaceDocumentResponse>(
+				`/workspaces/${workspaceId}/documents/${documentId}`
+			);
+			return res.data;
+		},
+		meta: {
+			errorMessage: "This is a non-existent or unauthorized document.",
+		},
 	});
 
 	return query;

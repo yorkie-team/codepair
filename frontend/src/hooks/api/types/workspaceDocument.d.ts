@@ -5,6 +5,8 @@ export class GetWorkspaceDocumentListResponse {
 	documents: Array<Document>;
 }
 
+export class GetWorkspaceDocumentResponse extends Document {}
+
 export class CreateDocumentRequest {
 	title: string;
 }

@@ -4,7 +4,7 @@ import { RootState } from "./store";
 
 export interface User {
 	id: string;
-	nickname: string;
+	nickname: string | null;
 	lastWorkspaceSlug: string;
 	updatedAt: Date;
 	createdAt: Date;

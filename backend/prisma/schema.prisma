@@ -14,7 +14,7 @@ model User {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   socialProvider    String          @map("social_provider")
   socialUid         String          @unique @map("social_uid")
-  nickname          String
+  nickname          String?
   createdAt         DateTime        @default(now()) @map("created_at")
   updatedAt         DateTime        @updatedAt @map("updated_at")
   userWorkspaceList UserWorkspace[]
@@ -52,7 +52,6 @@ model Document {
   id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
   yorkieDocumentId         String                 @map("yorkie_document_id")
   title                    String
-  slug                     String
   content                  String?
   createdAt                DateTime               @default(now()) @map("created_at")
   updatedAt                DateTime               @updatedAt @map("updated_at")

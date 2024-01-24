@@ -1,13 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindUserResponse } from "./types/find-user-response.type";
-import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import { CheckService } from "src/check/check.service";
 import slugify from "slugify";
+import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 
 @Injectable()
 export class UsersService {
-	constructor(private prismaService: PrismaService) {}
+	constructor(
+		private prismaService: PrismaService,
+		private checkService: CheckService
+	) {}
 
 	async findOne(userId: string): Promise<FindUserResponse> {
 		const foundUserWorkspace = await this.prismaService.userWorkspace.findFirst({
@@ -40,15 +44,11 @@ export class UsersService {
 
 		return {
 			...foundUser,
-			lastWorkspaceSlug: foundUserWorkspace.workspace.slug,
+			lastWorkspaceSlug: foundUserWorkspace?.workspace?.slug,
 		};
 	}
 
-	async findOrCreate(
-		socialProvider: string,
-		socialUid: string,
-		nickname: string
-	): Promise<User | null> {
+	async findOrCreate(socialProvider: string, socialUid: string): Promise<User | null> {
 		const foundUser = await this.prismaService.user.findFirst({
 			where: {
 				socialProvider,
@@ -64,40 +64,57 @@ export class UsersService {
 			data: {
 				socialProvider,
 				socialUid,
-				nickname,
-			},
-		});
-
-		const title = `${user.nickname}'s Workspace`;
-		let slug = slugify(title);
-
-		const duplicatedWorkspaceList = await this.prismaService.workspace.findMany({
-			where: {
-				slug: {
-					startsWith: slug,
-				},
-			},
-		});
-
-		if (duplicatedWorkspaceList.length) {
-			slug += `-${duplicatedWorkspaceList.length + 1}`;
-		}
-
-		const workspace = await this.prismaService.workspace.create({
-			data: {
-				title,
-				slug,
-			},
-		});
-
-		await this.prismaService.userWorkspace.create({
-			data: {
-				userId: user.id,
-				workspaceId: workspace.id,
-				role: WorkspaceRoleConstants.OWNER,
 			},
 		});
 
 		return user;
+	}
+
+	async changeNickname(userId: string, nickname: string): Promise<void> {
+		const { conflict } = await this.checkService.checkNameConflict(nickname);
+
+		if (conflict) {
+			throw new ConflictException();
+		}
+
+		await this.prismaService.user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				nickname,
+			},
+		});
+
+		const userWorkspaceList = await this.prismaService.userWorkspace.findMany({
+			select: {
+				id: true,
+			},
+			where: {
+				userId,
+			},
+		});
+
+		const slug = slugify(nickname, { lower: true });
+
+		if (!userWorkspaceList.length) {
+			const { id: workspaceId } = await this.prismaService.workspace.create({
+				select: {
+					id: true,
+				},
+				data: {
+					title: nickname,
+					slug,
+				},
+			});
+
+			await this.prismaService.userWorkspace.create({
+				data: {
+					workspaceId,
+					userId,
+					role: WorkspaceRoleConstants.OWNER,
+				},
+			});
+		}
 	}
 }

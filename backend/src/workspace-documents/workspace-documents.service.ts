@@ -4,7 +4,6 @@ import { PrismaService } from "src/db/prisma.service";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
-import slugify from "slugify";
 import { generateRandomKey } from "src/utils/functions/random-string";
 
 @Injectable()
@@ -23,24 +22,9 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException();
 		}
 
-		let slug = slugify(title);
-
-		const duplicatedDocumentList = await this.prismaService.document.findMany({
-			where: {
-				slug: {
-					startsWith: slug,
-				},
-			},
-		});
-
-		if (duplicatedDocumentList.length) {
-			slug += `-${duplicatedDocumentList.length + 1}`;
-		}
-
 		return this.prismaService.document.create({
 			data: {
 				title,
-				slug,
 				workspaceId,
 				yorkieDocumentId: Math.random().toString(36).substring(7),
 			},
@@ -85,6 +69,25 @@ export class WorkspaceDocumentsService {
 			documents: documentList.slice(0, pageSize),
 			cursor: documentList.length > pageSize ? documentList[pageSize].id : null,
 		};
+	}
+
+	async findOne(userId: string, workspaceId: string, documentId: string) {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+
+			return this.prismaService.document.findUniqueOrThrow({
+				where: {
+					id: documentId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException();
+		}
 	}
 
 	async createSharingToken(

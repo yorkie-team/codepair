@@ -5,13 +5,10 @@ export class Document {
 	workspaceId: string;
 	yorkieDocumentId: string;
 	title: string;
-	slug: string;
 	content?: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
-
-export class GetDocumentResponse extends Document {}
 
 export class GetDocumentBySharingTokenResponse extends Document {
 	role: ShareRole;
