@@ -23,18 +23,16 @@ import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
-import { useSearchParams } from "react-router-dom";
+import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 
 interface ShareModalProps extends Omit<ModalProps, "children"> {}
 
 function ShareModal(props: ShareModalProps) {
 	const { ...modalProps } = props;
 	const params = useParams();
-	const [searchParams] = useSearchParams();
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
-	const { data: document } = useGetDocumentQuery(
-		searchParams.get("token") ? null : params.documentSlug
-	);
+	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
 	const { mutateAsync: createWorkspaceSharingToken } = useCreateWorkspaceSharingTokenMutation(
 		document?.workspaceId || "",
 		document?.id || ""
@@ -59,7 +57,7 @@ function ShareModal(props: ShareModalProps) {
 		});
 
 		setShareUrl(
-			`${window.location.origin}/document/${params.documentSlug}?token=${sharingToken}`
+			`${window.location.origin}/${params.workspaceSlug}/${params.documentId}/share?token=${sharingToken}`
 		);
 	};
 
@@ -137,7 +135,9 @@ function ShareModal(props: ShareModalProps) {
 					</FormControl>
 					{Boolean(shareUrl) && (
 						<Stack direction="row" alignItems="center" gap={2}>
-							<Typography variant="body1">{shareUrl}</Typography>
+							<Typography variant="body1" width={1} noWrap>
+								{shareUrl}
+							</Typography>
 							<Tooltip title="Copy URL">
 								<IconButton onClick={handleCopyShareUrl}>
 									<ContentCopyIcon />
