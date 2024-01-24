@@ -129,6 +129,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 				title="Workspace"
 				onClose={handleCreateWorkspaceModalOpen}
 				onSuccess={handleCreateWorkspace}
+				enableConflictCheck
 			/>
 		</>
 	);
