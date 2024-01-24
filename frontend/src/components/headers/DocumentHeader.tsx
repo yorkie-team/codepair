@@ -111,13 +111,14 @@ function DocumentHeader() {
 					<Stack direction="row" alignItems="center" gap={1}>
 						<AvatarGroup max={4}>
 							{presenceList?.map((presence) => (
-								<Avatar
-									key={presence.clientID}
-									alt={presence.presence.name}
-									sx={{ bgcolor: presence.presence.color }}
-								>
-									{presence.presence.name[0]}
-								</Avatar>
+								<Tooltip key={presence.clientID} title={presence.presence.name}>
+									<Avatar
+										alt={presence.presence.name}
+										sx={{ bgcolor: presence.presence.color }}
+									>
+										{presence.presence.name[0]}
+									</Avatar>
+								</Tooltip>
 							))}
 						</AvatarGroup>
 						{!editorState.shareRole && <ShareButton />}

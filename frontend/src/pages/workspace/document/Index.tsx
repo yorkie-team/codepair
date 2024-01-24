@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import * as yorkie from "yorkie-js-sdk";
 import { setClient, setDoc } from "../../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
