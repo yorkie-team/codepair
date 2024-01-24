@@ -1,4 +1,4 @@
-export interface User {
+export class User {
 	id: string;
 	nickname?: string | null;
 	lastWorkspaceSlug?: string | null;
@@ -7,3 +7,7 @@ export interface User {
 }
 
 export class GetUserResponse extends User {}
+
+export class UpdateUserRequest {
+	nickname: string;
+}

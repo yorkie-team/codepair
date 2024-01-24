@@ -143,7 +143,7 @@ function WorkspaceDrawer() {
 			<ListItem disablePadding>
 				<ListItemButton onClick={handleOpenProfilePopover}>
 					<ListItemAvatar>
-						<Avatar>{userStore.data?.nickname.charAt(0)}</Avatar>
+						<Avatar>{userStore.data?.nickname?.charAt(0)}</Avatar>
 					</ListItemAvatar>
 					<ListItemText primary={userStore.data?.nickname} />
 					<ListItemSecondaryAction>

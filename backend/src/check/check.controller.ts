@@ -1,4 +1,4 @@
-import { Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { CheckService } from "./check.service";
 import { CheckNameConflictDto } from "./dto/check-name-conflict.dto";
 import { CheckNameConflicReponse } from "./types/check-name-conflict-response.type";
@@ -11,7 +11,7 @@ export class CheckController {
 	constructor(private checkService: CheckService) {}
 
 	@Public()
-	@Post("name-conflicts")
+	@Post("name-conflict")
 	@ApiOperation({
 		summary: "Check Whether The Name Conflicts with Username or Title of Workspace.",
 		description: "If the name is conflict, it returns true.",
@@ -19,7 +19,7 @@ export class CheckController {
 	@ApiBody({ type: CheckNameConflictDto })
 	@ApiOkResponse({ type: CheckNameConflicReponse })
 	async checkNameConflict(
-		checkNameConflictDto: CheckNameConflictDto
+		@Body() checkNameConflictDto: CheckNameConflictDto
 	): Promise<CheckNameConflicReponse> {
 		return this.checkService.checkNameConflict(checkNameConflictDto.name);
 	}

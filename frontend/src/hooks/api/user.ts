@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth, setAccessToken } from "../../store/authSlice";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { GetUserResponse } from "./types/user";
+import { GetUserResponse, UpdateUserRequest } from "./types/user";
 import { useEffect } from "react";
 import { User, setUserData } from "../../store/userSlice";
 
@@ -38,4 +38,22 @@ export const useGetUserQuery = () => {
 	}, [dispatch, query.data, query.isError, query.isSuccess]);
 
 	return query;
+};
+
+export const useUpdateUserNicknmaeMutation = () => {
+	const authStore = useSelector(selectAuth);
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (data: UpdateUserRequest) => {
+			const res = await axios.put<void>("/users", data);
+
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
+			});
+		},
+	});
 };
