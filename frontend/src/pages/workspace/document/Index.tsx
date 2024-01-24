@@ -1,22 +1,22 @@
 import { useEffect } from "react";
-import Editor from "../../components/editor/Editor";
+import Editor from "../../../components/editor/Editor";
 import * as yorkie from "yorkie-js-sdk";
-import { selectEditor, setClient, setDoc } from "../../store/editorSlice";
+import { selectEditor, setClient, setDoc } from "../../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType,
-} from "../../utils/yorkie/yorkieSync";
+} from "../../../utils/yorkie/yorkieSync";
 import randomColor from "randomcolor";
 import Color from "color";
 import { Box, Paper } from "@mui/material";
 import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
-import Preview from "../../components/editor/Preview";
+import Preview from "../../../components/editor/Preview";
 import { useParams } from "react-router-dom";
-import { selectUser } from "../../store/userSlice";
-import { useGetDocumentQuery } from "../../hooks/api/workspaceDocument";
-import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { selectUser } from "../../../store/userSlice";
+import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
+import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
 
 function DocumentIndex() {
 	const dispatch = useDispatch();

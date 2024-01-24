@@ -1,4 +1,4 @@
-import DocumentIndex from "./pages/document/Index";
+import DocumentIndex from "./pages/workspace/document/Index";
 import MainLayout from "./components/layouts/MainLayout";
 import LoginIndex from "./pages/login/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
@@ -10,6 +10,7 @@ import CodePairError from "./components/common/CodePairError";
 import JoinIndex from "./pages/workspace/join/Index";
 import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
+import DocumentShareIndex from "./pages/workspace/document/share/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -64,6 +65,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 				path: ":documentId",
 				accessType: AccessType.PRIVATE,
 				element: <DocumentIndex />,
+			},
+			{
+				path: ":documentId/share",
+				accessType: AccessType.PUBLIC,
+				element: <DocumentShareIndex />,
 			},
 		],
 	},
