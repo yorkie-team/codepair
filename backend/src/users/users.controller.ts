@@ -5,7 +5,6 @@ import {
 	ApiConflictResponse,
 	ApiOkResponse,
 	ApiOperation,
-	ApiResponse,
 	ApiTags,
 } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
