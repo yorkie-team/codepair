@@ -17,16 +17,60 @@ import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import ThemeButton from "../common/ThemeButton";
 import ShareButton from "../common/ShareButton";
 import { useEffect } from "react";
+import { useList } from "react-use";
+import { ActorID } from "yorkie-js-sdk";
+import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
 
 function EditorHeader() {
 	const dispatch = useDispatch();
 	const editorState = useSelector(selectEditor);
+	const [
+		presenceList,
+		{
+			set: setPresenceList,
+			push: pushToPresenceList,
+			removeAt: removePresenceAt,
+			clear: clearPresenceList,
+			filter: filterPresenceList,
+		},
+	] = useList<{
+		clientID: ActorID;
+		presence: YorkieCodeMirrorPresenceType;
+	}>([]);
 
 	useEffect(() => {
 		if (editorState.shareRole === "READ") {
 			dispatch(setMode("read"));
 		}
 	}, [dispatch, editorState.shareRole]);
+
+	useEffect(() => {
+		if (!editorState.doc) return;
+
+		setPresenceList(editorState.doc.getPresences());
+
+		const unsubscribe = editorState.doc.subscribe("others", (event) => {
+			if (event.type === "watched") {
+				pushToPresenceList(event.value);
+			}
+
+			if (event.type === "unwatched") {
+				filterPresenceList((presence) => presence.clientID !== event.value.clientID);
+			}
+		});
+
+		return () => {
+			unsubscribe();
+			clearPresenceList();
+		};
+	}, [
+		editorState.doc,
+		clearPresenceList,
+		pushToPresenceList,
+		removePresenceAt,
+		setPresenceList,
+		filterPresenceList,
+	]);
 
 	const handleChangeMode = (newMode: EditorModeType) => {
 		dispatch(setMode(newMode));
@@ -66,7 +110,7 @@ function EditorHeader() {
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
 						<AvatarGroup max={4}>
-							{editorState.doc?.getPresences()?.map((presence) => (
+							{presenceList?.map((presence) => (
 								<Avatar
 									key={presence.clientID}
 									alt={presence.presence.name}
