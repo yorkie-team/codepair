@@ -88,7 +88,7 @@ function CreateModal(props: CreateModalProps) {
 								<TextFieldElement
 									variant="standard"
 									name="title"
-									label="Title of new note"
+									label={`Title of New ${title}`}
 									required
 									fullWidth
 									inputProps={{
