@@ -82,30 +82,30 @@ function DocumentHeader() {
 				<Stack width="100%" direction="row" justifyContent="space-between">
 					<Stack direction="row" spacing={1} alignItems="center">
 						<Paper>
-							{/* {editorState.shareRole !== "READ" && ( */}
-							<ToggleButtonGroup
-								value={editorState.mode}
-								exclusive
-								onChange={(_, newMode) => handleChangeMode(newMode)}
-								size="small"
-							>
-								<ToggleButton value="edit" aria-label="edit">
-									<Tooltip title="Edit Mode">
-										<EditIcon />
-									</Tooltip>
-								</ToggleButton>
-								<ToggleButton value="both" aria-label="both">
-									<Tooltip title="Both Mode">
-										<VerticalSplitIcon />
-									</Tooltip>
-								</ToggleButton>
-								<ToggleButton value="read" aria-label="read">
-									<Tooltip title="Read Mode">
-										<VisibilityIcon />
-									</Tooltip>
-								</ToggleButton>
-							</ToggleButtonGroup>
-							{/* )} */}
+							{editorState.shareRole !== "READ" && (
+								<ToggleButtonGroup
+									value={editorState.mode}
+									exclusive
+									onChange={(_, newMode) => handleChangeMode(newMode)}
+									size="small"
+								>
+									<ToggleButton value="edit" aria-label="edit">
+										<Tooltip title="Edit Mode">
+											<EditIcon />
+										</Tooltip>
+									</ToggleButton>
+									<ToggleButton value="both" aria-label="both">
+										<Tooltip title="Both Mode">
+											<VerticalSplitIcon />
+										</Tooltip>
+									</ToggleButton>
+									<ToggleButton value="read" aria-label="read">
+										<Tooltip title="Read Mode">
+											<VisibilityIcon />
+										</Tooltip>
+									</ToggleButton>
+								</ToggleButtonGroup>
+							)}
 						</Paper>
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
