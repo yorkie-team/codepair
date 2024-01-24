@@ -9,6 +9,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import WorkspaceIndex from "./pages/workspace/Index";
 import CodePairError from "./components/common/CodePairError";
 import JoinIndex from "./pages/workspace/join/Index";
+import Index from "./pages/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -33,6 +34,10 @@ const codePairRoutes: Array<CodePairRoute> = [
 		accessType: AccessType.GUEST,
 		element: <MainLayout />,
 		children: [
+			{
+				path: "",
+				element: <Index />,
+			},
 			{
 				path: "login",
 				element: <LoginIndex />,
