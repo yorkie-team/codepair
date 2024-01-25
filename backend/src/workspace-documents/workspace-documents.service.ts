@@ -5,10 +5,17 @@ import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
 import { ShareRole } from "src/utils/types/share-role.type";
 import { generateRandomKey } from "src/utils/functions/random-string";
+import { ConfigService } from "@nestjs/config";
+import { FindDocumentFromYorkieResponse } from "./types/find-document-from-yorkie-response.type";
+import * as moment from "moment";
+import { connect } from "http2";
 
 @Injectable()
 export class WorkspaceDocumentsService {
-	constructor(private prismaService: PrismaService) {}
+	constructor(
+		private prismaService: PrismaService,
+		private configService: ConfigService
+	) {}
 
 	async create(userId: string, workspaceId: string, title: string) {
 		try {
@@ -65,8 +72,22 @@ export class WorkspaceDocumentsService {
 			...additionalOptions,
 		});
 
+		const slicedDocumentList = documentList.slice(0, pageSize);
+		const mergedDocumentList = await Promise.all(
+			slicedDocumentList.map(async (doc) => {
+				// Get updatedAt field from Yorkie server
+				return this.findDocumentFromYorkie(doc.yorkieDocumentId).then((yorkieDoc) => {
+					console.log(yorkieDoc);
+					return {
+						...doc,
+						updatedAt: moment(yorkieDoc.document.updatedAt).toDate(),
+					};
+				});
+			})
+		);
+
 		return {
-			documents: documentList.slice(0, pageSize),
+			documents: mergedDocumentList,
 			cursor: documentList.length > pageSize ? documentList[pageSize].id : null,
 		};
 	}
@@ -131,5 +152,40 @@ export class WorkspaceDocumentsService {
 		return {
 			sharingToken: token,
 		};
+	}
+
+	async findDocumentFromYorkie(documentKey: string): Promise<FindDocumentFromYorkieResponse> {
+		return new Promise((resolve, reject) => {
+			const client = connect(`${this.configService.get<string>("YORKIE_API_ADDR")}`);
+
+			client.on("error", (err) => reject(err));
+
+			const requestBody = JSON.stringify({
+				project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
+				document_key: documentKey,
+			});
+			const req = client.request({
+				":method": "POST",
+				":path": "/yorkie.v1.AdminService/GetDocument",
+				"Content-Type": "application/json",
+				"content-length": Buffer.byteLength(requestBody),
+				Authorization: this.configService.get<string>("YORKIE_PROJECT_SECRET_KEY"),
+			});
+
+			req.write(requestBody);
+			req.setEncoding("utf8");
+			let data = "";
+
+			req.on("data", (chunk) => {
+				data += chunk;
+			});
+
+			req.on("end", () => {
+				client.close();
+				resolve(JSON.parse(data) as FindDocumentFromYorkieResponse);
+			});
+
+			req.end();
+		});
 	}
 }
