@@ -26,6 +26,7 @@ export const useYorkieDocument = (
 		const initializeYorkie = async () => {
 			const newClient = new yorkie.Client(import.meta.env.VITE_YORKIE_API_ADDR, {
 				apiKey: import.meta.env.VITE_YORKIE_API_KEY,
+				token: "1231231",
 			});
 			await newClient.activate();
 
