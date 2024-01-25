@@ -8,6 +8,9 @@ import {
 	GetWorkspaceDocumentResponse,
 	GetWorkspaceDocumentListResponse,
 } from "./types/workspaceDocument";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setDocumentData } from "../../store/documentSlice";
 
 export const generateGetWorkspaceDocumentListQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId, "documents"];
@@ -42,6 +45,7 @@ export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
 };
 
 export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: string | null) => {
+	const dispatch = useDispatch();
 	const query = useQuery({
 		queryKey: generateGetDocumentQueryKey(workspaceId || "", documentId || ""),
 		enabled: Boolean(workspaceId && documentId),
@@ -55,6 +59,16 @@ export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: st
 			errorMessage: "This is a non-existent or unauthorized document.",
 		},
 	});
+
+	useEffect(() => {
+		if (query.data) {
+			dispatch(setDocumentData(query.data));
+		}
+
+		return () => {
+			dispatch(setDocumentData(null));
+		};
+	}, [dispatch, query.data]);
 
 	return query;
 };

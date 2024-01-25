@@ -13,11 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetWorkspaceUserListQuery } from "../../hooks/api/workspaceUser";
-import { useParams } from "react-router-dom";
-import {
-	useCreateWorkspaceInvitationTokenMutation,
-	useGetWorkspaceQuery,
-} from "../../hooks/api/workspace";
+import { useCreateWorkspaceInvitationTokenMutation } from "../../hooks/api/workspace";
 import { useMemo, useState } from "react";
 import { User } from "../../hooks/api/types/user";
 import InfiniteScroll from "react-infinite-scroller";
@@ -27,6 +23,8 @@ import moment, { unitOfTime } from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
+import { useSelector } from "react-redux";
+import { selectWorkspace } from "../../store/workspaceSlice";
 
 interface MemeberModalProps {
 	open: boolean;
@@ -35,15 +33,14 @@ interface MemeberModalProps {
 
 function MemeberModal(props: MemeberModalProps) {
 	const { open, onClose } = props;
-	const params = useParams();
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const workspaceStore = useSelector(selectWorkspace);
 	const {
 		data: workspaceUserPageList,
 		fetchNextPage,
 		hasNextPage,
-	} = useGetWorkspaceUserListQuery(workspace?.id);
+	} = useGetWorkspaceUserListQuery(workspaceStore.data?.id);
 	const { mutateAsync: createWorkspaceInvitationToken } =
-		useCreateWorkspaceInvitationTokenMutation(workspace?.id || "");
+		useCreateWorkspaceInvitationTokenMutation(workspaceStore.data?.id || "");
 	const userList = useMemo(() => {
 		return (
 			workspaceUserPageList?.pages.reduce((prev, page) => {
