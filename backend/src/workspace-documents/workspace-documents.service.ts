@@ -79,7 +79,9 @@ export class WorkspaceDocumentsService {
 				return this.findDocumentFromYorkie(doc.yorkieDocumentId).then((yorkieDoc) => {
 					return {
 						...doc,
-						updatedAt: moment(yorkieDoc.document.updatedAt).toDate(),
+						updatedAt: yorkieDoc.document?.updatedAt
+							? moment(yorkieDoc.document?.updatedAt).toDate()
+							: doc.updatedAt,
 					};
 				});
 			})
@@ -153,7 +155,9 @@ export class WorkspaceDocumentsService {
 		};
 	}
 
-	async findDocumentFromYorkie(documentKey: string): Promise<FindDocumentFromYorkieResponse> {
+	async findDocumentFromYorkie(
+		documentKey: string
+	): Promise<FindDocumentFromYorkieResponse | undefined> {
 		return new Promise((resolve, reject) => {
 			const client = connect(`${this.configService.get<string>("YORKIE_API_ADDR")}`);
 
