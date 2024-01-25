@@ -1,0 +1,13 @@
+name: docker-publish-latest
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+jobs:
+  call-base-docker-publish:
+    uses: ./.github/workflows/base-docker-publish.yml
+    secrets: inherit
+    with:
+      version: latest

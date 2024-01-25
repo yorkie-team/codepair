@@ -1,0 +1,26 @@
+name: Base Docker Publish
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: version to build
+        required: true
+        type: string
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build & Push Image
+        env:
+          VERSION: ${{ inputs.version }}
+        run: docker build -t yorkieteam/codepair-poc:$VERSION --push ./backend
