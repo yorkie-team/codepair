@@ -5,6 +5,8 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 import authSlice from "./authSlice";
 import userSlice from "./userSlice";
+import workspaceSlice from "./workspaceSlice";
+import documentSlice from "./documentSlice";
 
 const reducers = combineReducers({
 	// Persistence
@@ -13,6 +15,8 @@ const reducers = combineReducers({
 	// Volatile
 	user: userSlice,
 	editor: editorSlice,
+	workspace: workspaceSlice,
+	document: documentSlice,
 });
 
 const persistConfig = {
