@@ -77,7 +77,6 @@ export class WorkspaceDocumentsService {
 			slicedDocumentList.map(async (doc) => {
 				// Get updatedAt field from Yorkie server
 				return this.findDocumentFromYorkie(doc.yorkieDocumentId).then((yorkieDoc) => {
-					console.log(yorkieDoc);
 					return {
 						...doc,
 						updatedAt: moment(yorkieDoc.document.updatedAt).toDate(),
