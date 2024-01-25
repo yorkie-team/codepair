@@ -36,11 +36,6 @@ export class CheckController {
 	@ApiOkResponse({ type: CheckNameConflicReponse })
 	@HttpCode(HttpStatus.OK)
 	async checkYorkie(@Body() checkYorkieDto: CheckYorkieDto): Promise<CheckYorkieResponse> {
-		console.log(checkYorkieDto);
-
-		return {
-			allowed: true, // or false if the given token is not authorized for this document.
-			reason: "ok", // [optional] reason for this response.
-		};
+		return this.checkService.checkYorkie(checkYorkieDto);
 	}
 }
