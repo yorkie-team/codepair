@@ -14,17 +14,14 @@ import { invitationExpiredStringList } from "../../utils/expire";
 import { useState } from "react";
 import moment, { unitOfTime } from "moment";
 import { useParams } from "react-router";
-import {
-	useCreateWorkspaceSharingTokenMutation,
-	useGetDocumentQuery,
-} from "../../hooks/api/workspaceDocument";
+import { useCreateWorkspaceSharingTokenMutation } from "../../hooks/api/workspaceDocument";
 import { ShareRole } from "../../utils/share";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
-import { selectWorkspace } from "../../store/workspaceSlice";
+import { selectDocument } from "../../store/documentSlice";
 
 interface ShareModalProps extends Omit<ModalProps, "children"> {}
 
@@ -32,11 +29,10 @@ function ShareModal(props: ShareModalProps) {
 	const { ...modalProps } = props;
 	const params = useParams();
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
-	const workspaceStore = useSelector(selectWorkspace);
-	const { data: document } = useGetDocumentQuery(workspaceStore.data?.id, params.documentId);
+	const documentStore = useSelector(selectDocument);
 	const { mutateAsync: createWorkspaceSharingToken } = useCreateWorkspaceSharingTokenMutation(
-		document?.workspaceId || "",
-		document?.id || ""
+		documentStore.data?.workspaceId || "",
+		documentStore.data?.id || ""
 	);
 	const { enqueueSnackbar } = useSnackbar();
 
