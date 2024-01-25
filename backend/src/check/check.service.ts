@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { CheckNameConflicReponse } from "./types/check-name-conflict-response.type";
 import slugify from "slugify";
-import { CheckYorkieDto, YorkieMethod } from "./dto/check-yorkie.dto";
+import { CheckYorkieDto, Verb, YorkieMethod } from "./dto/check-yorkie.dto";
 import { CheckYorkieResponse } from "./types/check-yorkie-response.type";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "src/utils/types/jwt.type";
@@ -46,6 +46,7 @@ export class CheckService {
 			allowed = true;
 			reason = `Pass ${checkYorkieDto.method}`;
 		} else {
+			const { key: yorkieDocumentId } = checkYorkieDto.attributes?.[0];
 			if (type === "default") {
 				const { sub } = this.jwtService.verify<JwtPayload>(token);
 
@@ -54,7 +55,7 @@ export class CheckService {
 						id: true,
 					},
 					where: {
-						yorkieDocumentId: checkYorkieDto.attributes?.[0].key,
+						yorkieDocumentId,
 						workspace: {
 							userWorkspaceList: {
 								every: {
@@ -71,6 +72,9 @@ export class CheckService {
 					await this.prismaService.documentSharingToken.findFirst({
 						where: {
 							token,
+							document: {
+								yorkieDocumentId,
+							},
 						},
 					});
 

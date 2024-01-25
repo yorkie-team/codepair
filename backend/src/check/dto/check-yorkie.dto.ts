@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-enum Verb {
+export enum Verb {
 	"r" = "r",
 	"rw" = "rw",
 }
