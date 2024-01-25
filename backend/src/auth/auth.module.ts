@@ -13,6 +13,7 @@ import { JwtStrategy } from "./jwt.strategy";
 		JwtModule.registerAsync({
 			useFactory: async (configService: ConfigService) => {
 				return {
+					global: true,
 					signOptions: { expiresIn: "24h" },
 					secret: configService.get<string>("JWT_AUTH_SECRET"),
 				};
