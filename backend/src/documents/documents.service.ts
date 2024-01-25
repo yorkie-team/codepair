@@ -3,6 +3,7 @@ import { Document } from "@prisma/client";
 import { PrismaService } from "src/db/prisma.service";
 import { FindDocumentFromSharingTokenResponse } from "./types/find-document-from-sharing-token-response.type";
 import { ShareRoleEnum } from "src/utils/constants/share-role";
+import * as moment from "moment";
 
 @Injectable()
 export class DocumentsService {
@@ -22,6 +23,13 @@ export class DocumentsService {
 				});
 			documentId = documentSharingToken.documentId;
 			role = documentSharingToken.role as ShareRoleEnum;
+
+			if (
+				documentSharingToken.expiredAt &&
+				moment().isAfter(documentSharingToken.expiredAt)
+			) {
+				throw new Error();
+			}
 		} catch (e) {
 			throw new UnauthorizedException("Invalid sharing token");
 		}
