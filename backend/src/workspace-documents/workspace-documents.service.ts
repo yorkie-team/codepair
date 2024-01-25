@@ -185,7 +185,6 @@ export class WorkspaceDocumentsService {
 
 			req.on("end", () => {
 				client.close();
-				console.log(data);
 				resolve(JSON.parse(data) as FindDocumentFromYorkieResponse);
 			});
 
