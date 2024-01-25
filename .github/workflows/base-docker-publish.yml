@@ -23,4 +23,4 @@ jobs:
       - name: Build & Push Image
         env:
           VERSION: ${{ inputs.version }}
-        run: docker build -t yorkieteam/codepair:$VERSION --push ./backend
+        run: docker build -t yorkieteam/codepair-poc:$VERSION --push ./backend
