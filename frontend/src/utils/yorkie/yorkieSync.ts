@@ -83,13 +83,15 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 			return;
 		}
 
+		let adj = 0;
 		this._doc.update((root, presence) => {
 			update.changes.iterChanges((fromA, toA, _fromB, _toB, insert) => {
 				if (!root.content) {
 					root.content = new yorkie.Text();
 				}
 				const insertText = insert.sliceString(0, insert.length, "\n");
-				const updatedIndexRange = root.content.edit(fromA, toA, insertText);
+				const updatedIndexRange = root.content.edit(fromA + adj, toA + adj, insertText);
+				adj += insertText.length - (toA - fromA);
 				if (updatedIndexRange) {
 					presence.set({
 						selection: root.content.indexRangeToPosRange(updatedIndexRange),

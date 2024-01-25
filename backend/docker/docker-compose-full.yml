@@ -12,6 +12,9 @@ services:
             GITHUB_CALLBACK_URL: "<BACKEND_BASE_URL>/auth/login/github"
             JWT_AUTH_SECRET: "JWT_AUTH_SECRET"
             FRONTEND_BASE_URL: "FRONTEND_BASE_URL"
+            YORKIE_API_ADDR: "YORKIE_API_ADDR"
+            YORKIE_PROJECT_NAME: "YORKIE_PROJECT_NAME"
+            YORKIE_PROJECT_SECRET_KEY: "YORKIE_PROJECT_SECRET_KEY"
         ports:
             - "3000:3000"
         depends_on:
