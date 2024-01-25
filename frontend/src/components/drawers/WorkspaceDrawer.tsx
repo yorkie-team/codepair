@@ -17,8 +17,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import { MouseEventHandler, useState } from "react";
 import ProfilePopover from "../popovers/ProfilePopover";
-import { useNavigate, useParams } from "react-router-dom";
-import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { useNavigate } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
@@ -28,15 +27,17 @@ import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
 import ThemeButton from "../common/ThemeButton";
 import PeopleIcon from "@mui/icons-material/People";
 import MemberModal from "../modals/MemberModal";
+import { selectWorkspace } from "../../store/workspaceSlice";
 
 const DRAWER_WIDTH = 240;
 
 function WorkspaceDrawer() {
 	const navigate = useNavigate();
-	const params = useParams();
 	const userStore = useSelector(selectUser);
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
-	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
+	const workspaceStore = useSelector(selectWorkspace);
+	const { mutateAsync: createDocument } = useCreateDocumentMutation(
+		workspaceStore.data?.id || ""
+	);
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
 	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
 		(EventTarget & Element) | null
@@ -91,7 +92,7 @@ function WorkspaceDrawer() {
 			<ListItem disablePadding>
 				<ListItemButton onClick={handleOpenWorkspacePopover}>
 					<ListItemText
-						primary={workspace?.title}
+						primary={workspaceStore.data?.title}
 						primaryTypographyProps={{
 							variant: "subtitle1",
 							noWrap: true,

@@ -23,7 +23,8 @@ import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { useSelector } from "react-redux";
+import { selectWorkspace } from "../../store/workspaceSlice";
 
 interface ShareModalProps extends Omit<ModalProps, "children"> {}
 
@@ -31,8 +32,8 @@ function ShareModal(props: ShareModalProps) {
 	const { ...modalProps } = props;
 	const params = useParams();
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
-	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
+	const workspaceStore = useSelector(selectWorkspace);
+	const { data: document } = useGetDocumentQuery(workspaceStore.data?.id, params.documentId);
 	const { mutateAsync: createWorkspaceSharingToken } = useCreateWorkspaceSharingTokenMutation(
 		document?.workspaceId || "",
 		document?.id || ""
