@@ -5,7 +5,7 @@ enum Verb {
 	"rw" = "rw",
 }
 
-enum YorkieMethod {
+export enum YorkieMethod {
 	"ActivateClient" = "ActivateClient",
 	"DeactivateClient" = "DeactivateClient",
 	"AttachDocument" = "AttachDocument",
