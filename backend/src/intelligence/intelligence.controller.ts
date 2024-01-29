@@ -4,7 +4,6 @@ import { IntelligenceService } from "./intelligence.service";
 import { AuthroizedRequest } from "src/utils/types/req.type";
 import { Feature } from "./types/feature.type";
 import { RunFeatureDto } from "./dto/run-feature.dto";
-import { Public } from "src/utils/decorators/auth.decorator";
 import { Response } from "express";
 
 @ApiTags("Intelligences")
@@ -13,7 +12,6 @@ import { Response } from "express";
 export class IntelligenceController {
 	constructor(private intelligenceService: IntelligenceService) {}
 
-	@Public()
 	@Post(":feature")
 	@ApiOperation({
 		summary: "Run the Yorkie Intelligence Feature",
@@ -31,7 +29,11 @@ export class IntelligenceController {
 		@Param("feature") feature: Feature,
 		@Body() runFeatureDto: RunFeatureDto
 	): Promise<void> {
-		const stream = await this.intelligenceService.runFeature(feature, runFeatureDto.content);
+		const stream = await this.intelligenceService.runFeature(
+			req.user.id,
+			feature,
+			runFeatureDto.content
+		);
 
 		for await (const chunk of stream) {
 			res.write(chunk);

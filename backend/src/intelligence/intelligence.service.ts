@@ -19,13 +19,15 @@ export class IntelligenceService {
 		return selectedPrompt;
 	}
 
-	async runFeature(feature: Feature, content: string) {
+	async runFeature(userId: string, feature: Feature, content: string) {
 		const promptTemplate = this.selectPromptTemplate(feature);
 		const prompt = await promptTemplate.format({
 			content,
 		});
 		const parser = new StringOutputParser();
 
-		return this.chatModel.pipe(parser).stream(prompt);
+		return this.chatModel.pipe(parser).stream(prompt, {
+			tags: [feature, userId],
+		});
 	}
 }
