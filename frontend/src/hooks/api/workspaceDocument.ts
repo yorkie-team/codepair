@@ -29,7 +29,7 @@ export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
 				{
 					params: {
 						cursor: pageParam,
-						page_size: 20,
+						page_size: 30,
 					},
 				}
 			);
