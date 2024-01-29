@@ -10,6 +10,7 @@ import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
 import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
 import { DocumentsModule } from "./documents/documents.module";
 import { CheckModule } from "./check/check.module";
+import { AdminModule } from './admin/admin.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { CheckModule } from "./check/check.module";
 		WorkspaceDocumentsModule,
 		DocumentsModule,
 		CheckModule,
+		AdminModule,
 	],
 	controllers: [],
 	providers: [
