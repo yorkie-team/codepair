@@ -58,7 +58,7 @@ export class AdminService {
 					project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
 					page_size: 101,
 					previous_id: lastDocumentId,
-					// is_forward: true,
+					is_forward: true,
 				})
 			);
 
