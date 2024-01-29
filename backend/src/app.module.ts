@@ -10,6 +10,8 @@ import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
 import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
 import { DocumentsModule } from "./documents/documents.module";
 import { CheckModule } from "./check/check.module";
+import { IntelligenceModule } from "./intelligence/intelligence.module";
+import { LangchainModule } from "./langchain/langchain.module";
 
 @Module({
 	imports: [
@@ -21,6 +23,8 @@ import { CheckModule } from "./check/check.module";
 		WorkspaceDocumentsModule,
 		DocumentsModule,
 		CheckModule,
+		IntelligenceModule,
+		LangchainModule,
 	],
 	controllers: [],
 	providers: [
