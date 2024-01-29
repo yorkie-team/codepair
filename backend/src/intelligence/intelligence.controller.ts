@@ -1,7 +1,9 @@
-import { Controller, Get, Req } from "@nestjs/common";
+import { Body, Controller, Get, Param, Req } from "@nestjs/common";
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { IntelligenceService } from "./intelligence.service";
 import { AuthroizedRequest } from "src/utils/types/req.type";
+import { Feature } from "./types/feature.type";
+import { RunFeatureDto } from "./dto/run-feature.dto";
 
 @ApiTags("Intelligences")
 @ApiBearerAuth()
@@ -17,9 +19,15 @@ export class IntelligenceController {
 	@ApiParam({
 		name: "feature",
 		description: "Feature of intelligence to run",
+		enum: Feature,
 	})
 	@ApiOkResponse({ type: String })
-	async runFeature(@Req() req: AuthroizedRequest): Promise<string> {
+	async runFeature(
+		@Req() req: AuthroizedRequest,
+		@Param("feature") feature: Feature,
+		@Body() runFeatureDto: RunFeatureDto
+	): Promise<string> {
+		await this.intelligenceService.runFeature(feature, runFeatureDto.content);
 		return "Test";
 	}
 }
