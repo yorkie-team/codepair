@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Req } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { IntelligenceService } from "./intelligence.service";
 import { AuthroizedRequest } from "src/utils/types/req.type";
 import { Feature } from "./types/feature.type";
 import { RunFeatureDto } from "./dto/run-feature.dto";
+import { Public } from "src/utils/decorators/auth.decorator";
+import { Response } from "express";
 
 @ApiTags("Intelligences")
 @ApiBearerAuth()
@@ -11,7 +13,8 @@ import { RunFeatureDto } from "./dto/run-feature.dto";
 export class IntelligenceController {
 	constructor(private intelligenceService: IntelligenceService) {}
 
-	@Get(":feature")
+	@Public()
+	@Post(":feature")
 	@ApiOperation({
 		summary: "Run the Yorkie Intelligence Feature",
 		description: "Run the selected yorkie intelligence",
@@ -24,10 +27,16 @@ export class IntelligenceController {
 	@ApiOkResponse({ type: String })
 	async runFeature(
 		@Req() req: AuthroizedRequest,
+		@Res() res: Response,
 		@Param("feature") feature: Feature,
 		@Body() runFeatureDto: RunFeatureDto
-	): Promise<string> {
-		await this.intelligenceService.runFeature(feature, runFeatureDto.content);
-		return "Test";
+	): Promise<void> {
+		const stream = await this.intelligenceService.runFeature(feature, runFeatureDto.content);
+
+		for await (const chunk of stream) {
+			res.write(chunk);
+		}
+
+		res.end();
 	}
 }
