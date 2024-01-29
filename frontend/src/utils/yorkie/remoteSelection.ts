@@ -130,81 +130,7 @@ export class YorkieRemoteSelectionsPluginValue {
 		this.conf = view.state.facet(yorkieSyncFacet);
 
 		this.unsubscribe = this.conf.doc.subscribe("others", (event) => {
-			const decorations: Array<cmState.Range<cmView.Decoration>> = [];
 			if (["presence-changed", "unwatched"].includes(event.type)) {
-				this.conf.doc.getPresences().forEach((presence) => {
-					if (presence.clientID === this.conf.client.getID()) {
-						return;
-					}
-					if (presence.presence.selection == null) {
-						return;
-					}
-					const cursor = this.conf.doc
-						.getRoot()
-						.content.posRangeToIndexRange(presence.presence.selection);
-					const color = presence.presence.color;
-					const name = presence.presence.name;
-					const start = Math.min(cursor[0], cursor[1]);
-					const end = Math.max(cursor[0], cursor[1]);
-					const startLine = view.state.doc.lineAt(start);
-					const endLine = view.state.doc.lineAt(end);
-					if (startLine.number === endLine.number) {
-						// selected content in a single line.
-						decorations.push({
-							from: start,
-							to: end,
-							value: cmView.Decoration.mark({
-								attributes: { style: `background-color: ${color}` },
-								class: "cm-ySelection",
-							}),
-						});
-					} else {
-						// selected content in multiple lines
-						// first, render text-selection in the first line
-						decorations.push({
-							from: start,
-							to: startLine.from + startLine.length,
-							value: cmView.Decoration.mark({
-								attributes: { style: `background-color: ${color}` },
-								class: "cm-ySelection",
-							}),
-						});
-						// render text-selection in the last line
-						decorations.push({
-							from: endLine.from,
-							to: end,
-							value: cmView.Decoration.mark({
-								attributes: { style: `background-color: ${color}` },
-								class: "cm-ySelection",
-							}),
-						});
-						for (let i = startLine.number + 1; i < endLine.number; i++) {
-							const linePos = view.state.doc.line(i).from;
-							const linePosTo = view.state.doc.line(i).to;
-							decorations.push({
-								from: linePos,
-								to: linePosTo,
-								value: cmView.Decoration.mark({
-									attributes: {
-										style: `background-color: ${color}`,
-										class: "cm-ySelection",
-									},
-								}),
-							});
-						}
-					}
-					decorations.push({
-						from: cursor[0],
-						to: cursor[0],
-						value: cmView.Decoration.widget({
-							side: cursor[0] - cursor[1] > 0 ? -1 : 1, // the local cursor should be rendered outside the remote selection
-							block: false,
-							widget: new YRemoteCaretWidget(color, name),
-						}),
-					});
-				});
-				this.decorations = cmView.Decoration.set(decorations, true);
-
 				view.dispatch({ annotations: [yorkieRemoteSelectionsAnnotation.of([])] });
 			}
 		});
@@ -216,6 +142,8 @@ export class YorkieRemoteSelectionsPluginValue {
 	}
 
 	update(update: cmView.ViewUpdate) {
+		const decorations: Array<cmState.Range<cmView.Decoration>> = [];
+
 		this.conf.doc.update((root, presence) => {
 			const hasFocus = update.view.hasFocus && update.view.dom.ownerDocument.hasFocus();
 			const sel = hasFocus ? update.state.selection.main : null;
@@ -225,8 +153,85 @@ export class YorkieRemoteSelectionsPluginValue {
 				presence.set({
 					selection,
 				});
+			} else if (presence.get("selection")) {
+				presence.set({
+					selection: null,
+				});
 			}
 		});
+
+		this.conf.doc.getPresences().forEach((presence) => {
+			if (presence.clientID === this.conf.client.getID()) {
+				return;
+			}
+			if (presence.presence.selection == null) {
+				return;
+			}
+			const cursor = this.conf.doc
+				.getRoot()
+				.content.posRangeToIndexRange(presence.presence.selection);
+			const color = presence.presence.color;
+			const name = presence.presence.name;
+			const start = Math.min(cursor[0], cursor[1]);
+			const end = Math.max(cursor[0], cursor[1]);
+			const startLine = update.view.state.doc.lineAt(start);
+			const endLine = update.view.state.doc.lineAt(end);
+			if (startLine.number === endLine.number) {
+				// selected content in a single line.
+				decorations.push({
+					from: start,
+					to: end,
+					value: cmView.Decoration.mark({
+						attributes: { style: `background-color: ${color}` },
+						class: "cm-ySelection",
+					}),
+				});
+			} else {
+				// selected content in multiple lines
+				// first, render text-selection in the first line
+				decorations.push({
+					from: start,
+					to: startLine.from + startLine.length,
+					value: cmView.Decoration.mark({
+						attributes: { style: `background-color: ${color}` },
+						class: "cm-ySelection",
+					}),
+				});
+				// render text-selection in the last line
+				decorations.push({
+					from: endLine.from,
+					to: end,
+					value: cmView.Decoration.mark({
+						attributes: { style: `background-color: ${color}` },
+						class: "cm-ySelection",
+					}),
+				});
+				for (let i = startLine.number + 1; i < endLine.number; i++) {
+					const linePos = update.view.state.doc.line(i).from;
+					const linePosTo = update.view.state.doc.line(i).to;
+					decorations.push({
+						from: linePos,
+						to: linePosTo,
+						value: cmView.Decoration.mark({
+							attributes: {
+								style: `background-color: ${color}`,
+								class: "cm-ySelection",
+							},
+						}),
+					});
+				}
+			}
+			decorations.push({
+				from: cursor[0],
+				to: cursor[0],
+				value: cmView.Decoration.widget({
+					side: cursor[0] - cursor[1] > 0 ? -1 : 1, // the local cursor should be rendered outside the remote selection
+					block: false,
+					widget: new YRemoteCaretWidget(color, name),
+				}),
+			});
+		});
+		this.decorations = cmView.Decoration.set(decorations, true);
 	}
 }
 
