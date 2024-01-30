@@ -75,30 +75,22 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 	}
 
 	update(update: cmView.ViewUpdate) {
-		if (
-			!update.docChanged ||
-			(update.transactions.length > 0 &&
-				update.transactions[0].annotation(yorkieSyncAnnotation) === this.conf)
-		) {
-			return;
+		if (update.docChanged) {
+			for (const tr of update.transactions) {
+				const events = ["select", "input", "delete", "move", "undo", "redo"];
+				if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
+					continue;
+				}
+				if (tr.annotation(cmState.Transaction.remote)) {
+					continue;
+				}
+				tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+					this._doc.update((root) => {
+						root.content.edit(fromA, toA, inserted.toJSON().join("\n"));
+					});
+				});
+			}
 		}
-
-		let adj = 0;
-		this._doc.update((root, presence) => {
-			update.changes.iterChanges((fromA, toA, _fromB, _toB, insert) => {
-				if (!root.content) {
-					root.content = new yorkie.Text();
-				}
-				const insertText = insert.sliceString(0, insert.length, "\n");
-				const updatedIndexRange = root.content.edit(fromA + adj, toA + adj, insertText);
-				adj += insertText.length - (toA - fromA);
-				if (updatedIndexRange) {
-					presence.set({
-						selection: root.content.indexRangeToPosRange(updatedIndexRange),
-					} as unknown as YorkieCodeMirrorPresenceType);
-				}
-			});
-		});
 	}
 
 	destroy() {
