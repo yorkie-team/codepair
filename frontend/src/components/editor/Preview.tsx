@@ -14,10 +14,21 @@ function Preview() {
 	useEffect(() => {
 		if (!editorStore.doc) return;
 
-		setContent(editorStore.doc?.getRoot().content?.toString() || "");
+		const updatePreviewContent = () => {
+			const editorText = editorStore.doc?.getRoot().content?.toString() || "";
+			// Add soft line break
+			setContent(
+				editorText
+					.split("\n")
+					.map((line) => line + "  ")
+					.join("\n")
+			);
+		};
+
+		updatePreviewContent();
 
 		const unsubsribe = editorStore.doc.subscribe("$.content", () => {
-			setContent(editorStore.doc?.getRoot().content.toString() as string);
+			updatePreviewContent();
 		});
 
 		return () => {
