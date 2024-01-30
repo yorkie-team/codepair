@@ -10,6 +10,7 @@ import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
+import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 
 function Editor() {
 	const themeMode = useCurrentTheme();
@@ -42,6 +43,7 @@ function Editor() {
 				}),
 				EditorView.lineWrapping,
 				keymap.of([indentWithTab]),
+				intelligencePivot,
 			],
 		});
 
