@@ -29,15 +29,9 @@ export class IntelligenceController {
 		@Param("feature") feature: Feature,
 		@Body() runFeatureDto: RunFeatureDto
 	): Promise<void> {
-		const stream = await this.intelligenceService.runFeature(
-			req.user.id,
-			feature,
-			runFeatureDto.content
+		await this.intelligenceService.runFeature(req.user.id, feature, runFeatureDto, (chunk) =>
+			res.write(chunk)
 		);
-
-		for await (const chunk of stream) {
-			res.write(chunk);
-		}
 
 		res.end();
 	}
