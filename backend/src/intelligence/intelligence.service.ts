@@ -3,6 +3,7 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { Feature } from "./types/feature.type";
 import { githubIssuePromptTemplate } from "./prompt/github-issue";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { githubPrPromptTemplate } from "./prompt/github-pr";
 
 @Injectable()
 export class IntelligenceService {
@@ -11,6 +12,7 @@ export class IntelligenceService {
 	private selectPromptTemplate(feature: Feature) {
 		const promptTemplates = {
 			[Feature.GITHUB_ISSUE]: githubIssuePromptTemplate,
+			[Feature.GITHUB_PR]: githubPrPromptTemplate,
 		};
 		const selectedPrompt = promptTemplates[feature];
 
