@@ -102,7 +102,8 @@ Fixes #
 export const githubPrPromptTemplate = new FewShotChatMessagePromptTemplate({
 	prefix: `I want you to act as a GitHub PR Writer for me. I'll provide you with brief notes about GitHub PR, and you just need to write the PR using the examples I've provided.
 Make sure to adhere to the template that we commonly follow in Example.
-If the information is not provided by the user, please refrain from attaching document links found elsewhere. Please respond in English.`,
+If the information is not provided by the user, please refrain from attaching document links found elsewhere. Please respond in English.
+Please refer to the example for guidance, but generate results based on the information provided in the Brief Information section.`,
 	suffix: "Brief information about the GitHub PR: {content}",
 	examplePrompt,
 	examples,
