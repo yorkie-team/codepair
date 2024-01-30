@@ -41,14 +41,24 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 	view: cmView.EditorView;
 	conf: YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
 	_doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
-	_observer: yorkie.NextFn<yorkie.DocEvent<YorkieCodeMirrorPresenceType>>;
-	_unsubscribe: yorkie.Unsubscribe;
 
 	constructor(view: cmView.EditorView) {
 		this.view = view;
 		this.conf = view.state.facet(yorkieSyncFacet);
+		this._doc = this.conf.doc;
 
-		this._observer = (event) => {
+		this._doc.subscribe((event) => {
+			if (event.type !== "snapshot") return;
+
+			// The text is replaced to snapshot and must be re-synced.
+			const text = this._doc.getRoot().content;
+			view.dispatch({
+				changes: { from: 0, to: view.state.doc.length, insert: text.toString() },
+				annotations: [cmState.Transaction.remote.of(true)],
+			});
+		});
+
+		this._doc.subscribe("$.content", (event) => {
 			if (event.type !== "remote-change") return;
 
 			const { operations } = event.value;
@@ -65,36 +75,33 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 
 					view.dispatch({
 						changes,
-						annotations: [yorkieSyncAnnotation.of(this.conf)],
+						annotations: [cmState.Transaction.remote.of(true)],
 					});
 				}
 			});
-		};
-		this._doc = this.conf.doc;
-		this._unsubscribe = this._doc.subscribe("$.content", this._observer);
+		});
 	}
 
 	update(update: cmView.ViewUpdate) {
 		if (update.docChanged) {
 			for (const tr of update.transactions) {
 				const events = ["select", "input", "delete", "move", "undo", "redo"];
-				if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
+				if (!events.some((event) => tr.isUserEvent(event))) {
 					continue;
 				}
 				if (tr.annotation(cmState.Transaction.remote)) {
 					continue;
 				}
+				let adj = 0;
 				tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+					const insertText = inserted.toJSON().join("\n");
 					this._doc.update((root) => {
-						root.content.edit(fromA, toA, inserted.toJSON().join("\n"));
+						root.content.edit(fromA + adj, toA + adj, insertText);
 					});
+					adj += insertText.length - (toA - fromA);
 				});
 			}
 		}
-	}
-
-	destroy() {
-		this._unsubscribe();
 	}
 }
 
