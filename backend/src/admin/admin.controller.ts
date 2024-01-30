@@ -15,15 +15,7 @@ export class AdminController {
 		description: "The last document ID of previous API Call",
 		required: false,
 	})
-	@ApiQuery({
-		type: String,
-		name: "workspace_slug",
-		description: "The slug of workspace to migrate",
-	})
-	async migrate(
-		@Query("last_document_id") lastDocumentId: string,
-		@Query("workspace_slug") workspaceSlug: string
-	) {
-		this.adminService.migrateData(workspaceSlug, lastDocumentId);
+	async migrate(@Query("last_document_id") lastDocumentId: string) {
+		this.adminService.migrateData("backup", lastDocumentId);
 	}
 }
