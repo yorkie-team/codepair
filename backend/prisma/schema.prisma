@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
-  socialProvider    String          @map("social_provider")
-  socialUid         String          @unique @map("social_uid")
-  nickname          String?
-  createdAt         DateTime        @default(now()) @map("created_at")
-  updatedAt         DateTime        @updatedAt @map("updated_at")
-  userWorkspaceList UserWorkspace[]
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  socialProvider      String            @map("social_provider")
+  socialUid           String            @unique @map("social_uid")
+  nickname            String?
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+  userWorkspaceList   UserWorkspace[]
+  intelligenceLogList IntelligenceLog[]
 
   @@map("users")
 }
@@ -58,6 +59,7 @@ model Document {
   workspace                Workspace              @relation(fields: [workspaceId], references: [id])
   workspaceId              String                 @map("workspace_id") @db.ObjectId
   documentSharingTokenList DocumentSharingToken[]
+  intelligenceLogList      IntelligenceLog[]
 
   @@map("documents")
 }
@@ -84,5 +86,21 @@ model DocumentSharingToken {
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
 
-  @@map("document_sharing_token")
+  @@map("document_sharing_tokens")
+}
+
+model IntelligenceLog {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  document   Document  @relation(fields: [documentId], references: [id])
+  documentId String    @map("document_id") @db.ObjectId
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    @map("user_id") @db.ObjectId
+  memoryKey  String
+  question   String
+  answer     String
+  expiredAt  DateTime? @map("expired_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@map("intelligence_logs")
 }
