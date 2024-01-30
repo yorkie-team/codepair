@@ -50,7 +50,7 @@
 		"react-social-login-buttons": "^3.9.1",
 		"react-use": "^17.5.0",
 		"redux-persist": "^6.0.0",
-		"yorkie-js-sdk": "^0.4.13"
+		"yorkie-js-sdk": "^0.4.15-rc"
 	},
 	"devDependencies": {
 		"@types/color": "^3.0.6",

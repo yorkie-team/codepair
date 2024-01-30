@@ -7,6 +7,8 @@ import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../store/authSlice";
 
+yorkie.setLogLevel(4);
+
 export const useYorkieDocument = (
 	yorkieDocuentId?: string | null,
 	presenceName?: string | null
