@@ -3,7 +3,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 
 const chatModelFactory = {
-	provide: "BaseChatModel",
+	provide: "ChatModel",
 	useFactory: () => new ChatOpenAI({}) as BaseChatModel,
 };
 
