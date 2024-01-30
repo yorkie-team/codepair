@@ -1,7 +1,7 @@
 import { Controller, Post, Query } from "@nestjs/common";
 import { AdminService } from "./admin.service";
 import { Public } from "src/utils/decorators/auth.decorator";
-import { ApiOkResponse, ApiQuery } from "@nestjs/swagger";
+import { ApiQuery } from "@nestjs/swagger";
 
 @Controller("admin")
 export class AdminController {
