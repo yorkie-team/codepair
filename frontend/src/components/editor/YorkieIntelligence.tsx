@@ -8,7 +8,6 @@ import YorkieIntelligenceFooter from "./YorkieIntelligenceFooter";
 function YorkieIntelligence() {
 	const theme = useTheme();
 	const [footerOpen, setFooterOpen] = useState(false);
-	const [draggedContents, setDraggedContents] = useState("");
 	const [intelligenceHeaderPivot, setIntelligenceHeaderPivot] = useState<Element | null>(null);
 	const [intelligenceFooterPivot, setIntelligenceFooterPivot] = useState<Element | null>(null);
 	const [debouncedPivot, setDebouncedPivot] = useState<Element | null>(null);
@@ -27,11 +26,9 @@ function YorkieIntelligence() {
 			const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
 			setIntelligenceHeaderPivot(intelligenceHeaderPivot);
 			setIntelligenceFooterPivot(intelligenceFooterPivot);
-			setFooterOpen(false);
 
-			if (intelligenceHeaderPivot) {
-				const selection = window.getSelection();
-				setDraggedContents(selection!.toString());
+			if (!intelligenceHeaderPivot) {
+				setFooterOpen(false);
 			}
 		});
 	}, []);
@@ -70,7 +67,11 @@ function YorkieIntelligence() {
 				</Fade>,
 				debouncedPivot
 			)}
-			{footerOpen && createPortal(<YorkieIntelligenceFooter />, intelligenceFooterPivot)}
+			{footerOpen &&
+				createPortal(
+					<YorkieIntelligenceFooter  />,
+					intelligenceFooterPivot
+				)}
 		</>
 	);
 }

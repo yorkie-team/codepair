@@ -7,17 +7,20 @@ import { INTELLIGENCE_FOOTER_ID, INTELLIGENCE_HEADER_ID } from "../../constants/
 
 class IntelligencePivotWidget extends cmView.WidgetType {
 	id: string;
+	content: string;
 	selectionRange: cmState.SelectionRange | null;
 
-	constructor(id: string, selectionRange: cmState.SelectionRange | null) {
+	constructor(id: string, content: string, selectionRange: cmState.SelectionRange | null) {
 		super();
 		this.id = id;
+		this.content = content;
 		this.selectionRange = selectionRange;
 	}
 
 	toDOM() {
 		return dom.element("span", [
 			pair.create("id", this.id),
+			pair.create("content", this.content),
 			pair.create("style", `position: relaitve;`),
 		]) as HTMLElement;
 	}
@@ -52,18 +55,22 @@ export class IntelligencePivotPluginValue {
 
 	update(update: cmView.ViewUpdate) {
 		const decorations: Array<cmState.Range<cmView.Decoration>> = [];
-		const hasFocus = update.view.hasFocus && update.view.dom.ownerDocument.hasFocus();
-		const selectionRange = hasFocus ? update.state.selection.main : null;
-		const isDragged = Boolean(selectionRange && selectionRange?.from !== selectionRange?.to);
+		const selectionRange = update.state.selection.main;
+		const isDragged = selectionRange?.from !== selectionRange?.to;
 
 		if (isDragged && selectionRange) {
+			const selectedContent = update.state.sliceDoc(selectionRange.from, selectionRange.to);
 			decorations.push({
 				from: selectionRange.from,
 				to: selectionRange.from,
 				value: cmView.Decoration.widget({
-					side: 1, // the local cursor should be rendered outside the remote selection
+					side: 1,
 					block: false,
-					widget: new IntelligencePivotWidget(INTELLIGENCE_HEADER_ID, selectionRange),
+					widget: new IntelligencePivotWidget(
+						INTELLIGENCE_HEADER_ID,
+						selectedContent,
+						selectionRange
+					),
 				}),
 			});
 
@@ -71,9 +78,13 @@ export class IntelligencePivotPluginValue {
 				from: selectionRange.to,
 				to: selectionRange.to,
 				value: cmView.Decoration.widget({
-					side: 1, // the local cursor should be rendered outside the remote selection
+					side: 1,
 					block: false,
-					widget: new IntelligencePivotWidget(INTELLIGENCE_FOOTER_ID, selectionRange),
+					widget: new IntelligencePivotWidget(
+						INTELLIGENCE_FOOTER_ID,
+						selectedContent,
+						selectionRange
+					),
 				}),
 			});
 		}
