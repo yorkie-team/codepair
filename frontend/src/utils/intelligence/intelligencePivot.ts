@@ -3,18 +3,21 @@ import * as cmView from "@codemirror/view";
 import * as cmState from "@codemirror/state";
 import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
+import { INTELLIGENCE_FOOTER_ID, INTELLIGENCE_HEADER_ID } from "../../constants/intelligence";
 
 class IntelligencePivotWidget extends cmView.WidgetType {
+	id: string;
 	selectionRange: cmState.SelectionRange | null;
 
-	constructor(selectionRange: cmState.SelectionRange | null) {
+	constructor(id: string, selectionRange: cmState.SelectionRange | null) {
 		super();
+		this.id = id;
 		this.selectionRange = selectionRange;
 	}
 
 	toDOM() {
 		return dom.element("span", [
-			pair.create("id", "yorkie-intelligence"),
+			pair.create("id", this.id),
 			pair.create("style", `position: relaitve;`),
 		]) as HTMLElement;
 	}
@@ -60,7 +63,17 @@ export class IntelligencePivotPluginValue {
 				value: cmView.Decoration.widget({
 					side: 1, // the local cursor should be rendered outside the remote selection
 					block: false,
-					widget: new IntelligencePivotWidget(selectionRange),
+					widget: new IntelligencePivotWidget(INTELLIGENCE_HEADER_ID, selectionRange),
+				}),
+			});
+
+			decorations.push({
+				from: selectionRange.to,
+				to: selectionRange.to,
+				value: cmView.Decoration.widget({
+					side: 1, // the local cursor should be rendered outside the remote selection
+					block: false,
+					widget: new IntelligencePivotWidget(INTELLIGENCE_FOOTER_ID, selectionRange),
 				}),
 			});
 		}
