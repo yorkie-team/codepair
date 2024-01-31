@@ -58,6 +58,11 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 			});
 		});
 
+		this._doc.update((root) => {
+			if (root.content) return;
+			root.content = new yorkie.Text();
+		});
+
 		this._doc.subscribe("$.content", (event) => {
 			if (event.type !== "remote-change") return;
 
