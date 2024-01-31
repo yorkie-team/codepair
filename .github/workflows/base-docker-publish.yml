@@ -20,7 +20,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Use docker buildx
+        run: docker buildx create --use
+
       - name: Build & Push Image
         env:
           VERSION: ${{ inputs.version }}
-        run: docker build -t yorkieteam/codepair:$VERSION --push ./backend
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t yorkieteam/codepair:$VERSION --push ./backend
