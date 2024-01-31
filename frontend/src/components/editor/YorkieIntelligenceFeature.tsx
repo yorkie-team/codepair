@@ -20,6 +20,7 @@ import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { addSoftLineBreak } from "../../utils/document";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
@@ -71,6 +72,10 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		mutateIntelligence("Regenerate a response the last thing you said.");
 	};
 
+	const handleRequestSubmit = (data: { content: string }) => {
+		mutateIntelligence(data.content);
+	};
+
 	return (
 		<Stack gap={4}>
 			<Box bgcolor={theme.palette.grey[200]} p={1} borderRadius={2}>
@@ -79,7 +84,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
 			{!isLoading && (
 				<MarkdownPreview
-					source={data || ""}
+					source={addSoftLineBreak(data || "")}
 					wrapperElement={{
 						"data-color-mode": currentTheme,
 					}}
@@ -98,10 +103,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 					<Button variant="contained">Replace</Button>
 				</Stack>
 				<FormControl>
-					<FormContainer
-						defaultValues={{ content: "" }}
-						onSuccess={(data) => mutateIntelligence(data.content)}
-					>
+					<FormContainer defaultValues={{ content: "" }} onSuccess={handleRequestSubmit}>
 						<Stack gap={4} alignItems="flex-end">
 							<TextFieldElement
 								variant="outlined"

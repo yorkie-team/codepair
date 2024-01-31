@@ -5,5 +5,6 @@ body {
 
 #yorkie-intelligence-footer .wmde-markdown {
 	-webkit-user-modify: read-only;
-	white-space: wrap;
+	white-space: initial !important;
 }
+
