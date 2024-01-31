@@ -18,6 +18,8 @@ import { useIntelligenceFeatureStream, useIntelligenceStream } from "../../hooks
 import { useEffect, useMemo, useState } from "react";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
@@ -27,6 +29,7 @@ interface YorkieIntelligenceFeatureProps {
 function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	const { title, feature } = props;
 	const theme = useTheme();
+	const currentTheme = useCurrentTheme();
 	const {
 		data: featureData,
 		memoryKey,
@@ -65,9 +68,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	};
 
 	const handleRetry = async () => {
-		mutateIntelligence(
-			"Regenerate a response the last thing you said."
-		);
+		mutateIntelligence("Regenerate a response the last thing you said.");
 	};
 
 	return (
@@ -76,7 +77,15 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 				<Typography>{title}</Typography>
 			</Box>
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
-			{!isLoading && <Typography>{data}</Typography>}
+			{!isLoading && (
+				<MarkdownPreview
+					source={data || ""}
+					wrapperElement={{
+						"data-color-mode": currentTheme,
+					}}
+				/>
+			)}
+
 			<Stack gap={2}>
 				<Stack direction="row" justifyContent="flex-end" gap={1}>
 					<Button variant="outlined" onClick={handleRetry}>

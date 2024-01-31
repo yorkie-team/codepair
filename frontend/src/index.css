@@ -2,3 +2,8 @@ body {
 	margin: 0;
 	min-height: 100vh;
 }
+
+#yorkie-intelligence-footer .wmde-markdown {
+	-webkit-user-modify: read-only;
+	white-space: wrap;
+}
