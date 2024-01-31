@@ -1,4 +1,4 @@
-import { ChatPromptTemplate, FewShotChatMessagePromptTemplate } from "langchain/prompts";
+import { ChatPromptTemplate, FewShotChatMessagePromptTemplate } from "@langchain/core/prompts";
 
 const examplePrompt = ChatPromptTemplate.fromTemplate(
 	"## Title\n{title}\n## Issue Type\n{issueType}\n## Content\n{content}"
