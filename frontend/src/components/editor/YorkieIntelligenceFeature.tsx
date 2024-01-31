@@ -14,8 +14,10 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import SendIcon from "@mui/icons-material/Send";
-import { useIntelligenceFeatureStream } from "../../hooks/api/intelligence";
-import { useEffect, useState } from "react";
+import { useIntelligenceFeatureStream, useIntelligenceStream } from "../../hooks/api/intelligence";
+import { useEffect, useMemo, useState } from "react";
+import clipboard from "clipboardy";
+import { useSnackbar } from "notistack";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
@@ -25,9 +27,25 @@ interface YorkieIntelligenceFeatureProps {
 function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	const { title, feature } = props;
 	const theme = useTheme();
-	const { data, memoryKey, isLoading, mutateAsync } = useIntelligenceFeatureStream(feature);
+	const {
+		data: featureData,
+		memoryKey,
+		isLoading: isFeatureLoading,
+		mutateAsync: mutateIntelligenceFeature,
+	} = useIntelligenceFeatureStream(feature);
+	const {
+		data: followUpData,
+		isLoading: isFollowUpLoading,
+		mutateAsync: mutateIntelligence,
+	} = useIntelligenceStream(memoryKey);
 	const [content, setContent] = useState("");
 	const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
+	const isLoading = useMemo(
+		() => isFeatureLoading || isFollowUpLoading,
+		[isFeatureLoading, isFollowUpLoading]
+	);
+	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
+	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		setContent(intelligenceFooterPivot?.getAttribute("content") ?? "");
@@ -36,8 +54,21 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	useEffect(() => {
 		if (!content) return;
 
-		mutateAsync(content);
-	}, [content, mutateAsync]);
+		mutateIntelligenceFeature(content);
+	}, [content, mutateIntelligenceFeature]);
+
+	const handleCopyContent = async () => {
+		if (!data) return;
+
+		await clipboard.write(data);
+		enqueueSnackbar("URL Copied!", { variant: "success" });
+	};
+
+	const handleRetry = async () => {
+		mutateIntelligence(
+			"Regenerate a response the last thing you said."
+		);
+	};
 
 	return (
 		<Stack gap={4}>
@@ -48,10 +79,10 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			{!isLoading && <Typography>{data}</Typography>}
 			<Stack gap={2}>
 				<Stack direction="row" justifyContent="flex-end" gap={1}>
-					<Button variant="outlined">
+					<Button variant="outlined" onClick={handleRetry}>
 						<RefreshIcon fontSize="small" />
 					</Button>
-					<Button variant="outlined">
+					<Button variant="outlined" onClick={handleCopyContent}>
 						<ContentCopyIcon fontSize="small" />
 					</Button>
 					<Button variant="outlined">Insert below</Button>
@@ -60,7 +91,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 				<FormControl>
 					<FormContainer
 						defaultValues={{ content: "" }}
-						// onSuccess={handleCreate}
+						onSuccess={(data) => mutateIntelligence(data.content)}
 					>
 						<Stack gap={4} alignItems="flex-end">
 							<TextFieldElement
