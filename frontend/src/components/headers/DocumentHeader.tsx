@@ -54,7 +54,10 @@ function DocumentHeader() {
 		setPresenceList(editorState.doc.getPresences());
 
 		const unsubscribe = editorState.doc.subscribe("others", (event) => {
-			if (event.type === "watched") {
+			if (
+				event.type === "watched" &&
+				presenceList.every((presence) => presence.clientID !== event.value.clientID)
+			) {
 				pushToPresenceList(event.value);
 			}
 
