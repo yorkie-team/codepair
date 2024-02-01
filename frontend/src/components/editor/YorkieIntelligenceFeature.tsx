@@ -12,7 +12,7 @@ import {
 import { INTELLIGENCE_FOOTER_ID, IntelligenceFeature } from "../../constants/intelligence";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import SendIcon from "@mui/icons-material/Send";
 import { useIntelligenceFeatureStream, useIntelligenceStream } from "../../hooks/api/intelligence";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -60,7 +60,16 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	);
 	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
 	const { enqueueSnackbar } = useSnackbar();
+	const featureCardRef = useRef<HTMLDivElement>(null);
 	const markdownPreviewRef = useRef<HTMLElement>(null);
+	const formContext = useForm<{ content: string }>();
+	const { reset, formState } = formContext;
+
+	useEffect(() => {
+		if (formState.isSubmitSuccessful) {
+			reset({ content: "" });
+		}
+	}, [formState.isSubmitSuccessful, reset]);
 
 	useEffect(() => {
 		setContent(intelligenceFooterPivot?.getAttribute("content") ?? "");
@@ -73,10 +82,15 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	}, [content, mutateIntelligenceFeature]);
 
 	useEffect(() => {
-		if (data && markdownPreviewRef.current) {
+		if (data && markdownPreviewRef.current && featureCardRef.current) {
 			markdownPreviewRef.current.scrollTo({
 				behavior: "smooth",
 				top: markdownPreviewRef.current.scrollHeight,
+			});
+			featureCardRef.current.scrollIntoView({
+				block: "end",
+				inline: "nearest",
+				behavior: "smooth",
 			});
 		}
 	}, [data]);
@@ -128,7 +142,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	};
 
 	return (
-		<Stack gap={4}>
+		<Stack gap={4} ref={featureCardRef}>
 			<Box bgcolor={theme.palette.grey[200]} p={1} borderRadius={2}>
 				<Typography>{title}</Typography>
 			</Box>
@@ -145,7 +159,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			)}
 
 			<Stack gap={2}>
-				{!isComplete && (
+				{isComplete && (
 					<Stack direction="row" justifyContent="flex-end" gap={1}>
 						<Button variant="outlined" onClick={handleRetry}>
 							<RefreshIcon fontSize="small" />
@@ -162,7 +176,11 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 					</Stack>
 				)}
 				<FormControl>
-					<FormContainer defaultValues={{ content: "" }} onSuccess={handleRequestSubmit}>
+					<FormContainer
+						defaultValues={{ content: "" }}
+						formContext={formContext}
+						onSuccess={handleRequestSubmit}
+					>
 						<Stack gap={4} alignItems="flex-end">
 							<TextFieldElement
 								variant="outlined"
@@ -171,7 +189,6 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 								required
 								fullWidth
 								size="small"
-								multiline
 								InputProps={{
 									startAdornment: (
 										<InputAdornment position="start">
