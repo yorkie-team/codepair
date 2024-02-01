@@ -35,7 +35,7 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 		return () => {
 			setAnchorEl(undefined);
 		};
-	}, [anchorRef.current]);
+	}, []);
 
 	const handleSelectFeature = (feature: IntelligenceFeature, title: string) => {
 		setSelectedFeature(feature);
