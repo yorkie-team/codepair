@@ -88,7 +88,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 				top: markdownPreviewRef.current.scrollHeight,
 			});
 			featureCardRef.current.scrollIntoView({
-				block: "end",
+				block: "nearest",
 				inline: "nearest",
 				behavior: "smooth",
 			});
@@ -103,7 +103,9 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	};
 
 	const handleRetry = async () => {
-		mutateIntelligence("Regenerate a response the last thing you said.");
+		mutateIntelligence(
+			"Recreate the last statement with a paraphrase or adjust it slightly to better suit the user's input."
+		);
 	};
 
 	const handleRequestSubmit = (data: { content: string }) => {
@@ -188,6 +190,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 								placeholder={"Tell Yorkie what to do next"}
 								required
 								fullWidth
+								disabled={!isComplete}
 								size="small"
 								InputProps={{
 									startAdornment: (

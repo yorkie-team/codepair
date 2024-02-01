@@ -1,7 +1,7 @@
 import { ChatPromptTemplate, FewShotChatMessagePromptTemplate } from "@langchain/core/prompts";
 
 const examplePrompt = ChatPromptTemplate.fromTemplate(
-	"## Title\n{title}\n## Issue Type\n{issueType}\n## Content\n{content}"
+	"[Example]\n## Title\n{title}\n## Issue Type\n{issueType}\n## Content\n{content}"
 );
 
 const examples = [
@@ -73,8 +73,9 @@ Keep the product simple`,
 ];
 
 export const githubIssuePromptTemplate = new FewShotChatMessagePromptTemplate({
-	prefix: `I want you to act as a GitHub Issue writer. I will provide brief information about the GitHub issue I want to create, and you should write the GitHub issue based on the examples I provide.
-    The types of issues you can write are bug 🐞 or enhancement 🌟. Please ensure that you follow the template used in each type of issue example provided. Please write your responses in English.`,
+	prefix: `I want you to act as a GitHub Issue writer. I will provide brief information about the GitHub issue I want to create, and you should write the GitHub issue.
+The types of issues you can write are bug 🐞 or enhancement 🌟. Please ensure that you follow the template used in each type of issue example provided. Do not provide the example as it is. Please write your responses in English. 
+If there is insufficient information to create the issue, request additional information.`,
 	suffix: "Brief information about the GitHub issue: {content}",
 	examplePrompt,
 	examples,
