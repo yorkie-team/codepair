@@ -45,7 +45,7 @@ export const editorSlice = createSlice({
 			state.client = action.payload;
 		},
 		setCmView: (state, action: PayloadAction<EditorView | null>) => {
-			state.cmView = action.payload;
+			Object.assign(state, { cmView: action.payload });
 		},
 	},
 });
