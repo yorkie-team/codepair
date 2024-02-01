@@ -57,7 +57,7 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [editorStore.client, editorStore.doc, element, themeMode]);
+	}, [dispatch, editorStore.client, editorStore.doc, element, themeMode]);
 
 	return (
 		<div

@@ -15,7 +15,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import SendIcon from "@mui/icons-material/Send";
 import { useIntelligenceFeatureStream, useIntelligenceStream } from "../../hooks/api/intelligence";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import MarkdownPreview from "@uiw/react-markdown-preview";
@@ -39,11 +39,13 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		data: featureData,
 		memoryKey,
 		isLoading: isFeatureLoading,
+		isComplete: isFeatureComplete,
 		mutateAsync: mutateIntelligenceFeature,
 	} = useIntelligenceFeatureStream(feature);
 	const {
 		data: followUpData,
 		isLoading: isFollowUpLoading,
+		isComplete: isFollowUpComplete,
 		mutateAsync: mutateIntelligence,
 	} = useIntelligenceStream(memoryKey);
 	const [content, setContent] = useState("");
@@ -52,8 +54,13 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		() => isFeatureLoading || isFollowUpLoading,
 		[isFeatureLoading, isFollowUpLoading]
 	);
+	const isComplete = useMemo(
+		() => isFeatureComplete || isFollowUpComplete,
+		[isFeatureComplete, isFollowUpComplete]
+	);
 	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
 	const { enqueueSnackbar } = useSnackbar();
+	const markdownPreviewRef = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		setContent(intelligenceFooterPivot?.getAttribute("content") ?? "");
@@ -64,6 +71,15 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 
 		mutateIntelligenceFeature(content);
 	}, [content, mutateIntelligenceFeature]);
+
+	useEffect(() => {
+		if (data && markdownPreviewRef.current) {
+			markdownPreviewRef.current.scrollTo({
+				behavior: "smooth",
+				top: markdownPreviewRef.current.scrollHeight,
+			});
+		}
+	}, [data]);
 
 	const handleCopyContent = async () => {
 		if (!data) return;
@@ -84,7 +100,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		if (!editorStore.cmView) return;
 		const selection = editorStore.cmView.state.selection.main;
 		let from = Math.min(selection.to, selection.from);
-		let to = Math.max(selection.to, selection.from);
+		const to = Math.max(selection.to, selection.from);
 		let insert = data as string;
 
 		if (!replace) {
@@ -118,7 +134,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			</Box>
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
 			{!isLoading && (
-				<Box sx={{ maxHeight: 500, overflow: "auto" }}>
+				<Box ref={markdownPreviewRef} sx={{ maxHeight: 500, overflow: "auto" }}>
 					<MarkdownPreview
 						source={addSoftLineBreak(data || "")}
 						wrapperElement={{
@@ -129,7 +145,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			)}
 
 			<Stack gap={2}>
-				{!isLoading && (
+				{!isComplete && (
 					<Stack direction="row" justifyContent="flex-end" gap={1}>
 						<Button variant="outlined" onClick={handleRetry}>
 							<RefreshIcon fontSize="small" />

@@ -10,10 +10,12 @@ export const useIntelligenceFeatureStream = (feature: IntelligenceFeature) => {
 	const [data, setData] = useState<string | null>(null);
 	const [memoryKey, setMemoryKey] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isComplete, setIsComplete] = useState(false);
 
 	const mutateAsync = useCallback(
 		async (content: string) => {
 			setIsLoading(true);
+			setIsComplete(false);
 			setMemoryKey(null);
 			setData(null);
 			const response = await fetch(
@@ -54,6 +56,7 @@ export const useIntelligenceFeatureStream = (feature: IntelligenceFeature) => {
 				result += text;
 				setData(result);
 			}
+			setIsComplete(true);
 		},
 		[authStore.accessToken, documentSotre.data?.id, feature]
 	);
@@ -62,6 +65,7 @@ export const useIntelligenceFeatureStream = (feature: IntelligenceFeature) => {
 		data,
 		memoryKey,
 		isLoading,
+		isComplete,
 		mutateAsync,
 	};
 };
@@ -71,12 +75,14 @@ export const useIntelligenceStream = (memoryKey: string | null) => {
 	const documentSotre = useSelector(selectDocument);
 	const [data, setData] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isComplete, setIsComplete] = useState(false);
 
 	const mutateAsync = useCallback(
 		async (content: string) => {
 			if (!memoryKey) return;
 
 			setIsLoading(true);
+			setIsComplete(false);
 			setData(null);
 			const response = await fetch(`${import.meta.env.VITE_API_ADDR}/intelligence`, {
 				method: "POST",
@@ -106,6 +112,7 @@ export const useIntelligenceStream = (memoryKey: string | null) => {
 				result += text;
 				setData(result);
 			}
+			setIsComplete(true);
 		},
 		[authStore.accessToken, documentSotre.data?.id, memoryKey]
 	);
@@ -114,6 +121,7 @@ export const useIntelligenceStream = (memoryKey: string | null) => {
 		data,
 		memoryKey,
 		isLoading,
+		isComplete,
 		mutateAsync,
 	};
 };
