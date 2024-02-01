@@ -60,7 +60,6 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	);
 	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
 	const { enqueueSnackbar } = useSnackbar();
-	const featureCardRef = useRef<HTMLDivElement>(null);
 	const markdownPreviewRef = useRef<HTMLElement>(null);
 	const formContext = useForm<{ content: string }>();
 	const { reset, formState } = formContext;
@@ -82,15 +81,10 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	}, [content, mutateIntelligenceFeature]);
 
 	useEffect(() => {
-		if (data && markdownPreviewRef.current && featureCardRef.current) {
+		if (data && markdownPreviewRef.current) {
 			markdownPreviewRef.current.scrollTo({
 				behavior: "smooth",
 				top: markdownPreviewRef.current.scrollHeight,
-			});
-			featureCardRef.current.scrollIntoView({
-				block: "nearest",
-				inline: "nearest",
-				behavior: "smooth",
 			});
 		}
 	}, [data]);
@@ -144,7 +138,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	};
 
 	return (
-		<Stack gap={4} ref={featureCardRef}>
+		<Stack gap={4}>
 			<Box bgcolor={theme.palette.grey[200]} p={1} borderRadius={2}>
 				<Typography>{title}</Typography>
 			</Box>

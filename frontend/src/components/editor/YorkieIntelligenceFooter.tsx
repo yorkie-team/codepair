@@ -1,10 +1,11 @@
-import { Box, Card, Fade, Popover, useTheme } from "@mui/material";
+import { Box, Card, Popover, useTheme } from "@mui/material";
 import YorkieIntelligenceFeatureList from "./YorkieIntelligenceFeatureList";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IntelligenceFeature } from "../../constants/intelligence";
 import YorkieIntelligenceFeature from "./YorkieIntelligenceFeature";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
+import CloseIntelligenceModal from "../modals/CloseIntelligenceModal";
 
 interface YorkieIntelligenceFooterProps {
 	onClose: () => void;
@@ -18,15 +19,13 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 	const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
 	const [selectedFeature, setSelectedFeature] = useState<IntelligenceFeature | null>(null);
 	const [anchorEl, setAnchorEl] = useState<HTMLSpanElement>();
-	const handleSelectFeature = (feature: IntelligenceFeature, title: string) => {
-		setSelectedFeature(feature);
-		setSelectedTitle(title);
-	};
+	const [closeModalOpen, setCloseModalOpen] = useState(false);
+	const cardRef = useRef<HTMLDivElement>(null);
+
 	const width = useMemo(
 		() => editorStore.cmView!.contentDOM.getBoundingClientRect().width - 12,
 		[editorStore.cmView]
 	);
-	console.log(width);
 
 	useEffect(() => {
 		if (!anchorRef.current) return;
@@ -37,6 +36,15 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 			setAnchorEl(undefined);
 		};
 	}, [anchorRef.current]);
+
+	const handleSelectFeature = (feature: IntelligenceFeature, title: string) => {
+		setSelectedFeature(feature);
+		setSelectedTitle(title);
+	};
+
+	const handleCloseModalOpen = () => {
+		setCloseModalOpen((prev) => !prev);
+	};
 
 	return (
 		<Box
@@ -62,8 +70,12 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 					vertical: "top",
 					horizontal: "left",
 				}}
+				onClose={handleCloseModalOpen}
+				disableScrollLock
+				disablePortal
 			>
 				<Card
+					ref={cardRef}
 					sx={{
 						boxShadow: theme.shadows[11],
 						borderRadius: 2,
@@ -82,6 +94,11 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 					)}
 				</Card>
 			</Popover>
+			<CloseIntelligenceModal
+				open={closeModalOpen}
+				onCloseIntelligence={onClose}
+				onClose={handleCloseModalOpen}
+			/>
 		</Box>
 	);
 }
