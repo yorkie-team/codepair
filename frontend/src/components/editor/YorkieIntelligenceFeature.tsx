@@ -83,25 +83,29 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			</Box>
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
 			{!isLoading && (
-				<MarkdownPreview
-					source={addSoftLineBreak(data || "")}
-					wrapperElement={{
-						"data-color-mode": currentTheme,
-					}}
-				/>
+				<Box sx={{ maxHeight: 500, overflow: "auto" }}>
+					<MarkdownPreview
+						source={addSoftLineBreak(data || "")}
+						wrapperElement={{
+							"data-color-mode": currentTheme,
+						}}
+					/>
+				</Box>
 			)}
 
 			<Stack gap={2}>
-				<Stack direction="row" justifyContent="flex-end" gap={1}>
-					<Button variant="outlined" onClick={handleRetry}>
-						<RefreshIcon fontSize="small" />
-					</Button>
-					<Button variant="outlined" onClick={handleCopyContent}>
-						<ContentCopyIcon fontSize="small" />
-					</Button>
-					<Button variant="outlined">Insert below</Button>
-					<Button variant="contained">Replace</Button>
-				</Stack>
+				{!isLoading && (
+					<Stack direction="row" justifyContent="flex-end" gap={1}>
+						<Button variant="outlined" onClick={handleRetry}>
+							<RefreshIcon fontSize="small" />
+						</Button>
+						<Button variant="outlined" onClick={handleCopyContent}>
+							<ContentCopyIcon fontSize="small" />
+						</Button>
+						<Button variant="outlined">Insert below</Button>
+						<Button variant="contained">Replace</Button>
+					</Stack>
+				)}
 				<FormControl>
 					<FormContainer defaultValues={{ content: "" }} onSuccess={handleRequestSubmit}>
 						<Stack gap={4} alignItems="flex-end">
