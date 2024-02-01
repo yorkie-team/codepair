@@ -59,7 +59,7 @@ function YorkieIntelligence() {
 							onClick={handleFooterOpen}
 						>
 							<Stack direction="row" alignItems="center" gap={1}>
-								<img src="/public/yorkie.png" height={20} />
+								<img src="/yorkie.png" height={20} />
 								<Typography variant="subtitle1">Yorkie Intelligence</Typography>
 							</Stack>
 						</CardActionArea>
@@ -67,11 +67,7 @@ function YorkieIntelligence() {
 				</Fade>,
 				debouncedPivot
 			)}
-			{footerOpen &&
-				createPortal(
-					<YorkieIntelligenceFooter  />,
-					intelligenceFooterPivot
-				)}
+			{footerOpen && createPortal(<YorkieIntelligenceFooter />, intelligenceFooterPivot)}
 		</>
 	);
 }

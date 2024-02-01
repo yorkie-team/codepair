@@ -116,7 +116,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 								InputProps={{
 									startAdornment: (
 										<InputAdornment position="start">
-											<img src="/public/yorkie.png" height={20} />
+											<img src="/yorkie.png" height={20} />
 										</InputAdornment>
 									),
 									endAdornment: (
