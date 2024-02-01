@@ -1,6 +1,8 @@
-import { ChatPromptTemplate, FewShotChatMessagePromptTemplate } from "langchain/prompts";
+import { ChatPromptTemplate, FewShotChatMessagePromptTemplate } from "@langchain/core/prompts";
 
-const examplePrompt = ChatPromptTemplate.fromTemplate("## Title\n{title}\n## Content\n{content}");
+const examplePrompt = ChatPromptTemplate.fromTemplate(
+	"[Example]\n## Title\n{title}\n## Content\n{content}"
+);
 
 const examples = [
 	{
@@ -100,10 +102,9 @@ Fixes #
 ];
 
 export const githubPrPromptTemplate = new FewShotChatMessagePromptTemplate({
-	prefix: `I want you to act as a GitHub PR Writer for me. I'll provide you with brief notes about GitHub PR, and you just need to write the PR using the examples I've provided.
-Make sure to adhere to the template that we commonly follow in Example.
-If the information is not provided by the user, please refrain from attaching document links found elsewhere. Please respond in English.
-Please refer to the example for guidance, but generate results based on the information provided in the Brief Information section.`,
+	prefix: `I want you to act as a GitHub PR Writer for me. I'll provide you with brief notes about GitHub PR, and you just need to write the PR.
+Please ensure that you follow the template used in example provided. Do not provide the example as it is. Please write your responses in English. 
+If there is insufficient information to create the PR, request additional information.`,
 	suffix: "Brief information about the GitHub PR: {content}",
 	examplePrompt,
 	examples,

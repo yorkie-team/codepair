@@ -36,6 +36,7 @@
 		"codemirror-toolbar": "^0.0.3",
 		"color": "^4.2.3",
 		"lib0": "^0.2.88",
+		"match-sorter": "^6.3.3",
 		"lodash": "^4.17.21",
 		"moment": "^2.30.1",
 		"notistack": "^2.0.8",
@@ -51,7 +52,7 @@
 		"react-social-login-buttons": "^3.9.1",
 		"react-use": "^17.5.0",
 		"redux-persist": "^6.0.0",
-		"yorkie-js-sdk": "^0.4.13"
+		"yorkie-js-sdk": "^0.4.15-rc"
 	},
 	"devDependencies": {
 		"@types/color": "^3.0.6",

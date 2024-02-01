@@ -36,11 +36,12 @@ export const store = configureStore({
 					"persist/PERSIST", // redux-persist
 					"editor/setDoc",
 					"editor/setClient",
+					"editor/setCmView",
 				],
-				ignoredPaths: ["editor.doc", "editor.client"],
+				ignoredPaths: ["editor.doc", "editor.client", "editor.cmView"],
 			},
 			immutableCheck: {
-				ignoredPaths: ["editor.doc", "editor.client"],
+				ignoredPaths: ["editor.doc", "editor.client", "editor.cmView"],
 			},
 		}),
 });

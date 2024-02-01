@@ -8,6 +8,7 @@ import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
 import DocumentView from "../../../components/editor/DocumentView";
 import { useYorkieDocument } from "../../../hooks/useYorkieDocument";
+import YorkieIntelligence from "../../../components/editor/YorkieIntelligence";
 
 function DocumentIndex() {
 	const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function DocumentIndex() {
 	return (
 		<Box height="calc(100% - 64px)">
 			<DocumentView />
+			<YorkieIntelligence />
 		</Box>
 	);
 }
