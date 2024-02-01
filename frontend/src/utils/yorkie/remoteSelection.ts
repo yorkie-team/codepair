@@ -11,6 +11,7 @@ import {
 	YorkieCodeMirrorPresenceType,
 	yorkieSyncFacet,
 } from "./yorkieSync.js";
+import _ from "lodash";
 
 export const yorkieRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	".cm-ySelection": {},
@@ -150,9 +151,12 @@ export class YorkieRemoteSelectionsPluginValue {
 
 			if (sel && root.content) {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
-				presence.set({
-					selection,
-				});
+
+				if (!_.isEqual(selection, presence.get("selection"))) {
+					presence.set({
+						selection,
+					});
+				}
 			} else if (presence.get("selection")) {
 				presence.set({
 					selection: null,
