@@ -67,7 +67,11 @@ function YorkieIntelligence() {
 				</Fade>,
 				debouncedPivot
 			)}
-			{footerOpen && createPortal(<YorkieIntelligenceFooter />, intelligenceFooterPivot)}
+			{footerOpen &&
+				createPortal(
+					<YorkieIntelligenceFooter onClose={handleFooterOpen} />,
+					intelligenceFooterPivot
+				)}
 		</>
 	);
 }

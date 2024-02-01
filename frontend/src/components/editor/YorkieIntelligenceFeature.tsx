@@ -23,15 +23,15 @@ import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { addSoftLineBreak } from "../../utils/document";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
-import { Transaction } from "@codemirror/state";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
 	feature: IntelligenceFeature;
+	onClose: () => void;
 }
 
 function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
-	const { title, feature } = props;
+	const { title, feature, onClose } = props;
 	const theme = useTheme();
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
@@ -52,21 +52,18 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		() => isFeatureLoading || isFollowUpLoading,
 		[isFeatureLoading, isFollowUpLoading]
 	);
-	const data = useMemo(
-		() => "Test~\nTest~\nTest~\nTest~\n" || followUpData || featureData,
-		[featureData, followUpData]
-	);
+	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
 	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		setContent(intelligenceFooterPivot?.getAttribute("content") ?? "");
 	}, [intelligenceFooterPivot]);
 
-	// useEffect(() => {
-	// 	if (!content) return;
+	useEffect(() => {
+		if (!content) return;
 
-	// 	mutateIntelligenceFeature(content);
-	// }, [content, mutateIntelligenceFeature]);
+		mutateIntelligenceFeature(content);
+	}, [content, mutateIntelligenceFeature]);
 
 	const handleCopyContent = async () => {
 		if (!data) return;
@@ -86,22 +83,32 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	const handleAddContent = (replace: boolean = false) => {
 		if (!editorStore.cmView) return;
 		const selection = editorStore.cmView.state.selection.main;
-		let from = selection.to;
-		let to = selection.to;
-		let insert = data;
+		let from = Math.min(selection.to, selection.from);
+		let to = Math.max(selection.to, selection.from);
+		let insert = data as string;
 
-		if (replace) {
-			from = selection.from;
-		} else {
+		if (!replace) {
+			from = to;
 			insert = `\n${insert}`;
 		}
 
+		const selectionFrom = replace ? from : from + 1;
+		const selectionTo = from + insert.length;
+
 		editorStore.cmView?.dispatch({
 			changes: { from, to, insert },
+			selection: {
+				anchor: selectionFrom,
+				head: selectionTo,
+			},
 		});
-		editorStore.doc?.update((root) => {
+		editorStore.doc?.update((root, presence) => {
 			root.content.edit(from, to, insert);
+			presence.set({
+				selection: root.content.indexRangeToPosRange([selectionFrom, selectionTo]),
+			});
 		});
+		onClose();
 	};
 
 	return (

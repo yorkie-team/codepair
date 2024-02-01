@@ -4,7 +4,12 @@ import { useState } from "react";
 import { IntelligenceFeature } from "../../constants/intelligence";
 import YorkieIntelligenceFeature from "./YorkieIntelligenceFeature";
 
-function YorkieIntelligenceFooter() {
+interface YorkieIntelligenceFooterProps {
+	onClose: () => void;
+}
+
+function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
+	const { onClose } = props;
 	const theme = useTheme();
 	const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
 	const [selectedFeature, setSelectedFeature] = useState<IntelligenceFeature | null>(null);
@@ -30,6 +35,7 @@ function YorkieIntelligenceFooter() {
 					<YorkieIntelligenceFeature
 						title={selectedTitle}
 						feature={selectedFeature}
+						onClose={onClose}
 					/>
 				) : (
 					<YorkieIntelligenceFeatureList onSelectFeature={handleSelectFeature} />
