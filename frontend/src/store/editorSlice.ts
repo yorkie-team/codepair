@@ -4,6 +4,7 @@ import { RootState } from "./store";
 import * as yorkie from "yorkie-js-sdk";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 import { ShareRole } from "../utils/share";
+import { EditorView } from "codemirror";
 
 export type EditorModeType = "edit" | "both" | "read";
 export type CodePairDocType = yorkie.Document<
@@ -16,6 +17,7 @@ export interface EditorState {
 	shareRole: ShareRole | null;
 	doc: CodePairDocType | null;
 	client: yorkie.Client | null;
+	cmView: EditorView | null;
 }
 
 const initialState: EditorState = {
@@ -23,6 +25,7 @@ const initialState: EditorState = {
 	shareRole: null,
 	doc: null,
 	client: null,
+	cmView: null,
 };
 
 export const editorSlice = createSlice({
@@ -41,10 +44,13 @@ export const editorSlice = createSlice({
 		setClient: (state, action: PayloadAction<yorkie.Client | null>) => {
 			state.client = action.payload;
 		},
+		setCmView: (state, action: PayloadAction<EditorView | null>) => {
+			state.cmView = action.payload;
+		},
 	},
 });
 
-export const { setMode, setDoc, setClient, setShareRole } = editorSlice.actions;
+export const { setMode, setDoc, setClient, setShareRole, setCmView } = editorSlice.actions;
 
 export const selectEditor = (state: RootState) => state.editor;
 

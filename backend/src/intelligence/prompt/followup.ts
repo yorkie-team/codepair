@@ -1,4 +1,4 @@
-import { ChatPromptTemplate, MessagesPlaceholder } from "langchain/prompts";
+import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 
 export const followUpPromptTemplate = ChatPromptTemplate.fromMessages([
 	[

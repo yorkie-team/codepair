@@ -2,16 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import { EditorState } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 import { markdown } from "@codemirror/lang-markdown";
-import { useSelector } from "react-redux";
-import { selectEditor } from "../../store/editorSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectEditor, setCmView } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import toolbar, { markdownItems } from "codemirror-toolbar";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
+import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 
 function Editor() {
+	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
@@ -42,6 +44,7 @@ function Editor() {
 				}),
 				EditorView.lineWrapping,
 				keymap.of([indentWithTab]),
+				intelligencePivot,
 			],
 		});
 
@@ -49,11 +52,12 @@ function Editor() {
 			state,
 			parent: element,
 		});
+		dispatch(setCmView(view));
 
 		return () => {
 			view?.destroy();
 		};
-	}, [editorStore.client, editorStore.doc, element, themeMode]);
+	}, [dispatch, editorStore.client, editorStore.doc, element, themeMode]);
 
 	return (
 		<div

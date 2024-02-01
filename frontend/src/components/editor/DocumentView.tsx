@@ -43,7 +43,7 @@ function DocumentView() {
 									width: 8,
 									borderRadius: 0,
 									cursor: "col-resize",
-									zIndex: 100,
+									zIndex: 0,
 								}}
 							/>
 							<div

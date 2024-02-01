@@ -5,6 +5,7 @@ import { selectEditor } from "../../store/editorSlice";
 import { CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./editor.css";
+import { addSoftLineBreak } from "../../utils/document";
 
 function Preview() {
 	const currentTheme = useCurrentTheme();
@@ -17,12 +18,7 @@ function Preview() {
 		const updatePreviewContent = () => {
 			const editorText = editorStore.doc?.getRoot().content?.toString() || "";
 			// Add soft line break
-			setContent(
-				editorText
-					.split("\n")
-					.map((line) => line + "  ")
-					.join("\n")
-			);
+			setContent(addSoftLineBreak(editorText));
 		};
 
 		updatePreviewContent();
@@ -46,9 +42,13 @@ function Preview() {
 
 	return (
 		<MarkdownPreview
-			source={content}
+			source={addSoftLineBreak(content)}
 			wrapperElement={{
 				"data-color-mode": currentTheme,
+				style: {
+					whiteSpace: "wrap !important",
+					WebkitUserModify: "read-only",
+				},
 			}}
 		/>
 	);
