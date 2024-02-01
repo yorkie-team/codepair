@@ -47,7 +47,10 @@ function YorkieIntelligenceFeatureList(props: YorkieIntelligenceFeatureListProps
 			/>
 			<MenuList>
 				{filteredFeatureInfoList.map((featureInfo) => (
-					<MenuItem key={featureInfo.feature} onClick={() => onSelectFeature(featureInfo.feature, featureInfo.title)}>
+					<MenuItem
+						key={featureInfo.feature}
+						onClick={() => onSelectFeature(featureInfo.feature, featureInfo.title)}
+					>
 						<ListItemIcon>{featureInfo.icon}</ListItemIcon>
 						<ListItemText>{featureInfo.title}</ListItemText>
 					</MenuItem>
