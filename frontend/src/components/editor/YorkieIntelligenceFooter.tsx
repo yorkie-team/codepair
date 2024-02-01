@@ -71,8 +71,6 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 					horizontal: "left",
 				}}
 				onClose={handleCloseModalOpen}
-				disableScrollLock
-				disablePortal
 			>
 				<Card
 					ref={cardRef}

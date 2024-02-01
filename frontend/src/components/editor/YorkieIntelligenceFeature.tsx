@@ -2,6 +2,7 @@ import {
 	Box,
 	Button,
 	CircularProgress,
+	Fade,
 	FormControl,
 	IconButton,
 	InputAdornment,
@@ -143,19 +144,19 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 				<Typography>{title}</Typography>
 			</Box>
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
-			{!isLoading && (
-				<Box ref={markdownPreviewRef} sx={{ maxHeight: 500, overflow: "auto" }}>
+			<Box ref={markdownPreviewRef} sx={{ height: 350, overflow: "auto" }}>
+				{!isLoading && (
 					<MarkdownPreview
 						source={addSoftLineBreak(data || "")}
 						wrapperElement={{
 							"data-color-mode": currentTheme,
 						}}
 					/>
-				</Box>
-			)}
+				)}
+			</Box>
 
 			<Stack gap={2}>
-				{isComplete && (
+				<Fade in={isComplete}>
 					<Stack direction="row" justifyContent="flex-end" gap={1}>
 						<Button variant="outlined" onClick={handleRetry}>
 							<RefreshIcon fontSize="small" />
@@ -170,7 +171,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 							Replace
 						</Button>
 					</Stack>
-				)}
+				</Fade>
 				<FormControl>
 					<FormContainer
 						defaultValues={{ content: "" }}
@@ -193,11 +194,13 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 										</InputAdornment>
 									),
 									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton type="submit" edge="end">
-												<SendIcon />
-											</IconButton>
-										</InputAdornment>
+										<Fade in={isComplete}>
+											<InputAdornment position="end">
+												<IconButton type="submit" edge="end">
+													<SendIcon />
+												</IconButton>
+											</InputAdornment>
+										</Fade>
 									),
 								}}
 							/>
