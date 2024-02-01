@@ -1,4 +1,4 @@
-import { Card, CardActionArea, Fade, Stack, Typography, useTheme } from "@mui/material";
+import { Card, CardActionArea, Fade, Popper, Stack, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDebounce } from "react-use";
@@ -29,6 +29,7 @@ function YorkieIntelligence() {
 
 			if (!intelligenceHeaderPivot) {
 				setFooterOpen(false);
+				setDebouncedPivot(null);
 			}
 		});
 	}, []);
@@ -41,32 +42,37 @@ function YorkieIntelligence() {
 
 	return (
 		<>
-			{createPortal(
-				<Fade in>
-					<Card
-						sx={{
-							position: "absolute",
-							transform: "translateY(-200%)",
-							boxShadow: theme.shadows[11],
-							borderRadius: 2,
-						}}
-					>
-						<CardActionArea
+			<Popper
+				open={Boolean(debouncedPivot)}
+				anchorEl={debouncedPivot}
+				placement="top-start"
+				transition
+			>
+				{({ TransitionProps }) => (
+					<Fade {...TransitionProps}>
+						<Card
 							sx={{
-								paddingX: 1.3,
-								paddingY: 0.3,
+								boxShadow: theme.shadows[11],
+								borderRadius: 2,
+								mb: 1,
 							}}
-							onClick={handleFooterOpen}
 						>
-							<Stack direction="row" alignItems="center" gap={1}>
-								<img src="/yorkie.png" height={20} />
-								<Typography variant="subtitle1">Yorkie Intelligence</Typography>
-							</Stack>
-						</CardActionArea>
-					</Card>
-				</Fade>,
-				debouncedPivot
-			)}
+							<CardActionArea
+								sx={{
+									paddingX: 1.3,
+									paddingY: 0.3,
+								}}
+								onClick={handleFooterOpen}
+							>
+								<Stack direction="row" alignItems="center" gap={1}>
+									<img src="/yorkie.png" height={20} />
+									<Typography variant="subtitle1">Yorkie Intelligence</Typography>
+								</Stack>
+							</CardActionArea>
+						</Card>
+					</Fade>
+				)}
+			</Popper>
 			{footerOpen &&
 				createPortal(
 					<YorkieIntelligenceFooter onClose={handleFooterOpen} />,
