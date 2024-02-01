@@ -21,6 +21,9 @@ import { useSnackbar } from "notistack";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { addSoftLineBreak } from "../../utils/document";
+import { useSelector } from "react-redux";
+import { selectEditor } from "../../store/editorSlice";
+import { Transaction } from "@codemirror/state";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
@@ -31,6 +34,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	const { title, feature } = props;
 	const theme = useTheme();
 	const currentTheme = useCurrentTheme();
+	const editorStore = useSelector(selectEditor);
 	const {
 		data: featureData,
 		memoryKey,
@@ -48,18 +52,21 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		() => isFeatureLoading || isFollowUpLoading,
 		[isFeatureLoading, isFollowUpLoading]
 	);
-	const data = useMemo(() => followUpData || featureData, [featureData, followUpData]);
+	const data = useMemo(
+		() => "Test~\nTest~\nTest~\nTest~\n" || followUpData || featureData,
+		[featureData, followUpData]
+	);
 	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		setContent(intelligenceFooterPivot?.getAttribute("content") ?? "");
 	}, [intelligenceFooterPivot]);
 
-	useEffect(() => {
-		if (!content) return;
+	// useEffect(() => {
+	// 	if (!content) return;
 
-		mutateIntelligenceFeature(content);
-	}, [content, mutateIntelligenceFeature]);
+	// 	mutateIntelligenceFeature(content);
+	// }, [content, mutateIntelligenceFeature]);
 
 	const handleCopyContent = async () => {
 		if (!data) return;
@@ -74,6 +81,27 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 
 	const handleRequestSubmit = (data: { content: string }) => {
 		mutateIntelligence(data.content);
+	};
+
+	const handleAddContent = (replace: boolean = false) => {
+		if (!editorStore.cmView) return;
+		const selection = editorStore.cmView.state.selection.main;
+		let from = selection.to;
+		let to = selection.to;
+		let insert = data;
+
+		if (replace) {
+			from = selection.from;
+		} else {
+			insert = `\n${insert}`;
+		}
+
+		editorStore.cmView?.dispatch({
+			changes: { from, to, insert },
+		});
+		editorStore.doc?.update((root) => {
+			root.content.edit(from, to, insert);
+		});
 	};
 
 	return (
@@ -102,8 +130,12 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 						<Button variant="outlined" onClick={handleCopyContent}>
 							<ContentCopyIcon fontSize="small" />
 						</Button>
-						<Button variant="outlined">Insert below</Button>
-						<Button variant="contained">Replace</Button>
+						<Button variant="outlined" onClick={() => handleAddContent()}>
+							Insert below
+						</Button>
+						<Button variant="contained" onClick={() => handleAddContent(true)}>
+							Replace
+						</Button>
 					</Stack>
 				)}
 				<FormControl>
