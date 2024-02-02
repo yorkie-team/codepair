@@ -26,6 +26,7 @@ Follow these steps:
 **Frontend Environment Configuration**
 
 1. Navigate to the `frontend` directory.
+   
    ```
    cd frontend
    ```
@@ -35,6 +36,7 @@ Follow these steps:
 **Backend Environment Configuration**
 
 1. Navigate to the `backend` directory.
+   
    ```
    cd backend
    ```
@@ -47,11 +49,13 @@ Follow these steps:
 ### Run Application
 
 1. Run the Dockerfile for MongoDB, the database used by CodePair:
+   
     ```
     docker-compose up -f ./backend/docker/mongodb_replica/docker-compose.yml -d
     ```
 
 2. Run the Backend application:
+   
     ```
     cd backend
     npm install
@@ -59,6 +63,7 @@ Follow these steps:
     ```
 
 3. Run the Frontend application:
+   
     ```
     cd frontend
     npm install
