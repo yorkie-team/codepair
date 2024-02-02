@@ -25,10 +25,10 @@ model User {
 
 model UserWorkspace {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(onDelete: Cascade, fields: [userId], references: [id])
   userId      String    @map("user_id") @db.ObjectId
   role        String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspace   Workspace @relation(onDelete: Cascade, fields: [workspaceId], references: [id])
   workspaceId String    @map("workspace_id") @db.ObjectId
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
@@ -56,7 +56,7 @@ model Document {
   content                  String?
   createdAt                DateTime               @default(now()) @map("created_at")
   updatedAt                DateTime               @updatedAt @map("updated_at")
-  workspace                Workspace              @relation(fields: [workspaceId], references: [id])
+  workspace                Workspace              @relation(onDelete: Cascade, fields: [workspaceId], references: [id])
   workspaceId              String                 @map("workspace_id") @db.ObjectId
   documentSharingTokenList DocumentSharingToken[]
   intelligenceLogList      IntelligenceLog[]
@@ -67,7 +67,7 @@ model Document {
 model WorkspaceInvitationToken {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   token       String    @unique
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspace   Workspace @relation(onDelete: Cascade, fields: [workspaceId], references: [id])
   workspaceId String    @map("workspace_id") @db.ObjectId
   expiredAt   DateTime? @map("expired_at")
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -80,7 +80,7 @@ model DocumentSharingToken {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   token      String    @unique
   role       String
-  document   Document  @relation(fields: [documentId], references: [id])
+  document   Document  @relation(onDelete: Cascade, fields: [documentId], references: [id])
   documentId String    @map("document_id") @db.ObjectId
   expiredAt  DateTime? @map("expired_at")
   createdAt  DateTime  @default(now()) @map("created_at")
@@ -91,9 +91,9 @@ model DocumentSharingToken {
 
 model IntelligenceLog {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  document   Document  @relation(fields: [documentId], references: [id])
+  document   Document  @relation(onDelete: Cascade, fields: [documentId], references: [id])
   documentId String    @map("document_id") @db.ObjectId
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(onDelete: Cascade, fields: [userId], references: [id])
   userId     String    @map("user_id") @db.ObjectId
   memoryKey  String
   question   String
