@@ -1,5 +1,8 @@
 # CodePair
 
+<img width="1276" alt="스크린샷 2024-02-02 오후 4 34 00" src="https://github.com/yorkie-team/codepair-poc/assets/52884648/eef0e4ca-27e1-47c6-b499-33e8d4d632af">
+
+
 Build your own AI real-time collaborative markdown editor in just 5 minutes.
 
 ## Overview
