@@ -17,7 +17,7 @@ CodePair provides the following features:
 
 1. Run the Dockerfile for MongoDB, the database used by CodePair:
     ```
-    docker-compose up -f ./backend/docker/mongodb_replica/docker-compose.yml
+    docker-compose up -f ./backend/docker/mongodb_replica/docker-compose.yml -d
     ```
 
 2. Run the Backend application:
