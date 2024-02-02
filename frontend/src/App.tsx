@@ -5,14 +5,45 @@ import "@fontsource/roboto/700.css";
 import "./App.css";
 import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useMemo } from "react";
+import {
+	RouterProvider,
+	createBrowserRouter,
+	createRoutesFromChildren,
+	matchRoutes,
+	useLocation,
+	useNavigationType,
+} from "react-router-dom";
+import { useEffect, useMemo } from "react";
 import { selectConfig } from "./store/configSlice";
 import axios from "axios";
 import { routes } from "./routes";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./providers/AuthProvider";
 import { useErrorHandler } from "./hooks/useErrorHandler";
+import * as Sentry from "@sentry/react";
+
+if (import.meta.env.PROD) {
+	Sentry.init({
+		dsn: `${import.meta.env.VITE_APP_SENTRY_DSN}`,
+		release: `codepair@${import.meta.env.PACKAGE_VERSION}`,
+		integrations: [
+			new Sentry.BrowserTracing({
+				routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+					useEffect,
+					useLocation,
+					useNavigationType,
+					createRoutesFromChildren,
+					matchRoutes
+				),
+			}),
+		],
+
+		// Set tracesSampleRate to 1.0 to capture 100%
+		// of transactions for performance monitoring.
+		// We recommend adjusting this value in production
+		tracesSampleRate: 1.0,
+	});
+}
 
 const router = createBrowserRouter(routes);
 
