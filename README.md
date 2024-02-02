@@ -17,6 +17,34 @@ CodePair provides the following features:
 
 ## Getting Started (Development Mode)
 
+### Configuration and Setup
+
+Before running the Frontend and Backend applications, you need to fill in the required API Keys.
+
+Follow these steps:
+
+**Frontend Environment Configuration**
+
+1. Navigate to the `frontend` directory.
+   ```
+   cd frontend
+   ```
+2. Fill in each Key field with the appropriate value in `.env.development`. Refer to the following links to obtain the necessary Key values.
+   - [Create Yorkie Project](https://yorkie.dev/)
+
+**Backend Environment Configuration**
+
+1. Navigate to the `backend` directory.
+   ```
+   cd backend
+   ```
+2. Fill in each Key field with the appropriate value in `.env`. Refer to the following links to obtain the necessary Key values.
+   - [Create Yorkie Project](https://yorkie.dev/)
+   - [Create GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
+   - [Create OpenAI API Key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-api-key)
+   - [Create LangSmith API Key](https://www.langchain.com/langsmith)
+
+### Run Application
 
 1. Run the Dockerfile for MongoDB, the database used by CodePair:
     ```
