@@ -82,6 +82,10 @@ Follow these steps:
 
 4. Visit http://localhost:5173 to enjoy your CodePair.
 
+## Contributing
+
+See [CONTRIBUTING](CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+
 ## Contributors ✨
 
 Thanks goes to these incredible people:
