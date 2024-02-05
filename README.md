@@ -23,6 +23,12 @@ CodePair provides the following features:
 - **Sharing Document**: Share documents with external parties by setting permissions and expiration time
 - **Yorkie Intelligence**: AI intelligence available within the collaborative editing editor
 
+## Packages
+
+This repository contains multiple packages/modules that make up our project. Each package/module is contained in its own directory within this repository.
+
+- **Frontend**: Contains the frontend code of our application. Please refer to [frontend/README.md](frontend/README.md) for detailed information on setting up and running the frontend.
+
 ## Getting Started with Development
 
 ### Configuration and Setup
