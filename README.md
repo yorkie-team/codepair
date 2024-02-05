@@ -27,7 +27,7 @@ CodePair provides the following features:
 
 ### Configuration and Setup
 
-Before running the Frontend and Backend applications, you need to fill in the required API Keys.
+Before running the Frontend and Backend applications, you need to fill in the required API Keys.  
 Follow these steps:
 
 **Frontend Environment Configuration**
