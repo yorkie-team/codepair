@@ -28,6 +28,7 @@ CodePair provides the following features:
 This repository contains multiple packages/modules that make up our project. Each package/module is contained in its own directory within this repository.
 
 - **Frontend**: Contains the frontend code of our application. Please refer to [frontend/README.md](frontend/README.md) for detailed information on setting up and running the frontend.
+- **Backend**: Contains the backend code of our application. Please refer to [backend/README.md](backend/README.md) for detailed information on setting up and running the backend.
 
 ## Getting Started with Development
 
