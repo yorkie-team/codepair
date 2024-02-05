@@ -1,9 +1,17 @@
 # CodePair
 
+<p align="center">
+Build your own AI real-time collaborative markdown editor in just 5 minutes.
+</p>
+
+<p align="center">
+    <a href="https://codepair.yorkie.dev/"><b>Website</b></a> •
+    <a href="https://discord.com/invite/MVEAwz9sBy"><b>Discord</b></a>
+</p>
+
 <img width="1392" alt="스크린샷 2024-02-02 오후 4 35 29" src="https://github.com/yorkie-team/codepair-poc/assets/52884648/25c441ef-9ca4-4235-9969-279e1c56258b">
 
 
-Build your own AI real-time collaborative markdown editor in just 5 minutes.
 
 ## Overview
 
@@ -15,7 +23,7 @@ CodePair provides the following features:
 - **Sharing Document**: Share documents with external parties by setting permissions and expiration time
 - **Yorkie Intelligence**: AI intelligence available within the collaborative editing editor
 
-## Getting Started (Development Mode)
+## Getting Started with Development
 
 ### Configuration and Setup
 
@@ -27,36 +35,39 @@ Follow these steps:
 
 1. Navigate to the `frontend` directory.
    
-   ```
+   ```bash
    cd frontend
    ```
-2. Fill in each Key field with the appropriate value in `.env.development`. Refer to the following links to obtain the necessary Key values.
-   - [Create Yorkie Project](https://yorkie.dev/)
+2. Copy the `.env.example` file to create a `.env.development` file.
+   ```bash
+   cp .env.example .env.development
+   ```
+3. Edit the `.env.development` file and fill in the necessary environment variable values. Refer to the comments for the meaning and examples of each value.
 
 **Backend Environment Configuration**
 
-1. Navigate to the `backend` directory.
+1. Navigate to the `frontend` directory.
    
-   ```
+   ```bash
    cd backend
    ```
-2. Fill in each Key field with the appropriate value in `.env`. Refer to the following links to obtain the necessary Key values.
-   - [Create Yorkie Project](https://yorkie.dev/)
-   - [Create GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
-   - [Create OpenAI API Key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-api-key)
-   - [Create LangSmith API Key](https://www.langchain.com/langsmith)
-
+2. Copy the `.env.example` file to create a `.env.development` file.
+   ```bash
+   cp .env.example .env.development
+   ```
+3. Edit the `.env.development` file and fill in the necessary environment variable values. Refer to the comments for the meaning and examples of each value.
+   
 ### Run Application
 
 1. Run the Dockerfile for MongoDB, the database used by CodePair:
    
-    ```
+    ```bash
     docker-compose up -f ./backend/docker/mongodb_replica/docker-compose.yml -d
     ```
 
 2. Run the Backend application:
    
-    ```
+    ```bash
     cd backend
     npm install
     npm run start:dev
@@ -64,7 +75,7 @@ Follow these steps:
 
 3. Run the Frontend application:
    
-    ```
+    ```bash
     cd frontend
     npm install
     npm run dev
@@ -77,5 +88,5 @@ Follow these steps:
 Thanks goes to these incredible people:
 
 <a href="https://github.com/yorkie-team/codepair/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=yorkie-team/codepair-poc" />
+  <img src="https://contrib.rocks/image?repo=yorkie-team/codepair" />
 </a>
