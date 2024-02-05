@@ -24,6 +24,10 @@ This project is the backend part of the CodePair service developed using NestJS.
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to access the backend.
 
+## API Specification
+
+You can access the Swagger-based REST API specification at `<API_URL>/api` when the backend server is running.
+
 ## Commands
 
 ### Building the Project:
