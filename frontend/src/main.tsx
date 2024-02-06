@@ -7,6 +7,12 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { SnackbarProvider } from "notistack";
+import ReactGA from "react-ga4";
+
+const trackingCode = `${import.meta.env.VITE_APP_GOOGLE_ANALYTICS}`;
+if (trackingCode) {
+	ReactGA.initialize(trackingCode);
+}
 
 const persistor = persistStore(store);
 
