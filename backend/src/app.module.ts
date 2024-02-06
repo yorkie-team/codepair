@@ -10,7 +10,6 @@ import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
 import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
 import { DocumentsModule } from "./documents/documents.module";
 import { CheckModule } from "./check/check.module";
-import { AdminModule } from "./admin/admin.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
 
@@ -24,7 +23,6 @@ import { LangchainModule } from "./langchain/langchain.module";
 		WorkspaceDocumentsModule,
 		DocumentsModule,
 		CheckModule,
-		AdminModule,
 		IntelligenceModule,
 		LangchainModule,
 	],
