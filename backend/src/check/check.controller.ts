@@ -32,8 +32,8 @@ export class CheckController {
 		summary: "Check Whether The Access is Authorized",
 		description: "If the user doesn't have the permission, reject the access",
 	})
-	@ApiBody({ type: CheckNameConflictDto })
-	@ApiOkResponse({ type: CheckNameConflicReponse })
+	@ApiBody({ type: CheckYorkieDto })
+	@ApiOkResponse({ type: CheckYorkieResponse })
 	@HttpCode(HttpStatus.OK)
 	async checkYorkie(@Body() checkYorkieDto: CheckYorkieDto): Promise<CheckYorkieResponse> {
 		return this.checkService.checkYorkie(checkYorkieDto);
