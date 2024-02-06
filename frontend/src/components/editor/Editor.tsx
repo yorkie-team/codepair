@@ -11,6 +11,7 @@ import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
+import { imageUploader } from "../../utils/imageUploader";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function Editor() {
 				EditorView.lineWrapping,
 				keymap.of([indentWithTab]),
 				intelligencePivot,
+				imageUploader(async (url) => url, editorStore.doc),
 			],
 		});
 
