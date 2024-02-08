@@ -12,6 +12,7 @@ import { DocumentsModule } from "./documents/documents.module";
 import { CheckModule } from "./check/check.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
+import { FilesModule } from './files/files.module';
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { LangchainModule } from "./langchain/langchain.module";
 		CheckModule,
 		IntelligenceModule,
 		LangchainModule,
+		FilesModule,
 	],
 	controllers: [],
 	providers: [
