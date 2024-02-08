@@ -2,6 +2,7 @@
 
 ## Contents
 
+- [Architecture](./architecture.md): The architecture of CodePair's NestJS backend
 - [Yorkie Auth Webhook](./auth-webhook.md): Auth Webhook to prevent users from accessing unauthorized documents using a Public Key
 
 ## Maintaining the Document
