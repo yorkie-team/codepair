@@ -15,6 +15,7 @@ services:
             YORKIE_API_ADDR: "YORKIE_API_ADDR"
             YORKIE_PROJECT_NAME: "YORKIE_PROJECT_NAME"
             YORKIE_PROJECT_SECRET_KEY: "YORKIE_PROJECT_SECRET_KEY"
+            AWS_S3_BUCKET_NAME: "YOUR_S3_BUCKET_NAME"
         ports:
             - "3000:3000"
         restart: unless-stopped
