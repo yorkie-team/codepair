@@ -1,4 +1,4 @@
-# Yorkie Auth Webhook
+# Backend Architecture
 
 This document covers ㅅhe architecture of CodePair's NestJS backend.
 
