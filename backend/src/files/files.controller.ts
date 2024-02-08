@@ -6,11 +6,11 @@ import { AuthroizedRequest } from "src/utils/types/req.type";
 import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
 import { Public } from "src/utils/decorators/auth.decorator";
 
-@ApiBearerAuth()
 @Controller("files")
 export class FilesController {
 	constructor(private filesService: FilesService) {}
 
+	@Public()
 	@Post("")
 	@ApiOperation({
 		summary: "Create Presigned URL for Upload",
@@ -19,12 +19,10 @@ export class FilesController {
 	@ApiBody({ type: CreateUploadPresignedUrlDto })
 	@ApiResponse({ type: CreateUploadPresignedUrlResponse })
 	async createUploadPresignedUrl(
-		@Req() req: AuthroizedRequest,
 		@Body() createUploadPresignedUrlDto: CreateUploadPresignedUrlDto
 	): Promise<CreateUploadPresignedUrlResponse> {
 		return {
 			url: await this.filesService.createUploadPresignedUrl(
-				req.user.id,
 				createUploadPresignedUrlDto.workspaceId
 			),
 		};

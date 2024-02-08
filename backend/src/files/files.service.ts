@@ -18,19 +18,14 @@ export class FilesService {
 		this.s3Client = new S3Client();
 	}
 
-	async createUploadPresignedUrl(userId: string, workspaceId: string) {
+	async createUploadPresignedUrl(workspaceId: string) {
 		let workspace: Workspace;
 		try {
-			const userWorkspace = await this.prismaService.userWorkspace.findFirstOrThrow({
+			workspace = await this.prismaService.workspace.findFirstOrThrow({
 				where: {
-					userId,
-					workspaceId,
-				},
-				select: {
-					workspace: true,
+					id: workspaceId,
 				},
 			});
-			workspace = userWorkspace.workspace;
 		} catch (e) {
 			throw new UnauthorizedException();
 		}
