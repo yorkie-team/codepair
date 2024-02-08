@@ -1,6 +1,6 @@
 # Backend Architecture
 
-This document covers ㅅhe architecture of CodePair's NestJS backend.
+This document covers the architecture of CodePair's NestJS backend.
 
 ## Architecture
 
