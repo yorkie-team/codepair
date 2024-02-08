@@ -84,6 +84,7 @@ function Editor() {
 		editorStore.doc,
 		element,
 		themeMode,
+		workspaceStore.data,
 		createUploadUrl,
 		uploadFile,
 	]);
