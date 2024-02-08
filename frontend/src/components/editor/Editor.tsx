@@ -78,7 +78,15 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [dispatch, editorStore.client, editorStore.doc, element, themeMode, createUploadUrl]);
+	}, [
+		dispatch,
+		editorStore.client,
+		editorStore.doc,
+		element,
+		themeMode,
+		createUploadUrl,
+		uploadFile,
+	]);
 
 	return (
 		<div

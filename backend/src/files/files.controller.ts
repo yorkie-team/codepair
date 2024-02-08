@@ -1,13 +1,4 @@
-import {
-	Body,
-	Controller,
-	Get,
-	HttpRedirectResponse,
-	Param,
-	Post,
-	Redirect,
-	Req,
-} from "@nestjs/common";
+import { Body, Controller, Get, HttpRedirectResponse, Param, Post, Redirect } from "@nestjs/common";
 import { FilesService } from "./files.service";
 import { ApiResponse, ApiOperation, ApiBody } from "@nestjs/swagger";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
