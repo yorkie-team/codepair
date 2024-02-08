@@ -21,6 +21,8 @@
 		"test:e2e": "jest --config ./test/jest-e2e.json"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.509.0",
+		"@aws-sdk/s3-request-presigner": "^3.509.0",
 		"@langchain/community": "^0.0.21",
 		"@langchain/core": "^0.1.18",
 		"@nestjs/common": "^10.0.0",
@@ -33,8 +35,8 @@
 		"@prisma/client": "^5.8.1",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.1",
-		"markdown-to-txt": "^2.0.1",
 		"langchain": "^0.1.9",
+		"markdown-to-txt": "^2.0.1",
 		"moment": "^2.30.1",
 		"passport-github": "^1.1.0",
 		"passport-jwt": "^4.0.1",
