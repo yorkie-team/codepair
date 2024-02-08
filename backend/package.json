@@ -22,7 +22,6 @@
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.509.0",
-		"@aws-sdk/s3-presigned-post": "^3.509.0",
 		"@aws-sdk/s3-request-presigner": "^3.509.0",
 		"@langchain/community": "^0.0.21",
 		"@langchain/core": "^0.1.18",

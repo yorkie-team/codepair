@@ -1,7 +1,7 @@
 import { EditorView } from "codemirror";
 import { CodePairDocType } from "../store/editorSlice";
 
-export type UploadCallback = (imageBase64: string) => Promise<string>;
+export type UploadCallback = (file: File) => Promise<string>;
 
 const convertImageFilesToUrlList = async (fileList: FileList, uploadCallback: UploadCallback) => {
 	return await Promise.all(
@@ -13,7 +13,7 @@ const convertImageFilesToUrlList = async (fileList: FileList, uploadCallback: Up
 				reader.readAsDataURL(file);
 
 				reader.onload = function () {
-					resolve(uploadCallback(reader.result as string));
+					resolve(uploadCallback(file));
 				};
 				reader.onerror = function (error) {
 					reject(error);

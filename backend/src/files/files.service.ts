@@ -1,11 +1,16 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+	UnprocessableEntityException,
+} from "@nestjs/common";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { createPresignedPost, PresignedPostOptions } from "@aws-sdk/s3-presigned-post";
 import { ConfigService } from "@nestjs/config";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import { PrismaService } from "src/db/prisma.service";
 import { Workspace } from "@prisma/client";
+import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
 
 @Injectable()
 export class FilesService {
@@ -18,7 +23,11 @@ export class FilesService {
 		this.s3Client = new S3Client();
 	}
 
-	async createUploadPresignedUrl(workspaceId: string) {
+	async createUploadPresignedUrl(
+		workspaceId: string,
+		contentLength: number,
+		contentType: string
+	): Promise<CreateUploadPresignedUrlResponse> {
 		let workspace: Workspace;
 		try {
 			workspace = await this.prismaService.workspace.findFirstOrThrow({
@@ -30,19 +39,22 @@ export class FilesService {
 			throw new UnauthorizedException();
 		}
 
-		const options: PresignedPostOptions = {
-			Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
-			Key: `${workspace.slug}-${generateRandomKey()}`,
-			Conditions: [
-				["content-length-range", 0, 10_000_000], // 10MB
-				["starts-with", "$Content-Type", "image/"], // only image'
-				["eq", "x-amz-storage-class", "INTELLIGENT_TIERING"],
-			],
-			Expires: 300,
-		};
-		const { url } = await createPresignedPost(this.s3Client, options);
+		if (contentLength > 10_000_000) {
+			throw new UnprocessableEntityException();
+		}
 
-		return url;
+		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
+		const command = new PutObjectCommand({
+			Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+			Key: fileKey,
+			StorageClass: "INTELLIGENT_TIERING",
+			ContentType: contentType,
+			ContentLength: contentLength,
+		});
+		return {
+			fileKey,
+			url: await getSignedUrl(this.s3Client, command, { expiresIn: 300 }),
+		};
 	}
 
 	async createDownloadPresignedUrl(fileKey: string) {

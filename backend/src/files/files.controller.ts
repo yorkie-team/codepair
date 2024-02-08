@@ -1,8 +1,16 @@
-import { Body, Controller, HttpRedirectResponse, Param, Post, Redirect, Req } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Get,
+	HttpRedirectResponse,
+	Param,
+	Post,
+	Redirect,
+	Req,
+} from "@nestjs/common";
 import { FilesService } from "./files.service";
-import { ApiResponse, ApiOperation, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiResponse, ApiOperation, ApiBody } from "@nestjs/swagger";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
-import { AuthroizedRequest } from "src/utils/types/req.type";
 import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
 import { Public } from "src/utils/decorators/auth.decorator";
 
@@ -21,15 +29,15 @@ export class FilesController {
 	async createUploadPresignedUrl(
 		@Body() createUploadPresignedUrlDto: CreateUploadPresignedUrlDto
 	): Promise<CreateUploadPresignedUrlResponse> {
-		return {
-			url: await this.filesService.createUploadPresignedUrl(
-				createUploadPresignedUrlDto.workspaceId
-			),
-		};
+		return this.filesService.createUploadPresignedUrl(
+			createUploadPresignedUrlDto.workspaceId,
+			createUploadPresignedUrlDto.contentLength,
+			createUploadPresignedUrlDto.contentType
+		);
 	}
 
 	@Public()
-	@Post(":file_name")
+	@Get(":file_name")
 	@Redirect()
 	@ApiOperation({
 		summary: "Create Presigned URL for Download",

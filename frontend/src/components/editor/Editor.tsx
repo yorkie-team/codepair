@@ -12,12 +12,17 @@ import { keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { imageUploader } from "../../utils/imageUploader";
+import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
+import { selectWorkspace } from "../../store/workspaceSlice";
 
 function Editor() {
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
+	const workspaceStore = useSelector(selectWorkspace);
+	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
+	const { mutateAsync: uploadFile } = useUploadFileMutation();
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
 		setElement(node);
@@ -29,6 +34,20 @@ function Editor() {
 		if (!element || !editorStore.doc || !editorStore.client) {
 			return;
 		}
+
+		const handleUploadImage = async (file: File) => {
+			if (!workspaceStore.data) return "";
+
+			const uploadUrlData = await createUploadUrl({
+				workspaceId: workspaceStore.data.id,
+				contentLength: new Blob([file]).size,
+				contentType: file.type,
+			});
+
+			await uploadFile({ ...uploadUrlData, file });
+
+			return `${import.meta.env.VITE_API_ADDR}/files/${uploadUrlData.fileKey}`;
+		};
 
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
@@ -46,7 +65,7 @@ function Editor() {
 				EditorView.lineWrapping,
 				keymap.of([indentWithTab]),
 				intelligencePivot,
-				imageUploader(async (url) => url, editorStore.doc),
+				imageUploader(handleUploadImage, editorStore.doc),
 			],
 		});
 
@@ -59,7 +78,7 @@ function Editor() {
 		return () => {
 			view?.destroy();
 		};
-	}, [dispatch, editorStore.client, editorStore.doc, element, themeMode]);
+	}, [dispatch, editorStore.client, editorStore.doc, element, themeMode, createUploadUrl]);
 
 	return (
 		<div
