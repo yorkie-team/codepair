@@ -140,7 +140,7 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 
 	return (
 		<Stack gap={4}>
-			<Box bgcolor={theme.palette.grey[200]} p={1} borderRadius={2}>
+			<Box bgcolor={theme.palette.background.paper} p={1} borderRadius={2} border={1}>
 				<Typography>{title}</Typography>
 			</Box>
 			{isLoading && <CircularProgress sx={{ marginX: "auto" }} />}
