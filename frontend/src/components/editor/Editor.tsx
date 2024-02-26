@@ -5,7 +5,6 @@ import { markdown } from "@codemirror/lang-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import { selectEditor, setCmView } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
-import toolbar, { markdownItems } from "codemirror-toolbar";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { keymap } from "@codemirror/view";
@@ -14,6 +13,7 @@ import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { imageUploader } from "../../utils/imageUploader";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
 import { selectWorkspace } from "../../store/workspaceSlice";
+import { ScrollSyncPane } from "react-scroll-sync";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -55,9 +55,6 @@ function Editor() {
 				basicSetup,
 				markdown(),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
-				toolbar({
-					items: markdownItems,
-				}),
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({
 					"&": { width: "100%" },
@@ -73,6 +70,7 @@ function Editor() {
 			state,
 			parent: element,
 		});
+
 		dispatch(setCmView(view));
 
 		return () => {
@@ -90,14 +88,23 @@ function Editor() {
 	]);
 
 	return (
-		<div
-			ref={ref}
-			style={{
-				display: "flex",
-				alignItems: "stretch",
-				height: "100%",
-			}}
-		/>
+		<ScrollSyncPane>
+			<div
+				style={{
+					height: "100%",
+					overflow: "auto",
+				}}
+			>
+				<div
+					ref={ref}
+					style={{
+						display: "flex",
+						alignItems: "stretch",
+						minHeight: "100%",
+					}}
+				/>
+			</div>
+		</ScrollSyncPane>
 	);
 }
 
