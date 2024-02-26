@@ -5,6 +5,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import Editor from "./Editor";
 import { Backdrop, Box, CircularProgress, Paper } from "@mui/material";
 import Preview from "./Preview";
+import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
 function DocumentView() {
 	const editorStore = useSelector(selectEditor);
@@ -24,37 +25,44 @@ function DocumentView() {
 			{editorStore.mode === "both" && (
 				<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
 					{({ position: width, separatorProps }) => (
-						<div
-							id="wrapper"
-							style={{
-								display: "flex",
-								height: "100%",
-								overflow: "hidden",
-							}}
-						>
-							<div id="left-block" style={{ width }}>
-								<Editor />
-							</div>
-							<Paper
-								id="splitter"
-								{...separatorProps}
-								sx={{
-									height: "100%",
-									width: 8,
-									borderRadius: 0,
-									cursor: "col-resize",
-									zIndex: 0,
-								}}
-							/>
+						<ScrollSync>
 							<div
-								className="right-block"
-								style={{ width: `calc(100% - ${width}px)`, overflow: "auto" }}
+								id="wrapper"
+								style={{
+									display: "flex",
+									height: "100%",
+									overflow: "hidden",
+								}}
 							>
-								<Box sx={{ p: 4 }} height="100%">
-									<Preview />
-								</Box>
+								<div id="left-block" style={{ width }}>
+									<Editor />
+								</div>
+								<Paper
+									id="splitter"
+									{...separatorProps}
+									sx={{
+										height: "100%",
+										width: 8,
+										borderRadius: 0,
+										cursor: "col-resize",
+										zIndex: 0,
+									}}
+								/>
+								<ScrollSyncPane>
+									<div
+										className="right-block"
+										style={{
+											width: `calc(100% - ${width}px)`,
+											overflow: "auto",
+										}}
+									>
+										<Box sx={{ p: 4 }} height="100%">
+											<Preview />
+										</Box>
+									</div>
+								</ScrollSyncPane>
 							</div>
-						</div>
+						</ScrollSync>
 					)}
 				</Resizable>
 			)}
