@@ -38,6 +38,7 @@
 		"codemirror-toolbar": "^0.0.4",
 		"color": "^4.2.3",
 		"form-data": "^4.0.0",
+		"katex": "^0.16.9",
 		"lib0": "^0.2.88",
 		"lodash": "^4.17.21",
 		"match-sorter": "^6.3.3",
@@ -57,11 +58,15 @@
 		"react-social-login-buttons": "^3.9.1",
 		"react-use": "^17.5.0",
 		"redux-persist": "^6.0.0",
+		"rehype-katex": "^7.0.0",
+		"rehype-rewrite": "^4.0.2",
+		"remark-math": "^6.0.0",
 		"vite-plugin-package-version": "^1.1.0",
 		"yorkie-js-sdk": "^0.4.15-rc"
 	},
 	"devDependencies": {
 		"@types/color": "^3.0.6",
+		"@types/katex": "^0.16.7",
 		"@types/lodash": "^4.14.202",
 		"@types/randomcolor": "^0.5.9",
 		"@types/react": "^18.2.43",
