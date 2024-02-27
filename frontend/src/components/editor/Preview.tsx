@@ -10,6 +10,7 @@ import katex from "katex";
 import { getCodeString } from "rehype-rewrite";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import rehypeExternalLinks from "rehype-external-links";
 import "katex/dist/katex.min.css";
 
 function Preview() {
@@ -56,7 +57,7 @@ function Preview() {
 				},
 			}}
 			remarkPlugins={[remarkMath]}
-			rehypePlugins={[rehypeKatex]}
+			rehypePlugins={[rehypeKatex, [rehypeExternalLinks, { target: "_blank" }]]}
 			components={{
 				code: ({ children = [], className, ...props }) => {
 					// https://www.npmjs.com/package/@uiw/react-markdown-preview#support-custom-katex-preview
