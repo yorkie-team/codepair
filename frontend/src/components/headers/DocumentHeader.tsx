@@ -55,7 +55,7 @@ function DocumentHeader() {
 
 		const unsubscribe = editorState.doc.subscribe("others", (event) => {
 			if (event.type === "watched") {
-				pushToPresenceList(event.value);
+				setPresenceList(editorState.doc?.getPresences?.() ?? []);
 			}
 
 			if (event.type === "unwatched") {
