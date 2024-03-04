@@ -77,6 +77,7 @@ function DocumentHeader() {
 	]);
 
 	const handleChangeMode = (newMode: EditorModeType) => {
+		if (!newMode) return;
 		dispatch(setMode(newMode));
 	};
 
