@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Container, Grid, GridItem, Stack, Text, Card, Flex } from "yorkie-ui";
 import CodePairIcon from "../../components/icons/CodePairIcon";
 import { GithubLoginButton } from "react-social-login-buttons";
 
@@ -15,43 +15,30 @@ function LoginIndex() {
 	};
 
 	return (
-		<Container sx={{ height: 1 }}>
-			<Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-				<Paper sx={{ p: 5, width: "small", boxShadow: 2, maxWidth: "80%" }}>
-					<Stack gap={4}>
-						<Box>
-							<Stack direction="row" gap={1}>
+		<Container h="100%">
+			<Stack alignItems="center" justifyContent="center" h="100%">
+				<Card.Root width="xs">
+					<Card.Header>
+						<Card.Title>
+							<Flex gap="2">
 								<CodePairIcon />
-								<Typography variant="h6">Login</Typography>
-							</Stack>
-							<Typography variant="body2" color="text.secondary" maxWidth={320}>
-								Real-time markdown editor for interviews, meetings and more...
-							</Typography>
-						</Box>
-						<Stack gap={2}>
-							<Grid container spacing={1} alignItems="center">
-								<Grid item xs>
-									<Divider sx={{ width: 1 }} />
-								</Grid>
-								<Grid item xs="auto">
-									<Typography variant="body2" color="text.secondary">
-										Login with
-									</Typography>
-								</Grid>
-								<Grid item xs>
-									<Divider sx={{ width: 1 }} />
-								</Grid>
-							</Grid>
-							{socialLoginList.map(({ SocailLoginComponent, provider }) => (
-								<SocailLoginComponent
-									key={provider}
-									size="48px"
-									onClick={() => handleLogin(provider)}
-								/>
-							))}
-						</Stack>
-					</Stack>
-				</Paper>
+								CodePair
+							</Flex>
+						</Card.Title>
+						<Card.Description>
+							Real-time markdown editor for interviews, meetings and more...
+						</Card.Description>
+					</Card.Header>
+					<Card.Body>
+						{socialLoginList.map(({ SocailLoginComponent, provider }) => (
+							<SocailLoginComponent
+								key={provider}
+								size="48px"
+								onClick={() => handleLogin(provider)}
+							/>
+						))}
+					</Card.Body>
+				</Card.Root>
 			</Stack>
 		</Container>
 	);
