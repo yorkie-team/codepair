@@ -1,8 +1,7 @@
-import { AppBar, Button, Stack, Toolbar } from "@mui/material";
-
-import ThemeButton from "../common/ThemeButton";
+import { Box, Button, Container, Flex } from "yorkie-ui";
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";
+
 function MainHeader() {
 	const navigate = useNavigate();
 
@@ -11,24 +10,14 @@ function MainHeader() {
 	};
 
 	return (
-		<AppBar position="static" sx={{ zIndex: 100 }}>
-			<Toolbar>
-				<Stack
-					width="100%"
-					direction="row"
-					justifyContent="space-between"
-					alignItems="center"
-				>
+		<Box pos="static" borderWidth="1px" borderColor="border.default" py="6" zIndex="100">
+			<Container>
+				<Flex alignItems="center" justifyContent="space-between">
 					<CodePairIcon />
-					<Stack direction="row" alignItems="center" gap={2}>
-						<Button color="inherit" onClick={handleMoveToLogin}>
-							Login
-						</Button>
-						<ThemeButton />
-					</Stack>
-				</Stack>
-			</Toolbar>
-		</AppBar>
+					<Button onClick={handleMoveToLogin}>Login</Button>
+				</Flex>
+			</Container>
+		</Box>
 	);
 }
 
