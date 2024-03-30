@@ -1,7 +1,8 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router";
 import { useJoinWorkspaceMutation } from "../../../hooks/api/workspace";
 import { useEffect } from "react";
+import { Dialog } from "yorkie-ui";
 
 function JoinIndex() {
 	const params = useParams();
@@ -17,9 +18,13 @@ function JoinIndex() {
 	}, [joinWorkspace, navigate, params.invitationToken]);
 
 	return (
-		<Backdrop open>
-			<CircularProgress color="inherit" />
-		</Backdrop>
+		<Dialog.Root open>
+			<Dialog.Backdrop>
+				<Dialog.Positioner>
+					<CircularProgress color="inherit" />
+				</Dialog.Positioner>
+			</Dialog.Backdrop>
+		</Dialog.Root>
 	);
 }
 
