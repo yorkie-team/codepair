@@ -1,10 +1,10 @@
-import { Box } from "@mui/material";
+import { Box } from "yorkie-ui";
 import { Outlet } from "react-router-dom";
 import DocumentHeader from "../headers/DocumentHeader";
 
 function DocumentLayout() {
 	return (
-		<Box sx={{ flexGrow: 1 }} height="100vh">
+		<Box style={{ height: "100vh" }} flexGrow="1">
 			<DocumentHeader />
 			<Outlet />
 		</Box>
