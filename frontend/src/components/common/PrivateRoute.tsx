@@ -1,7 +1,8 @@
 import { ReactNode, useContext } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import { Dialog } from "yorkie-ui";
 
 interface PrivateRouteProps {
 	children?: ReactNode;
@@ -14,9 +15,13 @@ const PrivateRoute = (props: PrivateRouteProps) => {
 
 	if (isLoading) {
 		return (
-			<Backdrop open>
-				<CircularProgress color="inherit" />
-			</Backdrop>
+			<Dialog.Root open>
+				<Dialog.Backdrop>
+					<Dialog.Positioner>
+						<CircularProgress color="inherit" />
+					</Dialog.Positioner>
+				</Dialog.Backdrop>
+			</Dialog.Root>
 		);
 	}
 
