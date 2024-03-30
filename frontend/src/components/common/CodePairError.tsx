@@ -1,16 +1,20 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Text } from "yorkie-ui";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 function CodePairError() {
 	const error = useRouteError();
 
 	return (
-		<Stack width={1} height="100vh" alignItems="center" justifyContent="center">
+		<Stack
+			alignItems="center"
+			justifyContent="center"
+			style={{
+				height: "100vh",
+			}}
+		>
 			<Stack alignItems="center">
-				<Typography variant="h5">Something went wrong</Typography>
-				{isRouteErrorResponse(error) && (
-					<Typography variant="subtitle1">Status Code: {error.status}</Typography>
-				)}
+				<Text>Something went wrong</Text>
+				{isRouteErrorResponse(error) && <Text>Status Code: {error.status}</Text>}
 			</Stack>
 		</Stack>
 	);
