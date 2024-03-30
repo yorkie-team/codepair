@@ -1,4 +1,4 @@
-import { CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useCreateWorkspaceMutation, useGetWorkspaceListQuery } from "../../hooks/api/workspace";
 import InfiniteScroll from "react-infinite-scroller";
 import { useMemo, useState } from "react";
@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
-import { Flex, Menu, Text, Box } from "yorkie-ui";
+import { Flex, Menu, Text, Box, Button } from "yorkie-ui";
 import { useSelector } from "react-redux";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -69,9 +69,9 @@ function WorkspaceListMenu(props: WorkspaceListMenuProps) {
 					<Menu.Item id="title" w="100%" onClick={handleMenuOpen}>
 						<Flex w="100%" alignItems="center" justifyContent="space-between">
 							<Text>{workspaceStore.data?.title}</Text>
-							<IconButton>
+							<Button variant="ghost" size="xs">
 								{menuOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-							</IconButton>
+							</Button>
 						</Flex>
 					</Menu.Item>
 				</Menu.Trigger>
