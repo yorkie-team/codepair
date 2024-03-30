@@ -1,10 +1,10 @@
-import { Stack } from "@mui/material";
+import { Stack } from "yorkie-ui";
 import { Outlet } from "react-router-dom";
 import MainHeader from "../headers/MainHeader";
 
 function MainLayout() {
 	return (
-		<Stack sx={{ flexGrow: 1, height: "100vh" }}>
+		<Stack flexGrow="1" style={{ height: "100vh" }}>
 			<MainHeader />
 			<Outlet />
 		</Stack>
