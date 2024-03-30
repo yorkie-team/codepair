@@ -3,7 +3,6 @@ import {
 	Button,
 	Divider,
 	Drawer,
-	IconButton,
 	ListItem,
 	ListItemAvatar,
 	ListItemButton,
@@ -18,9 +17,8 @@ import { selectUser } from "../../store/userSlice";
 import { MouseEventHandler, useState } from "react";
 import ProfilePopover from "../popovers/ProfilePopover";
 import { useNavigate } from "react-router-dom";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
+
+import WorkspaceListMenu from "../popovers/WorkspaceListMenu";
 import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
@@ -39,9 +37,6 @@ function WorkspaceDrawer() {
 		workspaceStore.data?.id || ""
 	);
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
-	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
-		(EventTarget & Element) | null
-	>(null);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
 	const [memberModalOpen, setMemberModalOpen] = useState(false);
 
@@ -51,14 +46,6 @@ function WorkspaceDrawer() {
 
 	const handleCloseProfilePopover = () => {
 		setProfileAnchorEl(null);
-	};
-
-	const handleOpenWorkspacePopover: MouseEventHandler = (event) => {
-		setWorkspaceListAnchorEl(event.currentTarget);
-	};
-
-	const handleCloseWorkspacePopover = () => {
-		setWorkspaceListAnchorEl(null);
 	};
 
 	const handleCreateWorkspace = async (data: { title: string }) => {
@@ -90,30 +77,7 @@ function WorkspaceDrawer() {
 			open
 		>
 			<ListItem disablePadding>
-				<ListItemButton onClick={handleOpenWorkspacePopover}>
-					<ListItemText
-						primary={workspaceStore.data?.title}
-						primaryTypographyProps={{
-							variant: "subtitle1",
-							noWrap: true,
-						}}
-					/>
-					<ListItemSecondaryAction>
-						<IconButton>
-							{workspaceListAnchorEl ? (
-								<KeyboardArrowUpIcon />
-							) : (
-								<KeyboardArrowDownIcon />
-							)}
-						</IconButton>
-					</ListItemSecondaryAction>
-				</ListItemButton>
-				<WorkspaceListPopover
-					open={Boolean(workspaceListAnchorEl)}
-					anchorEl={workspaceListAnchorEl}
-					onClose={handleCloseWorkspacePopover}
-					width={DRAWER_WIDTH - 32}
-				/>
+				<WorkspaceListMenu width={DRAWER_WIDTH - 20} />
 			</ListItem>
 			<Divider />
 			<ListItem>
