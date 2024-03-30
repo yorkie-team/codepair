@@ -1,7 +1,7 @@
-import { IconButton } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import ShareModal from "../modals/ShareModal";
 import { useState } from "react";
+import { Button } from "yorkie-ui";
 
 function ShareButton() {
 	const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -12,9 +12,9 @@ function ShareButton() {
 
 	return (
 		<>
-			<IconButton onClick={handleShareModalOpen} color="inherit">
+			<Button onClick={handleShareModalOpen} variant="ghost">
 				<ShareIcon />
-			</IconButton>
+			</Button>
 			<ShareModal open={shareModalOpen} onClose={handleShareModalOpen} />
 		</>
 	);
