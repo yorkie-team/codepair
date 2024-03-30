@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "yorkie-ui";
 import DocumentView from "../../../../components/editor/DocumentView";
 import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
 import { Navigate, useLocation, useSearchParams } from "react-router-dom";
@@ -44,7 +44,11 @@ function DocumentShareIndex() {
 	if (!shareToken) return <Navigate to="/" state={{ from: location }} replace />;
 
 	return (
-		<Box height="calc(100% - 64px)">
+		<Box
+			style={{
+				height: "calc(100% - 64px)",
+			}}
+		>
 			<DocumentView />
 		</Box>
 	);
