@@ -1,31 +1,17 @@
-import {
-	Avatar,
-	Button,
-	Divider,
-	Drawer,
-	ListItem,
-	ListItemAvatar,
-	ListItemButton,
-	ListItemIcon,
-	ListItemSecondaryAction,
-	ListItemText,
-	Stack,
-} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import { MouseEventHandler, useState } from "react";
 import ProfilePopover from "../popovers/ProfilePopover";
 import { useNavigate } from "react-router-dom";
-
 import WorkspaceListMenu from "../popovers/WorkspaceListMenu";
 import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
 import { useCreateDocumentMutation } from "../../hooks/api/workspaceDocument";
-import ThemeButton from "../common/ThemeButton";
 import PeopleIcon from "@mui/icons-material/People";
 import MemberModal from "../modals/MemberModal";
 import { selectWorkspace } from "../../store/workspaceSlice";
+import { Avatar, Box, Button, Flex, Stack } from "yorkie-ui";
 
 const DRAWER_WIDTH = 240;
 
@@ -63,75 +49,65 @@ function WorkspaceDrawer() {
 	};
 
 	return (
-		<Drawer
-			sx={{
+		<Box
+			borderWidth="1px"
+			borderColor="border.default"
+			style={{
 				width: DRAWER_WIDTH,
+				height: "100vh",
 				flexShrink: 0,
-				"& .MuiDrawer-paper": {
-					width: DRAWER_WIDTH,
-					boxSizing: "border-box",
-				},
+				paddingBottom: 10,
 			}}
-			variant="permanent"
-			anchor="left"
-			open
 		>
-			<ListItem disablePadding>
+			<Stack
+				style={{
+					height: "100%",
+				}}
+			>
 				<WorkspaceListMenu width={DRAWER_WIDTH - 20} />
-			</ListItem>
-			<Divider />
-			<ListItem>
-				<Button
-					variant="contained"
-					startIcon={<AddIcon />}
-					sx={{
-						width: 1,
-					}}
-					onClick={handleCreateWorkspaceModalOpen}
-				>
-					New Note
-				</Button>
-			</ListItem>
-			<Divider />
-			<ListItem disablePadding>
-				<ListItemButton onClick={handleMemberModalOpen}>
-					<ListItemIcon>
+				<Box w="full" px="4">
+					<Button w="full" onClick={handleCreateWorkspaceModalOpen}>
+						<AddIcon />
+						New Note
+					</Button>
+				</Box>
+				<Button variant="ghost" w="full" onClick={handleMemberModalOpen}>
+					<Flex alignItems="center" w="full" gap="4">
 						<PeopleIcon />
-					</ListItemIcon>
-					<ListItemText primary="Members" />
-				</ListItemButton>
-			</ListItem>
-			<Divider />
-			<ListItem sx={{ mt: "auto" }}>
-				<Stack width={1} alignItems="center" justifyContent="flex-end" direction="row">
-					<ThemeButton />
-				</Stack>
-			</ListItem>
-			<Divider />
-			<ListItem disablePadding>
-				<ListItemButton onClick={handleOpenProfilePopover}>
-					<ListItemAvatar>
-						<Avatar>{userStore.data?.nickname?.charAt(0)}</Avatar>
-					</ListItemAvatar>
-					<ListItemText primary={userStore.data?.nickname} />
-					<ListItemSecondaryAction>
+						Members
+					</Flex>
+				</Button>
+
+				<Button
+					variant="ghost"
+					w="full"
+					onClick={handleOpenProfilePopover}
+					style={{
+						marginTop: "auto",
+					}}
+				>
+					<Flex alignItems="center" w="full" justifyContent="space-between">
+						<Flex alignItems="center" gap="4">
+							<Avatar name={userStore.data?.nickname?.charAt(0)} />
+							{userStore.data?.nickname}
+						</Flex>
 						<MoreVertIcon />
-					</ListItemSecondaryAction>
-				</ListItemButton>
+					</Flex>
+				</Button>
 				<ProfilePopover
 					open={Boolean(profileAnchorEl)}
 					anchorEl={profileAnchorEl}
 					onClose={handleCloseProfilePopover}
 				/>
-			</ListItem>
-			<CreateModal
-				open={createWorkspaceModalOpen}
-				title="Note"
-				onSuccess={handleCreateWorkspace}
-				onClose={handleCreateWorkspaceModalOpen}
-			/>
-			<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
-		</Drawer>
+				<CreateModal
+					open={createWorkspaceModalOpen}
+					title="Note"
+					onSuccess={handleCreateWorkspace}
+					onClose={handleCreateWorkspaceModalOpen}
+				/>
+				<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
+			</Stack>
+		</Box>
 	);
 }
 
