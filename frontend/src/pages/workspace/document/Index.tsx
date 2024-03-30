@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { setClient, setDoc } from "../../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Box } from "yorkie-ui";
 import { useParams } from "react-router-dom";
 import { selectUser } from "../../../store/userSlice";
 import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
@@ -35,7 +35,11 @@ function DocumentIndex() {
 	}, [cleanUpYorkieDocument, dispatch, client, doc]);
 
 	return (
-		<Box height="calc(100% - 64px)">
+		<Box
+			style={{
+				height: "calc(100% - 64px)",
+			}}
+		>
 			<DocumentView />
 			<YorkieIntelligence />
 		</Box>
