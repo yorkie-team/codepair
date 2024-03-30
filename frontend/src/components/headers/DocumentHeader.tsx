@@ -15,7 +15,6 @@ import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
-import ThemeButton from "../common/ThemeButton";
 import ShareButton from "../common/ShareButton";
 import { useEffect } from "react";
 import { useList } from "react-use";
@@ -136,7 +135,6 @@ function DocumentHeader() {
 							))}
 						</AvatarGroup>
 						{!editorState.shareRole && <ShareButton />}
-						<ThemeButton />
 					</Stack>
 				</Stack>
 			</Toolbar>
