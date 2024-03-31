@@ -1,18 +1,3 @@
-import {
-	AppBar,
-	Avatar,
-	AvatarGroup,
-	IconButton,
-	Paper,
-	Stack,
-	ToggleButton,
-	ToggleButtonGroup,
-	Toolbar,
-	Tooltip,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import ShareButton from "../common/ShareButton";
@@ -22,6 +7,7 @@ import { ActorID } from "yorkie-js-sdk";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useNavigate } from "react-router-dom";
+import { Avatar, Box, Button, Stack, Tabs, Tooltip } from "yorkie-ui";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -85,60 +71,55 @@ function DocumentHeader() {
 	};
 
 	return (
-		<AppBar position="static" sx={{ zIndex: 100 }}>
-			<Toolbar>
-				<Stack width="100%" direction="row" justifyContent="space-between">
-					<Stack direction="row" spacing={1} alignItems="center">
-						<Tooltip title="Back to Previous Page">
-							<IconButton color="inherit" onClick={handleToPrevious}>
+		<Box
+			position="static"
+			zIndex="100"
+			style={{
+				paddingTop: 8,
+				paddingBottom: 8,
+			}}
+			borderWidth="1px"
+		>
+			<Stack width="100%" direction="row" justifyContent="space-between">
+				<Stack direction="row" gap="1" alignItems="center">
+					<Tooltip.Root closeDelay={3}>
+						<Tooltip.Trigger>
+							<Button variant="ghost" onClick={handleToPrevious} size="sm">
 								<ArrowBackIosNewIcon />
-							</IconButton>
-						</Tooltip>
-						<Paper>
-							{editorState.shareRole !== "READ" && (
-								<ToggleButtonGroup
-									value={editorState.mode}
-									exclusive
-									onChange={(_, newMode) => handleChangeMode(newMode)}
-									size="small"
-								>
-									<ToggleButton value="edit" aria-label="edit">
-										<Tooltip title="Edit Mode">
-											<EditIcon />
-										</Tooltip>
-									</ToggleButton>
-									<ToggleButton value="both" aria-label="both">
-										<Tooltip title="Both Mode">
-											<VerticalSplitIcon />
-										</Tooltip>
-									</ToggleButton>
-									<ToggleButton value="read" aria-label="read">
-										<Tooltip title="Read Mode">
-											<VisibilityIcon />
-										</Tooltip>
-									</ToggleButton>
-								</ToggleButtonGroup>
-							)}
-						</Paper>
-					</Stack>
-					<Stack direction="row" alignItems="center" gap={1}>
-						<AvatarGroup max={4}>
-							{presenceList?.map((presence) => (
-								<Tooltip key={presence.clientID} title={presence.presence.name}>
-									<Avatar
-										alt={presence.presence.name}
-										sx={{ bgcolor: presence.presence.color }}
-									>
-										{presence.presence.name[0]}
-									</Avatar>
-								</Tooltip>
-							))}
-						</AvatarGroup>
-						{!editorState.shareRole && <ShareButton />}
-					</Stack>
+							</Button>
+						</Tooltip.Trigger>
+						<Tooltip.Positioner>
+							<Tooltip.Content>Back to Previous Page</Tooltip.Content>
+						</Tooltip.Positioner>
+					</Tooltip.Root>
+					{editorState.shareRole !== "READ" && (
+						<Tabs.Root
+							value={editorState.mode}
+							onValueChange={(e) => handleChangeMode(e.value as EditorModeType)}
+						>
+							<Tabs.List>
+								<Tabs.Trigger value="edit">Edit</Tabs.Trigger>
+								<Tabs.Trigger value="both">Both</Tabs.Trigger>
+								<Tabs.Trigger value="read">Read</Tabs.Trigger>
+							</Tabs.List>
+						</Tabs.Root>
+					)}
 				</Stack>
-			</Toolbar>
-		</AppBar>
+				<Stack direction="row" alignItems="center" gap={1}>
+					{presenceList?.map((presence) => (
+						<Tooltip.Root closeDelay={3}>
+							<Tooltip.Trigger>
+								<Avatar name={presence.presence.name} />
+							</Tooltip.Trigger>
+							<Tooltip.Positioner>
+								<Tooltip.Content>{presence.presence.name}</Tooltip.Content>
+							</Tooltip.Positioner>
+						</Tooltip.Root>
+					))}
+					{!editorState.shareRole && <ShareButton />}
+				</Stack>
+			</Stack>
+		</Box>
 	);
 }
 
