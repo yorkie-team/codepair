@@ -2,7 +2,7 @@ import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
-import { CircularProgress, Stack } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./editor.css";
 import { addSoftLineBreak } from "../../utils/document";
@@ -12,6 +12,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeExternalLinks from "rehype-external-links";
 import "katex/dist/katex.min.css";
+import { Stack } from "yorkie-ui";
 
 function Preview() {
 	const currentTheme = useCurrentTheme();
