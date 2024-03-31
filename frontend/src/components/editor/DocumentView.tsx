@@ -3,9 +3,10 @@ import { selectEditor } from "../../store/editorSlice";
 import Resizable from "react-resizable-layout";
 import { useWindowWidth } from "@react-hook/window-size";
 import Editor from "./Editor";
-import { Backdrop, Box, CircularProgress, Paper } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Preview from "./Preview";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import { Box, Dialog } from "yorkie-ui";
 
 function DocumentView() {
 	const editorStore = useSelector(selectEditor);
@@ -13,9 +14,13 @@ function DocumentView() {
 
 	if (!editorStore.doc || !editorStore.client)
 		return (
-			<Backdrop open>
-				<CircularProgress color="inherit" />
-			</Backdrop>
+			<Dialog.Root open>
+				<Dialog.Backdrop>
+					<Dialog.Positioner>
+						<CircularProgress color="inherit" />
+					</Dialog.Positioner>
+				</Dialog.Backdrop>
+			</Dialog.Root>
 		);
 
 	return (
@@ -37,15 +42,17 @@ function DocumentView() {
 								<div id="left-block" style={{ width }}>
 									<Editor />
 								</div>
-								<Paper
+								<Box
 									id="splitter"
 									{...separatorProps}
-									sx={{
+									style={{
 										height: "100%",
 										width: 8,
 										borderRadius: 0,
 										cursor: "col-resize",
 										zIndex: 0,
+										// Shadow
+										boxShadow: "0 0 8px 0 rgba(0, 0, 0, 0.1)",
 									}}
 								/>
 								<ScrollSyncPane>
@@ -56,7 +63,7 @@ function DocumentView() {
 											overflow: "auto",
 										}}
 									>
-										<Box sx={{ p: 4 }} height="100%">
+										<Box style={{ padding: 16 }} height="100%">
 											<Preview />
 										</Box>
 									</div>
@@ -67,7 +74,7 @@ function DocumentView() {
 				</Resizable>
 			)}
 			{editorStore.mode === "read" && (
-				<Box sx={{ p: 4, overflow: "auto" }} height="100%">
+				<Box style={{ padding: 16, overflow: "auto" }} height="100%">
 					<Preview />
 				</Box>
 			)}
