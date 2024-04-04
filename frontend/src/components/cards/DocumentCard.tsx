@@ -2,7 +2,7 @@ import moment from "moment";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Document } from "../../hooks/api/types/document.d";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Flex, Text } from "yorkie-ui";
+import { Card, Flex } from "yorkie-ui";
 
 interface DocumentCardProps {
 	document: Document;
