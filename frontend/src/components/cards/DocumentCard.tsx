@@ -1,8 +1,8 @@
 import moment from "moment";
-import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Document } from "../../hooks/api/types/document.d";
 import { useNavigate, useParams } from "react-router-dom";
+import { Card, Flex, Text } from "yorkie-ui";
 
 interface DocumentCardProps {
 	document: Document;
@@ -18,26 +18,32 @@ function DocumentCard(props: DocumentCardProps) {
 	};
 
 	return (
-		<Card sx={{ width: "100%" }}>
-			<CardActionArea onClick={handleToDocument}>
-				<CardContent>
-					<Typography variant="h5" component="div" noWrap>
+		<Card.Root width="full" cursor="pointer" onClick={handleToDocument}>
+			<Card.Header>
+				<Card.Title truncate w="full">
+					<Text
+						style={{
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							whiteSpace: "nowrap",
+						}}
+					>
 						{document.title}
-					</Typography>
-					<Stack direction="row" alignItems="center" gap={1}>
+					</Text>
+				</Card.Title>
+				<Card.Description>
+					<Flex align="center" gap={2}>
 						<AccessTimeIcon
 							fontSize="small"
 							sx={{
 								color: "text.secondary",
 							}}
 						/>
-						<Typography variant="body2" color="text.secondary" noWrap>
-							Changed {moment(document.updatedAt).fromNow()}
-						</Typography>
-					</Stack>
-				</CardContent>
-			</CardActionArea>
-		</Card>
+						{moment(document.updatedAt).fromNow()}
+					</Flex>
+				</Card.Description>
+			</Card.Header>
+		</Card.Root>
 	);
 }
 
