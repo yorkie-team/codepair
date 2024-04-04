@@ -20,18 +20,22 @@ function DocumentCard(props: DocumentCardProps) {
 	return (
 		<Card.Root width="full" cursor="pointer" onClick={handleToDocument}>
 			<Card.Header>
-				<Card.Title truncate w="full">
-					<Text
-						style={{
-							overflow: "hidden",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-						}}
-					>
-						{document.title}
-					</Text>
+				<Card.Title
+					style={{
+						overflow: "hidden",
+						textOverflow: "ellipsis",
+						whiteSpace: "nowrap",
+					}}
+				>
+					{document.title}
 				</Card.Title>
-				<Card.Description>
+				<Card.Description
+					style={{
+						overflow: "hidden",
+						textOverflow: "ellipsis",
+						whiteSpace: "nowrap",
+					}}
+				>
 					<Flex align="center" gap={2}>
 						<AccessTimeIcon
 							fontSize="small"
