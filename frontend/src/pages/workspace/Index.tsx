@@ -2,11 +2,12 @@ import { useParams } from "react-router-dom";
 import WorkspaceDrawer from "../../components/drawers/WorkspaceDrawer";
 import { useGetWorkspaceDocumentListQuery } from "../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
-import { Box, CircularProgress, Grid, Stack } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo } from "react";
 import { Document } from "../../hooks/api/types/document.d";
 import InfiniteScroll from "react-infinite-scroller";
+import { Grid, GridItem, Box, Stack } from "yorkie-ui";
 
 function WorkspaceIndex() {
 	const params = useParams();
@@ -32,7 +33,7 @@ function WorkspaceIndex() {
 					maxHeight: "100vh",
 					overflow: "auto",
 				}}
-				width={1}
+				width="full"
 			>
 				<InfiniteScroll
 					pageStart={0}
@@ -45,16 +46,12 @@ function WorkspaceIndex() {
 					}
 					useWindow={false}
 				>
-					<Box p={2} width={1}>
-						<Grid
-							container
-							spacing={{ xs: 2, md: 3 }}
-							columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-						>
+					<Box p={2} w="full">
+						<Grid gap={6} gridTemplateColumns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
 							{documentList.map((document) => (
-								<Grid key={document.id} item xs={4} sm={4} md={4} lg={3}>
+								<GridItem key={document.id}>
 									<DocumentCard document={document} />
-								</Grid>
+								</GridItem>
 							))}
 						</Grid>
 					</Box>
