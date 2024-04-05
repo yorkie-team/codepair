@@ -12,9 +12,9 @@ services:
             GITHUB_CALLBACK_URL: "<BACKEND_BASE_URL>/auth/login/github"
             JWT_AUTH_SECRET: "JWT_AUTH_SECRET"
             FRONTEND_BASE_URL: "FRONTEND_BASE_URL"
-            YORKIE_API_ADDR: "YORKIE_API_ADDR"
-            YORKIE_PROJECT_NAME: "YORKIE_PROJECT_NAME"
-            YORKIE_PROJECT_SECRET_KEY: "YORKIE_PROJECT_SECRET_KEY"
+            YORKIE_API_ADDR: "http://localhost:8080"
+            YORKIE_PROJECT_NAME: "admin" # If you want to use the other project, you should change this value
+            YORKIE_PROJECT_SECRET_KEY: "admin" # If you want to use the other project, you should change this value
         ports:
             - "3000:3000"
         depends_on:
@@ -22,6 +22,14 @@ services:
         restart: unless-stopped
         links:
             - "mongo:mongo"
+
+    yorkie:
+        image: "yorkieteam/yorkie:latest"
+        command: ["server", "--enable-pprof"]
+        restart: always
+        ports:
+            - "8080:8080"
+            - "8081:8081"
 
     mongo:
         build:
