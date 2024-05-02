@@ -23,11 +23,13 @@ import { ActorID } from "yorkie-js-sdk";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useNavigate } from "react-router-dom";
+import { selectWorkspace } from "../../store/workspaceSlice";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const editorState = useSelector(selectEditor);
+	const workspaceState = useSelector(selectWorkspace);
 	const [
 		presenceList,
 		{
@@ -82,7 +84,7 @@ function DocumentHeader() {
 	};
 
 	const handleToPrevious = () => {
-		navigate(-1);
+		navigate(`/${workspaceState.data?.slug}`);
 	};
 
 	return (
@@ -90,11 +92,13 @@ function DocumentHeader() {
 			<Toolbar>
 				<Stack width="100%" direction="row" justifyContent="space-between">
 					<Stack direction="row" spacing={1} alignItems="center">
-						<Tooltip title="Back to Previous Page">
-							<IconButton color="inherit" onClick={handleToPrevious}>
-								<ArrowBackIosNewIcon />
-							</IconButton>
-						</Tooltip>
+						{!editorState.shareRole && (
+							<Tooltip title="Back to Previous Page">
+								<IconButton color="inherit" onClick={handleToPrevious}>
+									<ArrowBackIosNewIcon />
+								</IconButton>
+							</Tooltip>
+						)}
 						<Paper>
 							{editorState.shareRole !== "READ" && (
 								<ToggleButtonGroup
