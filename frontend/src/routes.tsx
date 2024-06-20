@@ -10,6 +10,7 @@ import JoinIndex from "./pages/workspace/join/Index";
 import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
+import MemberIndex from "./pages/workspace/member/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -49,6 +50,10 @@ const codePairRoutes: Array<CodePairRoute> = [
 			{
 				path: "",
 				element: <WorkspaceIndex />,
+			},
+			{
+				path: "member",
+				element: <MemberIndex />,
 			},
 		],
 	},

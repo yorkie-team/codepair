@@ -9,14 +9,14 @@ import {
 	ListItemText,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import PeopleIcon from "@mui/icons-material/People";
-import MemberModal from "../modals/MemberModal";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { DRAWER_WIDTH, WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface WorkspaceDrawerProps {
 	open: boolean;
@@ -24,11 +24,15 @@ interface WorkspaceDrawerProps {
 
 function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 	const { open } = props;
+	const params = useParams();
+	const navigate = useNavigate();
 	const workspaceStore = useSelector(selectWorkspace);
 	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
 		(EventTarget & Element) | null
 	>(null);
-	const [memberModalOpen, setMemberModalOpen] = useState(false);
+	const currentPage = useMemo(() => {
+		return window.location.href.split("/")[4] ?? "main";
+	}, []);
 
 	const handleOpenWorkspacePopover: MouseEventHandler = (event) => {
 		setWorkspaceListAnchorEl(event.currentTarget);
@@ -38,8 +42,8 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 		setWorkspaceListAnchorEl(null);
 	};
 
-	const handleMemberModalOpen = () => {
-		setMemberModalOpen((prev) => !prev);
+	const handleNavigateToMember = () => {
+		navigate(`/${params.workspaceSlug}/member`);
 	};
 
 	return (
@@ -86,14 +90,16 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 			</WorkspaceDrawerHeader>
 			<Divider />
 			<ListItem disablePadding>
-				<ListItemButton onClick={handleMemberModalOpen}>
+				<ListItemButton
+					onClick={handleNavigateToMember}
+					selected={currentPage === "member"}
+				>
 					<ListItemIcon>
 						<PeopleIcon />
 					</ListItemIcon>
 					<ListItemText primary="Members" />
 				</ListItemButton>
 			</ListItem>
-			<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
 		</Drawer>
 	);
 }
