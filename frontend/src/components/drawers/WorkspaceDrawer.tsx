@@ -16,7 +16,7 @@ import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import PeopleIcon from "@mui/icons-material/People";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { DRAWER_WIDTH, WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 interface WorkspaceDrawerProps {
 	open: boolean;
@@ -24,6 +24,7 @@ interface WorkspaceDrawerProps {
 
 function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 	const { open } = props;
+	const location = useLocation();
 	const params = useParams();
 	const navigate = useNavigate();
 	const workspaceStore = useSelector(selectWorkspace);
@@ -31,8 +32,8 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 		(EventTarget & Element) | null
 	>(null);
 	const currentPage = useMemo(() => {
-		return window.location.href.split("/")[4] ?? "main";
-	}, []);
+		return location.pathname.split("/")[2] ?? "main";
+	}, [location.pathname]);
 
 	const handleOpenWorkspacePopover: MouseEventHandler = (event) => {
 		setWorkspaceListAnchorEl(event.currentTarget);

@@ -1,9 +1,10 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router-dom";
 import WorkspaceHeader from "../headers/WorkspaceHeader";
 import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
+import { useDispatch, useSelector } from "react-redux";
+import { selectConfig, setDrawerOpen } from "../../store/configSlice";
 
 export const DRAWER_WIDTH = 282;
 
@@ -36,17 +37,18 @@ export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 function WorkspaceLayout() {
-	const [open, setOpen] = React.useState(false);
+	const { drawerOpen } = useSelector(selectConfig);
+	const dispatch = useDispatch();
 
 	const handleDrawerOpen = () => {
-		setOpen((prev) => !prev);
+		dispatch(setDrawerOpen(!drawerOpen));
 	};
 
 	return (
 		<Box sx={{ display: "flex" }}>
-			<WorkspaceHeader open={open} onDrawerOpen={handleDrawerOpen} />
-			<WorkspaceDrawer open={open} />
-			<Main open={open}>
+			<WorkspaceHeader open={drawerOpen} onDrawerOpen={handleDrawerOpen} />
+			<WorkspaceDrawer open={drawerOpen} />
+			<Main open={drawerOpen}>
 				<WorkspaceDrawerHeader />
 				<Outlet />
 			</Main>

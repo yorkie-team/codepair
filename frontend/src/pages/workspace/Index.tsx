@@ -42,14 +42,7 @@ function WorkspaceIndex() {
 	};
 
 	return (
-		<Stack
-			style={{
-				maxHeight: "100vh",
-				overflow: "auto",
-			}}
-			width={1}
-			gap={2}
-		>
+		<Stack gap={2}>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" px={2}>
 				<Typography variant="h5" fontWeight="bold">
 					{workspace?.title}{" "}
@@ -65,31 +58,38 @@ function WorkspaceIndex() {
 					New Note
 				</Button>
 			</Stack>
-			<InfiniteScroll
-				pageStart={0}
-				loadMore={() => fetchNextPage()}
-				hasMore={hasNextPage}
-				loader={
-					<Stack className="loader" key={0}>
-						<CircularProgress size="sm" />
-					</Stack>
-				}
-				useWindow={false}
+			<Stack
+				style={{
+					maxHeight: "calc(100vh - 160px)",
+					overflow: "auto",
+				}}
 			>
-				<Box p={2} width={1}>
-					<Grid
-						container
-						spacing={{ xs: 2, md: 3 }}
-						columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-					>
-						{documentList.map((document) => (
-							<Grid key={document.id} item xs={4} sm={4} md={4} lg={3}>
-								<DocumentCard document={document} />
-							</Grid>
-						))}
-					</Grid>
-				</Box>
-			</InfiniteScroll>
+				<InfiniteScroll
+					pageStart={0}
+					loadMore={() => fetchNextPage()}
+					hasMore={hasNextPage}
+					loader={
+						<Stack className="loader" key={0}>
+							<CircularProgress size="sm" />
+						</Stack>
+					}
+					useWindow={false}
+				>
+					<Box p={2} width={1}>
+						<Grid
+							container
+							spacing={{ xs: 2, md: 3 }}
+							columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
+						>
+							{documentList.map((document) => (
+								<Grid key={document.id} item xs={4} sm={4} md={4} lg={3}>
+									<DocumentCard document={document} />
+								</Grid>
+							))}
+						</Grid>
+					</Box>
+				</InfiniteScroll>
+			</Stack>
 			<CreateModal
 				open={createDocumentModalOpen}
 				title="Note"
