@@ -1,6 +1,5 @@
 import DocumentIndex from "./pages/workspace/document/Index";
 import MainLayout from "./components/layouts/MainLayout";
-import LoginIndex from "./pages/login/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
 import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 import GuestRoute from "./components/common/GuestRoute";
@@ -39,10 +38,6 @@ const codePairRoutes: Array<CodePairRoute> = [
 			{
 				path: "",
 				element: <Index />,
-			},
-			{
-				path: "login",
-				element: <LoginIndex />,
 			},
 		],
 	},
