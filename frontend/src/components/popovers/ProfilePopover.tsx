@@ -22,11 +22,11 @@ function ProfilePopover(props: PopoverProps) {
 	return (
 		<Popover
 			anchorOrigin={{
-				vertical: "top",
+				vertical: "bottom",
 				horizontal: "right",
 			}}
 			transformOrigin={{
-				vertical: "bottom",
+				vertical: "top",
 				horizontal: "right",
 			}}
 			{...props}
