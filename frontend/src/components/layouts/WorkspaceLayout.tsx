@@ -1,12 +1,9 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Outlet } from "react-router-dom";
 import WorkspaceHeader from "../headers/WorkspaceHeader";
+import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
 
 export const DRAWER_WIDTH = 282;
 
@@ -29,7 +26,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 	}),
 }));
 
-const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
+export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 	display: "flex",
 	alignItems: "center",
 	padding: theme.spacing(0, 1),
@@ -39,7 +36,6 @@ const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 function WorkspaceLayout() {
-	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 
 	const handleDrawerOpen = () => {
@@ -49,25 +45,7 @@ function WorkspaceLayout() {
 	return (
 		<Box sx={{ display: "flex" }}>
 			<WorkspaceHeader open={open} onDrawerOpen={handleDrawerOpen} />
-			<Drawer
-				sx={{
-					width: DRAWER_WIDTH,
-					flexShrink: 0,
-					"& .MuiDrawer-paper": {
-						width: DRAWER_WIDTH,
-						boxSizing: "border-box",
-					},
-				}}
-				variant="persistent"
-				anchor="left"
-				open={open}
-			>
-				<WorkspaceDrawerHeader>
-					<IconButton onClick={handleDrawerOpen}>
-						{theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-					</IconButton>
-				</WorkspaceDrawerHeader>
-			</Drawer>
+			<WorkspaceDrawer open={open} />
 			<Main open={open}>
 				<WorkspaceDrawerHeader />
 				<Outlet />

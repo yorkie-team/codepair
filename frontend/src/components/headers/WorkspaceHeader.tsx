@@ -1,11 +1,13 @@
-import { Avatar, IconButton, Stack, Toolbar, styled } from "@mui/material";
+import { MouseEventHandler, useState } from "react";
+import { Avatar, IconButton, Stack, Toolbar, styled, useTheme } from "@mui/material";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import { DRAWER_WIDTH } from "../layouts/WorkspaceLayout";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import ProfilePopover from "../popovers/ProfilePopover";
-import { MouseEventHandler, useState } from "react";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 
 interface WorkspaceAppBarProps extends AppBarProps {
 	open?: boolean;
@@ -35,6 +37,7 @@ interface WorkspaceHeaderProps {
 
 function WorkspaceHeader(props: WorkspaceHeaderProps) {
 	const { open, onDrawerOpen } = props;
+	const theme = useTheme();
 	const userStore = useSelector(selectUser);
 	const [profileAnchorEl, setProfileAnchorEl] = useState<(EventTarget & Element) | null>(null);
 
@@ -63,9 +66,17 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 						aria-label="open drawer"
 						onClick={onDrawerOpen}
 						edge="start"
-						sx={{ mr: 2, ...(open && { display: "none" }) }}
+						sx={{ mr: 2 }}
 					>
-						<MenuIcon />
+						{open ? (
+							theme.direction === "ltr" ? (
+								<KeyboardDoubleArrowLeftIcon />
+							) : (
+								<KeyboardDoubleArrowRightIcon />
+							)
+						) : (
+							<MenuIcon />
+						)}
 					</IconButton>
 				</Stack>
 			</Toolbar>
