@@ -26,7 +26,7 @@ function WorkspaceIndex() {
 
 	return (
 		<Stack direction="row">
-			<WorkspaceDrawer />
+			{/* <WorkspaceDrawer />
 			<Box
 				style={{
 					maxHeight: "100vh",
@@ -59,7 +59,7 @@ function WorkspaceIndex() {
 						</Grid>
 					</Box>
 				</InfiniteScroll>
-			</Box>
+			</Box> */}
 		</Stack>
 	);
 }
