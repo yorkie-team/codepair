@@ -63,7 +63,7 @@
 		"rehype-rewrite": "^4.0.2",
 		"remark-math": "^6.0.0",
 		"vite-plugin-package-version": "^1.1.0",
-		"yorkie-js-sdk": "^0.4.15-rc"
+		"yorkie-js-sdk": "^0.4.24"
 	},
 	"devDependencies": {
 		"@types/color": "^3.0.6",
