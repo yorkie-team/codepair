@@ -21,12 +21,12 @@ import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { selectWorkspace } from "../../store/workspaceSlice";
 
-interface MemeberModalProps {
+interface MemberModalProps {
 	open: boolean;
 	onClose: () => void;
 }
 
-function MemeberModal(props: MemeberModalProps) {
+function MemberModal(props: MemberModalProps) {
 	const { open, onClose } = props;
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createWorkspaceInvitationToken } =
@@ -142,4 +142,4 @@ function MemeberModal(props: MemeberModalProps) {
 	);
 }
 
-export default MemeberModal;
+export default MemberModal;

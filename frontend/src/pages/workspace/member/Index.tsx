@@ -20,7 +20,7 @@ import { useGetWorkspaceUserListQuery } from "../../../hooks/api/workspaceUser";
 import { useMemo, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { User } from "../../../hooks/api/types/user";
-import MemeberModal from "../../../components/modals/MemberModal";
+import MemberModal from "../../../components/modals/MemberModal";
 
 function MemberIndex() {
 	const params = useParams();
@@ -30,7 +30,7 @@ function MemberIndex() {
 		fetchNextPage,
 		hasNextPage,
 	} = useGetWorkspaceUserListQuery(workspace?.id);
-	const [memeberModalOpen, setMemeberModalOpen] = useState(false);
+	const [memberModalOpen, setMemberModalOpen] = useState(false);
 	const userList = useMemo(() => {
 		return (
 			workspaceUserPageList?.pages.reduce((prev, page) => {
@@ -40,7 +40,7 @@ function MemberIndex() {
 	}, [workspaceUserPageList?.pages]);
 
 	const handleMemberModalOpen = () => {
-		setMemeberModalOpen((prev) => !prev);
+		setMemberModalOpen((prev) => !prev);
 	};
 
 	return (
@@ -110,7 +110,7 @@ function MemberIndex() {
 					</InfiniteScroll>
 				</TableContainer>
 			</Stack>
-			<MemeberModal open={memeberModalOpen} onClose={handleMemberModalOpen} />
+			<MemberModal open={memberModalOpen} onClose={handleMemberModalOpen} />
 		</Container>
 	);
 }
