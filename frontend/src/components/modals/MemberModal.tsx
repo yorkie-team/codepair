@@ -1,8 +1,6 @@
 import {
-	Avatar,
 	Box,
 	Button,
-	CircularProgress,
 	FormControl,
 	IconButton,
 	Modal,
@@ -12,11 +10,8 @@ import {
 	Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetWorkspaceUserListQuery } from "../../hooks/api/workspaceUser";
 import { useCreateWorkspaceInvitationTokenMutation } from "../../hooks/api/workspace";
-import { useMemo, useState } from "react";
-import { User } from "../../hooks/api/types/user";
-import InfiniteScroll from "react-infinite-scroller";
+import { useState } from "react";
 import { FormContainer, SelectElement } from "react-hook-form-mui";
 import { invitationExpiredStringList } from "../../utils/expire";
 import moment, { unitOfTime } from "moment";
@@ -26,28 +21,16 @@ import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { selectWorkspace } from "../../store/workspaceSlice";
 
-interface MemeberModalProps {
+interface MemberModalProps {
 	open: boolean;
 	onClose: () => void;
 }
 
-function MemeberModal(props: MemeberModalProps) {
+function MemberModal(props: MemberModalProps) {
 	const { open, onClose } = props;
 	const workspaceStore = useSelector(selectWorkspace);
-	const {
-		data: workspaceUserPageList,
-		fetchNextPage,
-		hasNextPage,
-	} = useGetWorkspaceUserListQuery(workspaceStore.data?.id);
 	const { mutateAsync: createWorkspaceInvitationToken } =
 		useCreateWorkspaceInvitationTokenMutation(workspaceStore.data?.id || "");
-	const userList = useMemo(() => {
-		return (
-			workspaceUserPageList?.pages.reduce((prev, page) => {
-				return prev.concat(page.workspaceUsers);
-			}, [] as Array<User>) ?? []
-		);
-	}, [workspaceUserPageList?.pages]);
 	const { enqueueSnackbar } = useSnackbar();
 	const [invitationUrl, setInvitationUrl] = useState<string | null>(null);
 
@@ -86,7 +69,7 @@ function MemeberModal(props: MemeberModalProps) {
 					left: "50%",
 					transform: "translate(-50%, -50%)",
 					p: 4,
-					width: 400,
+					width: 538,
 				}}
 			>
 				<IconButton
@@ -100,15 +83,19 @@ function MemeberModal(props: MemeberModalProps) {
 					<CloseIcon />
 				</IconButton>
 				<Stack gap={4}>
-					<Typography variant="h5">Members</Typography>
+					<Stack>
+						<Typography variant="h5" fontWeight="bold">
+							Add Members
+						</Typography>
+						<Typography>Generate and share the link.</Typography>
+					</Stack>
 					<Stack gap={1}>
-						<Typography variant="subtitle1">Invite Link</Typography>
 						<FormControl>
 							<FormContainer
 								defaultValues={{ expiredString: invitationExpiredStringList[0] }}
 								onSuccess={handleCreateInviteUrl}
 							>
-								<Stack direction="row" justifyContent="space-between" gap={2}>
+								<Stack gap={2}>
 									<SelectElement
 										label="Expired Date"
 										name="expiredString"
@@ -122,7 +109,6 @@ function MemeberModal(props: MemeberModalProps) {
 										sx={{
 											width: 1,
 										}}
-										variant="filled"
 									/>
 									<Button type="submit" variant="contained">
 										Generate
@@ -130,52 +116,30 @@ function MemeberModal(props: MemeberModalProps) {
 								</Stack>
 							</FormContainer>
 						</FormControl>
-						{Boolean(invitationUrl) && (
-							<Stack direction="row" alignItems="center" gap={2}>
-								<Typography variant="body1">{invitationUrl}</Typography>
-								<Tooltip title="Copy URL">
-									<IconButton onClick={handleCopyInviteUrl}>
-										<ContentCopyIcon />
-									</IconButton>
-								</Tooltip>
-							</Stack>
-						)}
 					</Stack>
-					<Box
-						style={{
-							height: 300,
-							maxHeight: "100%",
-							overflow: "auto",
-						}}
-						width={1}
-					>
-						<InfiniteScroll
-							pageStart={0}
-							loadMore={() => fetchNextPage()}
-							hasMore={hasNextPage}
-							loader={
-								<Box className="loader" key={0}>
-									<CircularProgress size="sm" />
-								</Box>
-							}
-							useWindow={false}
-						>
-							<Stack gap={2}>
-								{userList.map((user) => (
-									<Stack key={user.id} direction="row" alignItems="center">
-										<Stack direction="row" alignItems="center" gap={1}>
-											<Avatar>{user.nickname?.[0]}</Avatar>
-											<Typography>{user.nickname}</Typography>
-										</Stack>
-									</Stack>
-								))}
-							</Stack>
-						</InfiniteScroll>
-					</Box>
+					<Stack gap={1}>
+						<Typography variant="h6" fontWeight="bold">
+							Invite Link
+						</Typography>
+						<Box height={40}>
+							{invitationUrl ? (
+								<Stack direction="row" alignItems="center" gap={2}>
+									<Typography variant="body1">{invitationUrl}</Typography>
+									<Tooltip title="Copy URL">
+										<IconButton onClick={handleCopyInviteUrl}>
+											<ContentCopyIcon />
+										</IconButton>
+									</Tooltip>
+								</Stack>
+							) : (
+								<Typography mx="auto">No link has been generated.</Typography>
+							)}
+						</Box>
+					</Stack>
 				</Stack>
 			</Paper>
 		</Modal>
 	);
 }
 
-export default MemeberModal;
+export default MemberModal;

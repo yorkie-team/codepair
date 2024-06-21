@@ -1,6 +1,5 @@
 import DocumentIndex from "./pages/workspace/document/Index";
 import MainLayout from "./components/layouts/MainLayout";
-import LoginIndex from "./pages/login/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
 import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 import GuestRoute from "./components/common/GuestRoute";
@@ -11,6 +10,7 @@ import JoinIndex from "./pages/workspace/join/Index";
 import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
+import MemberIndex from "./pages/workspace/member/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -40,10 +40,6 @@ const codePairRoutes: Array<CodePairRoute> = [
 				path: "",
 				element: <Index />,
 			},
-			{
-				path: "login",
-				element: <LoginIndex />,
-			},
 		],
 	},
 	{
@@ -54,6 +50,10 @@ const codePairRoutes: Array<CodePairRoute> = [
 			{
 				path: "",
 				element: <WorkspaceIndex />,
+			},
+			{
+				path: "member",
+				element: <MemberIndex />,
 			},
 		],
 	},
