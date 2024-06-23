@@ -10,7 +10,7 @@ import { selectAuth } from "../store/authSlice";
 yorkie.setLogLevel(4);
 
 export const useYorkieDocument = (
-	yorkieDocuentId?: string | null,
+	yorkieDocumentId?: string | null,
 	presenceName?: string | null
 ) => {
 	const [searchParams] = useSearchParams();
@@ -29,7 +29,7 @@ export const useYorkieDocument = (
 
 	useEffect(() => {
 		let mounted = true;
-		if (!yorkieDocuentId || !presenceName || doc || client) return;
+		if (!yorkieDocumentId || !presenceName || doc || client) return;
 
 		let yorkieToken = `default:${authStore.accessToken}`;
 
@@ -47,7 +47,7 @@ export const useYorkieDocument = (
 			const newDoc = new yorkie.Document<
 				YorkieCodeMirrorDocType,
 				YorkieCodeMirrorPresenceType
-			>(yorkieDocuentId);
+			>(yorkieDocumentId);
 
 			await newClient.attach(newDoc, {
 				initialPresence: {
@@ -72,7 +72,7 @@ export const useYorkieDocument = (
 		return () => {
 			mounted = false;
 		};
-	}, [presenceName, yorkieDocuentId, doc, client, authStore.accessToken, searchParams]);
+	}, [presenceName, yorkieDocumentId, doc, client, authStore.accessToken, searchParams]);
 
 	useEffect(() => {
 		return () => {
