@@ -28,6 +28,7 @@ export const useYorkieDocument = (
 	}, [client, doc]);
 
 	useEffect(() => {
+		let mounted = true;
 		if (!yorkieDocuentId || !presenceName || doc || client) return;
 
 		let yorkieToken = `default:${authStore.accessToken}`;
@@ -43,7 +44,10 @@ export const useYorkieDocument = (
 			});
 			await newClient.activate();
 
-			const newDoc = new yorkie.Document(yorkieDocuentId as string);
+			const newDoc = new yorkie.Document<
+				YorkieCodeMirrorDocType,
+				YorkieCodeMirrorPresenceType
+			>(yorkieDocuentId);
 
 			await newClient.attach(newDoc, {
 				initialPresence: {
@@ -53,13 +57,28 @@ export const useYorkieDocument = (
 				},
 			});
 
+			// Clean up if the component is unmounted before the initialization is done
+			if (!mounted) {
+				await newClient.detach(newDoc);
+				await newClient.deactivate();
+				return;
+			}
+
 			setClient(newClient);
-			setDoc(
-				newDoc as yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
-			);
+			setDoc(newDoc);
 		};
 		initializeYorkie();
+
+		return () => {
+			mounted = false;
+		};
 	}, [presenceName, yorkieDocuentId, doc, client, authStore.accessToken, searchParams]);
 
-	return { client, doc, cleanUpYorkieDocument };
+	useEffect(() => {
+		return () => {
+			cleanUpYorkieDocument();
+		};
+	}, [cleanUpYorkieDocument]);
+
+	return { client, doc };
 };
