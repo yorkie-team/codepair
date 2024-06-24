@@ -13,10 +13,7 @@ function DocumentShareIndex() {
 	const [searchParams] = useSearchParams();
 	const shareToken = useMemo(() => searchParams.get("token"), [searchParams]);
 	const { data: sharedDocument } = useGetDocumentBySharingTokenQuery(shareToken);
-	const { doc, client, cleanUpYorkieDocument } = useYorkieDocument(
-		sharedDocument?.yorkieDocumentId,
-		"Anonymous"
-	);
+	const { doc, client } = useYorkieDocument(sharedDocument?.yorkieDocumentId, "Anonymous");
 
 	useEffect(() => {
 		if (!sharedDocument?.role) return;
@@ -35,11 +32,10 @@ function DocumentShareIndex() {
 		dispatch(setClient(client));
 
 		return () => {
-			cleanUpYorkieDocument();
 			dispatch(setDoc(null));
 			dispatch(setClient(null));
 		};
-	}, [cleanUpYorkieDocument, dispatch, client, doc]);
+	}, [dispatch, client, doc]);
 
 	if (!shareToken) return <Navigate to="/" state={{ from: location }} replace />;
 
