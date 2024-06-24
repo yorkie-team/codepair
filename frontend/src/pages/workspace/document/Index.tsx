@@ -16,10 +16,7 @@ function DocumentIndex() {
 	const userStore = useSelector(selectUser);
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
 	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
-	const { doc, client, cleanUpYorkieDocument } = useYorkieDocument(
-		document?.yorkieDocumentId,
-		userStore.data?.nickname
-	);
+	const { doc, client } = useYorkieDocument(document?.yorkieDocumentId, userStore.data?.nickname);
 
 	useEffect(() => {
 		if (!doc || !client) return;
@@ -28,11 +25,10 @@ function DocumentIndex() {
 		dispatch(setClient(client));
 
 		return () => {
-			cleanUpYorkieDocument();
 			dispatch(setDoc(null));
 			dispatch(setClient(null));
 		};
-	}, [cleanUpYorkieDocument, dispatch, client, doc]);
+	}, [dispatch, client, doc]);
 
 	return (
 		<Box height="calc(100% - 64px)">
