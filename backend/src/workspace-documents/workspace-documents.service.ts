@@ -61,6 +61,12 @@ export class WorkspaceDocumentsService {
 			additionalOptions.cursor = { id: cursor };
 		}
 
+		const totalLength = await this.prismaService.document.count({
+			where: {
+				workspaceId,
+			},
+		});
+
 		const documentList = await this.prismaService.document.findMany({
 			take: pageSize + 1,
 			where: {
@@ -90,6 +96,7 @@ export class WorkspaceDocumentsService {
 		return {
 			documents: mergedDocumentList,
 			cursor: documentList.length > pageSize ? documentList[pageSize].id : null,
+			totalLength,
 		};
 	}
 

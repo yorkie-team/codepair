@@ -47,7 +47,7 @@ function WorkspaceIndex() {
 				<Typography variant="h5" fontWeight="bold">
 					{workspace?.title}{" "}
 					<Typography component="span" variant="inherit" color="primary">
-						{documentPageList?.pages[0].documents.length}
+						{documentPageList?.pages[0].totalLength}
 					</Typography>
 				</Typography>
 				<Button
@@ -60,7 +60,7 @@ function WorkspaceIndex() {
 			</Stack>
 			<Stack
 				style={{
-					maxHeight: "calc(100vh - 160px)",
+					maxHeight: "calc(100vh - 144px)",
 					overflow: "auto",
 				}}
 			>
@@ -69,8 +69,8 @@ function WorkspaceIndex() {
 					loadMore={() => fetchNextPage()}
 					hasMore={hasNextPage}
 					loader={
-						<Stack className="loader" key={0}>
-							<CircularProgress size="sm" />
+						<Stack className="loader" key={0} alignItems="center">
+							<CircularProgress size={20} />
 						</Stack>
 					}
 					useWindow={false}

@@ -2,6 +2,7 @@ import { Document } from "./document";
 
 export class GetWorkspaceDocumentListResponse {
 	cursor: string | null;
+	totalLength: number;
 	documents: Array<Document>;
 }
 
