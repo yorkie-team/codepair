@@ -10,4 +10,7 @@ export class FindWorkspaceDocumentsResponse {
 
 	@ApiProperty({ type: String, description: "The ID of last document" })
 	cursor: string | null;
+
+	@ApiProperty({ type: Number, description: "The number of total documents" })
+	totalLength: number;
 }
