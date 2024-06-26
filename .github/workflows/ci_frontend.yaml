@@ -3,6 +3,7 @@ on:
   push:
     branches: main
     paths:
+      - ".github/workflows/ci_frontend.yaml"
       - "frontend/**"
   pull_request:
     branches:
