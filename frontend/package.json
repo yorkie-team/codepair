@@ -66,9 +66,11 @@
 		"yorkie-js-sdk": "^0.4.24"
 	},
 	"devDependencies": {
+		"@sentry/vite-plugin": "^2.20.1",
 		"@types/color": "^3.0.6",
 		"@types/katex": "^0.16.7",
 		"@types/lodash": "^4.14.202",
+		"@types/node": "^20.14.9",
 		"@types/randomcolor": "^0.5.9",
 		"@types/react": "^18.2.43",
 		"@types/react-dom": "^18.2.17",
