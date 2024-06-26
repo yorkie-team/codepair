@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/docker-publish-latest.yaml"
+      - "backend/**"
 jobs:
   call-base-docker-publish:
     uses: ./.github/workflows/base-docker-publish.yml

@@ -3,6 +3,7 @@ on:
   push:
     branches: main
     paths:
+      - ".github/workflows/gh_pages.yaml"
       - "frontend/**"
 jobs:
   build-and-deploy:
