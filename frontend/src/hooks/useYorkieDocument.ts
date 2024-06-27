@@ -78,6 +78,7 @@ export const useYorkieDocument = (
 
 	useEffect(() => {
 		return () => {
+			console.log("Cleaning Up Yorkie Document");
 			cleanUpYorkieDocument();
 		};
 	}, [cleanUpYorkieDocument]);

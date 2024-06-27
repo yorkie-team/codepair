@@ -106,6 +106,14 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 					adj += insertText.length - (toA - fromA);
 				});
 			}
+			const isSuccessful =
+				this.view.state.doc.toString() === this._doc.getRoot().content.toString();
+
+			if (!isSuccessful) {
+				console.error("YorkieSyncPlugin: Failed to sync the document");
+				console.error("CM:", this.view.state.doc.toString());
+				console.error("Yorkie:", this._doc.getRoot().content.toString());
+			}
 		}
 	}
 }
