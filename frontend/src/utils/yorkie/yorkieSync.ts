@@ -1,6 +1,7 @@
 import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as yorkie from "yorkie-js-sdk";
+import * as Sentry from "@sentry/react";
 
 export type YorkieCodeMirrorDocType = {
 	content: yorkie.Text<yorkie.Indexable>;
@@ -110,9 +111,12 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 				this.view.state.doc.toString() === this._doc.getRoot().content.toString();
 
 			if (!isSuccessful) {
-				console.error("YorkieSyncPlugin: Failed to sync the document");
-				console.error("CM:", this.view.state.doc.toString());
-				console.error("Yorkie:", this._doc.getRoot().content.toString());
+				const errMessage = `YorkieSyncPlugin: Failed to sync the document
+				CM: ${this.view.state.doc.toString()}
+				Yorkie: ${this._doc.getRoot().content.toString()}`;
+
+				console.error(errMessage);
+				Sentry.captureMessage(errMessage);
 			}
 		}
 	}
