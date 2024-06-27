@@ -1,7 +1,7 @@
 name: GitHub Page Publish
 on:
   push:
-    branches: fix-sentry
+    branches: main
     paths:
       - ".github/workflows/gh_pages.yaml"
       - "frontend/**"
@@ -27,7 +27,6 @@ jobs:
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env.sentry-build-plugin
           echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> .env.sentry-build-plugin
           echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> .env.sentry-build-plugin
-          ls -la
 
       - name: Install and Build 🔧
         working-directory: ${{ env.working-directory }}
@@ -37,8 +36,8 @@ jobs:
           npm install -f
           npm run build
 
-      # - name: Deploy 🚀
-      #   uses: JamesIves/github-pages-deploy-action@v4.6.1
-      #   with:
-      #     branch: gh-pages
-      #     folder: frontend/dist
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.6.1
+        with:
+          branch: gh-pages
+          folder: frontend/dist
