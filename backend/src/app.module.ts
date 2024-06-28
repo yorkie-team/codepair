@@ -13,6 +13,7 @@ import { CheckModule } from "./check/check.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
 import { FilesModule } from "./files/files.module";
+import { SettingsModule } from "./settings/settings.module";
 
 @Module({
 	imports: [
@@ -32,6 +33,7 @@ import { FilesModule } from "./files/files.module";
 		LangchainModule,
 		FilesModule,
 		ConfigModule,
+		SettingsModule,
 	],
 	controllers: [],
 	providers: [
