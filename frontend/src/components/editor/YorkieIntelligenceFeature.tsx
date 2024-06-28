@@ -122,18 +122,18 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		const selectionFrom = replace ? from : from + 1;
 		const selectionTo = from + insert.length;
 
+		editorStore.doc?.update((root, presence) => {
+			root.content.edit(from, to, insert);
+			presence.set({
+				selection: root.content.indexRangeToPosRange([selectionFrom, selectionTo]),
+			});
+		});
 		editorStore.cmView?.dispatch({
 			changes: { from, to, insert },
 			selection: {
 				anchor: selectionFrom,
 				head: selectionTo,
 			},
-		});
-		editorStore.doc?.update((root, presence) => {
-			root.content.edit(from, to, insert);
-			presence.set({
-				selection: root.content.indexRangeToPosRange([selectionFrom, selectionTo]),
-			});
 		});
 		onClose();
 	};
