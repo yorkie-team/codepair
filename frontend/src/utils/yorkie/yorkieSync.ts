@@ -99,12 +99,12 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 					continue;
 				}
 				let adj = 0;
-				tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
-					const insertText = inserted.toJSON().join("\n");
-					this._doc.update((root) => {
+				this._doc.update((root) => {
+					tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+						const insertText = inserted.toJSON().join("\n");
 						root.content.edit(fromA + adj, toA + adj, insertText);
+						adj += insertText.length - (toA - fromA);
 					});
-					adj += insertText.length - (toA - fromA);
 				});
 			}
 			const isSuccessful =
@@ -112,8 +112,8 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 
 			if (!isSuccessful) {
 				const errMessage = `YorkieSyncPlugin: Failed to sync the document
-				CM: ${this.view.state.doc.toString()}
-				Yorkie: ${this._doc.getRoot().content.toString()}`;
+CM: ${this.view.state.doc.toString()}
+Yorkie: ${this._doc.getRoot().content.toString()}`;
 
 				console.error(errMessage);
 				Sentry.captureMessage(errMessage);
