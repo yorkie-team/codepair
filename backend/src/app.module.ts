@@ -13,7 +13,6 @@ import { CheckModule } from "./check/check.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
 import { FilesModule } from "./files/files.module";
-import { ConfigModule } from "./config/config.module";
 
 @Module({
 	imports: [
