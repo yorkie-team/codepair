@@ -53,6 +53,7 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 
 			// The text is replaced to snapshot and must be re-synced.
 			const text = this._doc.getRoot().content;
+			console.log("YorkieSyncPlugin: Replacing the text to snapshot: ", text.toString());
 			view.dispatch({
 				changes: { from: 0, to: view.state.doc.length, insert: text.toString() },
 				annotations: [cmState.Transaction.remote.of(true)],
