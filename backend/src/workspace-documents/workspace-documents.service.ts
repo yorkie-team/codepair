@@ -6,7 +6,7 @@ import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-worksp
 import { ShareRole } from "src/utils/types/share-role.type";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import { ConfigService } from "@nestjs/config";
-import { FindDocumentFromYorkieResponse } from "./types/find-document-from-yorkie-response.type";
+import { FindDocumentsFromYorkieResponse } from "./types/find-documents-from-yorkie-response.type";
 import * as moment from "moment";
 import { connect } from "http2";
 
@@ -79,19 +79,19 @@ export class WorkspaceDocumentsService {
 		});
 
 		const slicedDocumentList = documentList.slice(0, pageSize);
-		const mergedDocumentList = await Promise.all(
-			slicedDocumentList.map(async (doc) => {
-				// Get updatedAt field from Yorkie server
-				return this.findDocumentFromYorkie(doc.yorkieDocumentId).then((yorkieDoc) => {
-					return {
-						...doc,
-						updatedAt: yorkieDoc.document?.updatedAt
-							? moment(yorkieDoc.document?.updatedAt).toDate()
-							: doc.updatedAt,
-					};
-				});
-			})
+		const yorkieDocumentList = await this.findManyFromYorkie(
+			slicedDocumentList.map((doc) => doc.yorkieDocumentId)
 		);
+		const mergedDocumentList = slicedDocumentList.map((doc, idx) => {
+			const yorkieDocument = yorkieDocumentList.documents?.[idx];
+
+			return {
+				...doc,
+				updatedAt: yorkieDocument?.updatedAt
+					? moment(yorkieDocument.updatedAt).toDate()
+					: doc.updatedAt,
+			};
+		});
 
 		return {
 			documents: mergedDocumentList,
@@ -162,9 +162,9 @@ export class WorkspaceDocumentsService {
 		};
 	}
 
-	async findDocumentFromYorkie(
-		documentKey: string
-	): Promise<FindDocumentFromYorkieResponse | undefined> {
+	async findManyFromYorkie(
+		documentKeyList: Array<string>
+	): Promise<FindDocumentsFromYorkieResponse | undefined> {
 		return new Promise((resolve, reject) => {
 			const client = connect(`${this.configService.get<string>("YORKIE_API_ADDR")}`);
 
@@ -172,11 +172,11 @@ export class WorkspaceDocumentsService {
 
 			const requestBody = JSON.stringify({
 				project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
-				document_key: documentKey,
+				document_keys: documentKeyList,
 			});
 			const req = client.request({
 				":method": "POST",
-				":path": "/yorkie.v1.AdminService/GetDocument",
+				":path": "/yorkie.v1.AdminService/GetDocuments",
 				"Content-Type": "application/json",
 				"content-length": Buffer.byteLength(requestBody),
 				Authorization: this.configService.get<string>("YORKIE_PROJECT_SECRET_KEY"),
@@ -192,7 +192,7 @@ export class WorkspaceDocumentsService {
 
 			req.on("end", () => {
 				client.close();
-				resolve(JSON.parse(data) as FindDocumentFromYorkieResponse);
+				resolve(JSON.parse(data) as FindDocumentsFromYorkieResponse);
 			});
 
 			req.end();

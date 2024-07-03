@@ -7,6 +7,6 @@ class YorkieDocument {
 	accessedAt: string;
 }
 
-export class FindDocumentFromYorkieResponse {
-	document: YorkieDocument;
+export class FindDocumentsFromYorkieResponse {
+	documents: Array<YorkieDocument>;
 }
