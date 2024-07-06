@@ -10,7 +10,7 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import { INTELLIGENCE_FOOTER_ID, IntelligenceFeature } from "../../constants/intelligence";
+import { INTELLIGENCE_FOOTER_ID } from "../../constants/intelligence";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
@@ -27,7 +27,7 @@ import { selectEditor } from "../../store/editorSlice";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
-	feature: IntelligenceFeature;
+	feature: string;
 	onClose: () => void;
 }
 
