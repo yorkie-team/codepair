@@ -1,14 +1,15 @@
 import { Controller, Get } from "@nestjs/common";
 import { SettingsService } from "./settings.service";
-import { ApiBearerAuth, ApiFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GetSettingsResponse } from "./types/get-settings-response.type";
+import { Public } from "src/utils/decorators/auth.decorator";
 
 @ApiTags("Settings")
-@ApiBearerAuth()
 @Controller("settings")
 export class SettingsController {
 	constructor(private settingsService: SettingsService) {}
 
+	@Public()
 	@Get()
 	@ApiOperation({
 		summary: "Get Settings",

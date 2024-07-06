@@ -7,6 +7,7 @@ import authSlice from "./authSlice";
 import userSlice from "./userSlice";
 import workspaceSlice from "./workspaceSlice";
 import documentSlice from "./documentSlice";
+import settingSlice from "./settingSlice";
 
 const reducers = combineReducers({
 	// Persistence
@@ -17,6 +18,7 @@ const reducers = combineReducers({
 	editor: editorSlice,
 	workspace: workspaceSlice,
 	document: documentSlice,
+	setting: settingSlice,
 });
 
 const persistConfig = {
