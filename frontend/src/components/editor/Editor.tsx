@@ -94,6 +94,7 @@ function Editor() {
 		workspaceStore.data,
 		createUploadUrl,
 		uploadFile,
+		settingStore.fileUpload?.enable,
 	]);
 
 	return (
