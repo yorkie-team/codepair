@@ -6,7 +6,7 @@ This project is the backend part of the CodePair service developed using NestJS.
 
 1. Set Up GitHub OAuth Key
 
-    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to this document for guidance.
+    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
     After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
