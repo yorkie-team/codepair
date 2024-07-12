@@ -2,9 +2,8 @@ import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAuth } from "../../store/authSlice";
 import { selectDocument } from "../../store/documentSlice";
-import { IntelligenceFeature } from "../../constants/intelligence";
 
-export const useIntelligenceFeatureStream = (feature: IntelligenceFeature) => {
+export const useIntelligenceFeatureStream = (feature: string) => {
 	const authStore = useSelector(selectAuth);
 	const documentSotre = useSelector(selectDocument);
 	const [data, setData] = useState<string | null>(null);
