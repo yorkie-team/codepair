@@ -9,11 +9,13 @@ import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
 import DocumentView from "../../../components/editor/DocumentView";
 import { useYorkieDocument } from "../../../hooks/useYorkieDocument";
 import YorkieIntelligence from "../../../components/editor/YorkieIntelligence";
+import { selectSetting } from "../../../store/settingSlice";
 
 function DocumentIndex() {
 	const dispatch = useDispatch();
 	const params = useParams();
 	const userStore = useSelector(selectUser);
+	const settingStore = useSelector(selectSetting);
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
 	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
 	const { doc, client } = useYorkieDocument(document?.yorkieDocumentId, userStore.data?.nickname);
@@ -33,7 +35,7 @@ function DocumentIndex() {
 	return (
 		<Box height="calc(100% - 64px)">
 			<DocumentView />
-			<YorkieIntelligence />
+			{settingStore.yorkieIntelligence?.enable && <YorkieIntelligence />}
 		</Box>
 	);
 }

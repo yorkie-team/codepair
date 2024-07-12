@@ -13,10 +13,15 @@ import { CheckModule } from "./check/check.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
 import { FilesModule } from "./files/files.module";
+import { SettingsModule } from "./settings/settings.module";
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true }),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath:
+				process.env.NODE_ENV === "production" ? ".env.production" : ".env.development",
+		}),
 		UsersModule,
 		AuthModule,
 		WorkspacesModule,
@@ -27,6 +32,8 @@ import { FilesModule } from "./files/files.module";
 		IntelligenceModule,
 		LangchainModule,
 		FilesModule,
+		ConfigModule,
+		SettingsModule,
 	],
 	controllers: [],
 	providers: [

@@ -1,7 +1,6 @@
 import { Box, Card, Popover, useTheme } from "@mui/material";
 import YorkieIntelligenceFeatureList from "./YorkieIntelligenceFeatureList";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { IntelligenceFeature } from "../../constants/intelligence";
 import YorkieIntelligenceFeature from "./YorkieIntelligenceFeature";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
@@ -17,7 +16,7 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 	const editorStore = useSelector(selectEditor);
 	const anchorRef = useRef<HTMLSpanElement>(null);
 	const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
-	const [selectedFeature, setSelectedFeature] = useState<IntelligenceFeature | null>(null);
+	const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
 	const [anchorEl, setAnchorEl] = useState<HTMLSpanElement>();
 	const [closeModalOpen, setCloseModalOpen] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
@@ -37,7 +36,7 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 		};
 	}, []);
 
-	const handleSelectFeature = (feature: IntelligenceFeature, title: string) => {
+	const handleSelectFeature = (feature: string, title: string) => {
 		setSelectedFeature(feature);
 		setSelectedTitle(title);
 	};

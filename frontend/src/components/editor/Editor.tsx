@@ -14,12 +14,14 @@ import { imageUploader } from "../../utils/imageUploader";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
+import { selectSetting } from "../../store/settingSlice";
 
 function Editor() {
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
+	const settingStore = useSelector(selectSetting);
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
@@ -31,7 +33,12 @@ function Editor() {
 	useEffect(() => {
 		let view: EditorView | undefined = undefined;
 
-		if (!element || !editorStore.doc || !editorStore.client) {
+		if (
+			!element ||
+			!editorStore.doc ||
+			!editorStore.client ||
+			typeof settingStore.fileUpload?.enable !== "boolean"
+		) {
 			return;
 		}
 
@@ -62,7 +69,9 @@ function Editor() {
 				EditorView.lineWrapping,
 				keymap.of([indentWithTab]),
 				intelligencePivot,
-				imageUploader(handleUploadImage, editorStore.doc),
+				...(settingStore.fileUpload.enable
+					? [imageUploader(handleUploadImage, editorStore.doc)]
+					: []),
 			],
 		});
 
@@ -85,6 +94,7 @@ function Editor() {
 		workspaceStore.data,
 		createUploadUrl,
 		uploadFile,
+		settingStore.fileUpload?.enable,
 	]);
 
 	return (
