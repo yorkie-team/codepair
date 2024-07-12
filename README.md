@@ -45,7 +45,7 @@ We offer two options. Choose the one that best suits your needs:
 
 ### 3-1. Frontend Development Only Mode
 
-1. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/dockerdocker-compose-full.yml`.
+1. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/docker/docker-compose-full.yml`.
 
    ```bash
    vi ./backend/docker/docker-compose-full.yml
