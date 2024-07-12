@@ -1,21 +1,30 @@
 version: "3.8"
 
 services:
-    codepair-backend:
-        build:
-            context: ../
-        environment:
-            # Environment variables need to be passed to the container
-            DATABASE_URL: "DATABASE_URL"
-            GITHUB_CLIENT_ID: "GITHUB_CLIENT_ID"
-            GITHUB_CLIENT_SECRET: "GITHUB_CLIENT_SECRET"
-            GITHUB_CALLBACK_URL: "<BACKEND_BASE_URL>/auth/login/github"
-            JWT_AUTH_SECRET: "JWT_AUTH_SECRET"
-            FRONTEND_BASE_URL: "FRONTEND_BASE_URL"
-            YORKIE_API_ADDR: "YORKIE_API_ADDR"
-            YORKIE_PROJECT_NAME: "YORKIE_PROJECT_NAME"
-            YORKIE_PROJECT_SECRET_KEY: "YORKIE_PROJECT_SECRET_KEY"
-            AWS_S3_BUCKET_NAME: "YOUR_S3_BUCKET_NAME"
+    yorkie:
+        image: "yorkieteam/yorkie:latest"
+        command: ["server", "--enable-pprof"]
+        restart: always
         ports:
-            - "3000:3000"
+            - "8080:8080"
+            - "8081:8081"
+
+    mongo:
+        build:
+            context: ./mongodb_replica
+            args:
+                MONGO_VERSION: 4
+        environment:
+            MONGO_REPLICA_HOST: 127.0.0.1
+            MONGO_REPLICA_PORT: 27017
+            MONGO_INITDB_DATABASE: "codepair"
+            MONGO_COMMAND: "mongo"
+        ports:
+            - "27017:27017"
         restart: unless-stopped
+        healthcheck:
+            test:
+                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+            interval: 5s
+            timeout: 2s
+            retries: 20

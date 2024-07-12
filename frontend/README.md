@@ -4,25 +4,38 @@ This project is the frontend part of the CodePair service developed using Vite a
 
 ## Getting Started
 
-1. Navigate to the project directory.
+1. Set Up GitHub OAuth Key
 
-```bash
-cd frontend
-```
+    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
-2. Install dependencies.
+    After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
-```bash
-npm install
-```
+2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/dockerdocker-compose-full.yml`.
 
-3. Start the development server.
+    ```bash
+    vi ./backend/docker/docker-compose-full.yml
 
-```bash
-npm run dev
-```
+    # In the file, update the following values:
+    # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+    GITHUB_CLIENT_ID: "your_github_client_id_here"
+    GITHUB_CLIENT_SECRET: "your_github_client_secret_here"
+    ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser to view the app.
+3. Run `./backend/dockerdocker-compose-full.yml`.
+
+    ```bash
+    docker-compose -f ./backend/docker/docker-compose-full.yml up -d
+    ```
+
+4. Run the Frontend application:
+
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+
+5. Visit [http://localhost:5173](http://localhost:5173) to enjoy your CodePair.
 
 ## Commands
 

@@ -11,8 +11,6 @@ Build your own AI real-time collaborative markdown editor in just 5 minutes.
 
 <img width="1392" alt="스크린샷 2024-02-02 오후 4 35 29" src="https://github.com/yorkie-team/codepair-poc/assets/52884648/25c441ef-9ca4-4235-9969-279e1c56258b">
 
-
-
 ## Overview
 
 CodePair is an open-source real-time collaborative markdown editor with AI intelligence, built using React, NestJS, and LangChain.
@@ -32,62 +30,84 @@ This repository contains multiple packages/modules that make up our project. Eac
 
 ## Getting Started with Development
 
-### Configuration and Setup
+### 1. Set Up GitHub OAuth Key
 
-Before running the Frontend and Backend applications, you need to fill in the required API Keys.  
-Follow these steps:
+For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](./docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
-**Frontend Environment Configuration**
+After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
-1. Navigate to the `frontend` directory.
-   
+### 2. Choose Running Mode
+
+We offer two options. Choose the one that best suits your needs:
+
+- **Frontend Development Only Mode**: Use this option if you only want to develop the frontend.
+- **Full Stack Development Mode**: Use this option if you want to develop both the frontend and backend together.
+
+### 3-1. Frontend Development Only Mode
+
+1. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/docker/docker-compose-full.yml`.
+
    ```bash
-   cd frontend
+   vi ./backend/docker/docker-compose-full.yml
+
+   # In the file, update the following values:
+   # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+   GITHUB_CLIENT_ID: "your_github_client_id_here"
+   GITHUB_CLIENT_SECRET: "your_github_client_secret_here"
    ```
-2. Copy the `.env.example` file to create a `.env.development` file.
+
+2. Run `./backend/dockerdocker-compose-full.yml`.
+
    ```bash
-   cp .env.example .env.development
+   docker-compose -f ./backend/docker/docker-compose-full.yml up -d
    ```
-3. Edit the `.env.development` file and fill in the necessary environment variable values. Refer to the comments for the meaning and examples of each value.
-
-**Backend Environment Configuration**
-
-1. Navigate to the `frontend` directory.
-   
-   ```bash
-   cd backend
-   ```
-2. Copy the `.env.example` file to create a `.env.development` file.
-   ```bash
-   cp .env.example .env.development
-   ```
-3. Edit the `.env.development` file and fill in the necessary environment variable values. Refer to the comments for the meaning and examples of each value.
-   
-### Run Application
-
-1. Run the Dockerfile for MongoDB, the database used by CodePair:
-   
-    ```bash
-    docker-compose up -f ./backend/docker/mongodb_replica/docker-compose.yml -d
-    ```
-
-2. Run the Backend application:
-   
-    ```bash
-    cd backend
-    npm install
-    npm run start:dev
-    ```
 
 3. Run the Frontend application:
-   
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
-    ```
+
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
 4. Visit http://localhost:5173 to enjoy your CodePair.
+
+### 3-2. Full Stack Development Mode
+
+1. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/.env.development`.
+
+   ```bash
+   vi ./backend/.env.development
+
+   # In the file, update the following values:
+   # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+   GITHUB_CLIENT_ID=your_github_client_id_here
+   GITHUB_CLIENT_SECRET=your_github_client_secret_here
+   ```
+
+2. Run `.backend/docker/docker-compose.yml`.
+
+   ```bash
+   docker-compose -f ./backend/docker/docker-compose.yml up -d
+   ```
+
+3. Run the Backend application:
+
+   ```bash
+   cd backend
+   npm install
+   npm run start:dev
+   ```
+
+4. Run the Frontend application:
+
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
+
+5. Visit http://localhost:5173 to enjoy your CodePair.
 
 ## Contributing
 

@@ -4,25 +4,38 @@ This project is the backend part of the CodePair service developed using NestJS.
 
 ## Getting Started
 
-1. Navigate to the project directory.
+1. Set Up GitHub OAuth Key
+
+    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
+
+    After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
+
+2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/.env.development`.
+
+    ```bash
+    vi ./backend/.env.development
+
+    # In the file, update the following values:
+    # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+    GITHUB_CLIENT_ID=your_github_client_id_here
+    GITHUB_CLIENT_SECRET=your_github_client_secret_here
+    ```
+
+3. Run `.backend/docker/docker-compose.yml`.
+
+    ```bash
+    docker-compose -f ./backend/docker/docker-compose.yml up -d
+    ```
+
+4. Run the Backend application:
 
     ```bash
     cd backend
-    ```
-
-2. Install dependencies.
-
-    ```bash
     npm install
-    ```
-
-3. Start the server in development mode.
-
-    ```bash
     npm run start:dev
     ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to access the backend.
+5. Visit http://localhost:3000 to enjoy your CodePair.
 
 ## API Specification
 

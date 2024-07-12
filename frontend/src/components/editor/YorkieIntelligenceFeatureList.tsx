@@ -1,32 +1,30 @@
-import { ListItemIcon, ListItemText, MenuItem, MenuList, Stack, TextField } from "@mui/material";
+import {
+	Icon,
+	ListItemIcon,
+	ListItemText,
+	MenuItem,
+	MenuList,
+	Stack,
+	TextField,
+} from "@mui/material";
 import { useMemo, useState } from "react";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import { matchSorter } from "match-sorter";
-import { IntelligenceFeature } from "../../constants/intelligence";
-
-const featureInfoList = [
-	{
-		title: "Write GitHub Issue",
-		icon: <GitHubIcon />,
-		feature: IntelligenceFeature.GITHUB_ISSUE,
-	},
-	{
-		title: "Write GitHub Pull Request",
-		icon: <GitHubIcon />,
-		feature: IntelligenceFeature.GITHUB_PR,
-	},
-];
+import { selectSetting } from "../../store/settingSlice";
+import { useSelector } from "react-redux";
 
 interface YorkieIntelligenceFeatureListProps {
-	onSelectFeature: (feature: IntelligenceFeature, title: string) => void;
+	onSelectFeature: (feature: string, title: string) => void;
 }
 
 function YorkieIntelligenceFeatureList(props: YorkieIntelligenceFeatureListProps) {
 	const { onSelectFeature } = props;
+	const settingStore = useSelector(selectSetting);
 	const [featureText, setFeatureText] = useState("");
 	const filteredFeatureInfoList = useMemo(() => {
-		return matchSorter(featureInfoList, featureText, { keys: ["title", "feature"] });
-	}, [featureText]);
+		return matchSorter(settingStore.yorkieIntelligence?.config.features ?? [], featureText, {
+			keys: ["title", "feature"],
+		});
+	}, [featureText, settingStore.yorkieIntelligence?.config.features]);
 
 	const handleFeatureTextChange: React.ChangeEventHandler<
 		HTMLInputElement | HTMLTextAreaElement
@@ -51,7 +49,11 @@ function YorkieIntelligenceFeatureList(props: YorkieIntelligenceFeatureListProps
 						key={featureInfo.feature}
 						onClick={() => onSelectFeature(featureInfo.feature, featureInfo.title)}
 					>
-						<ListItemIcon>{featureInfo.icon}</ListItemIcon>
+						<ListItemIcon>
+							<Icon>
+								<img src={featureInfo.icon} alt={featureInfo.title} />
+							</Icon>
+						</ListItemIcon>
 						<ListItemText>{featureInfo.title}</ListItemText>
 					</MenuItem>
 				))}
