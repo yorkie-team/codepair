@@ -35,7 +35,7 @@ This project is the frontend part of the CodePair service developed using Vite a
     npm run dev
     ```
 
-5. Visit http://localhost:5173 to enjoy your CodePair.
+5. Visit [http://localhost:5173](http://localhost:5173) to enjoy your CodePair.
 
 ## Commands
 
