@@ -56,7 +56,7 @@ We offer two options. Choose the one that best suits your needs:
    GITHUB_CLIENT_SECRET: "your_github_client_secret_here"
    ```
 
-2. Run `./backend/dockerdocker-compose-full.yml`.
+2. Run `./backend/docker/docker-compose-full.yml`.
 
    ```bash
    docker-compose -f ./backend/docker/docker-compose-full.yml up -d
@@ -85,7 +85,7 @@ We offer two options. Choose the one that best suits your needs:
    GITHUB_CLIENT_SECRET=your_github_client_secret_here
    ```
 
-2. Run `.backend/docker/docker-compose.yml`.
+2. Run `./backend/docker/docker-compose.yml`.
 
    ```bash
    docker-compose -f ./backend/docker/docker-compose.yml up -d
