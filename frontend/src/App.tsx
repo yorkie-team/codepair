@@ -21,6 +21,7 @@ import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-qu
 import AuthProvider from "./providers/AuthProvider";
 import { useErrorHandler } from "./hooks/useErrorHandler";
 import * as Sentry from "@sentry/react";
+import { useGetSettingsQuery } from "./hooks/api/settings";
 
 if (import.meta.env.PROD) {
 	Sentry.init({
@@ -48,6 +49,11 @@ if (import.meta.env.PROD) {
 const router = createBrowserRouter(routes);
 
 axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
+
+function SettingLoader() {
+	useGetSettingsQuery();
+	return null;
+}
 
 function App() {
 	const config = useSelector(selectConfig);
@@ -85,6 +91,7 @@ function App() {
 			<AuthProvider>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
+					<SettingLoader />
 					<Box minHeight="100vh">
 						<RouterProvider router={router} />
 					</Box>
