@@ -79,17 +79,6 @@ const codePairRoutes: Array<CodePairRoute> = [
 		],
 	},
 	{
-		path: "profile",
-		accessType: AccessType.PRIVATE,
-		element: <WorkspaceLayout />,
-		children: [
-			{
-				path: "",
-				element: <ProfileIndex />,
-			},
-		],
-	},
-	{
 		path: "auth/callback",
 		accessType: AccessType.GUEST,
 		element: <CallbackIndex />,
