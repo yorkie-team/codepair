@@ -6,10 +6,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { useUpdateUserNicknmaeMutation } from "../../../hooks/api/user";
 import { useCheckNameConflictQuery } from "../../../hooks/api/check";
-
+import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
+import { useParams } from "react-router-dom";
 const avatarSize = 117;
 
 function ProfileIndex() {
+	const params = useParams();
+	// eslint-disable-next-line
+	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+
 	const userStore = useSelector(selectUser);
 	const [nickname, setNickname] = useState(userStore.data?.nickname || "");
 	const [debouncedNickname, setDebouncedNickname] = useState("");
