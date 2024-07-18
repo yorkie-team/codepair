@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
-import { useUpdateUserNicknmaeMutation } from "../../hooks/api/user";
+import { useUpdateUserNicknameMutation } from "../../hooks/api/user";
 import { useCheckNameConflictQuery } from "../../hooks/api/check";
 
 const avatarSize = 117;
@@ -14,7 +14,7 @@ function ProfileIndex() {
 	const [nickname, setNickname] = useState(userStore.data?.nickname || "");
 	const [debouncedNickname, setDebouncedNickname] = useState("");
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
-	const { mutateAsync: updateUserNickname } = useUpdateUserNicknmaeMutation();
+	const { mutateAsync: updateUserNickname } = useUpdateUserNicknameMutation();
 	const errorMessage = useMemo(() => {
 		if (debouncedNickname != userStore.data?.nickname && conflictResult?.conflict) {
 			return "Already Exists";
@@ -22,7 +22,7 @@ function ProfileIndex() {
 		return null;
 	}, [conflictResult?.conflict, debouncedNickname, userStore.data?.nickname]);
 
-	const isSumbit = () => {
+	const isSubmit = () => {
 		return (
 			Boolean(errorMessage) || nickname === userStore.data?.nickname || nickname.length === 0
 		);
@@ -88,7 +88,7 @@ function ProfileIndex() {
 										type="submit"
 										variant="contained"
 										size="large"
-										disabled={isSumbit()}
+										disabled={isSubmit()}
 									>
 										Save
 									</Button>
