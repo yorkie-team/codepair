@@ -29,7 +29,7 @@ function ProfilePopover(props: PopoverProps) {
 	};
 
 	const handleMoveProfilePage = () => {
-		navigate(`/${params.workspaceSlug}/profile`);
+		navigate(`/profile`, { state: params.workspaceSlug });
 	};
 
 	const handleChangeTheme = () => {

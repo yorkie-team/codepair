@@ -1,11 +1,11 @@
 import { Container, Stack, Avatar, Typography, Button, FormControl } from "@mui/material";
 import { TextFieldElement, FormContainer } from "react-hook-form-mui";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../../store/userSlice";
+import { selectUser } from "../../store/userSlice";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
-import { useUpdateUserNicknmaeMutation } from "../../../hooks/api/user";
-import { useCheckNameConflictQuery } from "../../../hooks/api/check";
+import { useUpdateUserNicknmaeMutation } from "../../hooks/api/user";
+import { useCheckNameConflictQuery } from "../../hooks/api/check";
 
 const avatarSize = 117;
 

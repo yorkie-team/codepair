@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import MemberIndex from "./pages/workspace/member/Index";
-import ProfileIndex from "./pages/workspace/profile/Index";
+import ProfileIndex from "./pages/profile/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -56,10 +56,6 @@ const codePairRoutes: Array<CodePairRoute> = [
 				path: "member",
 				element: <MemberIndex />,
 			},
-			{
-				path: "profile",
-				element: <ProfileIndex />,
-			},
 		],
 	},
 	{
@@ -87,6 +83,17 @@ const codePairRoutes: Array<CodePairRoute> = [
 		path: "join/:invitationToken",
 		accessType: AccessType.PRIVATE,
 		element: <JoinIndex />,
+	},
+	{
+		path: "profile",
+		accessType: AccessType.PRIVATE,
+		element: <WorkspaceLayout />,
+		children: [
+			{
+				path: "",
+				element: <ProfileIndex />,
+			},
+		],
 	},
 ];
 
