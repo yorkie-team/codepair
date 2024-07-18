@@ -85,7 +85,7 @@ const codePairRoutes: Array<CodePairRoute> = [
 		element: <JoinIndex />,
 	},
 	{
-		path: "profile",
+		path: "profile/:workspaceSlug",
 		accessType: AccessType.PRIVATE,
 		element: <WorkspaceLayout />,
 		children: [
