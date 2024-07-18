@@ -16,11 +16,11 @@ function ProfileIndex() {
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
 	const { mutateAsync: updateUserNickname } = useUpdateUserNicknmaeMutation();
 	const errorMessage = useMemo(() => {
-		if (conflictResult?.conflict) {
+		if (debouncedNickname != userStore.data?.nickname && conflictResult?.conflict) {
 			return "Already Exists";
 		}
 		return null;
-	}, [conflictResult?.conflict]);
+	}, [conflictResult?.conflict, debouncedNickname, userStore.data?.nickname]);
 
 	const isSumbit = () => {
 		return (
