@@ -74,7 +74,6 @@ function ProfileIndex() {
 									<TextFieldElement
 										variant="standard"
 										name="nickname"
-										value={nickname}
 										required
 										fullWidth
 										inputProps={{
