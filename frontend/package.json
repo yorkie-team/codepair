@@ -37,7 +37,10 @@
 		"codemirror-markdown-slug": "^0.0.3",
 		"codemirror-toolbar": "^0.0.4",
 		"color": "^4.2.3",
+		"docx": "^8.5.0",
+		"file-saver": "^2.0.5",
 		"form-data": "^4.0.0",
+		"jspdf-html2canvas": "^1.5.2",
 		"katex": "^0.16.9",
 		"lib0": "^0.2.88",
 		"lodash": "^4.17.21",
@@ -68,6 +71,7 @@
 	"devDependencies": {
 		"@sentry/vite-plugin": "^2.20.1",
 		"@types/color": "^3.0.6",
+		"@types/file-saver": "^2.0.7",
 		"@types/katex": "^0.16.7",
 		"@types/lodash": "^4.14.202",
 		"@types/node": "^20.14.9",
