@@ -1,8 +1,9 @@
-import moment from "moment";
-import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Document } from "../../hooks/api/types/document.d";
+import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
+import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
+import { Document } from "../../hooks/api/types/document.d";
+import { documentNameStorage } from "../../utils/localStorage";
 
 interface DocumentCardProps {
 	document: Document;
@@ -14,6 +15,7 @@ function DocumentCard(props: DocumentCardProps) {
 	const params = useParams();
 
 	const handleToDocument = () => {
+		documentNameStorage.setDocumentName(document.title);
 		navigate(`/${params.workspaceSlug}/${document.id}`);
 	};
 

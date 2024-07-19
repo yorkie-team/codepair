@@ -1,22 +1,26 @@
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { useSelector } from "react-redux";
-import { selectEditor } from "../../store/editorSlice";
 import { CircularProgress, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
-import "./editor.css";
-import { addSoftLineBreak } from "../../utils/document";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 import katex from "katex";
+import "katex/dist/katex.min.css";
+import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeKatex from "rehype-katex";
 import { getCodeString } from "rehype-rewrite";
 import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeExternalLinks from "rehype-external-links";
-import "katex/dist/katex.min.css";
+import { PreviewRefContext } from "../../contexts/PreviewRefContext";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { selectEditor } from "../../store/editorSlice";
+import { addSoftLineBreak } from "../../utils/document";
+import { documentNameStorage } from "../../utils/localStorage";
+import "./editor.css";
 
 function Preview() {
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
+
+	const { previewRef } = useContext(PreviewRefContext);
 
 	useEffect(() => {
 		if (!editorStore.doc) return;
@@ -39,6 +43,10 @@ function Preview() {
 		};
 	}, [editorStore.doc]);
 
+	useEffect(() => {
+		return () => documentNameStorage.deleteDocumentName();
+	}, [])
+
 	if (!editorStore?.doc)
 		return (
 			<Stack direction="row" justifyContent="center">
@@ -48,6 +56,7 @@ function Preview() {
 
 	return (
 		<MarkdownPreview
+			ref={previewRef}
 			source={addSoftLineBreak(content)}
 			wrapperElement={{
 				"data-color-mode": currentTheme,

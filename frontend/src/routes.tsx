@@ -1,16 +1,17 @@
-import DocumentIndex from "./pages/workspace/document/Index";
-import MainLayout from "./components/layouts/MainLayout";
-import CallbackIndex from "./pages/auth/callback/Index";
-import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
+import CodePairError from "./components/common/CodePairError";
 import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
-import WorkspaceIndex from "./pages/workspace/Index";
-import CodePairError from "./components/common/CodePairError";
-import JoinIndex from "./pages/workspace/join/Index";
-import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
+import MainLayout from "./components/layouts/MainLayout";
+import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
+import Index from "./pages/Index";
+import CallbackIndex from "./pages/auth/callback/Index";
+import WorkspaceIndex from "./pages/workspace/Index";
+import DocumentIndex from "./pages/workspace/document/Index";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
+import JoinIndex from "./pages/workspace/join/Index";
 import MemberIndex from "./pages/workspace/member/Index";
+import PreviewRefProvider from "./providers/PreviewRefProvider";
 
 interface CodePairRoute {
 	path: string;
@@ -59,7 +60,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 	},
 	{
 		path: ":workspaceSlug",
-		element: <DocumentLayout />,
+		element: (
+			<PreviewRefProvider>
+				<DocumentLayout />
+			</PreviewRefProvider>
+		),
 		children: [
 			{
 				path: ":documentId",
