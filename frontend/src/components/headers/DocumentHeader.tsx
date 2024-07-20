@@ -11,7 +11,10 @@ import {
 	Tooltip,
 	Popover,
 	Typography,
-	Grid,
+	List,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
@@ -168,13 +171,11 @@ function DocumentHeader() {
 							}}
 						>
 							<Paper sx={{ padding: 2 }}>
-								<Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-									Additional Users
-								</Typography>
-								<Grid container spacing={2}>
+								<Typography variant="subtitle2">Additional Users</Typography>
+								<List>
 									{hiddenAvatars.map((presence) => (
-										<Grid item xs={4} key={presence.clientID}>
-											<Stack direction="row" alignItems="center" spacing={1}>
+										<ListItem key={presence.clientID} sx={{ paddingY: 0.5 }}>
+											<ListItemAvatar>
 												<Avatar
 													sx={{
 														bgcolor: presence.presence.color,
@@ -185,13 +186,16 @@ function DocumentHeader() {
 												>
 													{presence.presence.name[0]}
 												</Avatar>
-												<Typography variant="body2" sx={{ fontSize: 12 }}>
-													{presence.presence.name}
-												</Typography>
-											</Stack>
-										</Grid>
+											</ListItemAvatar>
+											<ListItemText
+												primary={presence.presence.name}
+												primaryTypographyProps={{
+													variant: "body2",
+												}}
+											/>
+										</ListItem>
 									))}
-								</Grid>
+								</List>
 							</Paper>
 						</Popover>
 						{!editorState.shareRole && <ShareButton />}
