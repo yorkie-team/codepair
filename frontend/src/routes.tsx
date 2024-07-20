@@ -11,7 +11,6 @@ import DocumentIndex from "./pages/workspace/document/Index";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import JoinIndex from "./pages/workspace/join/Index";
 import MemberIndex from "./pages/workspace/member/Index";
-import PreviewRefProvider from "./providers/PreviewRefProvider";
 
 interface CodePairRoute {
 	path: string;
@@ -60,11 +59,7 @@ const codePairRoutes: Array<CodePairRoute> = [
 	},
 	{
 		path: ":workspaceSlug",
-		element: (
-			<PreviewRefProvider>
-				<DocumentLayout />
-			</PreviewRefProvider>
-		),
+		element: <DocumentLayout />,
 		children: [
 			{
 				path: ":documentId",
