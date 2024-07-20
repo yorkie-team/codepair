@@ -1,6 +1,6 @@
 import { SaveAlt as SaveAltIcon } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem, Paper } from "@mui/material";
-import { MouseEvent, useCallback, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useFileExport } from "../../hooks/useFileExport";
 
 const DownloadMenu = () => {
@@ -14,22 +14,7 @@ const DownloadMenu = () => {
 		setAnchorEl(null);
 	};
 
-	const { exportToPDF, exportToTXT, exportToDOCX } = useFileExport();
-
-	const handleExportToPDF = useCallback(() => {
-		exportToPDF();
-		handleClose();
-	}, [exportToPDF]);
-
-	const handleExportToTXT = useCallback(() => {
-		exportToTXT();
-		handleClose();
-	}, [exportToTXT]);
-
-	const handleExportToDOCX = useCallback(() => {
-		exportToDOCX();
-		handleClose();
-	}, [exportToDOCX]);
+	const { handleExportToPDF, handleExportToHTML, handleExportToMarkdown } = useFileExport();
 
 	return (
 		<Paper>
@@ -44,8 +29,8 @@ const DownloadMenu = () => {
 				onClose={handleClose}
 			>
 				<MenuItem onClick={handleExportToPDF}>Download as PDF</MenuItem>
-				<MenuItem onClick={handleExportToTXT}>Download as TXT</MenuItem>
-				<MenuItem onClick={handleExportToDOCX}>Download as DOCX</MenuItem>
+				<MenuItem onClick={handleExportToHTML}>Download as HTML</MenuItem>
+				<MenuItem onClick={handleExportToMarkdown}>Download as Markd</MenuItem>
 			</Menu>
 		</Paper>
 	);
