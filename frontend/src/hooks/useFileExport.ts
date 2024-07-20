@@ -41,17 +41,26 @@ export const useFileExport = (): UseFileExportReturn => {
 					},
 					{
 						responseType: "blob",
+						headers: {
+							Accept: "application/octet-stream",
+						},
 					}
 				);
 
-				const blob = new Blob([response.data], { type: `application/${exportType}` });
+				const contentDisposition = response.headers["content-disposition"];
+				const fileNameMatch =
+					contentDisposition && contentDisposition.match(/filename="?(.+)"?\s*$/i);
+				const fileName = fileNameMatch ? fileNameMatch[1] : `${documentName}.${exportType}`;
+
+				const blob = new Blob([response.data], { type: response.headers["content-type"] });
+
 				const url = window.URL.createObjectURL(blob);
 				const link = document.createElement("a");
 				link.href = url;
-				link.setAttribute("download", `${encodeURIComponent(documentName)}.${exportType}`);
+				link.setAttribute("download", fileName);
 				document.body.appendChild(link);
 				link.click();
-				if (link.parentNode) link.parentNode.removeChild(link);
+				document.body.removeChild(link);
 				window.URL.revokeObjectURL(url);
 
 				enqueueSnackbar(`${exportType.toUpperCase()} 파일이 성공적으로 내보내졌습니다.`, {
