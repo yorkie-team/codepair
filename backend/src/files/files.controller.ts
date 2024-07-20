@@ -1,9 +1,20 @@
-import { Body, Controller, Get, HttpRedirectResponse, Param, Post, Redirect } from "@nestjs/common";
-import { FilesService } from "./files.service";
-import { ApiResponse, ApiOperation, ApiBody } from "@nestjs/swagger";
-import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
-import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
+import {
+	Body,
+	Controller,
+	Get,
+	HttpRedirectResponse,
+	InternalServerErrorException,
+	Param,
+	Post,
+	Redirect,
+	StreamableFile,
+} from "@nestjs/common";
+import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Public } from "src/utils/decorators/auth.decorator";
+import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
+import { FilesService } from "./files.service";
+import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
+import { ExportFileRequestBody } from "./types/export-file.type";
 
 @Controller("files")
 export class FilesController {
@@ -32,7 +43,7 @@ export class FilesController {
 	@Redirect()
 	@ApiOperation({
 		summary: "Create Presigned URL for Download",
-		description: "Create rresigned URL for download",
+		description: "Create Presigned URL for download",
 	})
 	async createDownloadPresignedUrl(
 		@Param("file_name") fileKey: string
@@ -41,5 +52,28 @@ export class FilesController {
 			url: await this.filesService.createDownloadPresignedUrl(fileKey),
 			statusCode: 302,
 		};
+	}
+
+	@Post("export-markdown")
+	@ApiOperation({
+		summary: "Export Markdown",
+		description: "Export Markdown to various formats",
+	})
+	@ApiBody({ type: ExportFileRequestBody })
+	@ApiResponse({ status: 200, description: "File exported successfully" })
+	async exportMarkdown(
+		@Body() exportFileRequestBody: ExportFileRequestBody
+	): Promise<StreamableFile> {
+		try {
+			const { fileContent, mimeType, fileName } =
+				await this.filesService.exportMarkdown(exportFileRequestBody);
+
+			return new StreamableFile(fileContent, {
+				type: mimeType,
+				disposition: `attachment; filename="${fileName}"`,
+			});
+		} catch (error) {
+			throw new InternalServerErrorException(`Failed to export file: ${error.message}`);
+		}
 	}
 }
