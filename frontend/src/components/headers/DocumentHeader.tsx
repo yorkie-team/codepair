@@ -9,6 +9,9 @@ import {
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
+	Popover,
+	Typography,
+	Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
@@ -17,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import ThemeButton from "../common/ThemeButton";
 import ShareButton from "../common/ShareButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useList } from "react-use";
 import { ActorID } from "yorkie-js-sdk";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
@@ -43,6 +46,8 @@ function DocumentHeader() {
 		clientID: ActorID;
 		presence: YorkieCodeMirrorPresenceType;
 	}>([]);
+
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	useEffect(() => {
 		if (editorState.shareRole === "READ") {
@@ -87,6 +92,20 @@ function DocumentHeader() {
 		navigate(`/${workspaceState.data?.slug}`);
 	};
 
+	// Display additional users in a popover when there are more than 4 users
+	const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	// Display None additional users in a popover when there are more than 4 users
+	const handleClosePopover = () => {
+		setAnchorEl(null);
+	};
+
+	const popoverOpen = Boolean(anchorEl);
+
+	const hiddenAvatars = presenceList.slice(3);
+
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
 			<Toolbar>
@@ -127,7 +146,7 @@ function DocumentHeader() {
 						</Paper>
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
-						<AvatarGroup max={4}>
+						<AvatarGroup max={4} onClick={handleOpenPopover}>
 							{presenceList?.map((presence) => (
 								<Tooltip key={presence.clientID} title={presence.presence.name}>
 									<Avatar
@@ -139,6 +158,42 @@ function DocumentHeader() {
 								</Tooltip>
 							))}
 						</AvatarGroup>
+						<Popover
+							open={popoverOpen}
+							anchorEl={anchorEl}
+							onClose={handleClosePopover}
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "left",
+							}}
+						>
+							<Paper sx={{ padding: 2 }}>
+								<Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
+									Additional Users
+								</Typography>
+								<Grid container spacing={2}>
+									{hiddenAvatars.map((presence) => (
+										<Grid item xs={4} key={presence.clientID}>
+											<Stack direction="row" alignItems="center" spacing={1}>
+												<Avatar
+													sx={{
+														bgcolor: presence.presence.color,
+														width: 24,
+														height: 24,
+														fontSize: 12,
+													}}
+												>
+													{presence.presence.name[0]}
+												</Avatar>
+												<Typography variant="body2" sx={{ fontSize: 12 }}>
+													{presence.presence.name}
+												</Typography>
+											</Stack>
+										</Grid>
+									))}
+								</Grid>
+							</Paper>
+						</Popover>
 						{!editorState.shareRole && <ShareButton />}
 						<ThemeButton />
 					</Stack>
