@@ -12,7 +12,6 @@ import { PreviewRefContext } from "../../contexts/PreviewRefContext";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { selectEditor } from "../../store/editorSlice";
 import { addSoftLineBreak } from "../../utils/document";
-import { documentNameStorage } from "../../utils/localStorage";
 import "./editor.css";
 
 function Preview() {
@@ -42,10 +41,6 @@ function Preview() {
 			setContent("");
 		};
 	}, [editorStore.doc]);
-
-	useEffect(() => {
-		return () => documentNameStorage.deleteDocumentName();
-	}, [])
 
 	if (!editorStore?.doc)
 		return (
