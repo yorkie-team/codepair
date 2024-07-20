@@ -15,13 +15,12 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { setTheme } from "../../store/configSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePopover(props: PopoverProps) {
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const navigate = useNavigate();
-	const params = useParams();
 
 	const handleLogout = () => {
 		dispatch(setAccessToken(null));
@@ -29,7 +28,7 @@ function ProfilePopover(props: PopoverProps) {
 	};
 
 	const handleMoveProfilePage = () => {
-		navigate(`/profile/${params.workspaceSlug}`);
+		navigate(`/settings/profile`);
 	};
 
 	const handleChangeTheme = () => {

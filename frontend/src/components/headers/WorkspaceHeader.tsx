@@ -11,27 +11,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";
 import { selectWorkspace } from "../../store/workspaceSlice";
-
-interface WorkspaceAppBarProps extends AppBarProps {
-	open?: boolean;
-}
-
-const WorkspaceAppBar = styled(AppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
-})<WorkspaceAppBarProps>(({ theme, open }) => ({
-	transition: theme.transitions.create(["margin", "width"], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		width: `calc(100% - ${DRAWER_WIDTH}px)`,
-		marginLeft: `${DRAWER_WIDTH}px`,
-		transition: theme.transitions.create(["margin", "width"], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
-}));
+import { CommonAppBar } from "./CommonHeader";
 
 interface WorkspaceHeaderProps {
 	open: boolean;
@@ -59,7 +39,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 	};
 
 	return (
-		<WorkspaceAppBar position="fixed" open={open}>
+		<CommonAppBar position="fixed" open={open}>
 			<Toolbar>
 				<Stack
 					width="100%"
@@ -99,7 +79,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 				anchorEl={profileAnchorEl}
 				onClose={handleCloseProfilePopover}
 			/>
-		</WorkspaceAppBar>
+		</CommonAppBar>
 	);
 }
 
