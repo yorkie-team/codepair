@@ -4,7 +4,7 @@ import {
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
-import { Box, Button, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo, useState } from "react";
 import { Document } from "../../hooks/api/types/document.d";
@@ -15,7 +15,8 @@ import AddIcon from "@mui/icons-material/Add";
 function WorkspaceIndex() {
 	const params = useParams();
 	const navigate = useNavigate();
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const { data: workspace, is404Error, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
+
 	const {
 		data: documentPageList,
 		fetchNextPage,
@@ -30,6 +31,18 @@ function WorkspaceIndex() {
 			}, [] as Array<Document>) ?? []
 		);
 	}, [documentPageList?.pages]);
+
+	if (isLoading) {
+		return (
+			<Backdrop open>
+				<CircularProgress color="inherit" />
+			</Backdrop>
+		);
+	}
+
+	if (is404Error) {
+		navigate("/404");
+	}
 
 	const handleCreateDocumentModalOpen = () => {
 		setCreateDocumentModalOpen((prev) => !prev);
