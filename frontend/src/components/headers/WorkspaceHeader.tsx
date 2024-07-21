@@ -1,7 +1,5 @@
 import { MouseEventHandler, useState } from "react";
-import { Avatar, IconButton, Stack, Toolbar, styled, useTheme } from "@mui/material";
-import AppBar, { AppBarProps } from "@mui/material/AppBar";
-import { DRAWER_WIDTH } from "../layouts/WorkspaceLayout";
+import { Avatar, IconButton, Stack, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
@@ -11,7 +9,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";
 import { selectWorkspace } from "../../store/workspaceSlice";
-import { CommonAppBar } from "./CommonHeader";
+import { DrawerAppBar } from "./DrawerAppBar";
 
 interface WorkspaceHeaderProps {
 	open: boolean;
@@ -39,7 +37,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 	};
 
 	return (
-		<CommonAppBar position="fixed" open={open}>
+		<DrawerAppBar position="fixed" open={open}>
 			<Toolbar>
 				<Stack
 					width="100%"
@@ -79,7 +77,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 				anchorEl={profileAnchorEl}
 				onClose={handleCloseProfilePopover}
 			/>
-		</CommonAppBar>
+		</DrawerAppBar>
 	);
 }
 

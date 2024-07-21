@@ -2,13 +2,13 @@ import { styled } from "@mui/material";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import { DRAWER_WIDTH } from "../layouts/WorkspaceLayout";
 
-interface CommonAppBarProps extends AppBarProps {
+interface DrawerAppBarProps extends AppBarProps {
 	open?: boolean;
 }
 
-export const CommonAppBar = styled(AppBar, {
+export const DrawerAppBar = styled(AppBar, {
 	shouldForwardProp: (prop) => prop !== "open",
-})<CommonAppBarProps>(({ theme, open }) => ({
+})<DrawerAppBarProps>(({ theme, open }) => ({
 	transition: theme.transitions.create(["margin", "width"], {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.leavingScreen,
