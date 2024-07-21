@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import MemberIndex from "./pages/workspace/member/Index";
+import NotFound from "./pages/error";
 
 interface CodePairRoute {
 	path: string;
@@ -82,6 +83,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 		path: "join/:invitationToken",
 		accessType: AccessType.PRIVATE,
 		element: <JoinIndex />,
+	},
+	{
+		path: "/404",
+		accessType: AccessType.PUBLIC,
+		element: <NotFound />,
 	},
 ];
 
