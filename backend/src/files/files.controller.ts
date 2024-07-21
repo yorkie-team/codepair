@@ -3,7 +3,6 @@ import {
 	Controller,
 	Get,
 	HttpRedirectResponse,
-	InternalServerErrorException,
 	Param,
 	Post,
 	Redirect,
@@ -73,7 +72,7 @@ export class FilesController {
 				disposition: `attachment; filename="${fileName}"`,
 			});
 		} catch (error) {
-			throw new InternalServerErrorException(`Failed to export file: ${error.message}`);
+			throw error;
 		}
 	}
 }
