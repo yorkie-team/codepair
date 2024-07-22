@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuItem, Paper } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import { useFileExport } from "../../hooks/useFileExport";
 
-const DownloadMenu = () => {
+function DownloadMenu() {
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -34,6 +34,6 @@ const DownloadMenu = () => {
 			</Menu>
 		</Paper>
 	);
-};
+}
 
 export default DownloadMenu;
