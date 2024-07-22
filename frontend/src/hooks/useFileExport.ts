@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectDocument } from "../store/documentSlice";
 import { selectEditor } from "../store/editorSlice";
+import { useExportFileMutation } from "./api/file";
 
 export const enum FileExtension {
 	Markdown = "markdown",
@@ -11,10 +11,12 @@ export const enum FileExtension {
 	PDF = "pdf",
 }
 
+type ExportFunction = () => void;
+
 interface UseFileExportReturn {
-	handleExportToPDF: () => void;
-	handleExportToHTML: () => void;
-	handleExportToMarkdown: () => void;
+	handleExportToPDF: ExportFunction;
+	handleExportToHTML: ExportFunction;
+	handleExportToMarkdown: ExportFunction;
 }
 
 export const useFileExport = (): UseFileExportReturn => {
@@ -22,30 +24,22 @@ export const useFileExport = (): UseFileExportReturn => {
 	const editorStore = useSelector(selectEditor);
 	const documentStore = useSelector(selectDocument);
 
-	const markdown = editorStore.doc?.getRoot().content?.toString() || "";
-	const documentName = documentStore.data?.title || "codepair_document";
+	const exportFileMutation = useExportFileMutation();
 
 	const handleExportFile = useCallback(
 		async (exportType: string) => {
 			try {
-				enqueueSnackbar(`${exportType.toUpperCase()} 파일 내보내기 시작...`, {
+				const markdown = editorStore.doc?.getRoot().content?.toString() || "";
+				const documentName = documentStore.data?.title || "codepair_document";
+				enqueueSnackbar(`${exportType.toUpperCase()} file export started`, {
 					variant: "info",
 				});
 
-				const response = await axios.post(
-					"/files/export-markdown",
-					{
-						exportType,
-						content: markdown,
-						fileName: documentName,
-					},
-					{
-						responseType: "blob",
-						headers: {
-							Accept: "application/octet-stream",
-						},
-					}
-				);
+				const response = await exportFileMutation.mutateAsync({
+					exportType,
+					content: markdown,
+					fileName: documentName,
+				});
 
 				const contentDisposition = response.headers["content-disposition"];
 				const fileNameMatch =
@@ -63,17 +57,17 @@ export const useFileExport = (): UseFileExportReturn => {
 				document.body.removeChild(link);
 				window.URL.revokeObjectURL(url);
 
-				enqueueSnackbar(`${exportType.toUpperCase()} 파일이 성공적으로 내보내졌습니다.`, {
+				enqueueSnackbar(`${exportType.toUpperCase()} file exported successfully`, {
 					variant: "success",
 				});
 			} catch (error) {
-				console.error("오류:", error);
-				enqueueSnackbar(`${exportType.toUpperCase()} 파일 내보내기에 실패했습니다.`, {
+				console.error("Error:", error);
+				enqueueSnackbar(`Failed to export ${exportType.toUpperCase()} file`, {
 					variant: "error",
 				});
 			}
 		},
-		[markdown, documentName, enqueueSnackbar]
+		[editorStore.doc, documentStore.data?.title, enqueueSnackbar, exportFileMutation]
 	);
 
 	const handleExportToPDF = () => handleExportFile(FileExtension.PDF);
