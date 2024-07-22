@@ -21,7 +21,7 @@ This is a rough outline of what a contributor's workflow looks like:
 - Make commits of logical units
 - Make sure commit messages are in the proper format
 - Push changes in a topic branch to a personal fork of the repository
-- Submit a pull request to yorkie-team/dashboard
+- Submit a pull request to yorkie-team/codepair
 - The PR must receive a LGTM from maintainers
 
 Thanks for contributing!
