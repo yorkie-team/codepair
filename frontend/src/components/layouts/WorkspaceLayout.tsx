@@ -5,8 +5,7 @@ import WorkspaceHeader from "../headers/WorkspaceHeader";
 import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
 import { useDispatch, useSelector } from "react-redux";
 import { selectConfig, setDrawerOpen } from "../../store/configSlice";
-
-export const DRAWER_WIDTH = 282;
+import { DRAWER_WIDTH } from "../../constants/layout";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 	open?: boolean;
