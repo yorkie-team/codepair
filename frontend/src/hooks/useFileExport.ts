@@ -42,8 +42,7 @@ export const useFileExport = (): UseFileExportReturn => {
 				});
 
 				const contentDisposition = response.headers["content-disposition"];
-				const fileNameMatch =
-					contentDisposition && contentDisposition.match(/filename="?(.+)"?\s*$/i);
+				const fileNameMatch = contentDisposition?.match(/filename="?(.+)"?\s*$/i);
 				const fileName = fileNameMatch ? fileNameMatch[1] : `${documentName}.${exportType}`;
 
 				const blob = new Blob([response.data], { type: response.headers["content-type"] });
