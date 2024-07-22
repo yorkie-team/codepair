@@ -22,11 +22,11 @@ function ProfileIndex() {
 		return null;
 	}, [conflictResult?.conflict, debouncedNickname, userStore.data?.nickname]);
 
-	const isSubmit = () => {
+	const isSubmitDisabled = useMemo(() => {
 		return (
 			Boolean(errorMessage) || nickname === userStore.data?.nickname || nickname.length === 0
 		);
-	};
+	}, [errorMessage, nickname, userStore.data?.nickname]);
 
 	useDebounce(
 		() => {
@@ -88,7 +88,7 @@ function ProfileIndex() {
 										type="submit"
 										variant="contained"
 										size="large"
-										disabled={isSubmit()}
+										disabled={isSubmitDisabled}
 									>
 										Save
 									</Button>
