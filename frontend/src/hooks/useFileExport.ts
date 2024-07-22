@@ -67,7 +67,7 @@ export const useFileExport = (): UseFileExportReturn => {
 				});
 			}
 		},
-		[editorStore.doc, documentStore.data?.title, enqueueSnackbar, exportFileMutation]
+		[editorStore, documentStore, enqueueSnackbar, exportFileMutation]
 	);
 
 	const handleExportToPDF = () => handleExportFile(FileExtension.PDF);
