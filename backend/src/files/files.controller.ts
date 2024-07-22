@@ -8,12 +8,12 @@ import {
 	Redirect,
 	StreamableFile,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOkResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Public } from "src/utils/decorators/auth.decorator";
 import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
 import { FilesService } from "./files.service";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
-import { ExportFileRequestBody } from "./types/export-file.type";
+import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.type";
 
 @Controller("files")
 export class FilesController {
@@ -53,26 +53,23 @@ export class FilesController {
 		};
 	}
 
+	@Public()
 	@Post("export-markdown")
 	@ApiOperation({
 		summary: "Export Markdown",
 		description: "Export Markdown to various formats",
 	})
 	@ApiBody({ type: ExportFileRequestBody })
-	@ApiResponse({ status: 200, description: "File exported successfully" })
+	@ApiOkResponse({ type: ExportFileResponse })
 	async exportMarkdown(
 		@Body() exportFileRequestBody: ExportFileRequestBody
 	): Promise<StreamableFile> {
-		try {
-			const { fileContent, mimeType, fileName } =
-				await this.filesService.exportMarkdown(exportFileRequestBody);
+		const { fileContent, mimeType, fileName } =
+			await this.filesService.exportMarkdown(exportFileRequestBody);
 
-			return new StreamableFile(fileContent, {
-				type: mimeType,
-				disposition: `attachment; filename="${fileName}"`,
-			});
-		} catch (error) {
-			throw error;
-		}
+		return new StreamableFile(fileContent, {
+			type: mimeType,
+			disposition: `attachment; filename="${fileName}"`,
+		});
 	}
 }

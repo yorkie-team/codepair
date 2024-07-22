@@ -1,8 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsIn } from "class-validator";
 
 export class ExportFileRequestBody {
-	@ApiProperty({ type: String, description: "export_type" })
-	exportType: "pdf" | "html" | "markdown";
+	@ApiProperty({ type: String, description: "export file type" })
+	@IsIn(["pdf", "html", "markdown"])
+	exportType: string;
 
 	@ApiProperty({ type: String, description: "markdown string" })
 	content: string;
@@ -11,8 +13,13 @@ export class ExportFileRequestBody {
 	fileName: string;
 }
 
-export interface ExportFileResponseDto {
+export class ExportFileResponse {
+	@ApiProperty({ type: Buffer, description: "File content" })
 	fileContent: Buffer;
+
+	@ApiProperty({ type: String, description: "File mime type" })
 	mimeType: string;
+
+	@ApiProperty({ type: String, description: "File name" })
 	fileName: string;
 }

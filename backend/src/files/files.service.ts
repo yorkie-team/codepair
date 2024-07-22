@@ -3,7 +3,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
 	Injectable,
-	InternalServerErrorException,
 	NotFoundException,
 	UnauthorizedException,
 	UnprocessableEntityException,
@@ -15,7 +14,7 @@ import * as MarkdownIt from "markdown-it";
 import { PrismaService } from "src/db/prisma.service";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
-import { ExportFileRequestBody, ExportFileResponseDto } from "./types/export-file.type";
+import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.type";
 
 @Injectable()
 export class FilesService {
@@ -77,34 +76,22 @@ export class FilesService {
 
 	async exportMarkdown(
 		exportFileRequestBody: ExportFileRequestBody
-	): Promise<ExportFileResponseDto> {
+	): Promise<ExportFileResponse> {
 		const { exportType, content, fileName } = exportFileRequestBody;
 
-		try {
-			switch (exportType) {
-				case "markdown":
-					return this.exportToMarkdown(content, fileName);
-				case "html":
-					return this.exportToHtml(content, fileName);
-				case "pdf":
-					return this.exportToPdf(content, fileName);
-				default:
-					throw new BadRequestException("Invalid export type");
-			}
-		} catch (error) {
-			if (error instanceof BadRequestException) {
-				throw error;
-			}
-			throw new InternalServerErrorException(
-				`Failed to export ${exportType} file: ${error.message}`
-			);
+		switch (exportType) {
+			case "markdown":
+				return this.exportToMarkdown(content, fileName);
+			case "html":
+				return this.exportToHtml(content, fileName);
+			case "pdf":
+				return this.exportToPdf(content, fileName);
+			default:
+				throw new BadRequestException("Invalid export type");
 		}
 	}
 
-	private async exportToMarkdown(
-		content: string,
-		fileName: string
-	): Promise<ExportFileResponseDto> {
+	private async exportToMarkdown(content: string, fileName: string): Promise<ExportFileResponse> {
 		return {
 			fileContent: Buffer.from(content),
 			mimeType: "text/markdown",
@@ -112,7 +99,7 @@ export class FilesService {
 		};
 	}
 
-	private async exportToHtml(content: string, fileName: string): Promise<ExportFileResponseDto> {
+	private async exportToHtml(content: string, fileName: string): Promise<ExportFileResponse> {
 		const html = this.markdown.render(content);
 		return {
 			fileContent: Buffer.from(html),
@@ -121,7 +108,7 @@ export class FilesService {
 		};
 	}
 
-	private async exportToPdf(content: string, fileName: string): Promise<ExportFileResponseDto> {
+	private async exportToPdf(content: string, fileName: string): Promise<ExportFileResponse> {
 		const html = this.markdown.render(content);
 		const options = { format: "A4" };
 		const file = { content: html };
