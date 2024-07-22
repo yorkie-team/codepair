@@ -30,7 +30,7 @@ function DownloadMenu() {
 			>
 				<MenuItem onClick={handleExportToPDF}>Download as PDF</MenuItem>
 				<MenuItem onClick={handleExportToHTML}>Download as HTML</MenuItem>
-				<MenuItem onClick={handleExportToMarkdown} >Download as Markdown</MenuItem>
+				<MenuItem onClick={handleExportToMarkdown}>Download as Markdown</MenuItem>
 			</Menu>
 		</Paper>
 	);
