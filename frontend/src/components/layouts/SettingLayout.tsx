@@ -3,10 +3,9 @@ import { Outlet } from "react-router-dom";
 import SettingHeader from "../headers/SettingHeader";
 
 function SettingLayout() {
-
 	return (
 		<Box sx={{ display: "flex" }}>
-			<SettingHeader/>
+			<SettingHeader />
 			<Outlet />
 		</Box>
 	);

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import AppBar, { AppBarProps } from "@mui/material/AppBar";
-import { DRAWER_WIDTH } from "../layouts/WorkspaceLayout";
+import { DRAWER_WIDTH } from "../../constants/layout";
 
 interface DrawerAppBarProps extends AppBarProps {
 	open?: boolean;
