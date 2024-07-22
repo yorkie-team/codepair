@@ -3,7 +3,7 @@ import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useCheckNameConflictQuery } from "../../hooks/api/check";
 import { useMemo, useState } from "react";
 import { useDebounce } from "react-use";
-import { useUpdateUserNicknmaeMutation } from "../../hooks/api/user";
+import { useUpdateUserNicknameMutation } from "../../hooks/api/user";
 
 interface ChangeNicknameModalProps extends Omit<ModalProps, "children"> {}
 
@@ -11,7 +11,7 @@ function ChangeNicknameModal(props: ChangeNicknameModalProps) {
 	const [nickname, setNickname] = useState("");
 	const [debouncedNickname, setDebouncedNickname] = useState("");
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
-	const { mutateAsync: updateUserNickname } = useUpdateUserNicknmaeMutation();
+	const { mutateAsync: updateUserNickname } = useUpdateUserNicknameMutation();
 	const errorMessage = useMemo(() => {
 		if (conflictResult?.conflict) {
 			return "Already Exists";

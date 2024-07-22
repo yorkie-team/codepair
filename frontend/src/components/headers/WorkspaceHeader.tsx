@@ -1,7 +1,5 @@
 import { MouseEventHandler, useState } from "react";
-import { Avatar, IconButton, Stack, Toolbar, styled, useTheme } from "@mui/material";
-import AppBar, { AppBarProps } from "@mui/material/AppBar";
-import { DRAWER_WIDTH } from "../layouts/WorkspaceLayout";
+import { Avatar, IconButton, Stack, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
@@ -11,27 +9,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";
 import { selectWorkspace } from "../../store/workspaceSlice";
-
-interface WorkspaceAppBarProps extends AppBarProps {
-	open?: boolean;
-}
-
-const WorkspaceAppBar = styled(AppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
-})<WorkspaceAppBarProps>(({ theme, open }) => ({
-	transition: theme.transitions.create(["margin", "width"], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		width: `calc(100% - ${DRAWER_WIDTH}px)`,
-		marginLeft: `${DRAWER_WIDTH}px`,
-		transition: theme.transitions.create(["margin", "width"], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
-}));
+import { DrawerAppBar } from "./DrawerAppBar";
 
 interface WorkspaceHeaderProps {
 	open: boolean;
@@ -59,7 +37,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 	};
 
 	return (
-		<WorkspaceAppBar position="fixed" open={open}>
+		<DrawerAppBar position="fixed" open={open}>
 			<Toolbar>
 				<Stack
 					width="100%"
@@ -99,7 +77,7 @@ function WorkspaceHeader(props: WorkspaceHeaderProps) {
 				anchorEl={profileAnchorEl}
 				onClose={handleCloseProfilePopover}
 			/>
-		</WorkspaceAppBar>
+		</DrawerAppBar>
 	);
 }
 

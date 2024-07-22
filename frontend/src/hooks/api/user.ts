@@ -40,7 +40,7 @@ export const useGetUserQuery = () => {
 	return query;
 };
 
-export const useUpdateUserNicknmaeMutation = () => {
+export const useUpdateUserNicknameMutation = () => {
 	const authStore = useSelector(selectAuth);
 	const queryClient = useQueryClient();
 
