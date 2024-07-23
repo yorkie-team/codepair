@@ -1,3 +1,7 @@
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import EditIcon from "@mui/icons-material/Edit";
+import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
 	AppBar,
 	Avatar,
@@ -16,20 +20,17 @@ import {
 	ListItemAvatar,
 	ListItemText,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useDispatch, useSelector } from "react-redux";
-import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
-import ThemeButton from "../common/ThemeButton";
-import ShareButton from "../common/ShareButton";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useList } from "react-use";
 import { ActorID } from "yorkie-js-sdk";
-import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { useNavigate } from "react-router-dom";
+import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
+import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
+import DownloadMenu from "../common/DownloadMenu";
+import ShareButton from "../common/ShareButton";
+import ThemeButton from "../common/ThemeButton";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -147,6 +148,7 @@ function DocumentHeader() {
 								</ToggleButtonGroup>
 							)}
 						</Paper>
+						<DownloadMenu />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
 						<AvatarGroup max={4} onClick={handleOpenPopover}>
