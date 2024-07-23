@@ -10,7 +10,7 @@ This project is the frontend part of the CodePair service developed using Vite a
 
     After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
-2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/dockerdocker-compose-full.yml`.
+2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/docker/docker-compose-full.yml`.
 
     ```bash
     vi ./backend/docker/docker-compose-full.yml
@@ -21,7 +21,7 @@ This project is the frontend part of the CodePair service developed using Vite a
     GITHUB_CLIENT_SECRET: "your_github_client_secret_here"
     ```
 
-3. Run `./backend/dockerdocker-compose-full.yml`.
+3. Run `./backend/docker/docker-compose-full.yml`.
 
     ```bash
     docker-compose -f ./backend/docker/docker-compose-full.yml up -d
