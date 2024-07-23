@@ -19,13 +19,18 @@ import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.t
 @Injectable()
 export class FilesService {
 	private s3Client: S3Client;
-	private readonly markdown = new MarkdownIt();
+	private readonly markdown: MarkdownIt;
 
 	constructor(
 		private configService: ConfigService,
 		private prismaService: PrismaService
 	) {
 		this.s3Client = new S3Client();
+		this.markdown = new MarkdownIt({
+			html: true,
+			breaks: true,
+			linkify: true,
+		});
 	}
 
 	async createUploadPresignedUrl(
