@@ -1,8 +1,8 @@
-import moment from "moment";
-import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Document } from "../../hooks/api/types/document.d";
+import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
+import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
+import { Document } from "../../hooks/api/types/document.d";
 
 interface DocumentCardProps {
 	document: Document;

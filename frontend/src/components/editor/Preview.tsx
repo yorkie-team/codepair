@@ -1,17 +1,17 @@
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { useSelector } from "react-redux";
-import { selectEditor } from "../../store/editorSlice";
 import { CircularProgress, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
-import "./editor.css";
-import { addSoftLineBreak } from "../../utils/document";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 import katex from "katex";
+import "katex/dist/katex.min.css";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeKatex from "rehype-katex";
 import { getCodeString } from "rehype-rewrite";
 import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeExternalLinks from "rehype-external-links";
-import "katex/dist/katex.min.css";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { selectEditor } from "../../store/editorSlice";
+import { addSoftLineBreak } from "../../utils/document";
+import "./editor.css";
 
 function Preview() {
 	const currentTheme = useCurrentTheme();
