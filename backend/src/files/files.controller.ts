@@ -1,19 +1,9 @@
-import {
-	Body,
-	Controller,
-	Get,
-	HttpRedirectResponse,
-	Param,
-	Post,
-	Redirect,
-	StreamableFile,
-} from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpRedirectResponse, Param, Post, Redirect } from "@nestjs/common";
+import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Public } from "src/utils/decorators/auth.decorator";
 import { CreateUploadPresignedUrlDto } from "./dto/create-upload-url.dto";
 import { FilesService } from "./files.service";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
-import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.type";
 
 @Controller("files")
 export class FilesController {
@@ -53,23 +43,23 @@ export class FilesController {
 		};
 	}
 
-	@Public()
-	@Post("export-markdown")
-	@ApiOperation({
-		summary: "Export Markdown",
-		description: "Export Markdown to various formats",
-	})
-	@ApiBody({ type: ExportFileRequestBody })
-	@ApiOkResponse({ type: ExportFileResponse })
-	async exportMarkdown(
-		@Body() exportFileRequestBody: ExportFileRequestBody
-	): Promise<StreamableFile> {
-		const { fileContent, mimeType, fileName } =
-			await this.filesService.exportMarkdown(exportFileRequestBody);
+	// @Public()
+	// @Post("export-markdown")
+	// @ApiOperation({
+	// 	summary: "Export Markdown",
+	// 	description: "Export Markdown to various formats",
+	// })
+	// @ApiBody({ type: ExportFileRequestBody })
+	// @ApiOkResponse({ type: ExportFileResponse })
+	// async exportMarkdown(
+	// 	@Body() exportFileRequestBody: ExportFileRequestBody
+	// ): Promise<StreamableFile> {
+	// 	const { fileContent, mimeType, fileName } =
+	// 		await this.filesService.exportMarkdown(exportFileRequestBody);
 
-		return new StreamableFile(fileContent, {
-			type: mimeType,
-			disposition: `attachment; filename="${fileName}"`,
-		});
-	}
+	// 	return new StreamableFile(fileContent, {
+	// 		type: mimeType,
+	// 		disposition: `attachment; filename="${fileName}"`,
+	// 	});
+	// }
 }
