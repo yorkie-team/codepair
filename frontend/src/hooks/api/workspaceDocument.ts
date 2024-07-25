@@ -70,10 +70,10 @@ export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: st
 		};
 	}, [dispatch, query.data]);
 
-	const isError =
+	const is500Error =
 		query.error && axios.isAxiosError(query.error) && query.error.response?.status === 500;
 
-	return { ...query, isError };
+	return { ...query, is500Error };
 };
 
 export const useCreateDocumentMutation = (workspaceId: string) => {
