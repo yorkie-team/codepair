@@ -17,11 +17,15 @@ function DocumentIndex() {
 	const navigate = useNavigate();
 	const userStore = useSelector(selectUser);
 	const settingStore = useSelector(selectSetting);
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	const {
+		data: workspace,
+		is404Error,
+		isLoading: isWorkspaceLoading,
+	} = useGetWorkspaceQuery(params.workspaceSlug);
 	const {
 		data: document,
-		isError,
-		isLoading,
+		is500Error,
+		isLoading: isDocumentLoading,
 	} = useGetDocumentQuery(workspace?.id, params.documentId);
 	const { doc, client } = useYorkieDocument(document?.yorkieDocumentId, userStore.data?.nickname);
 
@@ -37,7 +41,7 @@ function DocumentIndex() {
 		};
 	}, [dispatch, client, doc]);
 
-	if (isLoading) {
+	if (isDocumentLoading || isWorkspaceLoading) {
 		return (
 			<Backdrop open>
 				<CircularProgress color="inherit" />
@@ -45,7 +49,7 @@ function DocumentIndex() {
 		);
 	}
 
-	if (isError) {
+	if (is500Error || is404Error) {
 		navigate("/404");
 	}
 
