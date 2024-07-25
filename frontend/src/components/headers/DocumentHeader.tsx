@@ -28,7 +28,7 @@ import { ActorID } from "yorkie-js-sdk";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
-// import DownloadMenu from "../common/DownloadMenu";
+import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
 
@@ -148,7 +148,7 @@ function DocumentHeader() {
 								</ToggleButtonGroup>
 							)}
 						</Paper>
-						{/* <DownloadMenu /> */}
+						<DownloadMenu />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
 						<AvatarGroup max={4} onClick={handleOpenPopover}>
