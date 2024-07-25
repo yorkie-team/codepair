@@ -82,13 +82,16 @@ export class WorkspaceDocumentsService {
 		const yorkieDocumentList = await this.findManyFromYorkie(
 			slicedDocumentList.map((doc) => doc.yorkieDocumentId)
 		);
-		const mergedDocumentList = slicedDocumentList.map((doc, idx) => {
-			const yorkieDocument = yorkieDocumentList.documents?.[idx];
+		const yorkieDocumentMap = new Map(
+			yorkieDocumentList.documents?.map((doc) => [doc.key, doc])
+		);
+		const mergedDocumentList = slicedDocumentList.map((doc) => {
+			const yorkieDocumentUpdatedAt = yorkieDocumentMap.get(doc.yorkieDocumentId)?.updatedAt;
 
 			return {
 				...doc,
-				updatedAt: yorkieDocument?.updatedAt
-					? moment(yorkieDocument.updatedAt).toDate()
+				updatedAt: yorkieDocumentUpdatedAt
+					? moment(yorkieDocumentUpdatedAt).toDate()
 					: doc.updatedAt,
 			};
 		});
