@@ -51,6 +51,12 @@ RUN apk add --no-cache \
     ca-certificates \
     ttf-freefont
 
+# Download Korean font for Puppeteer
+RUN mkdir /usr/share/fonts/nanumfont && \
+    wget http://cdn.naver.com/naver/NanumFont/fontfiles/NanumFont_TTF_ALL.zip && \
+    unzip NanumFont_TTF_ALL.zip -d /usr/share/fonts/nanumfont && \ 
+    fc-cache -f -v
+
 # Set the environment variables
 ENV NODE_ENV production
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
