@@ -5,14 +5,13 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common";
 import { Prisma, Workspace } from "@prisma/client";
-import { PrismaService } from "src/db/prisma.service";
-import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
-import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
-import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
-import slugify from "slugify";
-import { generateRandomKey } from "src/utils/functions/random-string";
 import * as moment from "moment";
 import { CheckService } from "src/check/check.service";
+import { PrismaService } from "src/db/prisma.service";
+import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import { generateRandomKey } from "src/utils/functions/random-string";
+import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
+import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -31,7 +30,7 @@ export class WorkspacesService {
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
-				slug: slugify(title, { lower: true }),
+				slug: encodeURIComponent(title),
 			},
 		});
 
