@@ -70,7 +70,7 @@ export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: st
 		};
 	}, [dispatch, query.data]);
 
-	return { ...query };
+	return query;
 };
 
 export const useCreateDocumentMutation = (workspaceId: string) => {

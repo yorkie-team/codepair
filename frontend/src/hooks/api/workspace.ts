@@ -46,10 +46,7 @@ export const useGetWorkspaceQuery = (workspaceSlug?: string) => {
 		};
 	}, [dispatch, query.data]);
 
-	const is404Error =
-		query.error && axios.isAxiosError(query.error) && query.error.response?.status === 404;
-
-	return { ...query, is404Error };
+	return query;
 };
 
 export const useGetWorkspaceListQuery = () => {
