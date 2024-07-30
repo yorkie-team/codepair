@@ -15,7 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 function WorkspaceIndex() {
 	const params = useParams();
 	const navigate = useNavigate();
-	const { data: workspace, is404Error, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
+	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
 	const {
 		data: documentPageList,
@@ -38,10 +38,6 @@ function WorkspaceIndex() {
 				<CircularProgress color="inherit" />
 			</Backdrop>
 		);
-	}
-
-	if (is404Error) {
-		navigate("/404");
 	}
 
 	const handleCreateDocumentModalOpen = () => {

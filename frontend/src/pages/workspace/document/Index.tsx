@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { setClient, setDoc } from "../../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { selectUser } from "../../../store/userSlice";
 import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
@@ -14,19 +14,16 @@ import { selectSetting } from "../../../store/settingSlice";
 function DocumentIndex() {
 	const dispatch = useDispatch();
 	const params = useParams();
-	const navigate = useNavigate();
+
 	const userStore = useSelector(selectUser);
 	const settingStore = useSelector(selectSetting);
-	const {
-		data: workspace,
-		is404Error,
-		isLoading: isWorkspaceLoading,
-	} = useGetWorkspaceQuery(params.workspaceSlug);
-	const {
-		data: document,
-		is500Error,
-		isLoading: isDocumentLoading,
-	} = useGetDocumentQuery(workspace?.id, params.documentId);
+	const { data: workspace, isLoading: isWorkspaceLoading } = useGetWorkspaceQuery(
+		params.workspaceSlug
+	);
+	const { data: document, isLoading: isDocumentLoading } = useGetDocumentQuery(
+		workspace?.id,
+		params.documentId
+	);
 	const { doc, client } = useYorkieDocument(document?.yorkieDocumentId, userStore.data?.nickname);
 
 	useEffect(() => {
@@ -47,10 +44,6 @@ function DocumentIndex() {
 				<CircularProgress color="inherit" />
 			</Backdrop>
 		);
-	}
-
-	if (is500Error || is404Error) {
-		navigate("/404");
 	}
 
 	return (

@@ -22,6 +22,7 @@ import AuthProvider from "./providers/AuthProvider";
 import { useErrorHandler } from "./hooks/useErrorHandler";
 import * as Sentry from "@sentry/react";
 import { useGetSettingsQuery } from "./hooks/api/settings";
+import { isAxios404Error, isAxios500Error } from "./hooks/useAxiosError";
 
 if (import.meta.env.PROD) {
 	Sentry.init({
@@ -45,6 +46,12 @@ if (import.meta.env.PROD) {
 		tracesSampleRate: 1.0,
 	});
 }
+
+const customNavigate = (path: string) => {
+	window.history.pushState({}, "", path);
+
+	window.dispatchEvent(new Event("popstate"));
+};
 
 const router = createBrowserRouter(routes);
 
@@ -76,7 +83,16 @@ function App() {
 	const queryClient = useMemo(() => {
 		return new QueryClient({
 			queryCache: new QueryCache({
-				onError: handleError,
+				onError: (error) => {
+					if (isAxios404Error(error)) {
+						customNavigate("/404");
+					} else if (isAxios500Error(error)) {
+						customNavigate("/404");
+					} else {
+						// 다른 에러 처리
+						handleError(error);
+					}
+				},
 			}),
 			defaultOptions: {
 				mutations: {
