@@ -46,46 +46,47 @@ function Editor() {
 		(formatType: "bold" | "italic" | "code") => {
 			const marker = getMarker(formatType);
 			const markerLength = marker.length;
+			const maxLength = 10;
 
 			return (view: EditorView) => {
 				const changes = view.state.changeByRange((range) => {
-					const isBefore = view.state
-						.sliceDoc(range.from - markerLength, range.from)
-						.includes(marker);
-					const isAfter = view.state
-						.sliceDoc(range.to, range.to + markerLength)
-						.includes(marker);
+					const beforeIdx = view.state
+						.sliceDoc(range.from - maxLength, range.from)
+						.indexOf(marker);
+					const afterIdx = view.state
+						.sliceDoc(range.to, range.to + maxLength)
+						.indexOf(marker);
 
 					const changes = [];
 
 					changes.push(
-						isBefore
+						beforeIdx === -1
 							? {
-									from: range.from - markerLength,
-									to: range.from,
-									insert: Text.of([""]),
-								}
-							: {
 									from: range.from,
 									insert: Text.of([marker]),
+								}
+							: {
+									from: range.from - maxLength + beforeIdx,
+									to: range.from - maxLength + beforeIdx + markerLength,
+									insert: Text.of([""]),
 								}
 					);
 
 					changes.push(
-						isAfter
+						afterIdx === -1
 							? {
-									from: range.to,
-									to: range.to + markerLength,
-									insert: Text.of([""]),
-								}
-							: {
 									from: range.to,
 									insert: Text.of([marker]),
 								}
+							: {
+									from: range.to + afterIdx,
+									to: range.to + afterIdx + markerLength,
+									insert: Text.of([""]),
+								}
 					);
 
-					const extendBefore = isBefore ? -markerLength : markerLength;
-					const extendAfter = isAfter ? -markerLength : markerLength;
+					const extendBefore = beforeIdx === -1 ? markerLength : -markerLength;
+					const extendAfter = afterIdx === -1 ? markerLength : -markerLength;
 
 					return {
 						changes,
