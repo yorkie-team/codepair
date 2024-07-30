@@ -7,7 +7,7 @@ import { selectEditor, setCmView } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { keymap } from "@codemirror/view";
+import { keymap, ViewUpdate } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { imageUploader } from "../../utils/imageUploader";
@@ -15,6 +15,13 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
+import { Popover, Button } from "@mui/material";
+
+enum FormatType {
+	BOLD = "bold",
+	ITALIC = "italic",
+	CODE = "code",
+}
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -26,32 +33,94 @@ function Editor() {
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 
+	const [showFormatBar, setShowFormatBar] = useState(false);
+	const [editorView, setEditorView] = useState<EditorView>();
+	const [formatBarPosition, setFormatBarPosition] = useState({ top: 0, left: 0 });
+	const [selectedFormats, setSelectedFormats] = useState<Set<FormatType>>(new Set());
+
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
 		setElement(node);
 	}, []);
 
-	const getMarker = useCallback((formatType: "bold" | "italic" | "code") => {
+	const getMarker = useCallback((formatType: FormatType) => {
 		switch (formatType) {
-			case "bold":
+			case FormatType.BOLD:
 				return "**";
-			case "italic":
+			case FormatType.ITALIC:
 				return "_";
-			case "code":
+			case FormatType.CODE:
 				return "`";
 		}
 	}, []);
 
+	const getFormatLength = (state: EditorState, from: number) => {
+		const maxCheckLength = 10;
+		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).toString();
+		let cnt = 0;
+
+		console.log(docSlice);
+
+		for (let i = docSlice.length - 1; i >= 0; i--) {
+			if (!["*", "_", "`"].includes(docSlice[i])) {
+				break;
+			}
+			cnt++;
+		}
+
+		return cnt;
+	};
+
+	const updateFormatBar = useCallback((update: ViewUpdate) => {
+		const selection = update.state.selection.main;
+		if (!selection.empty) {
+			const coords = update.view.coordsAtPos(selection.from);
+			if (coords) {
+				const maxLength = getFormatLength(update.view.state, selection.from);
+
+				const selectedTextStart = update.state.sliceDoc(
+					selection.from - maxLength,
+					selection.from
+				);
+				const selectedTextEnd = update.state.sliceDoc(
+					selection.to,
+					selection.to + maxLength
+				);
+				const formats = new Set<FormatType>();
+
+				if (selectedTextStart.includes("**") && selectedTextEnd.includes("**"))
+					formats.add(FormatType.BOLD);
+				if (selectedTextStart.includes("_") && selectedTextEnd.includes("_"))
+					formats.add(FormatType.ITALIC);
+				if (selectedTextStart.includes("`") && selectedTextEnd.includes("`"))
+					formats.add(FormatType.CODE);
+
+				setSelectedFormats(formats);
+				setFormatBarPosition({
+					top: coords.top - 10,
+					left: coords.left + 20,
+				});
+				setShowFormatBar(true);
+			}
+		} else {
+			setShowFormatBar(false);
+			setSelectedFormats(new Set());
+		}
+	}, []);
+
 	const applyFormat = useCallback(
-		(formatType: "bold" | "italic" | "code") => {
+		(formatType: FormatType) => {
 			const marker = getMarker(formatType);
 			const markerLength = marker.length;
-			const maxLength = 10;
 
 			return (view: EditorView) => {
 				const changes = view.state.changeByRange((range) => {
+					const maxLength = getFormatLength(view.state, range.from);
 					const beforeIdx = view.state
-						.sliceDoc(range.from - maxLength, range.from)
+						.sliceDoc(
+							range.from - maxLength < 0 ? 0 : range.from - maxLength,
+							range.from
+						)
 						.indexOf(marker);
 					const afterIdx = view.state
 						.sliceDoc(range.to, range.to + maxLength)
@@ -138,6 +207,12 @@ function Editor() {
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
 			extensions: [
+				keymap.of([
+					indentWithTab,
+					{ key: "Mod-b", run: applyFormat(FormatType.BOLD) },
+					{ key: "Mod-i", run: applyFormat(FormatType.ITALIC) },
+					{ key: "Mod-e", run: applyFormat(FormatType.CODE) },
+				]),
 				basicSetup,
 				markdown(),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
@@ -146,16 +221,15 @@ function Editor() {
 					"&": { width: "100%" },
 				}),
 				EditorView.lineWrapping,
-				keymap.of([
-					indentWithTab,
-					{ key: "Mod-b", run: applyFormat("bold") },
-					{ key: "Mod-k", run: applyFormat("italic") },
-					{ key: "Mod-e", run: applyFormat("code") },
-				]),
 				intelligencePivot,
 				...(settingStore.fileUpload.enable
 					? [imageUploader(handleUploadImage, editorStore.doc)]
 					: []),
+				EditorView.updateListener.of((update) => {
+					if (update.selectionSet) {
+						updateFormatBar(update);
+					}
+				}),
 			],
 		});
 
@@ -164,6 +238,7 @@ function Editor() {
 			parent: element,
 		});
 
+		setEditorView(view);
 		dispatch(setCmView(view));
 
 		return () => {
@@ -180,6 +255,7 @@ function Editor() {
 		uploadFile,
 		settingStore.fileUpload?.enable,
 		applyFormat,
+		updateFormatBar,
 	]);
 
 	return (
@@ -198,6 +274,67 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
+				{showFormatBar && editorView && (
+					<Popover
+						open={showFormatBar}
+						anchorReference="anchorPosition"
+						anchorPosition={{
+							top: formatBarPosition.top,
+							left: formatBarPosition.left,
+						}}
+						onClose={() => setShowFormatBar(false)}
+						anchorOrigin={{
+							vertical: "top",
+							horizontal: "left",
+						}}
+						transformOrigin={{
+							vertical: "bottom",
+							horizontal: "left",
+						}}
+						disableAutoFocus
+					>
+						<div style={{ padding: "3px 5px" }}>
+							<Button
+								onClick={() => applyFormat(FormatType.BOLD)(editorView)}
+								sx={{
+									width: "25px",
+									height: "25px",
+									minWidth: "25px",
+									margin: "2px",
+								}}
+								color={selectedFormats.has(FormatType.BOLD) ? "primary" : "inherit"}
+							>
+								<strong>B</strong>
+							</Button>
+							<Button
+								onClick={() => applyFormat(FormatType.ITALIC)(editorView)}
+								sx={{
+									width: "25px",
+									height: "25px",
+									minWidth: "25px",
+									margin: "2px",
+								}}
+								color={
+									selectedFormats.has(FormatType.ITALIC) ? "primary" : "inherit"
+								}
+							>
+								<strong>𝐢</strong>
+							</Button>
+							<Button
+								onClick={() => applyFormat(FormatType.CODE)(editorView)}
+								sx={{
+									width: "25px",
+									height: "25px",
+									minWidth: "25px",
+									margin: "2px",
+								}}
+								color={selectedFormats.has(FormatType.CODE) ? "primary" : "inherit"}
+							>
+								<strong>{"</>"}</strong>
+							</Button>
+						</div>
+					</Popover>
+				)}
 			</div>
 		</ScrollSyncPane>
 	);
