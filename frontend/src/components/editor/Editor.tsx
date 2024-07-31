@@ -21,6 +21,7 @@ enum FormatType {
 	BOLD = "bold",
 	ITALIC = "italic",
 	CODE = "code",
+	STRIKETHROUGH = "strikeThrough",
 }
 
 function Editor() {
@@ -51,6 +52,8 @@ function Editor() {
 				return "_";
 			case FormatType.CODE:
 				return "`";
+			case FormatType.STRIKETHROUGH:
+				return "~~";
 		}
 	}, []);
 
@@ -60,7 +63,7 @@ function Editor() {
 		let cnt = 0;
 
 		for (let i = docSlice.length - 1; i >= 0; i--) {
-			if (!["*", "_", "`"].includes(docSlice[i])) break;
+			if (!["*", "_", "`", "~"].includes(docSlice[i])) break;
 			cnt++;
 		}
 
@@ -90,6 +93,8 @@ function Editor() {
 					formats.add(FormatType.ITALIC);
 				if (selectedTextStart.includes("`") && selectedTextEnd.includes("`"))
 					formats.add(FormatType.CODE);
+				if (selectedTextStart.includes("~~") && selectedTextEnd.includes("~~"))
+					formats.add(FormatType.STRIKETHROUGH);
 
 				setSelectedFormats(formats);
 				setFormatBarPosition({
@@ -208,6 +213,7 @@ function Editor() {
 					{ key: "Mod-b", run: applyFormat(FormatType.BOLD) },
 					{ key: "Mod-i", run: applyFormat(FormatType.ITALIC) },
 					{ key: "Mod-e", run: applyFormat(FormatType.CODE) },
+					{ key: "Mod-Shift-x", run: applyFormat(FormatType.STRIKETHROUGH) },
 				]),
 				basicSetup,
 				markdown(),
@@ -304,10 +310,10 @@ function Editor() {
 							exclusive
 							aria-label="text formatting"
 						>
-							<Tooltip title={`Cmd+B/Ctrl+B`} placement="top">
+							<Tooltip title={"Cmd+B / Ctrl+B"} placement="top">
 								<ToggleButton
 									value={FormatType.BOLD}
-									aria-label="bold"
+									aria-label={FormatType.BOLD}
 									color={
 										selectedFormats.has(FormatType.BOLD)
 											? "primary"
@@ -326,11 +332,10 @@ function Editor() {
 									B
 								</ToggleButton>
 							</Tooltip>
-							<Tooltip title={`Cmd+I/Ctrl+I`} placement="top">
+							<Tooltip title={"Cmd+I / Ctrl+I"} placement="top">
 								<ToggleButton
 									value={FormatType.ITALIC}
-									aria-label="italic"
-									className="MuiToggleButton-primary"
+									aria-label={FormatType.ITALIC}
 									color={
 										selectedFormats.has(FormatType.ITALIC)
 											? "primary"
@@ -349,10 +354,10 @@ function Editor() {
 									𝐢
 								</ToggleButton>
 							</Tooltip>
-							<Tooltip title={`Cmd+E/Ctrl+E`} placement="top">
+							<Tooltip title={"Cmd+E / Ctrl+E"} placement="top">
 								<ToggleButton
 									value={FormatType.CODE}
-									aria-label="code"
+									aria-label={FormatType.CODE}
 									color={
 										selectedFormats.has(FormatType.CODE)
 											? "primary"
@@ -369,6 +374,28 @@ function Editor() {
 									}}
 								>
 									{"</>"}
+								</ToggleButton>
+							</Tooltip>
+							<Tooltip title={"Cmd+Shift+X / Ctrl+Shfit+X"} placement="top">
+								<ToggleButton
+									value={FormatType.STRIKETHROUGH}
+									aria-label={FormatType.STRIKETHROUGH}
+									color={
+										selectedFormats.has(FormatType.STRIKETHROUGH)
+											? "primary"
+											: "secondary"
+									}
+									sx={{
+										width: "25px",
+										height: "25px",
+										minWidth: "25px",
+										padding: "0",
+										margin: "2px",
+										border: "none",
+										fontWeight: "bold",
+									}}
+								>
+									~
 								</ToggleButton>
 							</Tooltip>
 						</ToggleButtonGroup>
