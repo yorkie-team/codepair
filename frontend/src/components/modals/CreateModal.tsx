@@ -108,7 +108,7 @@ function CreateModal(props: CreateModalProps) {
 									type="submit"
 									variant="contained"
 									size="large"
-									disabled={Boolean(errorMessage) || nickname.length < 2}
+									disabled={Boolean(errorMessage)}
 								>
 									OK
 								</Button>
