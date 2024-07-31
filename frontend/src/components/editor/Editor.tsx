@@ -51,7 +51,7 @@ function Editor() {
 		}
 	}, []);
 
-	const getFormatMarkerLength = (state: EditorState, from: number) => {
+	const getFormatMarkerLength = useCallback((state: EditorState, from: number) => {
 		const maxCheckLength = 10;
 		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).toString();
 		let cnt = 0;
@@ -62,46 +62,54 @@ function Editor() {
 		}
 
 		return cnt;
-	};
-
-	const updateFormatBar = useCallback((update: ViewUpdate) => {
-		const selection = update.state.selection.main;
-		if (!selection.empty) {
-			const coords = update.view.coordsAtPos(selection.from);
-			if (coords) {
-				const maxLength = getFormatMarkerLength(update.view.state, selection.from);
-
-				const selectedTextStart = update.state.sliceDoc(
-					selection.from - maxLength,
-					selection.from
-				);
-				const selectedTextEnd = update.state.sliceDoc(
-					selection.to,
-					selection.to + maxLength
-				);
-				const formats = new Set<FormatType>();
-
-				if (selectedTextStart.includes("**") && selectedTextEnd.includes("**"))
-					formats.add(FormatType.BOLD);
-				if (selectedTextStart.includes("_") && selectedTextEnd.includes("_"))
-					formats.add(FormatType.ITALIC);
-				if (selectedTextStart.includes("`") && selectedTextEnd.includes("`"))
-					formats.add(FormatType.CODE);
-				if (selectedTextStart.includes("~~") && selectedTextEnd.includes("~~"))
-					formats.add(FormatType.STRIKETHROUGH);
-
-				setSelectedFormats(formats);
-				setFormatBarPosition({
-					top: coords.top - 10,
-					left: coords.left + 20,
-				});
-				setShowFormatBar(true);
-			}
-		} else {
-			setShowFormatBar(false);
-			setSelectedFormats(new Set());
-		}
 	}, []);
+
+	const updateFormatBar = useCallback(
+		(update: ViewUpdate) => {
+			const selection = update.state.selection.main;
+			if (!selection.empty) {
+				const coords = update.view.coordsAtPos(selection.from);
+				if (coords) {
+					const maxLength = getFormatMarkerLength(update.view.state, selection.from);
+
+					const selectedTextStart = update.state.sliceDoc(
+						selection.from - maxLength,
+						selection.from
+					);
+					const selectedTextEnd = update.state.sliceDoc(
+						selection.to,
+						selection.to + maxLength
+					);
+					const formats = new Set<FormatType>();
+
+					const checkAndAddFormat = (marker: string, format: FormatType) => {
+						if (
+							selectedTextStart.includes(marker) &&
+							selectedTextEnd.includes(marker)
+						) {
+							formats.add(format);
+						}
+					};
+
+					checkAndAddFormat("**", FormatType.BOLD);
+					checkAndAddFormat("_", FormatType.ITALIC);
+					checkAndAddFormat("`", FormatType.CODE);
+					checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
+
+					setSelectedFormats(formats);
+					setFormatBarPosition({
+						top: coords.top - 10,
+						left: coords.left + 20,
+					});
+					setShowFormatBar(true);
+				}
+			} else {
+				setShowFormatBar(false);
+				setSelectedFormats(new Set());
+			}
+		},
+		[getFormatMarkerLength]
+	);
 
 	const applyFormat = useCallback(
 		(formatType: FormatType) => {
@@ -119,9 +127,7 @@ function Editor() {
 						.indexOf(marker);
 					const afterIdx = state.sliceDoc(range.to, range.to + maxLength).indexOf(marker);
 
-					const changes = [];
-
-					changes.push(
+					const changes = [
 						beforeIdx === -1
 							? {
 									from: range.from,
@@ -131,10 +137,8 @@ function Editor() {
 									from: range.from - maxLength + beforeIdx,
 									to: range.from - maxLength + beforeIdx + markerLength,
 									insert: Text.of([""]),
-								}
-					);
+								},
 
-					changes.push(
 						afterIdx === -1
 							? {
 									from: range.to,
@@ -144,8 +148,8 @@ function Editor() {
 									from: range.to + afterIdx,
 									to: range.to + afterIdx + markerLength,
 									insert: Text.of([""]),
-								}
-					);
+								},
+					];
 
 					const extendBefore = beforeIdx === -1 ? markerLength : -markerLength;
 					const extendAfter = afterIdx === -1 ? markerLength : -markerLength;
@@ -158,6 +162,7 @@ function Editor() {
 						),
 					};
 				});
+
 				dispatch(
 					state.update(changes, {
 						scrollIntoView: true,
@@ -168,7 +173,7 @@ function Editor() {
 				return true;
 			};
 		},
-		[getFormatMarker]
+		[getFormatMarker, getFormatMarkerLength]
 	);
 
 	useEffect(() => {

@@ -58,27 +58,27 @@ function FormatBar({
 			>
 				<TooltipButton
 					selectedFormats={selectedFormats}
-					formatType={FormatType.BOLD}
-					title={"Cmd+B / Ctrl+B"}
-					value={<strong>B</strong>}
-				/>
-				<TooltipButton
-					selectedFormats={selectedFormats}
 					formatType={FormatType.ITALIC}
 					title={"Cmd+I / Ctrl+I"}
 					value={<i>i</i>}
 				/>
 				<TooltipButton
 					selectedFormats={selectedFormats}
-					formatType={FormatType.CODE}
-					title={"Cmd+E / Ctrl+E"}
-					value={"</>"}
+					formatType={FormatType.BOLD}
+					title={"Cmd+B / Ctrl+B"}
+					value={<strong>B</strong>}
 				/>
 				<TooltipButton
 					selectedFormats={selectedFormats}
 					formatType={FormatType.STRIKETHROUGH}
 					title={"Cmd+Shift+X / Ctrl+Shfit+X"}
 					value={"~"}
+				/>
+				<TooltipButton
+					selectedFormats={selectedFormats}
+					formatType={FormatType.CODE}
+					title={"Cmd+E / Ctrl+E"}
+					value={"</>"}
 				/>
 			</ToggleButtonGroup>
 		</Popover>
