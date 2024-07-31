@@ -15,7 +15,7 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
-import { Popover, Button } from "@mui/material";
+import { Popover, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 
 enum FormatType {
 	BOLD = "bold",
@@ -59,12 +59,8 @@ function Editor() {
 		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).toString();
 		let cnt = 0;
 
-		console.log(docSlice);
-
 		for (let i = docSlice.length - 1; i >= 0; i--) {
-			if (!["*", "_", "`"].includes(docSlice[i])) {
-				break;
-			}
+			if (!["*", "_", "`"].includes(docSlice[i])) break;
 			cnt++;
 		}
 
@@ -293,46 +289,89 @@ function Editor() {
 						}}
 						disableAutoFocus
 					>
-						<div style={{ padding: "3px 5px" }}>
-							<Button
-								onClick={() => applyFormat(FormatType.BOLD)(editorView)}
-								sx={{
-									width: "25px",
-									height: "25px",
-									minWidth: "25px",
-									margin: "2px",
-								}}
-								color={selectedFormats.has(FormatType.BOLD) ? "primary" : "inherit"}
-							>
-								<strong>B</strong>
-							</Button>
-							<Button
-								onClick={() => applyFormat(FormatType.ITALIC)(editorView)}
-								sx={{
-									width: "25px",
-									height: "25px",
-									minWidth: "25px",
-									margin: "2px",
-								}}
-								color={
-									selectedFormats.has(FormatType.ITALIC) ? "primary" : "inherit"
+						<ToggleButtonGroup
+							style={{ padding: "3px 5px" }}
+							value={Array.from(selectedFormats)}
+							onChange={(_, format: FormatType) => {
+								if (selectedFormats.has(format)) {
+									selectedFormats.delete(format);
+								} else {
+									selectedFormats.add(format);
 								}
-							>
-								<strong>𝐢</strong>
-							</Button>
-							<Button
-								onClick={() => applyFormat(FormatType.CODE)(editorView)}
-								sx={{
-									width: "25px",
-									height: "25px",
-									minWidth: "25px",
-									margin: "2px",
-								}}
-								color={selectedFormats.has(FormatType.CODE) ? "primary" : "inherit"}
-							>
-								<strong>{"</>"}</strong>
-							</Button>
-						</div>
+								setSelectedFormats(new Set(selectedFormats));
+								applyFormat(format)(editorView);
+							}}
+							exclusive
+							aria-label="text formatting"
+						>
+							<Tooltip title={`Cmd+B/Ctrl+B`} placement="top">
+								<ToggleButton
+									value={FormatType.BOLD}
+									aria-label="bold"
+									color={
+										selectedFormats.has(FormatType.BOLD)
+											? "primary"
+											: "secondary"
+									}
+									sx={{
+										width: "25px",
+										height: "25px",
+										minWidth: "25px",
+										padding: "0",
+										margin: "2px",
+										border: "none",
+										fontWeight: "bold",
+									}}
+								>
+									B
+								</ToggleButton>
+							</Tooltip>
+							<Tooltip title={`Cmd+I/Ctrl+I`} placement="top">
+								<ToggleButton
+									value={FormatType.ITALIC}
+									aria-label="italic"
+									className="MuiToggleButton-primary"
+									color={
+										selectedFormats.has(FormatType.ITALIC)
+											? "primary"
+											: "secondary"
+									}
+									sx={{
+										width: "25px",
+										height: "25px",
+										minWidth: "25px",
+										padding: "0",
+										margin: "2px",
+										border: "none",
+										fontWeight: "bold",
+									}}
+								>
+									𝐢
+								</ToggleButton>
+							</Tooltip>
+							<Tooltip title={`Cmd+E/Ctrl+E`} placement="top">
+								<ToggleButton
+									value={FormatType.CODE}
+									aria-label="code"
+									color={
+										selectedFormats.has(FormatType.CODE)
+											? "primary"
+											: "secondary"
+									}
+									sx={{
+										width: "25px",
+										height: "25px",
+										minWidth: "25px",
+										padding: "0",
+										margin: "2px",
+										border: "none",
+										fontWeight: "bold",
+									}}
+								>
+									{"</>"}
+								</ToggleButton>
+							</Tooltip>
+						</ToggleButtonGroup>
 					</Popover>
 				)}
 			</div>
