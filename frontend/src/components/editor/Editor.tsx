@@ -15,14 +15,9 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
-import { Popover, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
+import { FormatType } from "../../utils/format";
 
-enum FormatType {
-	BOLD = "bold",
-	ITALIC = "italic",
-	CODE = "code",
-	STRIKETHROUGH = "strikeThrough",
-}
+import FormatBar from "./FormatBar";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -35,7 +30,6 @@ function Editor() {
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 
 	const [showFormatBar, setShowFormatBar] = useState(false);
-	const [editorView, setEditorView] = useState<EditorView>();
 	const [formatBarPosition, setFormatBarPosition] = useState({ top: 0, left: 0 });
 	const [selectedFormats, setSelectedFormats] = useState<Set<FormatType>>(new Set());
 
@@ -44,7 +38,7 @@ function Editor() {
 		setElement(node);
 	}, []);
 
-	const getMarker = useCallback((formatType: FormatType) => {
+	const getFormatMarker = useCallback((formatType: FormatType) => {
 		switch (formatType) {
 			case FormatType.BOLD:
 				return "**";
@@ -57,7 +51,7 @@ function Editor() {
 		}
 	}, []);
 
-	const getFormatLength = (state: EditorState, from: number) => {
+	const getFormatMarkerLength = (state: EditorState, from: number) => {
 		const maxCheckLength = 10;
 		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).toString();
 		let cnt = 0;
@@ -75,7 +69,7 @@ function Editor() {
 		if (!selection.empty) {
 			const coords = update.view.coordsAtPos(selection.from);
 			if (coords) {
-				const maxLength = getFormatLength(update.view.state, selection.from);
+				const maxLength = getFormatMarkerLength(update.view.state, selection.from);
 
 				const selectedTextStart = update.state.sliceDoc(
 					selection.from - maxLength,
@@ -111,21 +105,19 @@ function Editor() {
 
 	const applyFormat = useCallback(
 		(formatType: FormatType) => {
-			const marker = getMarker(formatType);
+			const marker = getFormatMarker(formatType);
 			const markerLength = marker.length;
 
-			return (view: EditorView) => {
-				const changes = view.state.changeByRange((range) => {
-					const maxLength = getFormatLength(view.state, range.from);
-					const beforeIdx = view.state
+			return ({ state, dispatch }: EditorView) => {
+				const changes = state.changeByRange((range) => {
+					const maxLength = getFormatMarkerLength(state, range.from);
+					const beforeIdx = state
 						.sliceDoc(
 							range.from - maxLength < 0 ? 0 : range.from - maxLength,
 							range.from
 						)
 						.indexOf(marker);
-					const afterIdx = view.state
-						.sliceDoc(range.to, range.to + maxLength)
-						.indexOf(marker);
+					const afterIdx = state.sliceDoc(range.to, range.to + maxLength).indexOf(marker);
 
 					const changes = [];
 
@@ -166,8 +158,8 @@ function Editor() {
 						),
 					};
 				});
-				view.dispatch(
-					view.state.update(changes, {
+				dispatch(
+					state.update(changes, {
 						scrollIntoView: true,
 						annotations: Transaction.userEvent.of("input"),
 					})
@@ -176,7 +168,7 @@ function Editor() {
 				return true;
 			};
 		},
-		[getMarker]
+		[getFormatMarker]
 	);
 
 	useEffect(() => {
@@ -240,7 +232,6 @@ function Editor() {
 			parent: element,
 		});
 
-		setEditorView(view);
 		dispatch(setCmView(view));
 
 		return () => {
@@ -276,130 +267,16 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
-				{showFormatBar && editorView && (
-					<Popover
-						open={showFormatBar}
-						anchorReference="anchorPosition"
-						anchorPosition={{
-							top: formatBarPosition.top,
-							left: formatBarPosition.left,
-						}}
-						onClose={() => setShowFormatBar(false)}
-						anchorOrigin={{
-							vertical: "top",
-							horizontal: "left",
-						}}
-						transformOrigin={{
-							vertical: "bottom",
-							horizontal: "left",
-						}}
-						disableAutoFocus
-					>
-						<ToggleButtonGroup
-							style={{ padding: "3px 5px" }}
-							value={Array.from(selectedFormats)}
-							onChange={(_, format: FormatType) => {
-								if (selectedFormats.has(format)) {
-									selectedFormats.delete(format);
-								} else {
-									selectedFormats.add(format);
-								}
-								setSelectedFormats(new Set(selectedFormats));
-								applyFormat(format)(editorView);
-							}}
-							exclusive
-							aria-label="text formatting"
-						>
-							<Tooltip title={"Cmd+B / Ctrl+B"} placement="top">
-								<ToggleButton
-									value={FormatType.BOLD}
-									aria-label={FormatType.BOLD}
-									color={
-										selectedFormats.has(FormatType.BOLD)
-											? "primary"
-											: "secondary"
-									}
-									sx={{
-										width: "25px",
-										height: "25px",
-										minWidth: "25px",
-										padding: "0",
-										margin: "2px",
-										border: "none",
-										fontWeight: "bold",
-									}}
-								>
-									B
-								</ToggleButton>
-							</Tooltip>
-							<Tooltip title={"Cmd+I / Ctrl+I"} placement="top">
-								<ToggleButton
-									value={FormatType.ITALIC}
-									aria-label={FormatType.ITALIC}
-									color={
-										selectedFormats.has(FormatType.ITALIC)
-											? "primary"
-											: "secondary"
-									}
-									sx={{
-										width: "25px",
-										height: "25px",
-										minWidth: "25px",
-										padding: "0",
-										margin: "2px",
-										border: "none",
-										fontWeight: "bold",
-									}}
-								>
-									𝐢
-								</ToggleButton>
-							</Tooltip>
-							<Tooltip title={"Cmd+E / Ctrl+E"} placement="top">
-								<ToggleButton
-									value={FormatType.CODE}
-									aria-label={FormatType.CODE}
-									color={
-										selectedFormats.has(FormatType.CODE)
-											? "primary"
-											: "secondary"
-									}
-									sx={{
-										width: "25px",
-										height: "25px",
-										minWidth: "25px",
-										padding: "0",
-										margin: "2px",
-										border: "none",
-										fontWeight: "bold",
-									}}
-								>
-									{"</>"}
-								</ToggleButton>
-							</Tooltip>
-							<Tooltip title={"Cmd+Shift+X / Ctrl+Shfit+X"} placement="top">
-								<ToggleButton
-									value={FormatType.STRIKETHROUGH}
-									aria-label={FormatType.STRIKETHROUGH}
-									color={
-										selectedFormats.has(FormatType.STRIKETHROUGH)
-											? "primary"
-											: "secondary"
-									}
-									sx={{
-										width: "25px",
-										height: "25px",
-										minWidth: "25px",
-										padding: "0",
-										margin: "2px",
-										border: "none",
-										fontWeight: "bold",
-									}}
-								>
-									~
-								</ToggleButton>
-							</Tooltip>
-						</ToggleButtonGroup>
-					</Popover>
+				{showFormatBar && editorStore.cmView && (
+					<FormatBar
+						showFormatBar={showFormatBar}
+						setShowFormatBar={setShowFormatBar}
+						formatBarPosition={formatBarPosition}
+						selectedFormats={selectedFormats}
+						setSelectedFormats={setSelectedFormats}
+						applyFormat={applyFormat}
+						cmView={editorStore.cmView}
+					/>
 				)}
 			</div>
 		</ScrollSyncPane>
