@@ -22,7 +22,7 @@ import AuthProvider from "./providers/AuthProvider";
 import { useErrorHandler } from "./hooks/useErrorHandler";
 import * as Sentry from "@sentry/react";
 import { useGetSettingsQuery } from "./hooks/api/settings";
-import { isAxios404Error, isAxios500Error } from "./hooks/useAxiosError";
+import { isAxios404Error, isAxios500Error } from "./utils/axios.default";
 
 if (import.meta.env.PROD) {
 	Sentry.init({
@@ -47,6 +47,7 @@ if (import.meta.env.PROD) {
 	});
 }
 
+//TODO: Change it to navigate
 const customNavigate = (path: string) => {
 	window.history.pushState({}, "", path);
 
@@ -89,7 +90,6 @@ function App() {
 					} else if (isAxios500Error(error)) {
 						customNavigate("/404");
 					} else {
-						// 다른 에러 처리
 						handleError(error);
 					}
 				},
