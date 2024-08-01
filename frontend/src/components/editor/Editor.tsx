@@ -17,6 +17,8 @@ import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
 import { FormatType } from "../../utils/format";
 
+import { useDebounce } from "react-use";
+
 import FormatBar from "./FormatBar";
 
 function Editor() {
@@ -32,6 +34,7 @@ function Editor() {
 	const [showFormatBar, setShowFormatBar] = useState(false);
 	const [formatBarPosition, setFormatBarPosition] = useState({ top: 0, left: 0 });
 	const [selectedFormats, setSelectedFormats] = useState<Set<FormatType>>(new Set());
+	const [debouncedUpdate, setDebouncedUpdate] = useState<null | ViewUpdate>(null);
 
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
@@ -64,52 +67,55 @@ function Editor() {
 		return cnt;
 	}, []);
 
-	const updateFormatBar = useCallback(
-		(update: ViewUpdate) => {
-			const selection = update.state.selection.main;
-			if (!selection.empty) {
-				const coords = update.view.coordsAtPos(selection.from);
-				if (coords) {
-					const maxLength = getFormatMarkerLength(update.view.state, selection.from);
+	const debouncedUpdateFormatBar = useCallback(() => {
+		if (!debouncedUpdate) return;
 
-					const selectedTextStart = update.state.sliceDoc(
-						selection.from - maxLength,
-						selection.from
-					);
-					const selectedTextEnd = update.state.sliceDoc(
-						selection.to,
-						selection.to + maxLength
-					);
-					const formats = new Set<FormatType>();
+		const update = debouncedUpdate;
+		const selection = update.state.selection.main;
+		if (!selection.empty) {
+			const coords = update.view.coordsAtPos(selection.from);
+			if (coords) {
+				const maxLength = getFormatMarkerLength(update.view.state, selection.from);
 
-					const checkAndAddFormat = (marker: string, format: FormatType) => {
-						if (
-							selectedTextStart.includes(marker) &&
-							selectedTextEnd.includes(marker)
-						) {
-							formats.add(format);
-						}
-					};
+				const selectedTextStart = update.state.sliceDoc(
+					selection.from - maxLength,
+					selection.from
+				);
+				const selectedTextEnd = update.state.sliceDoc(
+					selection.to,
+					selection.to + maxLength
+				);
+				const formats = new Set<FormatType>();
 
-					checkAndAddFormat("**", FormatType.BOLD);
-					checkAndAddFormat("_", FormatType.ITALIC);
-					checkAndAddFormat("`", FormatType.CODE);
-					checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
+				const checkAndAddFormat = (marker: string, format: FormatType) => {
+					if (selectedTextStart.includes(marker) && selectedTextEnd.includes(marker)) {
+						formats.add(format);
+					}
+				};
 
-					setSelectedFormats(formats);
-					setFormatBarPosition({
-						top: coords.top - 10,
-						left: coords.left + 20,
-					});
-					setShowFormatBar(true);
-				}
-			} else {
-				setShowFormatBar(false);
-				setSelectedFormats(new Set());
+				checkAndAddFormat("**", FormatType.BOLD);
+				checkAndAddFormat("_", FormatType.ITALIC);
+				checkAndAddFormat("`", FormatType.CODE);
+				checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
+
+				setSelectedFormats(formats);
+				setFormatBarPosition({
+					top: coords.top - 8,
+					left: coords.left + 190,
+				});
+				setShowFormatBar(true);
 			}
-		},
-		[getFormatMarkerLength]
-	);
+		} else {
+			setShowFormatBar(false);
+			setSelectedFormats(new Set());
+		}
+	}, [debouncedUpdate, getFormatMarkerLength]);
+
+	useDebounce(debouncedUpdateFormatBar, 500, [debouncedUpdate]);
+
+	const updateFormatBar = useCallback((update: ViewUpdate) => {
+		setDebouncedUpdate(update);
+	}, []);
 
 	const applyFormat = useCallback(
 		(formatType: FormatType) => {
