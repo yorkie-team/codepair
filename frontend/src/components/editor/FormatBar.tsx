@@ -1,7 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { Popover, ToggleButtonGroup } from "@mui/material";
 import { FormatType } from "../../utils/format";
-import TooltipButton from "./TooltipButton";
+import TooltipToggleButton from "../common/TooltipToggleButton";
 
 interface FormatBarProps {
 	formatBarState: {
@@ -61,30 +61,34 @@ function FormatBar({
 				exclusive
 				aria-label="text formatting"
 			>
-				<TooltipButton
-					selectedFormats={selectedFormats}
-					formatType={FormatType.ITALIC}
+				<TooltipToggleButton
+					color={selectedFormats.has(FormatType.ITALIC) ? "primary" : "secondary"}
 					title={"Cmd+I / Ctrl+I"}
-					value={<i>i</i>}
-				/>
-				<TooltipButton
-					selectedFormats={selectedFormats}
-					formatType={FormatType.BOLD}
+					value={FormatType.ITALIC}
+				>
+					<i>i</i>
+				</TooltipToggleButton>
+				<TooltipToggleButton
+					color={selectedFormats.has(FormatType.BOLD) ? "primary" : "secondary"}
 					title={"Cmd+B / Ctrl+B"}
-					value={<strong>B</strong>}
-				/>
-				<TooltipButton
-					selectedFormats={selectedFormats}
-					formatType={FormatType.STRIKETHROUGH}
+					value={FormatType.BOLD}
+				>
+					<strong>B</strong>
+				</TooltipToggleButton>
+				<TooltipToggleButton
+					color={selectedFormats.has(FormatType.STRIKETHROUGH) ? "primary" : "secondary"}
 					title={"Cmd+Shift+X / Ctrl+Shfit+X"}
-					value={"~"}
-				/>
-				<TooltipButton
-					selectedFormats={selectedFormats}
-					formatType={FormatType.CODE}
+					value={FormatType.STRIKETHROUGH}
+				>
+					~
+				</TooltipToggleButton>
+				<TooltipToggleButton
+					color={selectedFormats.has(FormatType.CODE) ? "primary" : "secondary"}
 					title={"Cmd+E / Ctrl+E"}
-					value={"</>"}
-				/>
+					value={FormatType.CODE}
+				>
+					{"</>"}
+				</TooltipToggleButton>
 			</ToggleButtonGroup>
 		</Popover>
 	);
