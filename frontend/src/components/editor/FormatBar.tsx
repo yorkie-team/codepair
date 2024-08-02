@@ -4,21 +4,25 @@ import { FormatType } from "../../utils/format";
 import TooltipButton from "./TooltipButton";
 
 interface FormatBarProps {
-	showFormatBar: boolean;
-	setShowFormatBar: (show: boolean) => void;
-	selectedFormats: Set<FormatType>;
-	setSelectedFormats: (formats: Set<FormatType>) => void;
-	formatBarPosition: { top: number; left: number };
+	formatBarState: {
+		show: boolean;
+		position: { top: number; left: number };
+		selectedFormats: Set<FormatType>;
+	};
+	setFormatBarState: React.Dispatch<
+		React.SetStateAction<{
+			show: boolean;
+			position: { top: number; left: number };
+			selectedFormats: Set<FormatType>;
+		}>
+	>;
 	applyFormat: (format: FormatType) => (view: EditorView) => void;
 	cmView: EditorView;
 }
 
 function FormatBar({
-	showFormatBar,
-	setShowFormatBar,
-	formatBarPosition,
-	selectedFormats,
-	setSelectedFormats,
+	formatBarState: { show: showFormatBar, position: formatBarPosition, selectedFormats },
+	setFormatBarState,
 	applyFormat,
 	cmView,
 }: FormatBarProps) {
@@ -30,7 +34,7 @@ function FormatBar({
 				top: formatBarPosition.top,
 				left: formatBarPosition.left,
 			}}
-			onClose={() => setShowFormatBar(false)}
+			onClose={() => setFormatBarState((prev) => ({ ...prev, show: false }))}
 			anchorOrigin={{
 				vertical: "top",
 				horizontal: "left",
@@ -42,15 +46,16 @@ function FormatBar({
 			disableAutoFocus
 		>
 			<ToggleButtonGroup
-				style={{ padding: "3px 5px" }}
+				sx={{ padding: "3px 5px" }}
 				value={Array.from(selectedFormats)}
 				onChange={(_, format: FormatType) => {
-					if (selectedFormats.has(format)) {
-						selectedFormats.delete(format);
+					const newSelectedFormats = new Set(selectedFormats);
+					if (newSelectedFormats.has(format)) {
+						newSelectedFormats.delete(format);
 					} else {
-						selectedFormats.add(format);
+						newSelectedFormats.add(format);
 					}
-					setSelectedFormats(new Set(selectedFormats));
+					setFormatBarState((prev) => ({ ...prev, selectedFormats: newSelectedFormats }));
 					applyFormat(format)(cmView);
 				}}
 				exclusive
