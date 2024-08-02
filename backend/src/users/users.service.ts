@@ -74,7 +74,10 @@ export class UsersService {
 		const { conflict } = await this.checkService.checkNameConflict(nickname);
 
 		if (conflict) {
-			throw new ConflictException();
+			throw new ConflictException("Conflict", {
+				cause: new Error(),
+				description: "The nickname conflicts.",
+			});
 		}
 
 		await this.prismaService.user.update({

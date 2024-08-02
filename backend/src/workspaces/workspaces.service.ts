@@ -25,7 +25,10 @@ export class WorkspacesService {
 		const { conflict } = await this.checkService.checkNameConflict(title);
 
 		if (conflict) {
-			throw new ConflictException();
+			throw new ConflictException("Conflict", {
+				cause: new Error(),
+				description: "Workspace title is already in use.",
+			});
 		}
 
 		const workspace = await this.prismaService.workspace.create({
@@ -63,7 +66,10 @@ export class WorkspacesService {
 
 			return foundWorkspace;
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("Not found", {
+				cause: new Error(),
+				description: "Workspace not found, or the user lacks the appropriate permissions.",
+			});
 		}
 	}
 
@@ -114,7 +120,11 @@ export class WorkspacesService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("Not found", {
+				cause: new Error(),
+				description:
+					"Worksapce does not exist, or the user lacks the appropriate permissions.",
+			});
 		}
 
 		const token = generateRandomKey();
@@ -152,7 +162,10 @@ export class WorkspacesService {
 				throw new Error();
 			}
 		} catch (err) {
-			throw new UnauthorizedException("Invitation token is invalid or expired.");
+			throw new UnauthorizedException("Unauthorized", {
+				cause: new Error(),
+				description: "Invitation token is invalid or expired.",
+			});
 		}
 
 		try {
@@ -162,7 +175,10 @@ export class WorkspacesService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException("The workspace is deleted.");
+			throw new NotFoundException("Not found", {
+				cause: new Error(),
+				description: "The workspace is deleted.",
+			});
 		}
 
 		const userWorkspace = await this.prismaService.userWorkspace.findFirst({

@@ -46,11 +46,17 @@ export class FilesService {
 				},
 			});
 		} catch (e) {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException("Unauthorized", {
+				cause: new Error(),
+				description: "Client unauthorized.",
+			});
 		}
 
 		if (contentLength > 10_000_000) {
-			throw new UnprocessableEntityException();
+			throw new UnprocessableEntityException("Unprocessable Entity", {
+				cause: new Error(),
+				description: "Content length too long.",
+			});
 		}
 
 		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
@@ -75,7 +81,10 @@ export class FilesService {
 			});
 			return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("Not found", {
+				cause: new Error(),
+				description: "File not found.",
+			});
 		}
 	}
 
@@ -92,7 +101,10 @@ export class FilesService {
 			case "pdf":
 				return this.exportToPdf(content, fileName);
 			default:
-				throw new BadRequestException("Invalid export type");
+				throw new BadRequestException("Bad request", {
+					cause: new Error(),
+					description: "Invalid export type",
+				});
 		}
 	}
 

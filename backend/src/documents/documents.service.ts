@@ -31,7 +31,10 @@ export class DocumentsService {
 				throw new Error();
 			}
 		} catch (e) {
-			throw new UnauthorizedException("Invalid sharing token");
+			throw new UnauthorizedException("Unauthorized", {
+				cause: new Error(),
+				description: "Invalid sharing token",
+			});
 		}
 
 		let document: Document;
@@ -43,7 +46,10 @@ export class DocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("Not found", {
+				cause: new Error(),
+				description: "Document not found",
+			});
 		}
 
 		return {
