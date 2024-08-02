@@ -119,12 +119,12 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-
-			return this.prismaService.document.findUniqueOrThrow({
+			const document = await this.prismaService.document.findUniqueOrThrow({
 				where: {
 					id: documentId,
 				},
 			});
+			return document;
 		} catch (e) {
 			throw new NotFoundException("Not found", {
 				cause: new Error(),
