@@ -7,6 +7,17 @@ interface TooltipButtonProps {
 	title: string;
 	value: string | JSX.Element;
 }
+const style = {
+	toggleButton: {
+		width: "25px",
+		height: "25px",
+		minWidth: "25px",
+		padding: "0",
+		margin: "2px",
+		border: "none",
+		fontWeight: "bold",
+	},
+};
 
 function TooltipButton({ selectedFormats, formatType, title, value }: TooltipButtonProps) {
 	return (
@@ -15,15 +26,7 @@ function TooltipButton({ selectedFormats, formatType, title, value }: TooltipBut
 				value={formatType}
 				aria-label={formatType}
 				color={selectedFormats.has(formatType) ? "primary" : "secondary"}
-				sx={{
-					width: "25px",
-					height: "25px",
-					minWidth: "25px",
-					padding: "0",
-					margin: "2px",
-					border: "none",
-					fontWeight: "bold",
-				}}
+				sx={style.toggleButton}
 			>
 				{value}
 			</ToggleButton>
