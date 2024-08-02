@@ -94,7 +94,7 @@ export class UsersService {
 			},
 		});
 
-		const encodedText = encodeURIComponent(nickname);
+		const encodedText = encodeURI(nickname);
 
 		if (!userWorkspaceList.length) {
 			const { id: workspaceId } = await this.prismaService.workspace.create({
