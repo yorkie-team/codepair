@@ -30,7 +30,7 @@ export class WorkspacesService {
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
-				slug: encodeURIComponent(title),
+				slug: encodeURI(title),
 			},
 		});
 

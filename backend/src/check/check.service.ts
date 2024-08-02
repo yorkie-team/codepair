@@ -15,7 +15,7 @@ export class CheckService {
 	) {}
 
 	async checkNameConflict(name: string): Promise<CheckNameConflicReponse> {
-		const encodedText = encodeURIComponent(name);
+		const encodedText = encodeURI(name);
 		const conflictUserList = await this.prismaService.user.findMany({
 			where: {
 				OR: [{ nickname: name }, { nickname: encodedText }],
