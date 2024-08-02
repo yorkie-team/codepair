@@ -68,7 +68,8 @@ export class WorkspacesController {
 		@Req() req: AuthroizedRequest,
 		@Param("workspace_slug") workspaceSlug: string
 	): Promise<FindWorkspaceResponse> {
-		return this.workspacesService.findOneBySlug(req.user.id, encodeURIComponent(workspaceSlug));
+		console.log(encodeURI(workspaceSlug));
+		return this.workspacesService.findOneBySlug(req.user.id, encodeURI(workspaceSlug));
 	}
 
 	@Get("")
