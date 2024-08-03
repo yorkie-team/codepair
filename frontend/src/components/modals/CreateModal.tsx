@@ -31,6 +31,8 @@ function CreateModal(props: CreateModalProps) {
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
 
 	const errorMessage = useMemo(() => {
+		if (!enableConflictCheck) return null;
+
 		if (nickname.length < 2) {
 			return "Title must be at least 2 characters";
 		}
@@ -38,7 +40,7 @@ function CreateModal(props: CreateModalProps) {
 			return "Already Exists";
 		}
 		return null;
-	}, [nickname.length, conflictResult?.conflict]);
+	}, [enableConflictCheck, nickname.length, conflictResult?.conflict]);
 
 	useDebounce(
 		() => {
