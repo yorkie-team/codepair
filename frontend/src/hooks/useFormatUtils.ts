@@ -37,12 +37,10 @@ export const useFormatUtils = () => {
 
 	const getFormatMarkerLength = useCallback((state: EditorState, from: number) => {
 		const maxCheckLength = 10;
-		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).split("");
 
-		return docSlice.reduce((acc, c) => {
-			if (["*", "_", "`", "~"].includes(c)) ++acc;
-			return acc;
-		}, 0);
+		const markerSet = new Set(["*", "_", "`", "~"]);
+		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from);
+		return [...docSlice].reduce((acc, c) => (markerSet.has(c) ? acc + 1 : acc), 0);
 	}, []);
 
 	const applyFormat = useCallback(

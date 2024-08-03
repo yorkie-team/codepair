@@ -12,11 +12,15 @@ const style = {
 	},
 };
 
-function TooltipToggleButton({ title, ...props }: ToggleButtonProps & { title?: string }) {
+function TooltipToggleButton({
+	title,
+	children,
+	...props
+}: ToggleButtonProps & { title?: string }) {
 	return (
 		<Tooltip title={title} placement="top">
 			<ToggleButton sx={style.toggleButton} {...props}>
-				{props.children}
+				{children}
 			</ToggleButton>
 		</Tooltip>
 	);
