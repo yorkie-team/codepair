@@ -7,14 +7,16 @@ import { selectEditor, setCmView } from "../../store/editorSlice";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { keymap } from "@codemirror/view";
-import { indentWithTab } from "@codemirror/commands";
+import { keymap, ViewUpdate } from "@codemirror/view";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { imageUploader } from "../../utils/imageUploader";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
+import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
+
+import FormatBar from "./FormatBar";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -25,10 +27,72 @@ function Editor() {
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
+
+	const [formatBarState, setFormatBarState] = useState<FormatBarState>({
+		show: false,
+		position: { top: 0, left: 0 },
+		selectedFormats: new Set<FormatType>(),
+	});
+
+	const { getFormatMarkerLength, applyFormat, setKeymapConfig } = useFormatUtils();
+
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
 		setElement(node);
 	}, []);
+
+	const updateFormatBar = useCallback(
+		(update: ViewUpdate) => {
+			const selection = update.state.selection.main;
+			if (!selection.empty) {
+				const coords = update.view.coordsAtPos(selection.from);
+				if (coords) {
+					const maxLength = getFormatMarkerLength(update.view.state, selection.from);
+
+					const selectedTextStart = update.state.sliceDoc(
+						selection.from - maxLength,
+						selection.from
+					);
+					const selectedTextEnd = update.state.sliceDoc(
+						selection.to,
+						selection.to + maxLength
+					);
+					const formats = new Set<FormatType>();
+
+					const checkAndAddFormat = (marker: string, format: FormatType) => {
+						if (
+							selectedTextStart.includes(marker) &&
+							selectedTextEnd.includes(marker)
+						) {
+							formats.add(format);
+						}
+					};
+
+					checkAndAddFormat("**", FormatType.BOLD);
+					checkAndAddFormat("_", FormatType.ITALIC);
+					checkAndAddFormat("`", FormatType.CODE);
+					checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
+
+					setFormatBarState((prev) => ({
+						...prev,
+						show: true,
+						position: {
+							top: coords.top - 8,
+							left: coords.left + 190,
+						},
+						selectedFormats: formats,
+					}));
+				}
+			} else {
+				setFormatBarState((prev) => ({
+					...prev,
+					show: false,
+					selectedFormats: new Set(),
+				}));
+			}
+		},
+		[getFormatMarkerLength]
+	);
 
 	useEffect(() => {
 		let view: EditorView | undefined = undefined;
@@ -59,6 +123,7 @@ function Editor() {
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
 			extensions: [
+				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
@@ -67,11 +132,15 @@ function Editor() {
 					"&": { width: "100%" },
 				}),
 				EditorView.lineWrapping,
-				keymap.of([indentWithTab]),
 				intelligencePivot,
 				...(settingStore.fileUpload.enable
 					? [imageUploader(handleUploadImage, editorStore.doc)]
 					: []),
+				EditorView.updateListener.of((update) => {
+					if (update.selectionSet) {
+						updateFormatBar(update);
+					}
+				}),
 			],
 		});
 
@@ -95,6 +164,9 @@ function Editor() {
 		createUploadUrl,
 		uploadFile,
 		settingStore.fileUpload?.enable,
+		applyFormat,
+		updateFormatBar,
+		setKeymapConfig,
 	]);
 
 	return (
@@ -113,6 +185,12 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
+				{Boolean(formatBarState.show && editorStore.cmView) && (
+					<FormatBar
+						formatBarState={formatBarState}
+						onChangeFormatBarState={setFormatBarState}
+					/>
+				)}
 			</div>
 		</ScrollSyncPane>
 	);
