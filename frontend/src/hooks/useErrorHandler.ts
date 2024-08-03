@@ -4,8 +4,8 @@ import { useCallback } from "react";
 interface CustomError extends Error {
 	response?: {
 		data: {
-			error?: string;
-			message: string;
+			error: string;
+			message?: string;
 			statusCode: number;
 		};
 	};
@@ -15,8 +15,9 @@ export function useErrorHandler() {
 	const { enqueueSnackbar } = useSnackbar();
 	const handleError = useCallback(
 		(error: CustomError) => {
+			console.error(error);
 			enqueueSnackbar(
-				error.response?.data.error || error.message || "Something went wrong...",
+				error.response?.data.message || error.message || "Something went wrong...",
 				{ variant: "error" }
 			);
 		},
