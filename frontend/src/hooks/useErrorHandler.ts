@@ -15,7 +15,6 @@ export function useErrorHandler() {
 	const { enqueueSnackbar } = useSnackbar();
 	const handleError = useCallback(
 		(error: CustomError) => {
-			console.error(error);
 			enqueueSnackbar(
 				error.response?.data.message || error.message || "Something went wrong...",
 				{ variant: "error" }
