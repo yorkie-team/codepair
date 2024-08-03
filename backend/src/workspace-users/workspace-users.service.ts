@@ -21,7 +21,9 @@ export class WorkspaceUsersService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const additionalOptions: Prisma.UserFindManyArgs = {};

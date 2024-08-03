@@ -24,7 +24,7 @@ export class WorkspacesService {
 		const { conflict } = await this.checkService.checkNameConflict(title);
 
 		if (conflict) {
-			throw new ConflictException();
+			throw new ConflictException("Workspace title is already in use.");
 		}
 
 		const workspace = await this.prismaService.workspace.create({
@@ -62,7 +62,9 @@ export class WorkspacesService {
 
 			return foundWorkspace;
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"Workspace not found, or the user lacks the appropriate permissions."
+			);
 		}
 	}
 
@@ -113,7 +115,9 @@ export class WorkspacesService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"Worksapce does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const token = generateRandomKey();

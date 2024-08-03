@@ -25,7 +25,7 @@ export class IntelligenceService {
 		};
 		const selectedPrompt = promptTemplates[feature];
 
-		if (!selectedPrompt) throw new NotFoundException();
+		if (!selectedPrompt) throw new NotFoundException("Feature not found");
 
 		return selectedPrompt;
 	}

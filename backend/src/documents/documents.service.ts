@@ -43,7 +43,7 @@ export class DocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("Document not found");
 		}
 
 		return {

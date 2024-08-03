@@ -46,11 +46,11 @@ export class FilesService {
 				},
 			});
 		} catch (e) {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException("Client unauthorized.");
 		}
 
 		if (contentLength > 10_000_000) {
-			throw new UnprocessableEntityException();
+			throw new UnprocessableEntityException("Content length too long.");
 		}
 
 		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
@@ -75,7 +75,7 @@ export class FilesService {
 			});
 			return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException("File not found.");
 		}
 	}
 
