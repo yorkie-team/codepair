@@ -7,15 +7,11 @@ import {
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { IS_PUBLIC_PATH } from "src/utils/decorators/auth.decorator";
-import * as jwt from "jsonwebtoken";
-import { ConfigService } from "@nestjs/config";
+import { AuthorizedUser } from "src/utils/types/req.type";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {
-	constructor(
-		private reflector: Reflector,
-		private configService: ConfigService
-	) {
+	constructor(private reflector: Reflector) {
 		super();
 	}
 
@@ -27,38 +23,19 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 		if (isPublic) {
 			return true;
 		}
+		return super.canActivate(context);
+	}
 
-		try {
-			const request = context.switchToHttp().getRequest();
-			const token = request.headers.authorization?.split(" ")[1];
-			if (!token) {
-				throw new UnauthorizedException("Unauthorized", {
-					cause: new Error(),
-					description: "Token not found",
-				});
-			}
-
-			const secretKey = this.configService.get<string>("JWT_AUTH_SECRET");
-			const decoded = jwt.verify(token, secretKey);
-			request.user = decoded;
-			return super.canActivate(context);
-		} catch (e) {
-			if (e.name === "TokenExpiredError") {
-				throw new UnauthorizedException("Unauthorized", {
-					cause: new Error(),
-					description: "Token has expired.",
-				});
-			} else if (e.name === "JsonWebTokenError") {
-				throw new UnauthorizedException("Unauthorized", {
-					cause: new Error(),
-					description: "Invalid token",
-				});
+	handleRequest<User = AuthorizedUser>(err: Error, user: User, info: Error): User {
+		if (err || !user) {
+			if (info?.name === "TokenExpiredError") {
+				throw new UnauthorizedException("Token has expired.");
+			} else if (info?.name === "JsonWebTokenError") {
+				throw new UnauthorizedException("Invalid token");
 			} else {
-				throw new ForbiddenException("Forbidden", {
-					cause: new Error(),
-					description: "Access denied",
-				});
+				throw err || new ForbiddenException("Access denied");
 			}
 		}
+		return user;
 	}
 }
