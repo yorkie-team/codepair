@@ -26,11 +26,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException("Not found", {
-				cause: new Error(),
-				description:
-					"The workspace does not exist, or the user lacks the appropriate permissions.",
-			});
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		return this.prismaService.document.create({
@@ -56,11 +54,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException("Not found", {
-				cause: new Error(),
-				description:
-					"The workspace does not exist, or the user lacks the appropriate permissions.",
-			});
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const additionalOptions: Prisma.DocumentFindManyArgs = {};
@@ -126,11 +122,9 @@ export class WorkspaceDocumentsService {
 			});
 			return document;
 		} catch (e) {
-			throw new NotFoundException("Not found", {
-				cause: new Error(),
-				description:
-					"The workspace or document does not exist, or the user lacks the appropriate permissions.",
-			});
+			throw new NotFoundException(
+				"The workspace or document does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 	}
 
@@ -158,11 +152,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException("Not found", {
-				cause: new Error(),
-				description:
-					"The workspace or document does not exist, or the user lacks the appropriate permissions.",
-			});
+			throw new NotFoundException(
+				"The workspace or document does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const token = generateRandomKey();
