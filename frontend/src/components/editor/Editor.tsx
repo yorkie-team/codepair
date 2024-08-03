@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { EditorState, Text, EditorSelection, Transaction } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,14 +8,13 @@ import { yorkieCodeMirror } from "../../utils/yorkie";
 import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { keymap, ViewUpdate } from "@codemirror/view";
-import { indentWithTab } from "@codemirror/commands";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { imageUploader } from "../../utils/imageUploader";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
-import { FormatType } from "../../utils/format";
+import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 
 import FormatBar from "./FormatBar";
 
@@ -29,41 +28,17 @@ function Editor() {
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 
-	const [formatBarState, setFormatBarState] = useState({
+	const [formatBarState, setFormatBarState] = useState<FormatBarState>({
 		show: false,
 		position: { top: 0, left: 0 },
 		selectedFormats: new Set<FormatType>(),
 	});
 
+	const { getFormatMarkerLength, applyFormat, setKeymapConfig } = useFormatUtils();
+
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
 		setElement(node);
-	}, []);
-
-	const getFormatMarker = useCallback((formatType: FormatType) => {
-		switch (formatType) {
-			case FormatType.BOLD:
-				return "**";
-			case FormatType.ITALIC:
-				return "_";
-			case FormatType.CODE:
-				return "`";
-			case FormatType.STRIKETHROUGH:
-				return "~~";
-		}
-	}, []);
-
-	const getFormatMarkerLength = useCallback((state: EditorState, from: number) => {
-		const maxCheckLength = 10;
-		const docSlice = state.sliceDoc(Math.max(0, from - maxCheckLength), from).toString();
-		let cnt = 0;
-
-		for (let i = docSlice.length - 1; i >= 0; i--) {
-			if (!["*", "_", "`", "~"].includes(docSlice[i])) break;
-			cnt++;
-		}
-
-		return cnt;
 	}, []);
 
 	const updateFormatBar = useCallback(
@@ -119,82 +94,6 @@ function Editor() {
 		[getFormatMarkerLength]
 	);
 
-	const applyFormat = useCallback(
-		(formatType: FormatType) => {
-			const marker = getFormatMarker(formatType);
-			const markerLength = marker.length;
-
-			return ({ state, dispatch }: EditorView) => {
-				const changes = state.changeByRange((range) => {
-					const maxLength = getFormatMarkerLength(state, range.from);
-					const beforeIdx = state
-						.sliceDoc(
-							range.from - maxLength < 0 ? 0 : range.from - maxLength,
-							range.from
-						)
-						.indexOf(marker);
-					const afterIdx = state.sliceDoc(range.to, range.to + maxLength).indexOf(marker);
-
-					const changes = [
-						beforeIdx === -1
-							? {
-									from: range.from,
-									insert: Text.of([marker]),
-								}
-							: {
-									from: range.from - maxLength + beforeIdx,
-									to: range.from - maxLength + beforeIdx + markerLength,
-									insert: Text.of([""]),
-								},
-
-						afterIdx === -1
-							? {
-									from: range.to,
-									insert: Text.of([marker]),
-								}
-							: {
-									from: range.to + afterIdx,
-									to: range.to + afterIdx + markerLength,
-									insert: Text.of([""]),
-								},
-					];
-
-					const extendBefore = beforeIdx === -1 ? markerLength : -markerLength;
-					const extendAfter = afterIdx === -1 ? markerLength : -markerLength;
-
-					return {
-						changes,
-						range: EditorSelection.range(
-							range.from + extendBefore,
-							range.to + extendAfter
-						),
-					};
-				});
-
-				dispatch(
-					state.update(changes, {
-						scrollIntoView: true,
-						annotations: Transaction.userEvent.of("input"),
-					})
-				);
-
-				return true;
-			};
-		},
-		[getFormatMarker, getFormatMarkerLength]
-	);
-
-	const setKeymapConfig = useCallback(
-		(func: typeof applyFormat) => [
-			indentWithTab,
-			{ key: "Mod-b", run: func(FormatType.BOLD) },
-			{ key: "Mod-i", run: func(FormatType.ITALIC) },
-			{ key: "Mod-e", run: func(FormatType.CODE) },
-			{ key: "Mod-Shift-x", run: func(FormatType.STRIKETHROUGH) },
-		],
-		[]
-	);
-
 	useEffect(() => {
 		let view: EditorView | undefined = undefined;
 
@@ -224,7 +123,7 @@ function Editor() {
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
 			extensions: [
-				keymap.of(setKeymapConfig(applyFormat)),
+				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
@@ -286,12 +185,10 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
-				{formatBarState.show && editorStore.cmView && (
+				{Boolean(formatBarState.show && editorStore.cmView) && (
 					<FormatBar
 						formatBarState={formatBarState}
-						setFormatBarState={setFormatBarState}
-						applyFormat={applyFormat}
-						cmView={editorStore.cmView}
+						onChangeFormatBarState={setFormatBarState}
 					/>
 				)}
 			</div>

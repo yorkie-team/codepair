@@ -1,31 +1,18 @@
-import { EditorView } from "@codemirror/view";
 import { Popover, ToggleButtonGroup } from "@mui/material";
-import { FormatType } from "../../utils/format";
 import TooltipToggleButton from "../common/TooltipToggleButton";
+import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 
 interface FormatBarProps {
-	formatBarState: {
-		show: boolean;
-		position: { top: number; left: number };
-		selectedFormats: Set<FormatType>;
-	};
-	setFormatBarState: React.Dispatch<
-		React.SetStateAction<{
-			show: boolean;
-			position: { top: number; left: number };
-			selectedFormats: Set<FormatType>;
-		}>
-	>;
-	applyFormat: (format: FormatType) => (view: EditorView) => void;
-	cmView: EditorView;
+	formatBarState: FormatBarState;
+	onChangeFormatBarState: React.Dispatch<React.SetStateAction<FormatBarState>>;
 }
 
 function FormatBar({
 	formatBarState: { show: showFormatBar, position: formatBarPosition, selectedFormats },
-	setFormatBarState,
-	applyFormat,
-	cmView,
+	onChangeFormatBarState,
 }: FormatBarProps) {
+	const { toggleButtonChangeHandler } = useFormatUtils();
+
 	return (
 		<Popover
 			open={showFormatBar}
@@ -34,7 +21,7 @@ function FormatBar({
 				top: formatBarPosition.top,
 				left: formatBarPosition.left,
 			}}
-			onClose={() => setFormatBarState((prev) => ({ ...prev, show: false }))}
+			onClose={() => onChangeFormatBarState((prev) => ({ ...prev, show: false }))}
 			anchorOrigin={{
 				vertical: "top",
 				horizontal: "left",
@@ -48,16 +35,7 @@ function FormatBar({
 			<ToggleButtonGroup
 				sx={{ padding: "3px 5px" }}
 				value={Array.from(selectedFormats)}
-				onChange={(_, format: FormatType) => {
-					const newSelectedFormats = new Set(selectedFormats);
-					if (newSelectedFormats.has(format)) {
-						newSelectedFormats.delete(format);
-					} else {
-						newSelectedFormats.add(format);
-					}
-					setFormatBarState((prev) => ({ ...prev, selectedFormats: newSelectedFormats }));
-					applyFormat(format)(cmView);
-				}}
+				onChange={toggleButtonChangeHandler(selectedFormats, onChangeFormatBarState)}
 				exclusive
 				aria-label="text formatting"
 			>
