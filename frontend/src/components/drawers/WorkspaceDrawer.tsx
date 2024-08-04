@@ -15,9 +15,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import PeopleIcon from "@mui/icons-material/People";
 import { selectWorkspace } from "../../store/workspaceSlice";
-import { DRAWER_WIDTH, WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
+import { WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-
+import { DRAWER_WIDTH } from "../../constants/layout";
 interface WorkspaceDrawerProps {
 	open: boolean;
 }

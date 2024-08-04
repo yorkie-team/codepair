@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
 	Button,
 	FormControl,
@@ -8,11 +9,10 @@ import {
 	Stack,
 	Typography,
 } from "@mui/material";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import CloseIcon from "@mui/icons-material/Close";
 import { useMemo, useState } from "react";
-import { useCheckNameConflictQuery } from "../../hooks/api/check";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useDebounce } from "react-use";
+import { useCheckNameConflictQuery } from "../../hooks/api/check";
 
 interface CreateRequest {
 	title: string;
@@ -29,12 +29,18 @@ function CreateModal(props: CreateModalProps) {
 	const [nickname, setNickname] = useState("");
 	const [debouncedNickname, setDebouncedNickname] = useState("");
 	const { data: conflictResult } = useCheckNameConflictQuery(debouncedNickname);
+
 	const errorMessage = useMemo(() => {
+		if (!enableConflictCheck) return null;
+
+		if (nickname.length < 2) {
+			return "Title must be at least 2 characters";
+		}
 		if (conflictResult?.conflict) {
 			return "Already Exists";
 		}
 		return null;
-	}, [conflictResult?.conflict]);
+	}, [enableConflictCheck, nickname.length, conflictResult?.conflict]);
 
 	useDebounce(
 		() => {
@@ -49,8 +55,10 @@ function CreateModal(props: CreateModalProps) {
 	};
 
 	const handleCreate = async (data: CreateRequest) => {
-		await onSuccess(data);
-		handleCloseModal();
+		if (data.title.length >= 2) {
+			await onSuccess(data);
+			handleCloseModal();
+		}
 	};
 
 	const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

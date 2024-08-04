@@ -9,8 +9,6 @@ import {
 	Query,
 	Req,
 } from "@nestjs/common";
-import { WorkspacesService } from "./workspaces.service";
-import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import {
 	ApiBearerAuth,
 	ApiBody,
@@ -24,15 +22,17 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { AuthroizedRequest } from "src/utils/types/req.type";
+import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
+import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
+import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
+import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
-import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
-import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
-import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
-import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
+import { WorkspacesService } from "./workspaces.service";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth()
@@ -68,7 +68,7 @@ export class WorkspacesController {
 		@Req() req: AuthroizedRequest,
 		@Param("workspace_slug") workspaceSlug: string
 	): Promise<FindWorkspaceResponse> {
-		return this.workspacesService.findOneBySlug(req.user.id, workspaceSlug);
+		return this.workspacesService.findOneBySlug(req.user.id, encodeURI(workspaceSlug));
 	}
 
 	@Get("")

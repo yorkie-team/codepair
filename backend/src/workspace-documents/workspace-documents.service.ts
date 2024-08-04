@@ -26,7 +26,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		return this.prismaService.document.create({
@@ -52,7 +54,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const additionalOptions: Prisma.DocumentFindManyArgs = {};
@@ -82,13 +86,16 @@ export class WorkspaceDocumentsService {
 		const yorkieDocumentList = await this.findManyFromYorkie(
 			slicedDocumentList.map((doc) => doc.yorkieDocumentId)
 		);
-		const mergedDocumentList = slicedDocumentList.map((doc, idx) => {
-			const yorkieDocument = yorkieDocumentList.documents?.[idx];
+		const yorkieDocumentMap = new Map(
+			yorkieDocumentList.documents?.map((doc) => [doc.key, doc])
+		);
+		const mergedDocumentList = slicedDocumentList.map((doc) => {
+			const yorkieDocumentUpdatedAt = yorkieDocumentMap.get(doc.yorkieDocumentId)?.updatedAt;
 
 			return {
 				...doc,
-				updatedAt: yorkieDocument?.updatedAt
-					? moment(yorkieDocument.updatedAt).toDate()
+				updatedAt: yorkieDocumentUpdatedAt
+					? moment(yorkieDocumentUpdatedAt).toDate()
 					: doc.updatedAt,
 			};
 		});
@@ -108,14 +115,16 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-
-			return this.prismaService.document.findUniqueOrThrow({
+			const document = await this.prismaService.document.findUniqueOrThrow({
 				where: {
 					id: documentId,
 				},
 			});
+			return document;
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"The workspace or document does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 	}
 
@@ -143,7 +152,9 @@ export class WorkspaceDocumentsService {
 				},
 			});
 		} catch (e) {
-			throw new NotFoundException();
+			throw new NotFoundException(
+				"The workspace or document does not exist, or the user lacks the appropriate permissions."
+			);
 		}
 
 		const token = generateRandomKey();
@@ -173,6 +184,7 @@ export class WorkspaceDocumentsService {
 			const requestBody = JSON.stringify({
 				project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
 				document_keys: documentKeyList,
+				include_snapshot: false,
 			});
 			const req = client.request({
 				":method": "POST",

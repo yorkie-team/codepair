@@ -1,10 +1,9 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { PrismaService } from "src/db/prisma.service";
-import { FindUserResponse } from "./types/find-user-response.type";
 import { CheckService } from "src/check/check.service";
-import slugify from "slugify";
+import { PrismaService } from "src/db/prisma.service";
 import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
+import { FindUserResponse } from "./types/find-user-response.type";
 
 @Injectable()
 export class UsersService {
@@ -74,7 +73,7 @@ export class UsersService {
 		const { conflict } = await this.checkService.checkNameConflict(nickname);
 
 		if (conflict) {
-			throw new ConflictException();
+			throw new ConflictException("The nickname conflicts.");
 		}
 
 		await this.prismaService.user.update({
@@ -95,7 +94,7 @@ export class UsersService {
 			},
 		});
 
-		const slug = slugify(nickname, { lower: true });
+		const encodedText = encodeURI(nickname);
 
 		if (!userWorkspaceList.length) {
 			const { id: workspaceId } = await this.prismaService.workspace.create({
@@ -104,7 +103,7 @@ export class UsersService {
 				},
 				data: {
 					title: nickname,
-					slug,
+					slug: encodedText,
 				},
 			});
 

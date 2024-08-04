@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/db/prisma.service";
-import { CheckNameConflicReponse } from "./types/check-name-conflict-response.type";
-import slugify from "slugify";
-import { CheckYorkieDto, YorkieMethod } from "./dto/check-yorkie.dto";
-import { CheckYorkieResponse } from "./types/check-yorkie-response.type";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "src/utils/types/jwt.type";
 import * as moment from "moment";
+import { PrismaService } from "src/db/prisma.service";
+import { JwtPayload } from "src/utils/types/jwt.type";
+import { CheckYorkieDto, YorkieMethod } from "./dto/check-yorkie.dto";
+import { CheckNameConflicReponse } from "./types/check-name-conflict-response.type";
+import { CheckYorkieResponse } from "./types/check-yorkie-response.type";
 
 @Injectable()
 export class CheckService {
@@ -16,15 +15,15 @@ export class CheckService {
 	) {}
 
 	async checkNameConflict(name: string): Promise<CheckNameConflicReponse> {
-		const slug = slugify(name, { lower: true });
+		const encodedText = encodeURI(name);
 		const conflictUserList = await this.prismaService.user.findMany({
 			where: {
-				OR: [{ nickname: name }, { nickname: slug }],
+				OR: [{ nickname: name }, { nickname: encodedText }],
 			},
 		});
 		const conflictWorkspaceList = await this.prismaService.workspace.findMany({
 			where: {
-				OR: [{ title: name }, { title: slug }],
+				OR: [{ title: name }, { title: encodedText }],
 			},
 		});
 

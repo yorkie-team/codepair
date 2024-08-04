@@ -7,6 +7,7 @@ import {
 	PopoverProps,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useDispatch } from "react-redux";
 import { setAccessToken } from "../../store/authSlice";
 import { setUserData } from "../../store/userSlice";
@@ -14,14 +15,20 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { setTheme } from "../../store/configSlice";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePopover(props: PopoverProps) {
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
+	const navigate = useNavigate();
 
 	const handleLogout = () => {
 		dispatch(setAccessToken(null));
 		dispatch(setUserData(null));
+	};
+
+	const handleMoveProfilePage = () => {
+		navigate(`/settings/profile`);
 	};
 
 	const handleChangeTheme = () => {
@@ -46,6 +53,12 @@ function ProfilePopover(props: PopoverProps) {
 						{themeMode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
 					</ListItemIcon>
 					<ListItemText>Appearance</ListItemText>
+				</MenuItem>
+				<MenuItem onClick={handleMoveProfilePage}>
+					<ListItemIcon>
+						<ManageAccountsIcon fontSize="small" />
+					</ListItemIcon>
+					<ListItemText>Profile</ListItemText>
 				</MenuItem>
 				<MenuItem onClick={handleLogout}>
 					<ListItemIcon>

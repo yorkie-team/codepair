@@ -1,6 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { UploadFileRequest, CreateUploadUrlRequest, CreateUploadUrlResponse } from "./types/file";
+import {
+	CreateUploadUrlRequest,
+	CreateUploadUrlResponse,
+	ExportFileRequest,
+	UploadFileRequest,
+} from "./types/file";
 
 export const useCreateUploadUrlMutation = () => {
 	return useMutation({
@@ -21,6 +26,31 @@ export const useUploadFileMutation = () => {
 					"Content-Type": data.file.type,
 				},
 			});
+		},
+	});
+};
+
+export const useExportFileMutation = () => {
+	return useMutation({
+		mutationFn: async (data: ExportFileRequest) => {
+			const { exportType, content, fileName } = data;
+
+			const res = await axios.post(
+				"/files/export-markdown",
+				{
+					exportType,
+					content,
+					fileName,
+				},
+				{
+					responseType: "blob",
+					headers: {
+						Accept: "application/octet-stream",
+					},
+				}
+			);
+
+			return res;
 		},
 	});
 };
