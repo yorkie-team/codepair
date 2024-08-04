@@ -86,9 +86,9 @@ function App() {
 			queryCache: new QueryCache({
 				onError: (error) => {
 					if (isAxios404Error(error)) {
-						customNavigate("/404");
+						window.location.href = "/404";
 					} else if (isAxios500Error(error)) {
-						customNavigate("/404");
+						window.location.href = "/404";
 					} else {
 						handleError(error);
 					}
