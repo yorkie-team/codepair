@@ -89,9 +89,9 @@ const codePairRoutes: Array<CodePairRoute> = [
 	{
 		path: "/404",
 		accessType: AccessType.PUBLIC,
-		element: <NotFound />
-  },
-  {
+		element: <NotFound />,
+	},
+	{
 		path: "settings/profile",
 		accessType: AccessType.PRIVATE,
 		element: <SettingLayout />,
