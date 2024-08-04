@@ -47,13 +47,6 @@ if (import.meta.env.PROD) {
 	});
 }
 
-//TODO: Change it to navigate
-const customNavigate = (path: string) => {
-	window.history.pushState({}, "", path);
-
-	window.dispatchEvent(new Event("popstate"));
-};
-
 const router = createBrowserRouter(routes);
 
 axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
@@ -86,9 +79,9 @@ function App() {
 			queryCache: new QueryCache({
 				onError: (error) => {
 					if (isAxios404Error(error)) {
-						customNavigate("/404");
+						window.location.href = "/404";
 					} else if (isAxios500Error(error)) {
-						customNavigate("/404");
+						window.location.href = "/404";
 					} else {
 						handleError(error);
 					}
