@@ -47,13 +47,6 @@ if (import.meta.env.PROD) {
 	});
 }
 
-//TODO: Change it to navigate
-const customNavigate = (path: string) => {
-	window.history.pushState({}, "", path);
-
-	window.dispatchEvent(new Event("popstate"));
-};
-
 const router = createBrowserRouter(routes);
 
 axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
