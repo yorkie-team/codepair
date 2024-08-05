@@ -22,6 +22,7 @@ import AuthProvider from "./providers/AuthProvider";
 import { useErrorHandler } from "./hooks/useErrorHandler";
 import * as Sentry from "@sentry/react";
 import { useGetSettingsQuery } from "./hooks/api/settings";
+import { isAxios404Error, isAxios500Error } from "./utils/axios.default";
 
 if (import.meta.env.PROD) {
 	Sentry.init({
@@ -76,7 +77,15 @@ function App() {
 	const queryClient = useMemo(() => {
 		return new QueryClient({
 			queryCache: new QueryCache({
-				onError: handleError,
+				onError: (error) => {
+					if (isAxios404Error(error)) {
+						window.location.href = "/404";
+					} else if (isAxios500Error(error)) {
+						window.location.href = "/404";
+					} else {
+						handleError(error);
+					}
+				},
 			}),
 			defaultOptions: {
 				mutations: {
