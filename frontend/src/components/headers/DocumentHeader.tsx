@@ -7,18 +7,17 @@ import {
 	Avatar,
 	AvatarGroup,
 	IconButton,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
 	Paper,
+	Popover,
 	Stack,
 	ToggleButton,
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
-	Popover,
-	Typography,
-	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemText,
+	Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -108,7 +107,19 @@ function DocumentHeader() {
 
 	const popoverOpen = Boolean(anchorEl);
 
-	const hiddenAvatars = presenceList.slice(3);
+	const MAX_VISIBLE_AVATARS = 4
+	const hiddenAvatars = presenceList.slice(MAX_VISIBLE_AVATARS);
+
+	const renderAvatar = (presence: { clientID: ActorID; presence: YorkieCodeMirrorPresenceType }) => (
+		<Tooltip key={presence.clientID} title={presence.presence.name}>
+			<Avatar
+				alt={presence.presence.name}
+				sx={{ bgcolor: presence.presence.color }}
+			>
+				{presence.presence.name[0]}
+			</Avatar>
+		</Tooltip>
+	);
 
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
@@ -151,17 +162,13 @@ function DocumentHeader() {
 						<DownloadMenu />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
-						<AvatarGroup max={4} onClick={handleOpenPopover}>
-							{presenceList?.map((presence) => (
-								<Tooltip key={presence.clientID} title={presence.presence.name}>
-									<Avatar
-										alt={presence.presence.name}
-										sx={{ bgcolor: presence.presence.color }}
-									>
-										{presence.presence.name[0]}
-									</Avatar>
-								</Tooltip>
-							))}
+						<AvatarGroup>
+							{presenceList.slice(0, MAX_VISIBLE_AVATARS).map(renderAvatar)}
+							{presenceList.length > MAX_VISIBLE_AVATARS && (
+								<Avatar onClick={handleOpenPopover}>
+									+{presenceList.length - MAX_VISIBLE_AVATARS}
+								</Avatar>
+							)}
 						</AvatarGroup>
 						<Popover
 							open={popoverOpen}
@@ -174,30 +181,28 @@ function DocumentHeader() {
 						>
 							<Paper sx={{ padding: 2 }}>
 								<Typography variant="subtitle2">Additional Users</Typography>
-								<List>
-									{hiddenAvatars.map((presence) => (
-										<ListItem key={presence.clientID} sx={{ paddingY: 0.5 }}>
-											<ListItemAvatar>
-												<Avatar
-													sx={{
-														bgcolor: presence.presence.color,
-														width: 24,
-														height: 24,
-														fontSize: 12,
-													}}
-												>
-													{presence.presence.name[0]}
-												</Avatar>
-											</ListItemAvatar>
-											<ListItemText
-												primary={presence.presence.name}
-												primaryTypographyProps={{
-													variant: "body2",
+								{hiddenAvatars.map((presence) => (
+									<ListItem key={presence.clientID} sx={{ paddingY: 1 }}>
+										<ListItemAvatar>
+											<Avatar
+												sx={{
+													bgcolor: presence.presence.color,
+													width: 24,
+													height: 24,
+													fontSize: 12,
 												}}
-											/>
-										</ListItem>
-									))}
-								</List>
+											>
+												{presence.presence.name[0]}
+											</Avatar>
+										</ListItemAvatar>
+										<ListItemText
+											primary={presence.presence.name}
+											primaryTypographyProps={{
+												variant: "body2",
+											}}
+										/>
+									</ListItem>
+								))}
 							</Paper>
 						</Popover>
 						{!editorState.shareRole && <ShareButton />}
