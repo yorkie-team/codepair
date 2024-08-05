@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { setClient, setDoc } from "../../../store/editorSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { selectUser } from "../../../store/userSlice";
 import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
@@ -14,10 +14,16 @@ import { selectSetting } from "../../../store/settingSlice";
 function DocumentIndex() {
 	const dispatch = useDispatch();
 	const params = useParams();
+
 	const userStore = useSelector(selectUser);
 	const settingStore = useSelector(selectSetting);
-	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
-	const { data: document } = useGetDocumentQuery(workspace?.id, params.documentId);
+	const { data: workspace, isLoading: isWorkspaceLoading } = useGetWorkspaceQuery(
+		params.workspaceSlug
+	);
+	const { data: document, isLoading: isDocumentLoading } = useGetDocumentQuery(
+		workspace?.id,
+		params.documentId
+	);
 	const { doc, client } = useYorkieDocument(document?.yorkieDocumentId, userStore.data?.nickname);
 
 	useEffect(() => {
@@ -31,6 +37,14 @@ function DocumentIndex() {
 			dispatch(setClient(null));
 		};
 	}, [dispatch, client, doc]);
+
+	if (isDocumentLoading || isWorkspaceLoading) {
+		return (
+			<Backdrop open>
+				<CircularProgress color="inherit" />
+			</Backdrop>
+		);
+	}
 
 	return (
 		<Box height="calc(100% - 64px)">

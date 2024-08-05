@@ -11,6 +11,7 @@ import DocumentIndex from "./pages/workspace/document/Index";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import JoinIndex from "./pages/workspace/join/Index";
 import MemberIndex from "./pages/workspace/member/Index";
+import NotFound from "./pages/error";
 import ProfileIndex from "./pages/settings/profile/Index";
 import SettingLayout from "./components/layouts/SettingLayout";
 
@@ -84,6 +85,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 		path: "join/:invitationToken",
 		accessType: AccessType.PRIVATE,
 		element: <JoinIndex />,
+	},
+	{
+		path: "/404",
+		accessType: AccessType.PUBLIC,
+		element: <NotFound />,
 	},
 	{
 		path: "settings/profile",
