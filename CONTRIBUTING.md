@@ -41,6 +41,44 @@ detached.
 
 The first line is the subject and should be no longer than 70 characters, the second line is always blank, and other lines should be wrapped at 80 characters. This allows the message to be easier to read on GitHub as well as in various git tools.
 
+## Tag System
+
+> Note: The following flows describe the process for handling some types of tags.
+
+### New Feature: `enhancement 🌟`
+
+1. **Add Enhancement Tag**  
+   Add the `enhancement 🌟` tag when a new feature is requested.
+
+2. **Discussion on GitHub Issue**  
+   Discuss the new feature in a GitHub Issue.
+
+3. **Implementation Stage**  
+   Developers can incorporate their own design and ideas during the implementation stage.
+
+4. **Pull Request**  
+   Submit a pull request for review.
+
+### Applying UI Design: `needs design 🎨`, `design complete ✅`
+
+1. **Add Design Tag**  
+   Add the `needs design 🎨` tag when a new feature requires UI design.
+
+2. **Discussion on GitHub Issue**  
+   Discuss the UI design requirements in a GitHub Issue.
+
+3. **Design Stage**  
+   The designer from CodePair will provide the design in Figma during this stage.
+
+4. **Add Design Complete Tag**  
+   Once the design is finalized, the designer will add the `design complete ✅` tag to the issue.
+
+5. **Implementation Stage**  
+   Developers must implement the provided design without making changes or incorporating their own design ideas.
+
+6. **Pull Request**  
+   Submit a pull request for review.
+
 ## Contributor License Agreement
 
 We require that all contributors sign our Contributor License Agreement ("CLA") before we can accept the contribution.
