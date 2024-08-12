@@ -14,14 +14,9 @@ done
 if [ "$LINT_FRONTEND" = true ]; then
   echo "Changes detected in the frontend. Linting & Formatting frontend..."
   cd frontend
-  npm run lint
+  npx lint-staged
   if [ $? -ne 0 ]; then
     echo "Frontend linting failed. Commit aborted."
-    exit 1
-  fi
-  npm run format
-  if [ $? -ne 0 ]; then
-    echo "Frontend formatting failed. Commit aborted."
     exit 1
   fi
   cd ..
@@ -30,14 +25,9 @@ fi
 if [ "$LINT_BACKEND" = true ]; then
  echo "Changes detected in the backend. Linting & Formatting backend..."
   cd backend
-  npm run lint
+  npx lint-staged
   if [ $? -ne 0 ]; then
     echo "Backend linting failed. Commit aborted."
-    exit 1
-  fi
-  npm run format
-  if [ $? -ne 0 ]; then
-    echo "Backend formatting failed. Commit aborted."
     exit 1
   fi
   cd ..

@@ -12,6 +12,12 @@
 		"format": "prettier . --write",
 		"format:check": "prettier . --check"
 	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"npm run lint",
+			"npm run format"
+		]
+	},
 	"dependencies": {
 		"@codemirror/commands": "^6.3.3",
 		"@codemirror/lang-markdown": "^6.2.3",
