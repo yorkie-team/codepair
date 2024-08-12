@@ -1,0 +1,10 @@
+name: docker-publish
+on:
+  release:
+    types: [published]
+jobs:
+  call-base-docker-publish:
+    uses: ./.github/workflows/base-docker-publish.yml
+    secrets: inherit
+    with:
+      version: ${{ github.event.release.tag_name }}
