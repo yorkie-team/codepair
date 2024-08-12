@@ -16,7 +16,7 @@ if [ "$LINT_FRONTEND" = true ]; then
   cd frontend
   npx lint-staged
   if [ $? -ne 0 ]; then
-    echo "Frontend linting failed. Commit aborted."
+    echo "Frontend Linting & Formatting failed. Commit aborted."
     exit 1
   fi
   cd ..
@@ -27,7 +27,7 @@ if [ "$LINT_BACKEND" = true ]; then
   cd backend
   npx lint-staged
   if [ $? -ne 0 ]; then
-    echo "Backend linting failed. Commit aborted."
+    echo "Backend Linting & Formatting failed. Commit aborted."
     exit 1
   fi
   cd ..
