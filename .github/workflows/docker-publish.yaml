@@ -1,0 +1,24 @@
+name: docker-publish
+on:
+  release:
+    types: [published]
+
+jobs:
+  process-version:
+    runs-on: ubuntu-latest
+    outputs:
+      cleaned_version: ${{ steps.remove_v.outputs.cleaned_version }}
+    steps:
+      - name: Remove 'v' prefix from version
+        id: remove_v
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          CLEANED_VERSION=${VERSION#v}
+          echo "cleaned_version=$CLEANED_VERSION" >> $GITHUB_OUTPUT
+
+  call-base-docker-publish:
+    needs: process-version
+    uses: ./.github/workflows/base-docker-publish.yml
+    secrets: inherit
+    with:
+      version: ${{ needs.process-version.outputs.cleaned_version }}
