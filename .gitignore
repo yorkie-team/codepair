@@ -18,7 +18,6 @@ dist-ssr/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.DS_Store
 .idea
 .project
 .classpath
@@ -32,6 +31,10 @@ dist-ssr/
 *.sln
 *.sw?
 
+# OS
+.DS_Store
+
+
 # Environment
 .env
 .env.development
@@ -41,8 +44,3 @@ dist-ssr/
 # Tests
 coverage/
 .nyc_output/
-
-
-# Sqlite
-dev.db
-dev.db-journal
