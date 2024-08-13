@@ -21,5 +21,10 @@ export const generateFeatureList = (configService: ConfigService) => {
 			icon: generateIconUrl("github.svg"),
 			feature: "github-pr",
 		},
+		{
+			title: "Write Document",
+			icon: generateIconUrl("document.svg"),
+			feature: "document-writing",
+		},
 	];
 };
