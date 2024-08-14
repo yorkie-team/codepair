@@ -23,7 +23,7 @@ import { YorkieCodeMirrorPresenceType } from "../../utils/yorkie/yorkieSync";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
-import UserPresence from "./UserPresence";
+import UserPresenceList from "./UserPresenceList";
 
 export type Presence = {
 	clientID: ActorID;
@@ -130,7 +130,7 @@ function DocumentHeader() {
 						<DownloadMenu />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
-						<UserPresence presenceList={presenceList} />
+						<UserPresenceList presenceList={presenceList} />
 						{!editorState.shareRole && <ShareButton />}
 						<ThemeButton />
 					</Stack>

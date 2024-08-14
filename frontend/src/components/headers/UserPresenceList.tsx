@@ -12,11 +12,11 @@ import {
 import { useState } from "react";
 import { Presence } from "./DocumentHeader";
 
-interface UserPresenceProps {
+interface UserPresenceListProps {
 	presenceList: Presence[];
 }
 
-function UserPresence(props: UserPresenceProps) {
+function UserPresenceList(props: UserPresenceListProps) {
 	const { presenceList } = props;
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const popoverOpen = Boolean(anchorEl);
@@ -34,7 +34,11 @@ function UserPresence(props: UserPresenceProps) {
 
 	const renderAvatar = (presence: Presence) => (
 		<Tooltip key={presence.clientID} title={presence.presence.name}>
-			<Avatar alt={presence.presence.name} sx={{ bgcolor: presence.presence.color }}>
+			<Avatar
+				onClick={() => console.log(presence.presence)}
+				alt={presence.presence.name}
+				sx={{ bgcolor: presence.presence.color }}
+			>
 				{presence.presence.name[0]}
 			</Avatar>
 		</Tooltip>
@@ -89,4 +93,4 @@ function UserPresence(props: UserPresenceProps) {
 	);
 }
 
-export default UserPresence;
+export default UserPresenceList;
