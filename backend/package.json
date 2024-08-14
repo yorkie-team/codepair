@@ -1,11 +1,12 @@
 {
-	"name": "backend",
-	"version": "0.0.1",
-	"description": "",
-	"author": "",
+	"name": "codepair-backend",
+	"version": "0.1.2",
+	"description": "CodePair Backend",
+	"author": "yorkie-team",
 	"private": true,
-	"license": "UNLICENSED",
+	"license": "Apache-2.0",
 	"scripts": {
+		"prepare": "cd .. && husky .husky",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -19,6 +20,12 @@
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json"
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"npm run lint",
+			"npm run format"
+		]
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.509.0",
@@ -58,6 +65,7 @@
 		"eslint": "^8.42.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-prettier": "^5.0.0",
+		"husky": "^9.1.4",
 		"jest": "^29.5.0",
 		"prettier": "^3.0.0",
 		"prisma": "^5.8.1",

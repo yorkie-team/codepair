@@ -4,7 +4,7 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 
 const chatModelFactory = {
 	provide: "ChatModel",
-	useFactory: () => new ChatOpenAI({}) as BaseChatModel,
+	useFactory: () => new ChatOpenAI({ modelName: "gpt-4o-mini" }) as BaseChatModel,
 };
 
 @Module({

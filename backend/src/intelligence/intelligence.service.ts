@@ -10,6 +10,7 @@ import { PrismaService } from "src/db/prisma.service";
 import { RunFeatureDto } from "./dto/run-feature.dto";
 import { RunFollowUpDto } from "./dto/run-followup.dto";
 import { followUpPromptTemplate } from "./prompt/followup";
+import { documentWritingPromptTemplate } from "./prompt/document";
 
 @Injectable()
 export class IntelligenceService {
@@ -22,6 +23,7 @@ export class IntelligenceService {
 		const promptTemplates = {
 			[Feature.GITHUB_ISSUE]: githubIssuePromptTemplate,
 			[Feature.GITHUB_PR]: githubPrPromptTemplate,
+			[Feature.DOCUMENT_WRITING]: documentWritingPromptTemplate,
 		};
 		const selectedPrompt = promptTemplates[feature];
 
