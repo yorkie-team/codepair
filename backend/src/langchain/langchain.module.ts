@@ -7,17 +7,16 @@ const chatModelFactory = {
 	provide: "ChatModel",
 	useFactory: () => {
 		const modelType = process.env.YORKIE_INTELLIGENCE;
-		if (modelType === "gemma2:2b"){
+		if (modelType === "gemma2:2b") {
 			return new ChatOllama({
 				model: modelType,
 				checkOrPullModel: true,
 				streaming: true,
 			});
-		}
-		else if (modelType === "openai"){
+		} else if (modelType === "openai") {
 			return new ChatOpenAI({ modelName: "gpt-4o-mini" }) as BaseChatModel;
 		}
-	}
+	},
 };
 
 @Module({
