@@ -1,6 +1,9 @@
-import { Popover, ToggleButtonGroup } from "@mui/material";
+import { useSelector } from "react-redux";
+import { ButtonGroup, Popover, ToggleButtonGroup, Box } from "@mui/material";
 import TooltipToggleButton from "../common/TooltipToggleButton";
 import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
+import { selectSetting } from "../../store/settingSlice";
+import YorkieIntelligence from "./YorkieIntelligence";
 
 interface FormatBarProps {
 	formatBarState: FormatBarState;
@@ -12,6 +15,8 @@ function FormatBar({
 	onChangeFormatBarState,
 }: FormatBarProps) {
 	const { toggleButtonChangeHandler } = useFormatUtils();
+
+	const settingStore = useSelector(selectSetting);
 
 	return (
 		<Popover
@@ -31,9 +36,20 @@ function FormatBar({
 				horizontal: "left",
 			}}
 			disableAutoFocus
+			sx={{
+				"& .MuiPopover-paper": {
+					display: "flex",
+					alignItems: "center",
+				},
+			}}
 		>
+			{/* 가운데 정렬 */}
+			<ButtonGroup sx={{ height: "100%", margin: "3px 7px" }}>
+				{settingStore.yorkieIntelligence?.enable && <YorkieIntelligence />}
+			</ButtonGroup>
+			<Box sx={{ borderLeft: 1, height: "15px", borderColor: "#dddddd" }} />
 			<ToggleButtonGroup
-				sx={{ padding: "3px 5px" }}
+				sx={{ margin: "3px 7px" }}
 				value={Array.from(selectedFormats)}
 				onChange={toggleButtonChangeHandler(selectedFormats, onChangeFormatBarState)}
 				exclusive

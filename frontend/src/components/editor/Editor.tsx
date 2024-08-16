@@ -78,7 +78,7 @@ function Editor() {
 						show: true,
 						position: {
 							top: coords.top - 8,
-							left: coords.left + 190,
+							left: coords.left + 30,
 						},
 						selectedFormats: formats,
 					}));
