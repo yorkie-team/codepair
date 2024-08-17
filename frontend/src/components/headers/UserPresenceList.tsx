@@ -10,7 +10,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Presence } from "./DocumentHeader";
+import { Presence } from "../../hooks/useUserPresence";
 
 interface UserPresenceListProps {
 	presenceList: Presence[];
@@ -35,7 +35,7 @@ function UserPresenceList(props: UserPresenceListProps) {
 	const renderAvatar = (presence: Presence) => (
 		<Tooltip key={presence.clientID} title={presence.presence.name}>
 			<Avatar
-				onClick={() => console.log(presence.presence)}
+				onClick={() => console.log("presence: ", presence)}
 				alt={presence.presence.name}
 				sx={{ bgcolor: presence.presence.color }}
 			>
