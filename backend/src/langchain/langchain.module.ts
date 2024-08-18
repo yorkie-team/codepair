@@ -6,10 +6,21 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 const chatModelFactory = {
 	provide: "ChatModel",
 	useFactory: () => {
+		let modelList: string[] = [
+			"lamma3.1",
+			"gemma2",
+			"gemma2:2b",
+			"phi3",
+			"mistral",
+			"neural-chat",
+			"starling-lm",
+			"solar",
+		];
 		const modelType = process.env.YORKIE_INTELLIGENCE;
-		if (modelType === "gemma2:2b") {
+		if (modelType in modelList) {
 			return new ChatOllama({
 				model: modelType,
+				baseUrl: process.env.OLLAMA_HOST_PORT,
 				checkOrPullModel: true,
 				streaming: true,
 			});

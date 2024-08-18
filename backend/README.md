@@ -24,7 +24,7 @@ This project is the backend part of the CodePair service developed using NestJS.
 3. Run `.backend/docker/docker-compose.yml`.
 
     ```bash
-    docker-compose -f ./backend/docker/docker-compose.yml up -d
+    docker-compose -f ./backend/docker/docker-compose.yml --env-file ./backend/.env.development up -d
     ```
 
 4. Run the Backend application:

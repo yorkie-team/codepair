@@ -59,7 +59,7 @@ We offer two options. Choose the one that best suits your needs:
 2. Run `./backend/docker/docker-compose-full.yml`.
 
    ```bash
-   docker-compose -f ./backend/docker/docker-compose-full.yml up -d
+   docker-compose -f ./backend/docker/docker-compose-full.yml --env-file ./backend/.env.development up -d
    ```
 
 3. Run the Frontend application:
@@ -88,7 +88,7 @@ We offer two options. Choose the one that best suits your needs:
 2. Run `./backend/docker/docker-compose.yml`.
 
    ```bash
-   docker-compose -f ./backend/docker/docker-compose.yml up -d
+   docker-compose -f ./backend/docker/docker-compose.yml --env-file ./backend/.env.development up -d
    ```
 
 3. Run the Backend application:
