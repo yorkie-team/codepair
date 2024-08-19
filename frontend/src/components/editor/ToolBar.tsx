@@ -1,7 +1,9 @@
-import { Popover, ToggleButtonGroup, Divider, Stack } from "@mui/material";
+import { Popover, ToggleButtonGroup, Divider, Stack, Fade } from "@mui/material";
 import TooltipToggleButton from "../common/TooltipToggleButton";
 import { ToolBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 import YorkieIntelligence from "./YorkieIntelligence";
+import { useDebounce } from "react-use";
+import { useState } from "react";
 
 interface ToolBarProps {
 	toolBarState: ToolBarState;
@@ -9,14 +11,25 @@ interface ToolBarProps {
 }
 
 function ToolBar({
-	toolBarState: { show: showFormatBar, position: formatBarPosition, selectedFormats },
+	toolBarState: { show: showToolBar, position: formatBarPosition, selectedFormats },
 	onChangeToolBarState,
 }: ToolBarProps) {
 	const { toggleButtonChangeHandler } = useFormatUtils();
+	const [debouncedShowToolBar, setDebouncedShowToolBar] = useState<boolean | null>(null);
+
+	useDebounce(
+		() => {
+			setDebouncedShowToolBar(showToolBar);
+		},
+		500,
+		[showToolBar]
+	);
+
+	if (!debouncedShowToolBar) return;
 
 	return (
 		<Popover
-			open={showFormatBar}
+			open={debouncedShowToolBar}
 			anchorReference="anchorPosition"
 			anchorPosition={{
 				top: formatBarPosition.top,
@@ -32,6 +45,8 @@ function ToolBar({
 				horizontal: "left",
 			}}
 			disableAutoFocus
+			TransitionComponent={Fade}
+			TransitionProps={{ timeout: 300 }}
 		>
 			<Stack direction={"row"} margin={"5px 7px"}>
 				<YorkieIntelligence />
