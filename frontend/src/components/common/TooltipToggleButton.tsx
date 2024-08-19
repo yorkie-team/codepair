@@ -4,8 +4,6 @@ const style = {
 	toggleButton: {
 		width: "25px",
 		height: "25px",
-		minWidth: "25px",
-		margin: "4px",
 		border: "none",
 		fontWeight: "bold",
 	},
