@@ -16,7 +16,7 @@ import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
 import { ToolBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 
-import ToolBar from "./FormatBar";
+import ToolBar from "./ToolBar";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -185,7 +185,7 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
-				{Boolean(toolBarState.show && editorStore.cmView) && (
+				{Boolean(toolBarState.show) && (
 					<ToolBar toolBarState={toolBarState} onChangeToolBarState={setToolBarState} />
 				)}
 			</div>
