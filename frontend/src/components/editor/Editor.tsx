@@ -14,9 +14,9 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ScrollSyncPane } from "react-scroll-sync";
 import { selectSetting } from "../../store/settingSlice";
-import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
+import { ToolBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 
-import FormatBar from "./FormatBar";
+import ToolBar from "./FormatBar";
 
 function Editor() {
 	const dispatch = useDispatch();
@@ -28,7 +28,7 @@ function Editor() {
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 
-	const [formatBarState, setFormatBarState] = useState<FormatBarState>({
+	const [toolBarState, setToolBarState] = useState<ToolBarState>({
 		show: false,
 		position: { top: 0, left: 0 },
 		selectedFormats: new Set<FormatType>(),
@@ -73,7 +73,7 @@ function Editor() {
 					checkAndAddFormat("`", FormatType.CODE);
 					checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
 
-					setFormatBarState((prev) => ({
+					setToolBarState((prev) => ({
 						...prev,
 						show: true,
 						position: {
@@ -84,7 +84,7 @@ function Editor() {
 					}));
 				}
 			} else {
-				setFormatBarState((prev) => ({
+				setToolBarState((prev) => ({
 					...prev,
 					show: false,
 					selectedFormats: new Set(),
@@ -185,11 +185,8 @@ function Editor() {
 						minHeight: "100%",
 					}}
 				/>
-				{Boolean(formatBarState.show && editorStore.cmView) && (
-					<FormatBar
-						formatBarState={formatBarState}
-						onChangeFormatBarState={setFormatBarState}
-					/>
+				{Boolean(toolBarState.show && editorStore.cmView) && (
+					<ToolBar toolBarState={toolBarState} onChangeToolBarState={setToolBarState} />
 				)}
 			</div>
 		</ScrollSyncPane>

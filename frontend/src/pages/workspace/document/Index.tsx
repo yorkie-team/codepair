@@ -49,7 +49,6 @@ function DocumentIndex() {
 	return (
 		<Box height="calc(100% - 64px)">
 			<DocumentView />
-			{/* {settingStore.yorkieIntelligence?.enable && <YorkieIntelligence />} */}
 		</Box>
 	);
 }

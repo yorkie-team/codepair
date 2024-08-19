@@ -1,22 +1,18 @@
-import { useSelector } from "react-redux";
 import { ButtonGroup, Popover, ToggleButtonGroup, Box } from "@mui/material";
 import TooltipToggleButton from "../common/TooltipToggleButton";
-import { FormatBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
-import { selectSetting } from "../../store/settingSlice";
+import { ToolBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
 import YorkieIntelligence from "./YorkieIntelligence";
 
-interface FormatBarProps {
-	formatBarState: FormatBarState;
-	onChangeFormatBarState: React.Dispatch<React.SetStateAction<FormatBarState>>;
+interface ToolBarProps {
+	toolBarState: ToolBarState;
+	onChangeToolBarState: React.Dispatch<React.SetStateAction<ToolBarState>>;
 }
 
-function FormatBar({
-	formatBarState: { show: showFormatBar, position: formatBarPosition, selectedFormats },
-	onChangeFormatBarState,
-}: FormatBarProps) {
+function ToolBar({
+	toolBarState: { show: showFormatBar, position: formatBarPosition, selectedFormats },
+	onChangeToolBarState,
+}: ToolBarProps) {
 	const { toggleButtonChangeHandler } = useFormatUtils();
-
-	const settingStore = useSelector(selectSetting);
 
 	return (
 		<Popover
@@ -26,7 +22,7 @@ function FormatBar({
 				top: formatBarPosition.top,
 				left: formatBarPosition.left,
 			}}
-			onClose={() => onChangeFormatBarState((prev) => ({ ...prev, show: false }))}
+			onClose={() => onChangeToolBarState((prev) => ({ ...prev, show: false }))}
 			anchorOrigin={{
 				vertical: "top",
 				horizontal: "left",
@@ -43,15 +39,14 @@ function FormatBar({
 				},
 			}}
 		>
-			{/* 가운데 정렬 */}
 			<ButtonGroup sx={{ height: "100%", margin: "3px 7px" }}>
-				{settingStore.yorkieIntelligence?.enable && <YorkieIntelligence />}
+				<YorkieIntelligence />
 			</ButtonGroup>
 			<Box sx={{ borderLeft: 1, height: "15px", borderColor: "#dddddd" }} />
 			<ToggleButtonGroup
 				sx={{ margin: "3px 7px" }}
 				value={Array.from(selectedFormats)}
-				onChange={toggleButtonChangeHandler(selectedFormats, onChangeFormatBarState)}
+				onChange={toggleButtonChangeHandler(selectedFormats, onChangeToolBarState)}
 				exclusive
 				aria-label="text formatting"
 			>
@@ -88,4 +83,4 @@ function FormatBar({
 	);
 }
 
-export default FormatBar;
+export default ToolBar;
