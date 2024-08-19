@@ -23,7 +23,7 @@ function YorkieIntelligence() {
 		setFooterOpen((prev) => !prev);
 	};
 
-	const activated = intelligenceFooterPivot && yorkieIntelligence?.enable;
+	if (!intelligenceFooterPivot) return;
 
 	return (
 		<>
@@ -36,13 +36,13 @@ function YorkieIntelligence() {
 						border: "none",
 					},
 				}}
-				disabled={!activated}
+				disabled={!yorkieIntelligence?.enable}
 			>
 				<img
 					src="/yorkie.png"
 					height={20}
 					alt="yorkie_img"
-					style={{ filter: activated ? "none" : "grayscale(100%)" }}
+					style={{ filter: yorkieIntelligence?.enable ? "none" : "grayscale(100%)" }}
 				/>
 				<Typography variant="subtitle1" fontSize={14}>
 					Yorkie Intelligence
@@ -52,7 +52,7 @@ function YorkieIntelligence() {
 			{footerOpen &&
 				createPortal(
 					<YorkieIntelligenceFooter onClose={handleFooterOpen} />,
-					intelligenceFooterPivot as Element
+					intelligenceFooterPivot
 				)}
 		</>
 	);
