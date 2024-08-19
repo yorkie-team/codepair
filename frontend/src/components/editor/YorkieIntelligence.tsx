@@ -35,22 +35,24 @@ function YorkieIntelligence() {
 					"&:hover": {
 						border: "none",
 					},
-					filter: activated ? "none" : "grayscale(100%)",
-					pointerEvents: activated ? "auto" : "none",
-					opacity: activated ? 1 : 0.7,
 				}}
+				disabled={!activated}
 			>
-				<img src="/yorkie.png" height={20} alt="yorkie_img" />
+				<img
+					src="/yorkie.png"
+					height={20}
+					alt="yorkie_img"
+					style={{ filter: activated ? "none" : "grayscale(100%)" }}
+				/>
 				<Typography variant="subtitle1" fontSize={14}>
 					Yorkie Intelligence
 				</Typography>
 			</Button>
 
 			{footerOpen &&
-				activated &&
 				createPortal(
 					<YorkieIntelligenceFooter onClose={handleFooterOpen} />,
-					intelligenceFooterPivot
+					intelligenceFooterPivot as Element
 				)}
 		</>
 	);
