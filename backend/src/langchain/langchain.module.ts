@@ -26,7 +26,9 @@ const chatModelFactory = {
 	useFactory: () => {
 		const modelType = process.env.YORKIE_INTELLIGENCE;
 		try {
-			const [provider, model] = modelType.split(":", 2);
+			// Split the modelType string into provider and model
+			// ex) "ollama:gemma2:2b" => ["ollama", "gemma2:2b"]
+			const [provider, model] = modelType.split(/:(.+)/);
 			let chatModel: BaseChatModel | ChatOllama;
 
 			if (modelList[provider]?.includes(model)) {
