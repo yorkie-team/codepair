@@ -3,18 +3,50 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatOllama } from "@langchain/ollama";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 
+type ModelList = {
+	[key: string]: string[];
+};
+
+const modelList: ModelList = {
+	ollama: [
+		"lamma3.1",
+		"gemma2",
+		"gemma2:2b",
+		"phi3",
+		"mistral",
+		"neural-chat",
+		"starling-lm",
+		"solar",
+	],
+	openai: ["gpt-3.5-turbo", "gpt-4o-mini"],
+};
+
 const chatModelFactory = {
 	provide: "ChatModel",
 	useFactory: () => {
 		const modelType = process.env.YORKIE_INTELLIGENCE;
-		if (modelType === "gemma2:2b") {
-			return new ChatOllama({
-				model: modelType,
-				checkOrPullModel: true,
-				streaming: true,
-			});
-		} else if (modelType === "openai") {
-			return new ChatOpenAI({ modelName: "gpt-4o-mini" }) as BaseChatModel;
+		try {
+			const [provider, model] = modelType.split(":", 2);
+			let chatModel: BaseChatModel | ChatOllama;
+
+			if (modelList[provider] && modelList[provider].includes(model)) {
+				if (provider === "ollama") {
+					chatModel = new ChatOllama({
+						model: model,
+						baseUrl: process.env.OLLAMA_HOST_URL,
+						checkOrPullModel: true,
+						streaming: true,
+					});
+				} else if (provider === "openai") {
+					chatModel = new ChatOpenAI({ modelName: model });
+				}
+			}
+
+			if (!chatModel) throw new Error(`${model} is not found. please check your model name`);
+
+			return chatModel;
+		} catch {
+			throw new Error("~~~");
 		}
 	},
 };

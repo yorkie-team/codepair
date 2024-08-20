@@ -12,8 +12,8 @@ services:
     yorkie-intelligence:
         image: "ollama/ollama:latest"
         restart: always
-        ports:
-            - "11434:11434"
+        expose:
+            - "11434"
 
     mongo:
         build:
