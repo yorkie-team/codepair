@@ -48,7 +48,7 @@ const chatModelFactory = {
 
 			return chatModel;
 		} catch {
-			throw new Error(`${modelType} is not found. please check your model name`);
+			throw new Error(`${modelType} is not found. Please check your model name`);
 		}
 	},
 };
