@@ -2,31 +2,10 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router-dom";
 import WorkspaceHeader from "../headers/WorkspaceHeader";
+import { selectConfig } from "../../store/configSlice";
+import { useSelector } from "react-redux";
 import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
-import { useDispatch, useSelector } from "react-redux";
-import { selectConfig, setDrawerOpen } from "../../store/configSlice";
-import { DRAWER_WIDTH } from "../../constants/layout";
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-	open?: boolean;
-}>(({ theme, open }) => ({
-	flexGrow: 1,
-	paddingLeft: theme.spacing(3),
-	paddingRight: theme.spacing(3),
-	paddingTop: theme.spacing(3),
-	transition: theme.transitions.create("margin", {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	marginLeft: `-${DRAWER_WIDTH}px`,
-	...(open && {
-		transition: theme.transitions.create("margin", {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-		marginLeft: 0,
-	}),
-}));
+import { Stack } from "@mui/material";
 
 export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 	display: "flex",
@@ -39,20 +18,17 @@ export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 
 function WorkspaceLayout() {
 	const { drawerOpen } = useSelector(selectConfig);
-	const dispatch = useDispatch();
-
-	const handleDrawerOpen = () => {
-		dispatch(setDrawerOpen(!drawerOpen));
-	};
 
 	return (
 		<Box sx={{ display: "flex" }}>
-			<WorkspaceHeader open={drawerOpen} onDrawerOpen={handleDrawerOpen} />
-			<WorkspaceDrawer open={drawerOpen} />
-			<Main open={drawerOpen}>
-				<WorkspaceDrawerHeader />
-				<Outlet />
-			</Main>
+			<WorkspaceHeader />
+			<Stack direction="row" sx={{ width: "100%" }}>
+				<WorkspaceDrawer open={drawerOpen} />
+				<Box flexGrow={1} padding={3}>
+					<WorkspaceDrawerHeader />
+					<Outlet />
+				</Box>
+			</Stack>
 		</Box>
 	);
 }

@@ -115,12 +115,20 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 							))}
 						</InfiniteScroll>
 					</Box>
-					<Divider />
+				</MenuList>
+				<Divider />
+				<MenuList sx={{ width }}>
 					<MenuItem onClick={handleCreateWorkspaceModalOpen}>
 						<ListItemIcon>
-							<AddIcon fontSize="small" />
+							<AddIcon fontSize="small" color="primary" />
 						</ListItemIcon>
-						<ListItemText>Create Workspace</ListItemText>
+						<ListItemText
+							primaryTypographyProps={{
+								color: "primary",
+							}}
+						>
+							Create Workspace
+						</ListItemText>
 					</MenuItem>
 				</MenuList>
 			</Popover>
