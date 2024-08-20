@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../store/editorSlice";
 
-export interface FormatBarState {
+export interface ToolBarState {
 	show: boolean;
 	position: { top: number; left: number };
 	selectedFormats: Set<FormatType>;
@@ -122,7 +122,7 @@ export const useFormatUtils = () => {
 	const toggleButtonChangeHandler = useCallback(
 		(
 			selectedFormats: Set<FormatType>,
-			onChangeFormatBarState: Dispatch<SetStateAction<FormatBarState>>
+			onChangeToolBarState: Dispatch<SetStateAction<ToolBarState>>
 		) => {
 			return (_event: MouseEvent<HTMLElement>, format: FormatType) => {
 				if (!cmView) return;
@@ -133,7 +133,7 @@ export const useFormatUtils = () => {
 				} else {
 					newSelectedFormats.add(format);
 				}
-				onChangeFormatBarState((prev) => ({
+				onChangeToolBarState((prev) => ({
 					...prev,
 					selectedFormats: newSelectedFormats,
 				}));

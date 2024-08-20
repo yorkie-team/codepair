@@ -1,36 +1,26 @@
-import { Card, CardActionArea, Fade, Popper, Stack, Typography, useTheme } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useDebounce } from "react-use";
-import { INTELLIGENCE_FOOTER_ID, INTELLIGENCE_HEADER_ID } from "../../constants/intelligence";
+import { INTELLIGENCE_FOOTER_ID } from "../../constants/intelligence";
 import YorkieIntelligenceFooter from "./YorkieIntelligenceFooter";
+import { useSelector } from "react-redux";
+import { selectSetting } from "../../store/settingSlice";
 
 function YorkieIntelligence() {
-	const theme = useTheme();
 	const [footerOpen, setFooterOpen] = useState(false);
-	const [intelligenceHeaderPivot, setIntelligenceHeaderPivot] = useState<Element | null>(null);
 	const [intelligenceFooterPivot, setIntelligenceFooterPivot] = useState<Element | null>(null);
-	const [debouncedPivot, setDebouncedPivot] = useState<Element | null>(null);
 
-	useDebounce(
-		() => {
-			setDebouncedPivot(intelligenceHeaderPivot);
-		},
-		500,
-		[intelligenceHeaderPivot]
-	);
+	const { yorkieIntelligence } = useSelector(selectSetting);
 
 	useEffect(() => {
-		document.addEventListener("selectionchange", function () {
-			const intelligenceHeaderPivot = document.getElementById(INTELLIGENCE_HEADER_ID);
-			const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
-			setIntelligenceHeaderPivot(intelligenceHeaderPivot);
-			setIntelligenceFooterPivot(intelligenceFooterPivot);
+		// initialize intelligence footer pivot
+		const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
+		setIntelligenceFooterPivot(intelligenceFooterPivot);
 
-			if (!intelligenceHeaderPivot) {
-				setFooterOpen(false);
-				setDebouncedPivot(null);
-			}
+		document.addEventListener("selectionchange", function () {
+			// If changed selection (ex : text formatting), update the intelligence footer pivot
+			const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
+			setIntelligenceFooterPivot(intelligenceFooterPivot);
 		});
 	}, []);
 
@@ -38,41 +28,32 @@ function YorkieIntelligence() {
 		setFooterOpen((prev) => !prev);
 	};
 
-	if (!debouncedPivot || !intelligenceFooterPivot) return;
+	if (!intelligenceFooterPivot) return;
 
 	return (
 		<>
-			<Popper
-				open={Boolean(debouncedPivot)}
-				anchorEl={debouncedPivot}
-				placement="top-start"
-				transition
+			<Button
+				onClick={handleFooterOpen}
+				sx={{
+					padding: "3px 5px",
+					border: "none",
+					"&:hover": {
+						border: "none",
+					},
+				}}
+				disabled={!yorkieIntelligence?.enable}
 			>
-				{({ TransitionProps }) => (
-					<Fade {...TransitionProps}>
-						<Card
-							sx={{
-								boxShadow: theme.shadows[11],
-								borderRadius: 2,
-								mb: 1,
-							}}
-						>
-							<CardActionArea
-								sx={{
-									paddingX: 1.3,
-									paddingY: 0.3,
-								}}
-								onClick={handleFooterOpen}
-							>
-								<Stack direction="row" alignItems="center" gap={1}>
-									<img src="/yorkie.png" height={20} />
-									<Typography variant="subtitle1">Yorkie Intelligence</Typography>
-								</Stack>
-							</CardActionArea>
-						</Card>
-					</Fade>
-				)}
-			</Popper>
+				<img
+					src="/yorkie.png"
+					height={20}
+					alt="yorkie_img"
+					style={{ filter: yorkieIntelligence?.enable ? "none" : "grayscale(100%)" }}
+				/>
+				<Typography variant="subtitle1" fontSize={14}>
+					Yorkie Intelligence
+				</Typography>
+			</Button>
+
 			{footerOpen &&
 				createPortal(
 					<YorkieIntelligenceFooter onClose={handleFooterOpen} />,
