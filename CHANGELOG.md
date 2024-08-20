@@ -7,6 +7,20 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.3] - 2024-08-20
+
+### Added
+
+- Introduce `MAINTAINING.md` and `CHANGELOG.md` files by @devleejb in https://github.com/yorkie-team/codepair/pull/296
+
+### Changed
+
+- Intergrate `YorkieIntelligence` into `ToolBar` by @beberiche in https://github.com/yorkie-team/codepair/pull/301
+
+### Fixed
+
+- Update `rehype-katex` version to prevent errors in CodePair when entering specific KaTex statements by @devleejb in https://github.com/yorkie-team/codepair/pull/302
+
 ## [0.1.2] - 2024-08-14
 
 ### Added
