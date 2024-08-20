@@ -9,6 +9,12 @@ services:
             - "8080:8080"
             - "8081:8081"
 
+    yorkie-intelligence:
+        image: "ollama/ollama:latest"
+        restart: always
+        expose:
+            - "11434"
+
     mongo:
         build:
             context: ./mongodb_replica

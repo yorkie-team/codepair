@@ -32,6 +32,7 @@
 		"@aws-sdk/s3-request-presigner": "^3.509.0",
 		"@langchain/community": "^0.0.21",
 		"@langchain/core": "^0.1.18",
+		"@langchain/ollama": "^0.0.4",
 		"@nestjs/common": "^10.0.0",
 		"@nestjs/config": "^3.1.1",
 		"@nestjs/core": "^10.0.0",

@@ -10,7 +10,7 @@ export class SettingsService {
 	async getSettings(): Promise<GetSettingsResponse> {
 		return {
 			yorkieIntelligence: {
-				enable: this.configService.get("YORKIE_INTELLIGENCE") === "true",
+				enable: this.configService.get("YORKIE_INTELLIGENCE") !== "false",
 				config: {
 					features: generateFeatureList(this.configService),
 				},
