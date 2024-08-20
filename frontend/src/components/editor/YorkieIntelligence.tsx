@@ -13,10 +13,8 @@ function YorkieIntelligence() {
 	const { yorkieIntelligence } = useSelector(selectSetting);
 
 	useEffect(() => {
-		document.addEventListener("selectionchange", function () {
-			const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
-			setIntelligenceFooterPivot(intelligenceFooterPivot);
-		});
+		const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
+		setIntelligenceFooterPivot(intelligenceFooterPivot);
 	}, []);
 
 	const handleFooterOpen = () => {
