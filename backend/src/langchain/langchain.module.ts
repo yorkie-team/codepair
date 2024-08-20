@@ -29,7 +29,7 @@ const chatModelFactory = {
 			const [provider, model] = modelType.split(":", 2);
 			let chatModel: BaseChatModel | ChatOllama;
 
-			if (modelList[provider] && modelList[provider].includes(model)) {
+			if (modelList[provider]?.includes(model)) {
 				if (provider === "ollama") {
 					chatModel = new ChatOllama({
 						model: model,
