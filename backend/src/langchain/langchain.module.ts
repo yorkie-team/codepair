@@ -5,7 +5,7 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 
 type ModelList = {
 	[key: string]: string[];
-};
+}
 
 const modelList: ModelList = {
 	ollama: [
@@ -18,18 +18,22 @@ const modelList: ModelList = {
 		"starling-lm",
 		"solar",
 	],
-	openai: ["gpt-3.5-turbo", "gpt-4o-mini"],
-};
+	openai: [
+		"gpt-3.5-turbo",
+		"gpt-4o-mini"
+	]
+}
 
 const chatModelFactory = {
 	provide: "ChatModel",
 	useFactory: () => {
+		
 		const modelType = process.env.YORKIE_INTELLIGENCE;
-		try {
+		try{
 			const [provider, model] = modelType.split(":", 2);
-			let chatModel: BaseChatModel | ChatOllama;
+			let chatModel: BaseChatModel | ChatOllama
 
-			if (modelList[provider] && modelList[provider].includes(model)) {
+			if (modelList[provider] && modelList[provider].includes(model)){
 				if (provider === "ollama") {
 					chatModel = new ChatOllama({
 						model: model,
@@ -42,12 +46,13 @@ const chatModelFactory = {
 				}
 			}
 
-			if (!chatModel) throw new Error(`${model} is not found. please check your model name`);
+			if (!chatModel) throw new Error();
 
 			return chatModel;
 		} catch {
-			throw new Error("~~~");
+			throw new Error(`${modelType} is not found. please check your model name`);
 		}
+		
 	},
 };
 
