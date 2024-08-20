@@ -13,8 +13,15 @@ function YorkieIntelligence() {
 	const { yorkieIntelligence } = useSelector(selectSetting);
 
 	useEffect(() => {
+		// initialize intelligence footer pivot
 		const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
 		setIntelligenceFooterPivot(intelligenceFooterPivot);
+
+		document.addEventListener("selectionchange", function () {
+			// If changed selection (ex : text formatting), update the intelligence footer pivot
+			const intelligenceFooterPivot = document.getElementById(INTELLIGENCE_FOOTER_ID);
+			setIntelligenceFooterPivot(intelligenceFooterPivot);
+		});
 	}, []);
 
 	const handleFooterOpen = () => {
