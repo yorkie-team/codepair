@@ -73,12 +73,13 @@ function Editor() {
 					checkAndAddFormat("`", FormatType.CODE);
 					checkAndAddFormat("~~", FormatType.STRIKETHROUGH);
 
+					// TODO: If the size of FormatBar changes, adjust the position accordingly.
 					setToolBarState((prev) => ({
 						...prev,
 						show: true,
 						position: {
-							top: coords.top - 8,
-							left: coords.left + 30,
+							top: coords.top - 5,
+							left: coords.left,
 						},
 						selectedFormats: formats,
 					}));
