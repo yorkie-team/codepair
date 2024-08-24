@@ -1,20 +1,19 @@
-import { Controller, Get, HttpRedirectResponse, Redirect, Req, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { LoginRequest } from "./types/login-request.type";
-import { JwtService } from "@nestjs/jwt";
-import { LoginResponse } from "./types/login-response.type";
-import { UsersService } from "src/users/users.service";
-import { Public } from "src/utils/decorators/auth.decorator";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpRedirectResponse, Post, Redirect, Req, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Public } from "src/utils/decorators/auth.decorator";
+import { AuthService } from "./auth.service";
+import { LoginRequest } from "./types/login-request.type";
+import { LoginResponse } from "./types/login-response.type";
+import { RefreshTokenRequest } from "./types/refresh-token-request.type";
 
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
 	constructor(
-		private configService: ConfigService,
-		private jwtService: JwtService,
-		private usersService: UsersService
+		private readonly authService: AuthService,
+		private configService: ConfigService
 	) {}
 
 	@Public()
@@ -28,16 +27,21 @@ export class AuthController {
 	})
 	@ApiResponse({ type: LoginResponse })
 	async login(@Req() req: LoginRequest): Promise<HttpRedirectResponse> {
-		const user = await this.usersService.findOrCreate(
-			req.user.socialProvider,
-			req.user.socialUid
-		);
-
-		const accessToken = this.jwtService.sign({ sub: user.id, nickname: user.nickname });
+		const { accessToken, refreshToken } = await this.authService.loginWithGithub(req);
 
 		return {
-			url: `${this.configService.get("FRONTEND_BASE_URL")}/auth/callback?token=${accessToken}`,
+			url: `${this.configService.get("FRONTEND_BASE_URL")}/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`,
 			statusCode: 302,
 		};
+	}
+
+	@Public()
+	@Post("refresh")
+	@UseGuards(AuthGuard("refresh"))
+	@ApiOperation({ summary: 'Refresh Access Token' })
+	@ApiResponse({ type: LoginResponse })
+	async refresh(@Body() body: RefreshTokenRequest): Promise<{ accessToken: string }> {
+		const accessToken = await this.authService.getNewAccessToken(body.refreshToken);
+		return { accessToken };
 	}
 }
