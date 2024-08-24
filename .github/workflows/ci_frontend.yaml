@@ -35,3 +35,6 @@ jobs:
       - name: Lint
         run: npm run lint
         working-directory: ${{ env.working-directory }}
+      - name: Build
+        run: npm run build
+        working-directory: ${{ env.working-directory }}
