@@ -1,9 +1,7 @@
 import {
 	Box,
 	Collapse,
-	IconButton,
 	List,
-	ListItem,
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
@@ -95,19 +93,15 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 							sx={{ backgroundColor: "transparent" }}
 						>
 							<List>
-								<ListItem>
-									<IconButton
-										size="small"
-										sx={{ p: 0 }}
-										onClick={handleDrawerOpen}
-									>
+								<ListItemButton onClick={handleDrawerOpen}>
+									<ListItemIcon>
 										{open ? (
 											<KeyboardDoubleArrowLeftIcon />
 										) : (
 											<KeyboardDoubleArrowRightIcon />
 										)}
-									</IconButton>
-								</ListItem>
+									</ListItemIcon>
+								</ListItemButton>
 								{menuList.map((menu, index) => (
 									<ListItemButton
 										key={index}

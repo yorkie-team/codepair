@@ -45,7 +45,7 @@ function WorkspaceHeader() {
 					<Button
 						variant="text"
 						color="inherit"
-						sx={{ width: DRAWER_WIDTH - 48, textAlign: "left" }}
+						sx={{ width: DRAWER_WIDTH, textAlign: "left" }}
 						onClick={handleOpenWorkspacePopover}
 					>
 						<Stack
@@ -68,7 +68,7 @@ function WorkspaceHeader() {
 						open={Boolean(workspaceListAnchorEl)}
 						anchorEl={workspaceListAnchorEl}
 						onClose={handleCloseWorkspacePopover}
-						width={DRAWER_WIDTH - 48}
+						width={DRAWER_WIDTH}
 					/>
 					<IconButton onClick={handleOpenProfilePopover}>
 						<Avatar>{userStore.data?.nickname?.charAt(0)}</Avatar>
