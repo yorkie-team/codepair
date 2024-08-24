@@ -9,6 +9,7 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/ci_backend.yaml"
       - "backend/**"
 
 jobs:
@@ -34,4 +35,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
       - name: Lint
         run: npm run lint
+        working-directory: ${{ env.working-directory }}
+      - name: Build
+        run: npm run build
         working-directory: ${{ env.working-directory }}
