@@ -63,7 +63,7 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 	};
 
 	return (
-		<>
+		<Box>
 			<Box sx={{ width: open ? DRAWER_WIDTH : COLLAPESED_DRAWER_WIDTH }} />
 			<Paper
 				sx={{
@@ -122,7 +122,7 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 					</Box>
 				</Collapse>
 			</Paper>
-		</>
+		</Box>
 	);
 }
 
