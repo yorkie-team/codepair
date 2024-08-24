@@ -1,11 +1,10 @@
 import { MouseEventHandler, useState } from "react";
-import { Avatar, IconButton, Stack, Toolbar } from "@mui/material";
+import { AppBar, Avatar, IconButton, Stack, Toolbar } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/userSlice";
 import ProfilePopover from "../popovers/ProfilePopover";
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";
-import { DrawerAppBar } from "./DrawerAppBar";
 
 function SettingHeader() {
 	const navigate = useNavigate();
@@ -25,7 +24,7 @@ function SettingHeader() {
 	};
 
 	return (
-		<DrawerAppBar position="fixed">
+		<AppBar position="fixed">
 			<Toolbar>
 				<Stack
 					width="100%"
@@ -46,7 +45,7 @@ function SettingHeader() {
 				anchorEl={profileAnchorEl}
 				onClose={handleCloseProfilePopover}
 			/>
-		</DrawerAppBar>
+		</AppBar>
 	);
 }
 

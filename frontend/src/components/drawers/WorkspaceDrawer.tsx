@@ -1,23 +1,23 @@
 import {
-	Divider,
-	Drawer,
-	IconButton,
-	ListItem,
+	Box,
+	Collapse,
+	List,
 	ListItemButton,
 	ListItemIcon,
-	ListItemSecondaryAction,
 	ListItemText,
+	Paper,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { MouseEventHandler, useMemo, useState } from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
+import { useDispatch } from "react-redux";
+import { useMemo, useState } from "react";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import { selectWorkspace } from "../../store/workspaceSlice";
 import { WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { DRAWER_WIDTH } from "../../constants/layout";
+import { COLLAPESED_DRAWER_WIDTH, DRAWER_WIDTH } from "../../constants/layout";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import { setDrawerOpen } from "../../store/configSlice";
+
 interface WorkspaceDrawerProps {
 	open: boolean;
 }
@@ -27,81 +27,102 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 	const location = useLocation();
 	const params = useParams();
 	const navigate = useNavigate();
-	const workspaceStore = useSelector(selectWorkspace);
-	const [workspaceListAnchorEl, setWorkspaceListAnchorEl] = useState<
-		(EventTarget & Element) | null
-	>(null);
+	const dispatch = useDispatch();
+	const [hovered, setHovered] = useState(false);
 	const currentPage = useMemo(() => {
 		return location.pathname.split("/")[2] ?? "main";
 	}, [location.pathname]);
+	const menuList = useMemo(() => {
+		return [
+			{
+				title: "Workspace",
+				IconComponent: SpaceDashboardIcon,
+				selected: currentPage === "main",
+				moveTo: `/${params.workspaceSlug}`,
+			},
+			{
+				title: "Members",
+				IconComponent: PeopleIcon,
+				selected: currentPage === "member",
+				moveTo: `/${params.workspaceSlug}/member`,
+			},
+		];
+	}, [currentPage, params.workspaceSlug]);
 
-	const handleOpenWorkspacePopover: MouseEventHandler = (event) => {
-		setWorkspaceListAnchorEl(event.currentTarget);
+	const handleDrawerOpen = () => {
+		dispatch(setDrawerOpen(!open));
+		setHovered(false);
 	};
 
-	const handleCloseWorkspacePopover = () => {
-		setWorkspaceListAnchorEl(null);
+	const handleMouseEnter = () => {
+		setHovered(true);
 	};
 
-	const handleNavigateToMember = () => {
-		navigate(`/${params.workspaceSlug}/member`);
+	const handleMouseLeave = () => {
+		setHovered(false);
 	};
 
 	return (
-		<Drawer
-			sx={{
-				width: DRAWER_WIDTH,
-				flexShrink: 0,
-				"& .MuiDrawer-paper": {
-					width: DRAWER_WIDTH,
-					boxSizing: "border-box",
-				},
-			}}
-			variant="persistent"
-			anchor="left"
-			open={open}
-		>
-			<WorkspaceDrawerHeader>
-				<ListItem disablePadding>
-					<ListItemButton onClick={handleOpenWorkspacePopover}>
-						<ListItemText
-							primary={workspaceStore.data?.title}
-							primaryTypographyProps={{
-								variant: "subtitle1",
-								noWrap: true,
-							}}
-						/>
-						<ListItemSecondaryAction>
-							<IconButton>
-								{workspaceListAnchorEl ? (
-									<KeyboardArrowUpIcon />
-								) : (
-									<KeyboardArrowDownIcon />
-								)}
-							</IconButton>
-						</ListItemSecondaryAction>
-					</ListItemButton>
-					<WorkspaceListPopover
-						open={Boolean(workspaceListAnchorEl)}
-						anchorEl={workspaceListAnchorEl}
-						onClose={handleCloseWorkspacePopover}
-						width={DRAWER_WIDTH - 32}
-					/>
-				</ListItem>
-			</WorkspaceDrawerHeader>
-			<Divider />
-			<ListItem disablePadding>
-				<ListItemButton
-					onClick={handleNavigateToMember}
-					selected={currentPage === "member"}
+		<>
+			<Box sx={{ width: open ? DRAWER_WIDTH : COLLAPESED_DRAWER_WIDTH }} />
+			<Paper
+				sx={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					height: "100vh",
+					zIndex: 10,
+				}}
+			>
+				<Collapse
+					orientation="horizontal"
+					in={hovered || open}
+					collapsedSize={COLLAPESED_DRAWER_WIDTH}
 				>
-					<ListItemIcon>
-						<PeopleIcon />
-					</ListItemIcon>
-					<ListItemText primary="Members" />
-				</ListItemButton>
-			</ListItem>
-		</Drawer>
+					<Box
+						sx={{
+							width: DRAWER_WIDTH,
+							overflow: "hidden",
+						}}
+					>
+						<WorkspaceDrawerHeader />
+						<Paper
+							square
+							elevation={0}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
+							sx={{ backgroundColor: "transparent" }}
+						>
+							<List>
+								<ListItemButton onClick={handleDrawerOpen}>
+									<ListItemIcon>
+										{open ? (
+											<KeyboardDoubleArrowLeftIcon />
+										) : (
+											<KeyboardDoubleArrowRightIcon />
+										)}
+									</ListItemIcon>
+								</ListItemButton>
+								{menuList.map((menu, index) => (
+									<ListItemButton
+										key={index}
+										onClick={() => navigate(menu.moveTo)}
+										selected={menu.selected}
+									>
+										<ListItemIcon>
+											<menu.IconComponent
+												color={menu.selected ? "primary" : "inherit"}
+											/>
+										</ListItemIcon>
+										<ListItemText primary={menu.title} />
+									</ListItemButton>
+								))}
+							</List>
+						</Paper>
+					</Box>
+				</Collapse>
+			</Paper>
+		</>
 	);
 }
 
