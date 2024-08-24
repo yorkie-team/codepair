@@ -73,7 +73,7 @@
 		"rehype-rewrite": "^4.0.2",
 		"remark-math": "^6.0.0",
 		"vite-plugin-package-version": "^1.1.0",
-		"yorkie-js-sdk": "^0.4.27"
+		"yorkie-js-sdk": "^0.4.31"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^2.20.1",
