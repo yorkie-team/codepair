@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.5] - 2024-08-24
+
+### Fixed
+
+- Add build test on GitHub Actions CI and regenerate `package-lock.json` by @devleejb in https://github.com/yorkie-team/codepair/pull/310
+
 ## [0.1.4] - 2024-08-24
 
 ### Added
