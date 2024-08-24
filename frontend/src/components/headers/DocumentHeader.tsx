@@ -4,6 +4,7 @@ import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
 	AppBar,
+	CircularProgress,
 	IconButton,
 	Paper,
 	Stack,
@@ -12,7 +13,7 @@ import {
 	Toolbar,
 	Tooltip,
 } from "@mui/material";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
@@ -21,8 +22,8 @@ import { selectWorkspace } from "../../store/workspaceSlice";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
-import UserPresenceList from "./UserPresenceList";
 
+const UserPresenceList = lazy(() => import("./UserPresenceList"));
 function DocumentHeader() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -86,7 +87,9 @@ function DocumentHeader() {
 						<DownloadMenu />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
-						<UserPresenceList presenceList={presenceList} />
+						<Suspense fallback={<CircularProgress size={24} />}>
+							<UserPresenceList presenceList={presenceList} />
+						</Suspense>
 						{!editorState.shareRole && <ShareButton />}
 						<ThemeButton />
 					</Stack>
