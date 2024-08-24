@@ -47,6 +47,7 @@ export const useYorkieDocument = (
 					name: presenceName,
 					color: Color(randomColor()).fade(0.15).toString(),
 					selection: null,
+					cursor: [0, 0],
 				},
 			});
 		},
