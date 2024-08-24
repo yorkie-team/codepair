@@ -7,6 +7,21 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.4] - 2024-08-24
+
+### Added
+
+- Add Ollama Model for local usage of yorkie intelligence by @sihyeong671 in https://github.com/yorkie-team/codepair/pull/297
+
+## Changed
+
+- Apply the design of sidebar by @devleejb in https://github.com/yorkie-team/codepair/pull/306
+- Bump up `yorkie-js-sdk` to v0.4.31 by @devleejb in https://github.com/yorkie-team/codepair/pull/307
+
+## Fixed
+
+- Update and fix environment setup for Ollama model by @devleejb in https://github.com/yorkie-team/codepair/pull/304
+
 ## [0.1.3] - 2024-08-20
 
 ### Added
