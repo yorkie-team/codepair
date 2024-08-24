@@ -21,6 +21,10 @@ export const useUserPresence = (doc: CodePairDocType | null) => {
 		setPresenceList(doc.getPresences());
 
 		const unsubscribe = doc.subscribe("others", (event) => {
+			if (event.type === "presence-changed") {
+				setPresenceList(doc.getPresences() ?? []);
+			}
+
 			if (event.type === "watched") {
 				setPresenceList(doc.getPresences() ?? []);
 			}

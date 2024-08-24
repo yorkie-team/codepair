@@ -151,10 +151,12 @@ export class YorkieRemoteSelectionsPluginValue {
 
 			if (sel && root.content) {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
+				const cursor = root.content.posRangeToIndexRange(selection);
 
 				if (!_.isEqual(selection, presence.get("selection"))) {
 					presence.set({
 						selection,
+						cursor,
 					});
 				}
 			} else if (presence.get("selection")) {
