@@ -2,9 +2,12 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import "./App.css";
 import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import * as Sentry from "@sentry/react";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	RouterProvider,
 	createBrowserRouter,
@@ -13,15 +16,15 @@ import {
 	useLocation,
 	useNavigationType,
 } from "react-router-dom";
-import { useEffect, useMemo } from "react";
-import { selectConfig } from "./store/configSlice";
-import axios from "axios";
-import { routes } from "./routes";
-import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AuthProvider from "./providers/AuthProvider";
-import { useErrorHandler } from "./hooks/useErrorHandler";
-import * as Sentry from "@sentry/react";
+import "./App.css";
 import { useGetSettingsQuery } from "./hooks/api/settings";
+import { useErrorHandler } from "./hooks/useErrorHandler";
+import AuthProvider from "./providers/AuthProvider";
+import { routes } from "./routes";
+import { setAccessToken, setRefreshToken } from "./store/authSlice";
+import { selectConfig } from "./store/configSlice";
+import { store } from "./store/store";
+import { setUserData } from "./store/userSlice";
 import { isAxios404Error, isAxios500Error } from "./utils/axios.default";
 
 if (import.meta.env.PROD) {
@@ -48,6 +51,42 @@ if (import.meta.env.PROD) {
 }
 
 const router = createBrowserRouter(routes);
+
+axios.interceptors.response.use(
+    res => {
+		console.log("inspector test: " + res.data.json);
+		return res;
+	},
+    async error => {
+		const state = store.getState();
+		const dispatch = useDispatch();
+        const originalRequest = error.config;
+
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            const refreshToken = state.auth.refreshToken;
+            const response = await axios.post('/auth/refresh', { refreshToken });
+
+            if (response.status === 200) {
+                const newAccessToken = response.data.accessToken;
+				dispatch(setAccessToken(newAccessToken));
+
+                axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+                return axios(originalRequest);
+            } else {
+				dispatch(setAccessToken(null));
+				dispatch(setRefreshToken(null));
+				dispatch(setUserData(null));
+			}
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 
 axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
 
