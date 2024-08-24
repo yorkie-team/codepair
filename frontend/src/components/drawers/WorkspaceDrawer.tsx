@@ -51,6 +51,7 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 
 	const handleDrawerOpen = () => {
 		dispatch(setDrawerOpen(!open));
+		setHovered(false);
 	};
 
 	const handleMouseEnter = () => {
