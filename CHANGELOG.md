@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.6] - 2024-08-24
+
+### Fixed
+
+- Fix Slidebar Overlapping by @devleejb in https://github.com/yorkie-team/codepair/pull/312
+- Fix npm install command in `gh_pages` Actions to use `npm ci` by @devleejb in https://github.com/yorkie-team/codepair/pull/313
+
 ## [0.1.5] - 2024-08-24
 
 ### Fixed
