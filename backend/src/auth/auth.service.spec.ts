@@ -6,7 +6,6 @@ import { AuthService } from "./auth.service";
 
 describe("AuthService", () => {
 	let service: AuthService;
-	let usersService: UsersService;
 	let jwtService: JwtService;
 
 	beforeEach(async () => {
@@ -17,14 +16,16 @@ describe("AuthService", () => {
 				{
 					provide: UsersService,
 					useValue: {
-						findOrCreate: jest.fn().mockResolvedValue({ id: '123', nickname: 'testuser' }),
+						findOrCreate: jest
+							.fn()
+							.mockResolvedValue({ id: "123", nickname: "testuser" }),
 					},
 				},
 				{
 					provide: JwtService,
 					useValue: {
-						sign: jest.fn().mockReturnValue('signedToken'),
-						verify: jest.fn().mockReturnValue({ sub: '123', nickname: 'testuser' }),
+						sign: jest.fn().mockReturnValue("signedToken"),
+						verify: jest.fn().mockReturnValue({ sub: "123", nickname: "testuser" }),
 					},
 				},
 			],
@@ -32,7 +33,6 @@ describe("AuthService", () => {
 
 		service = module.get<AuthService>(AuthService);
 		jwtService = module.get<JwtService>(JwtService);
-		usersService = module.get<UsersService>(UsersService);
 	});
 
 	it("should be defined", () => {
@@ -41,13 +41,13 @@ describe("AuthService", () => {
 
 	describe("getNewAccessToken", () => {
 		it("should generate a new access token using refresh token", async () => {
-			const newToken = await service.getNewAccessToken('refreshToken');
+			const newToken = await service.getNewAccessToken("refreshToken");
 
-			expect(newToken).toBe('signedToken');
-			expect(jwtService.verify).toHaveBeenCalledWith('refreshToken');
+			expect(newToken).toBe("signedToken");
+			expect(jwtService.verify).toHaveBeenCalledWith("refreshToken");
 			expect(jwtService.sign).toHaveBeenCalledWith(
-				{ sub: '123', nickname: 'testuser' },
-				expect.any(Object),
+				{ sub: "123", nickname: "testuser" },
+				expect.any(Object)
 			);
 		});
 
@@ -56,7 +56,9 @@ describe("AuthService", () => {
 				throw new Error("Invalid token");
 			});
 
-			await expect(service.getNewAccessToken('invalidToken')).rejects.toThrow("Invalid token");
+			await expect(service.getNewAccessToken("invalidToken")).rejects.toThrow(
+				"Invalid token"
+			);
 		});
 	});
 });

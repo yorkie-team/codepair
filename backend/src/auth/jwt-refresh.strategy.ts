@@ -6,14 +6,12 @@ import { JwtPayload } from "src/utils/types/jwt.type";
 import { AuthorizedUser } from "src/utils/types/req.type";
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(
-	PassportJwtStrategy, "refresh"
-) {
+export class JwtRefreshStrategy extends PassportStrategy(PassportJwtStrategy, "refresh") {
 	constructor(configService: ConfigService) {
 		super({
-      		jwtFromRequest: (req: Request) => {
-				if (req && (req.body as any).refresh_token) {
-					return (req.body as any).refresh_token;
+			jwtFromRequest: (req) => {
+				if (req && req.body.refreshToken) {
+					return req.body.refreshToken;
 				}
 				return null;
 			},
