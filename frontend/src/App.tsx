@@ -52,42 +52,6 @@ if (import.meta.env.PROD) {
 
 const router = createBrowserRouter(routes);
 
-axios.interceptors.response.use(
-    res => {
-		console.log("inspector test: " + res.data.json);
-		return res;
-	},
-    async error => {
-		const state = store.getState();
-		const dispatch = useDispatch();
-        const originalRequest = error.config;
-
-        if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-
-            const refreshToken = state.auth.refreshToken;
-            const response = await axios.post('/auth/refresh', { refreshToken });
-
-            if (response.status === 200) {
-                const newAccessToken = response.data.accessToken;
-				dispatch(setAccessToken(newAccessToken));
-
-                axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-                return axios(originalRequest);
-            } else {
-				dispatch(setAccessToken(null));
-				dispatch(setRefreshToken(null));
-				dispatch(setUserData(null));
-			}
-        }
-
-        return Promise.reject(error);
-    }
-);
-
-
 axios.defaults.baseURL = import.meta.env.VITE_API_ADDR;
 
 function SettingLoader() {
@@ -97,6 +61,7 @@ function SettingLoader() {
 
 function App() {
 	const config = useSelector(selectConfig);
+	const dispatch = useDispatch();
 	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 	const theme = useMemo(() => {
 		const defaultMode = prefersDarkMode ? "dark" : "light";
@@ -133,6 +98,47 @@ function App() {
 			},
 		});
 	}, [handleError]);
+
+	useEffect(() => {
+		const handleRefreshTokenExpiration = () => {
+			dispatch(setAccessToken(null));
+			dispatch(setRefreshToken(null));
+			dispatch(setUserData(null));
+			// axios.defaults.headers.common["Authorization"] = "";
+		};
+
+		const interceptor = axios.interceptors.response.use(
+			(response) => response,
+			async (error) => {
+				if (error.response?.status === 401) {
+					if (error.config.url === "/auth/refresh") {
+						handleRefreshTokenExpiration();
+						return Promise.reject(error);
+					} else if (!error.config._retry) {
+						error.config._retry = true;
+						const refreshToken = store.getState().auth.refreshToken;
+						try {
+							const response = await axios.post("/auth/refresh", { refreshToken });
+							const newAccessToken = response.data.accessToken;
+							dispatch(setAccessToken(newAccessToken));
+							axios.defaults.headers.common["Authorization"] =
+								`Bearer ${newAccessToken}`;
+							error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+							return axios(error.config);
+						} catch (refreshError) {
+							handleRefreshTokenExpiration();
+							return Promise.reject(refreshError);
+						}
+					}
+				}
+				return Promise.reject(error);
+			}
+		);
+
+		return () => {
+			axios.interceptors.response.eject(interceptor);
+		};
+	}, [dispatch]);
 
 	return (
 		<QueryClientProvider client={queryClient}>

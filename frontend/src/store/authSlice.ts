@@ -4,12 +4,12 @@ import { RootState } from "./store";
 
 export interface AuthState {
 	accessToken: string | null;
-    refreshToken: string | null;
+	refreshToken: string | null;
 }
 
 const initialState: AuthState = {
 	accessToken: null,
-    refreshToken: null,
+	refreshToken: null,
 };
 
 export const authSlice = createSlice({
@@ -19,9 +19,9 @@ export const authSlice = createSlice({
 		setAccessToken: (state, action: PayloadAction<string | null>) => {
 			state.accessToken = action.payload;
 		},
-        setRefreshToken(state, action: PayloadAction<string | null>) {
-            state.refreshToken = action.payload;
-        },
+		setRefreshToken(state, action: PayloadAction<string | null>) {
+			state.refreshToken = action.payload;
+		},
 	},
 });
 

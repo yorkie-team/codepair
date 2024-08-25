@@ -20,7 +20,6 @@ function CallbackIndex() {
 
 		dispatch(setAccessToken(accessToken));
 		dispatch(setRefreshToken(refreshToken));
-
 	}, [dispatch, navigate, searchParams]);
 
 	return <Box></Box>;
