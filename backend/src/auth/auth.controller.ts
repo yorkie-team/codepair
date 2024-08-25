@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpRedirectResponse, Post, Redirect, Req, UseGuards } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Get,
+	HttpRedirectResponse,
+	Post,
+	Redirect,
+	Req,
+	UseGuards,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -38,7 +47,7 @@ export class AuthController {
 	@Public()
 	@Post("refresh")
 	@UseGuards(AuthGuard("refresh"))
-	@ApiOperation({ summary: 'Refresh Access Token' })
+	@ApiOperation({ summary: "Refresh Access Token" })
 	@ApiResponse({ type: LoginResponse })
 	async refresh(@Body() body: RefreshTokenRequest): Promise<{ accessToken: string }> {
 		const accessToken = await this.authService.getNewAccessToken(body.refreshToken);

@@ -16,9 +16,7 @@ import { JwtStrategy } from "./jwt.strategy";
 				return {
 					global: true,
 					signOptions: {
-						expiresIn: `${configService.get(
-							'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-						)}s`,
+						expiresIn: `${configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`,
 					},
 					secret: configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
 				};
