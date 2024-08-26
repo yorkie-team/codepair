@@ -1,21 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
-import { EditorState } from "@codemirror/state";
-import { EditorView, basicSetup } from "codemirror";
 import { markdown } from "@codemirror/lang-markdown";
-import { useDispatch, useSelector } from "react-redux";
-import { selectEditor, setCmView } from "../../store/editorSlice";
-import { yorkieCodeMirror } from "../../utils/yorkie";
-import { xcodeLight, xcodeDark } from "@uiw/codemirror-theme-xcode";
-import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { EditorState } from "@codemirror/state";
 import { keymap, ViewUpdate } from "@codemirror/view";
-import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
-import { imageUploader } from "../../utils/imageUploader";
-import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
-import { selectWorkspace } from "../../store/workspaceSlice";
+import { xcodeDark, xcodeLight } from "@uiw/codemirror-theme-xcode";
+import { basicSetup, EditorView } from "codemirror";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ScrollSyncPane } from "react-scroll-sync";
+import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/api/file";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { FormatType, ToolBarState, useFormatUtils } from "../../hooks/useFormatUtils";
+import { selectEditor, setCmView } from "../../store/editorSlice";
 import { selectSetting } from "../../store/settingSlice";
-import { ToolBarState, useFormatUtils, FormatType } from "../../hooks/useFormatUtils";
-
+import { selectWorkspace } from "../../store/workspaceSlice";
+import { imageUploader } from "../../utils/imageUploader";
+import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
+import { yorkieCodeMirror } from "../../utils/yorkie";
 import ToolBar from "./ToolBar";
 
 function Editor() {

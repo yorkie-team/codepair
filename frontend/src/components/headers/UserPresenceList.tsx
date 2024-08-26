@@ -9,17 +9,21 @@ import {
 	Tooltip,
 	Typography,
 } from "@mui/material";
+import { EditorView } from "codemirror";
 import { useState } from "react";
-import { Presence } from "./DocumentHeader";
+import { useSelector } from "react-redux";
+import { Presence } from "../../hooks/useUserPresence";
+import { selectEditor } from "../../store/editorSlice";
 
-interface UserPresenceProps {
+interface UserPresenceListProps {
 	presenceList: Presence[];
 }
 
-function UserPresence(props: UserPresenceProps) {
+function UserPresenceList(props: UserPresenceListProps) {
 	const { presenceList } = props;
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const popoverOpen = Boolean(anchorEl);
+	const editorStore = useSelector(selectEditor);
 
 	const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -29,12 +33,27 @@ function UserPresence(props: UserPresenceProps) {
 		setAnchorEl(null);
 	};
 
+	const handleScrollToUserLocation = (presence: Presence) => {
+		const cursor = presence.presence.cursor;
+		if (cursor === null) return;
+
+		editorStore.cmView?.dispatch({
+			effects: EditorView.scrollIntoView(cursor[0], {
+				y: "center",
+			}),
+		});
+	};
+
 	const MAX_VISIBLE_AVATARS = 4;
 	const hiddenAvatars = presenceList.slice(MAX_VISIBLE_AVATARS);
 
 	const renderAvatar = (presence: Presence) => (
 		<Tooltip key={presence.clientID} title={presence.presence.name}>
-			<Avatar alt={presence.presence.name} sx={{ bgcolor: presence.presence.color }}>
+			<Avatar
+				onClick={() => handleScrollToUserLocation(presence)}
+				alt={presence.presence.name}
+				sx={{ bgcolor: presence.presence.color }}
+			>
 				{presence.presence.name[0]}
 			</Avatar>
 		</Tooltip>
@@ -62,7 +81,11 @@ function UserPresence(props: UserPresenceProps) {
 				<Paper sx={{ padding: 2 }}>
 					<Typography variant="subtitle2">Additional Users</Typography>
 					{hiddenAvatars.map((presence) => (
-						<ListItem key={presence.clientID} sx={{ paddingY: 1 }}>
+						<ListItem
+							key={presence.clientID}
+							sx={{ paddingY: 1 }}
+							onClick={() => handleScrollToUserLocation(presence)}
+						>
 							<ListItemAvatar>
 								<Avatar
 									sx={{
@@ -89,4 +112,4 @@ function UserPresence(props: UserPresenceProps) {
 	);
 }
 
-export default UserPresence;
+export default UserPresenceList;
