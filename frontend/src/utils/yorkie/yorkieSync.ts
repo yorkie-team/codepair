@@ -10,7 +10,7 @@ export type YorkieCodeMirrorPresenceType = {
 	color: string;
 	name: string;
 	selection: yorkie.TextPosStructRange | null;
-	cursor: [number, number];
+	cursor: [number, number] | null;
 };
 
 export class YorkieSyncConfig<

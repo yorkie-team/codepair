@@ -35,6 +35,8 @@ function UserPresenceList(props: UserPresenceListProps) {
 
 	const handleScrollToUserLocation = (presence: Presence) => {
 		const cursor = presence.presence.cursor;
+		if (cursor === null) return;
+
 		editorStore.cmView?.dispatch({
 			effects: EditorView.scrollIntoView(cursor[0], {
 				y: "center",
