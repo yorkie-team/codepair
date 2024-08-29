@@ -7,6 +7,16 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.7] - 2024-08-29
+
+### Added
+
+- Add scroll navigation to user's location from profile view by @choidabom in https://github.com/yorkie-team/codepair/pull/316
+
+### Fixed
+
+- Added rehypeSanitize to improve preview xss issues by @taeng0204 in https://github.com/yorkie-team/codepair/pull/323
+
 ## [0.1.6] - 2024-08-24
 
 ### Fixed
