@@ -88,6 +88,15 @@ function App() {
 				},
 			}),
 			defaultOptions: {
+				queries: {
+					retry: (failureCount, error) => {
+						if (axios.isAxiosError(error) && error.response?.status === 401) {
+							return false;
+						}
+
+						return failureCount < 3;
+					},
+				},
 				mutations: {
 					onError: handleError,
 				},
