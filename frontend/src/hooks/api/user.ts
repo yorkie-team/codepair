@@ -14,17 +14,15 @@ export const useGetUserQuery = () => {
 	const dispatch = useDispatch();
 	const authStore = useSelector(selectAuth);
 
-	if (authStore.accessToken) {
-		axios.defaults.headers.common["Authorization"] = `Bearer ${authStore.accessToken}`;
-	}
-
 	const query = useQuery({
 		queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
 		enabled: Boolean(authStore.accessToken),
 		queryFn: async () => {
+			axios.defaults.headers.common["Authorization"] = `Bearer ${authStore.accessToken}`;
 			const res = await axios.get<GetUserResponse>("/users");
 			return res.data;
 		},
+		retry: false,
 	});
 
 	useEffect(() => {
