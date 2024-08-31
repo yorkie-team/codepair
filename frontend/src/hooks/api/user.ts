@@ -22,7 +22,6 @@ export const useGetUserQuery = () => {
 			const res = await axios.get<GetUserResponse>("/users");
 			return res.data;
 		},
-		retry: false,
 	});
 
 	useEffect(() => {
