@@ -7,6 +7,16 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.8] - 2024-09-01
+
+## Changed
+
+- Downgrade `yorkie-js-sdk` to `v0.4.27` by @devleejb in https://github.com/yorkie-team/codepair/pull/327
+
+## Fixed
+
+- Disable retry logic for 401 errors during login by @devleejb in https://github.com/yorkie-team/codepair/pull/325
+
 ## [0.1.7] - 2024-08-29
 
 ### Added
