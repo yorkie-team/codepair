@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.9] - 20204-09-02
+
+## Changed
+
+- Change version of `codemirror`, `yorkie-js-sdk` dependencies by @devleejb in https://github.com/yorkie-team/codepair/pull/329
+
 ## [0.1.8] - 2024-09-01
 
 ## Changed
