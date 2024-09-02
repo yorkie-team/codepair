@@ -22,9 +22,9 @@
 		]
 	},
 	"dependencies": {
-		"@codemirror/commands": "^6.3.3",
+		"@codemirror/commands": "6.1.2",
 		"@codemirror/lang-markdown": "^6.2.3",
-		"@codemirror/view": "^6.23.0",
+		"@codemirror/view": "6.23.1",
 		"@emotion/react": "^11.11.3",
 		"@emotion/styled": "^11.11.0",
 		"@fontsource/roboto": "^5.0.8",
@@ -74,7 +74,7 @@
 		"rehype-sanitize": "^6.0.0",
 		"remark-math": "^6.0.0",
 		"vite-plugin-package-version": "^1.1.0",
-		"yorkie-js-sdk": "^0.4.27"
+		"yorkie-js-sdk": "0.4.27"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^2.20.1",
