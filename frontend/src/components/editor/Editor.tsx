@@ -15,6 +15,7 @@ import { selectSetting } from "../../store/settingSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { imageUploader } from "../../utils/imageUploader";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
+import { urlHyperlinkInserter } from "../../utils/urlHyperlinkInserter";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import ToolBar from "./ToolBar";
 
@@ -78,6 +79,7 @@ function Editor() {
 				...(settingStore.fileUpload.enable
 					? [imageUploader(handleUploadImage, editorStore.doc)]
 					: []),
+				urlHyperlinkInserter(editorStore.doc),
 			],
 		});
 
