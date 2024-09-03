@@ -36,6 +36,9 @@ export const urlHyperlinkInserter = (doc: CodePairDocType) => {
 			const url = event.clipboardData?.getData("text/plain");
 			if (!url || !isValidUrl(url)) return;
 
+			const { from, to } = view.state.selection.main;
+			if (from === to) return;
+
 			insertLinkToEditor(url, view, doc);
 			event.preventDefault();
 		},
