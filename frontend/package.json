@@ -87,6 +87,7 @@
 		"@types/react-dom": "^18.2.17",
 		"@types/react-infinite-scroller": "^1.2.5",
 		"@types/react-scroll-sync": "^0.9.0",
+		"@types/validator": "^13.12.1",
 		"@typescript-eslint/eslint-plugin": "^6.14.0",
 		"@typescript-eslint/parser": "^6.14.0",
 		"@vitejs/plugin-react": "^4.2.1",

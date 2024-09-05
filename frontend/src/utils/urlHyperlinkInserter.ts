@@ -1,10 +1,9 @@
 import { EditorView } from "codemirror";
+import validator from "validator";
 import { CodePairDocType } from "../store/editorSlice";
 
 const isValidUrl = (url: string) => {
-	// eslint-disable-next-line no-useless-escape
-	const urlRegex = /^(https?|ftp):\/\/(-\.)?([^\s\/?\.#-]+\.?)+(\/[^\s]*)?$/i;
-	return urlRegex.test(url);
+	return validator.isURL(url);
 };
 
 const insertLinkToEditor = (url: string, view: EditorView, doc: CodePairDocType) => {
