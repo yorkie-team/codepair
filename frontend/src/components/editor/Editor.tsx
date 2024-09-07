@@ -1,7 +1,7 @@
 import { markdown } from "@codemirror/lang-markdown";
 import { EditorState } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
-import { vim } from "@replit/codemirror-vim";
+import { Vim, vim } from "@replit/codemirror-vim";
 import { xcodeDark, xcodeLight } from "@uiw/codemirror-theme-xcode";
 import { basicSetup, EditorView } from "codemirror";
 import { useCallback, useEffect, useState } from "react";
@@ -86,8 +86,10 @@ function Editor() {
 			],
 		});
 
-		const view = new EditorView({ state, parent: element });
+		// Vim key mapping: Map 'jj' to '<Esc>' in insert mode
+		Vim.map("jj", "<Esc>", "insert");
 
+		const view = new EditorView({ state, parent: element });
 		dispatch(setCmView(view));
 
 		return () => {
