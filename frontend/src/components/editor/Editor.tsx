@@ -1,6 +1,7 @@
 import { markdown } from "@codemirror/lang-markdown";
 import { EditorState } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
+import { vim } from "@replit/codemirror-vim";
 import { xcodeDark, xcodeLight } from "@uiw/codemirror-theme-xcode";
 import { basicSetup, EditorView } from "codemirror";
 import { useCallback, useEffect, useState } from "react";
@@ -10,7 +11,7 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { useFormatUtils } from "../../hooks/useFormatUtils";
 import { useToolBar } from "../../hooks/useToolBar";
-import { selectEditor, setCmView } from "../../store/editorSlice";
+import { CodeKeyType, selectEditor, setCmView } from "../../store/editorSlice";
 import { selectSetting } from "../../store/settingSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { imageUploader } from "../../utils/imageUploader";
@@ -41,6 +42,7 @@ function Editor() {
 			!element ||
 			!editorStore.doc ||
 			!editorStore.client ||
+			!editorStore.codeKey ||
 			typeof settingStore.fileUpload?.enable !== "boolean"
 		) {
 			return;
@@ -66,6 +68,7 @@ function Editor() {
 				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
+				editorStore.codeKey === CodeKeyType.vim ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,
@@ -94,6 +97,7 @@ function Editor() {
 		element,
 		editorStore.client,
 		editorStore.doc,
+		editorStore.codeKey,
 		themeMode,
 		workspaceStore.data,
 		settingStore.fileUpload?.enable,

@@ -1,12 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
-import * as yorkie from "yorkie-js-sdk";
-import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
-import { ShareRole } from "../utils/share";
+import { createSlice } from "@reduxjs/toolkit";
 import { EditorView } from "codemirror";
+import * as yorkie from "yorkie-js-sdk";
+import { ShareRole } from "../utils/share";
+import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import { RootState } from "./store";
 
-export type EditorModeType = "edit" | "both" | "read";
+export enum EditorModeType {
+	edit = "edit",
+	both = "both",
+	read = "read",
+}
+
+export enum CodeKeyType {
+	sublime = "sublime",
+	vim = "vim",
+}
+
 export type CodePairDocType = yorkie.Document<
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType
@@ -14,6 +24,7 @@ export type CodePairDocType = yorkie.Document<
 
 export interface EditorState {
 	mode: EditorModeType;
+	codeKey: CodeKeyType;
 	shareRole: ShareRole | null;
 	doc: CodePairDocType | null;
 	client: yorkie.Client | null;
@@ -21,7 +32,8 @@ export interface EditorState {
 }
 
 const initialState: EditorState = {
-	mode: "both",
+	mode: EditorModeType.both,
+	codeKey: CodeKeyType.sublime,
 	shareRole: null,
 	doc: null,
 	client: null,
@@ -34,6 +46,9 @@ export const editorSlice = createSlice({
 	reducers: {
 		setMode: (state, action: PayloadAction<EditorModeType>) => {
 			state.mode = action.payload;
+		},
+		setCodeKeyType: (state, action: PayloadAction<CodeKeyType>) => {
+			state.codeKey = action.payload;
 		},
 		setShareRole: (state, action: PayloadAction<ShareRole | null>) => {
 			state.shareRole = action.payload;
@@ -50,7 +65,8 @@ export const editorSlice = createSlice({
 	},
 });
 
-export const { setMode, setDoc, setClient, setShareRole, setCmView } = editorSlice.actions;
+export const { setMode, setCodeKeyType, setShareRole, setDoc, setClient, setCmView } =
+	editorSlice.actions;
 
 export const selectEditor = (state: RootState) => state.editor;
 

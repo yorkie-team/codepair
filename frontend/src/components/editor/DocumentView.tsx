@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
-import { selectEditor } from "../../store/editorSlice";
-import Resizable from "react-resizable-layout";
-import { useWindowWidth } from "@react-hook/window-size";
-import Editor from "./Editor";
 import { Backdrop, Box, CircularProgress, Paper } from "@mui/material";
-import Preview from "./Preview";
+import { useWindowWidth } from "@react-hook/window-size";
+import { useSelector } from "react-redux";
+import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import { EditorModeType, selectEditor } from "../../store/editorSlice";
+import Editor from "./Editor";
+import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
+import Preview from "./Preview";
 
-function DocumentView() {
+const DocumentView = () => {
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
 
@@ -20,9 +21,7 @@ function DocumentView() {
 
 	return (
 		<>
-			{/* For Markdown Preview Theme */}
-			<div className="wmde-markdown-var" />
-			{editorStore.mode === "both" && (
+			{editorStore.mode === EditorModeType.both && (
 				<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
 					{({ position: width, separatorProps }) => (
 						<ScrollSync>
@@ -32,10 +31,21 @@ function DocumentView() {
 									display: "flex",
 									height: "100%",
 									overflow: "hidden",
+									position: "relative",
 								}}
 							>
-								<div id="left-block" style={{ width }}>
-									<Editor />
+								<div
+									id="left-block"
+									style={{
+										width,
+										position: "relative",
+										height: "100%",
+									}}
+								>
+									<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
+										<Editor />
+									</div>
+									<EditorBottomBar width={width} />
 								</div>
 								<Paper
 									id="splitter"
@@ -66,14 +76,23 @@ function DocumentView() {
 					)}
 				</Resizable>
 			)}
-			{editorStore.mode === "read" && (
+
+			{editorStore.mode === EditorModeType.edit && (
+				<div style={{ position: "relative", height: "100%" }}>
+					<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
+						<Editor />
+					</div>
+					<EditorBottomBar width="100%" />
+				</div>
+			)}
+
+			{editorStore.mode === EditorModeType.read && (
 				<Box sx={{ p: 4, overflow: "auto" }} height="100%">
 					<Preview />
 				</Box>
 			)}
-			{editorStore.mode === "edit" && <Editor />}
 		</>
 	);
-}
+};
 
 export default DocumentView;
