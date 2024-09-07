@@ -5,8 +5,15 @@ import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import DocumentView from "../../../../components/editor/DocumentView";
 import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
 import { useYorkieDocument } from "../../../../hooks/useYorkieDocument";
-import { setClient, setDoc, setMode, setShareRole } from "../../../../store/editorSlice";
+import {
+	EditorModeType,
+	setClient,
+	setDoc,
+	setMode,
+	setShareRole,
+} from "../../../../store/editorSlice";
 import { selectUser } from "../../../../store/userSlice";
+import { ShareRole } from "../../../../utils/share";
 
 function DocumentShareIndex() {
 	const dispatch = useDispatch();
@@ -25,8 +32,8 @@ function DocumentShareIndex() {
 
 		dispatch(setShareRole(sharedDocument.role));
 
-		if (sharedDocument.role === "READ") {
-			dispatch(setMode("read"));
+		if (sharedDocument.role === ShareRole.READ) {
+			dispatch(setMode(EditorModeType.read));
 		}
 	}, [dispatch, sharedDocument?.role]);
 
