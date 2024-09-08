@@ -1,5 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "./store";
 
 export interface AuthState {
@@ -22,10 +23,15 @@ export const authSlice = createSlice({
 		setRefreshToken(state, action: PayloadAction<string | null>) {
 			state.refreshToken = action.payload;
 		},
+		logout: (state) => {
+			state.accessToken = null;
+			state.refreshToken = null;
+			axios.defaults.headers.common["Authorization"] = "";
+		},
 	},
 });
 
-export const { setAccessToken, setRefreshToken } = authSlice.actions;
+export const { setAccessToken, setRefreshToken, logout } = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.auth;
 

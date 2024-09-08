@@ -21,7 +21,7 @@ import { useGetSettingsQuery } from "./hooks/api/settings";
 import { useErrorHandler } from "./hooks/useErrorHandler";
 import AuthProvider from "./providers/AuthProvider";
 import { routes } from "./routes";
-import { setAccessToken, setRefreshToken } from "./store/authSlice";
+import { logout, setAccessToken } from "./store/authSlice";
 import { selectConfig } from "./store/configSlice";
 import { store } from "./store/store";
 import { setUserData } from "./store/userSlice";
@@ -101,10 +101,8 @@ function App() {
 
 	useEffect(() => {
 		const handleRefreshTokenExpiration = () => {
-			dispatch(setAccessToken(null));
-			dispatch(setRefreshToken(null));
+			dispatch(logout());
 			dispatch(setUserData(null));
-			// axios.defaults.headers.common["Authorization"] = "";
 		};
 
 		const interceptor = axios.interceptors.response.use(
@@ -112,7 +110,6 @@ function App() {
 			async (error) => {
 				if (error.response?.status === 401) {
 					if (error.config.url === "/auth/refresh") {
-						handleRefreshTokenExpiration();
 						return Promise.reject(error);
 					} else if (!error.config._retry) {
 						error.config._retry = true;
