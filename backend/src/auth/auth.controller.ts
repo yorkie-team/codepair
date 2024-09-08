@@ -10,12 +10,13 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Public } from "src/utils/decorators/auth.decorator";
 import { AuthService } from "./auth.service";
+import { RefreshTokenRequestDto } from "./dto/refresh-token-request.dto";
+import { RefreshTokenResponseDto } from "./dto/refresh-token-response.dto";
 import { LoginRequest } from "./types/login-request.type";
 import { LoginResponse } from "./types/login-response.type";
-import { RefreshTokenRequest } from "./types/refresh-token-request.type";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -36,7 +37,7 @@ export class AuthController {
 	})
 	@ApiResponse({ type: LoginResponse })
 	async login(@Req() req: LoginRequest): Promise<HttpRedirectResponse> {
-		const { accessToken, refreshToken } = await this.authService.loginWithGithub(req);
+		const { accessToken, refreshToken } = await this.authService.loginWithSocialProvider(req);
 
 		return {
 			url: `${this.configService.get("FRONTEND_BASE_URL")}/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`,
@@ -47,10 +48,13 @@ export class AuthController {
 	@Public()
 	@Post("refresh")
 	@UseGuards(AuthGuard("refresh"))
-	@ApiOperation({ summary: "Refresh Access Token" })
-	@ApiResponse({ type: LoginResponse })
-	async refresh(@Body() body: RefreshTokenRequest): Promise<{ accessToken: string }> {
-		const accessToken = await this.authService.getNewAccessToken(body.refreshToken);
-		return { accessToken };
+	@ApiOperation({
+		summary: "Refresh Access Token",
+		description: "Generates a new Access Token using the user's Refresh Token.",
+	})
+	@ApiBody({ type: RefreshTokenRequestDto })
+	@ApiResponse({ type: RefreshTokenResponseDto })
+	async refresh(@Body() body: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
+		return await this.authService.getNewAccessToken(body.refreshToken);
 	}
 }
