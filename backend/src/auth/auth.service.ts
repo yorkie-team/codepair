@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "src/users/users.service";
+import { RefreshTokenResponseDto } from "./dto/refresh-token-response.dto";
 import { LoginRequest } from "./types/login-request.type";
 import { LoginResponse } from "./types/login-response.type";
 
@@ -13,7 +14,7 @@ export class AuthService {
 		private readonly configService: ConfigService
 	) {}
 
-	async loginWithGithub(req: LoginRequest): Promise<LoginResponse> {
+	async loginWithSocialProvider(req: LoginRequest): Promise<LoginResponse> {
 		const user = await this.usersService.findOrCreate(
 			req.user.socialProvider,
 			req.user.socialUid
@@ -21,18 +22,24 @@ export class AuthService {
 
 		const accessToken = this.jwtService.sign(
 			{ sub: user.id, nickname: user.nickname },
-			{ expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s` }
+			{
+				secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+				expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`,
+			}
 		);
 
 		const refreshToken = this.jwtService.sign(
 			{ sub: user.id },
-			{ expiresIn: `${this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME")}s` }
+			{
+				secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+				expiresIn: `${this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME")}s`,
+			}
 		);
 
 		return { accessToken, refreshToken };
 	}
 
-	async getNewAccessToken(refreshToken: string) {
+	async getNewAccessToken(refreshToken: string): Promise<RefreshTokenResponseDto> {
 		const payload = this.jwtService.verify(refreshToken);
 
 		const newAccessToken = this.jwtService.sign(
@@ -40,6 +47,6 @@ export class AuthService {
 			{ expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s` }
 		);
 
-		return newAccessToken;
+		return { newAccessToken };
 	}
 }
