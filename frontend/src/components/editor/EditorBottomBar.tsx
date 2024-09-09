@@ -5,7 +5,11 @@ import { CodeKeyType, selectEditor, setCodeKeyType } from "../../store/editorSli
 
 export const BOTTOM_BAR_HEIGHT = 25;
 
-function EditorBottomBar(props: { width: number | string }) {
+interface EditorBottomBarProps {
+	width: number | string;
+}
+
+function EditorBottomBar(props: EditorBottomBarProps) {
 	const { width } = props;
 	const dispatch = useDispatch();
 	const editorStore = useSelector(selectEditor);
