@@ -17,6 +17,30 @@ export class WorkspaceDocumentsService {
 		private configService: ConfigService
 	) {}
 
+	async updateTitle(
+		userId: string,
+		workspaceId: string,
+		documentId: string,
+		title: string
+	): Promise<void> {
+		const document = await this.prismaService.document.findFirst({
+			where: {
+				id: documentId,
+				workspaceId: workspaceId,
+			},
+		});
+
+		if (!document) {
+			throw new NotFoundException("Document not found");
+		}
+
+		// Update the document's title
+		await this.prismaService.document.update({
+			where: { id: documentId },
+			data: { title: title },
+		});
+	}
+
 	async create(userId: string, workspaceId: string, title: string) {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({

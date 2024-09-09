@@ -170,26 +170,31 @@ function Editor() {
 	]);
 
 	return (
-		<ScrollSyncPane>
-			<div
-				style={{
-					height: "100%",
-					overflow: "auto",
-				}}
-			>
+		<>
+			<ScrollSyncPane>
 				<div
-					ref={ref}
 					style={{
-						display: "flex",
-						alignItems: "stretch",
-						minHeight: "100%",
+						height: "100%",
+						overflow: "auto",
 					}}
-				/>
-				{Boolean(toolBarState.show) && (
-					<ToolBar toolBarState={toolBarState} onChangeToolBarState={setToolBarState} />
-				)}
-			</div>
-		</ScrollSyncPane>
+				>
+					<div
+						ref={ref}
+						style={{
+							display: "flex",
+							alignItems: "stretch",
+							minHeight: "100%",
+						}}
+					/>
+					{Boolean(toolBarState.show) && (
+						<ToolBar
+							toolBarState={toolBarState}
+							onChangeToolBarState={setToolBarState}
+						/>
+					)}
+				</div>
+			</ScrollSyncPane>
+		</>
 	);
 }
 

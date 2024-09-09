@@ -13,3 +13,7 @@ export class Document {
 export class GetDocumentBySharingTokenResponse extends Document {
 	role: ShareRole;
 }
+
+export class UpdateDocumentRequest {
+	title: string;
+}

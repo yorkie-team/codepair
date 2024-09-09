@@ -11,10 +11,12 @@ import {
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
+	Button,
+	FormControl,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
@@ -22,6 +24,11 @@ import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+
+// Added this query to update the documentname
+import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -29,6 +36,17 @@ function DocumentHeader() {
 	const editorState = useSelector(selectEditor);
 	const workspaceState = useSelector(selectWorkspace);
 	const { presenceList } = useUserPresence(editorState.doc);
+	const [documentTitle, setDocumentTitle] = useState("");
+	const params = useParams();
+	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+	console.log("Workspace ID:", workspace?.id);
+	console.log("Document ID:", params.documentId);
+	console.log("Title:", documentTitle);
+
+	const { mutateAsync: updateDocumentTitle } = useUpdateDocumentTitleMutation(
+		workspace?.id || "",
+		params.documentId || ""
+	);
 
 	useEffect(() => {
 		if (editorState.shareRole === "READ") {
@@ -43,6 +61,16 @@ function DocumentHeader() {
 
 	const handleToPrevious = () => {
 		navigate(`/${workspaceState.data?.slug}`);
+	};
+
+	const handleDocumentTitleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		setDocumentTitle(e.target.value);
+	};
+
+	const handleUpdateDocumentTitle = async (data: { title: string }) => {
+		await updateDocumentTitle(data);
 	};
 
 	return (
@@ -84,6 +112,32 @@ function DocumentHeader() {
 							)}
 						</Paper>
 						<DownloadMenu />
+						{/* added field to update document title */}
+						<Stack gap={4}>
+							<FormControl>
+								<FormContainer
+									defaultValues={{ title: "" }}
+									onSuccess={handleUpdateDocumentTitle}
+								>
+									<Stack gap={4} alignItems="flex-end">
+										<TextFieldElement
+											variant="standard"
+											name="title"
+											label="document title"
+											required
+											fullWidth
+											inputProps={{
+												maxLength: 255,
+											}}
+											onChange={handleDocumentTitleChange}
+										/>
+										<Button type="submit" variant="contained" size="large">
+											OK
+										</Button>
+									</Stack>
+								</FormContainer>
+							</FormControl>
+						</Stack>
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1}>
 						<UserPresenceList presenceList={presenceList} />
