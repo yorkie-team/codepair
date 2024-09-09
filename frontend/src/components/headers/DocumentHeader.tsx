@@ -27,8 +27,10 @@ import UserPresenceList from "./UserPresenceList";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 
-// Added this query to update the documentname
-import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
+import {
+	useUpdateDocumentTitleMutation,
+	useGetDocumentQuery,
+} from "../../hooks/api/workspaceDocument";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -42,6 +44,11 @@ function DocumentHeader() {
 	console.log("Workspace ID:", workspace?.id);
 	console.log("Document ID:", params.documentId);
 	console.log("Title:", documentTitle);
+
+	const { data: documentData } = useGetDocumentQuery(
+		workspace?.id || "",
+		params.documentId || ""
+	);
 
 	const { mutateAsync: updateDocumentTitle } = useUpdateDocumentTitleMutation(
 		workspace?.id || "",
@@ -72,6 +79,12 @@ function DocumentHeader() {
 	const handleUpdateDocumentTitle = async (data: { title: string }) => {
 		await updateDocumentTitle(data);
 	};
+
+	useEffect(() => {
+		if (documentData && documentData.title) {
+			setDocumentTitle(documentData.title);
+		}
+	}, [documentData]);
 
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
@@ -116,14 +129,14 @@ function DocumentHeader() {
 						<Stack gap={4}>
 							<FormControl>
 								<FormContainer
-									defaultValues={{ title: "" }}
+									defaultValues={{ title: documentTitle }}
 									onSuccess={handleUpdateDocumentTitle}
 								>
 									<Stack gap={4} alignItems="flex-end">
 										<TextFieldElement
 											variant="standard"
 											name="title"
-											label="document title"
+											label={documentTitle}
 											required
 											fullWidth
 											inputProps={{
