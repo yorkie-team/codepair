@@ -12,11 +12,6 @@ export enum EditorModeType {
 	READ = "read",
 }
 
-export enum CodeKeyType {
-	SUBLIME = "sublime",
-	VIM = "vim",
-}
-
 export type CodePairDocType = yorkie.Document<
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType
@@ -24,7 +19,6 @@ export type CodePairDocType = yorkie.Document<
 
 export interface EditorState {
 	mode: EditorModeType;
-	codeKey: CodeKeyType;
 	shareRole: ShareRole | null;
 	doc: CodePairDocType | null;
 	client: yorkie.Client | null;
@@ -33,7 +27,6 @@ export interface EditorState {
 
 const initialState: EditorState = {
 	mode: EditorModeType.BOTH,
-	codeKey: CodeKeyType.SUBLIME,
 	shareRole: null,
 	doc: null,
 	client: null,
@@ -46,9 +39,6 @@ export const editorSlice = createSlice({
 	reducers: {
 		setMode: (state, action: PayloadAction<EditorModeType>) => {
 			state.mode = action.payload;
-		},
-		setCodeKeyType: (state, action: PayloadAction<CodeKeyType>) => {
-			state.codeKey = action.payload;
 		},
 		setShareRole: (state, action: PayloadAction<ShareRole | null>) => {
 			state.shareRole = action.payload;
@@ -65,8 +55,7 @@ export const editorSlice = createSlice({
 	},
 });
 
-export const { setMode, setCodeKeyType, setShareRole, setDoc, setClient, setCmView } =
-	editorSlice.actions;
+export const { setMode, setShareRole, setDoc, setClient, setCmView } = editorSlice.actions;
 
 export const selectEditor = (state: RootState) => state.editor;
 

@@ -1,7 +1,7 @@
 import { Button, Menu, MenuItem, Paper } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CodeKeyType, selectEditor, setCodeKeyType } from "../../store/editorSlice";
+import { CodeKeyType, selectConfig, setCodeKeyType } from "../../store/configSlice";
 
 export const BOTTOM_BAR_HEIGHT = 25;
 
@@ -12,7 +12,7 @@ interface EditorBottomBarProps {
 function EditorBottomBar(props: EditorBottomBarProps) {
 	const { width } = props;
 	const dispatch = useDispatch();
-	const editorStore = useSelector(selectEditor);
+	const configStore = useSelector(selectConfig);
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const open = Boolean(anchorEl);
 
@@ -45,7 +45,7 @@ function EditorBottomBar(props: EditorBottomBarProps) {
 			}}
 		>
 			<Button variant="text" onClick={handleOpen}>
-				{editorStore.codeKey}
+				{configStore.codeKey}
 			</Button>
 			<Menu
 				id="codekey-menu"

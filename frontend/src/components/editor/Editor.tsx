@@ -11,7 +11,8 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { useFormatUtils } from "../../hooks/useFormatUtils";
 import { useToolBar } from "../../hooks/useToolBar";
-import { CodeKeyType, selectEditor, setCmView } from "../../store/editorSlice";
+import { CodeKeyType, selectConfig } from "../../store/configSlice";
+import { selectEditor, setCmView } from "../../store/editorSlice";
 import { selectSetting } from "../../store/settingSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { imageUploader } from "../../utils/imageUploader";
@@ -31,6 +32,7 @@ function Editor(props: EditorProps) {
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
+	const configStore = useSelector(selectConfig);
 	const settingStore = useSelector(selectSetting);
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
@@ -48,7 +50,6 @@ function Editor(props: EditorProps) {
 			!element ||
 			!editorStore.doc ||
 			!editorStore.client ||
-			!editorStore.codeKey ||
 			typeof settingStore.fileUpload?.enable !== "boolean"
 		) {
 			return;
@@ -74,7 +75,7 @@ function Editor(props: EditorProps) {
 				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
-				editorStore.codeKey === CodeKeyType.VIM ? vim() : [],
+				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,
@@ -105,7 +106,7 @@ function Editor(props: EditorProps) {
 		element,
 		editorStore.client,
 		editorStore.doc,
-		editorStore.codeKey,
+		configStore.codeKey,
 		themeMode,
 		workspaceStore.data,
 		settingStore.fileUpload?.enable,
