@@ -5,7 +5,6 @@ import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import { EditorModeType, selectEditor } from "../../store/editorSlice";
 import Editor from "./Editor";
-import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import Preview from "./Preview";
 
 function DocumentView() {
@@ -42,10 +41,7 @@ function DocumentView() {
 										height: "100%",
 									}}
 								>
-									<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
-										<Editor />
-									</div>
-									<EditorBottomBar width={width} />
+									<Editor width={width} />
 								</div>
 								<Paper
 									id="splitter"
@@ -79,10 +75,7 @@ function DocumentView() {
 
 			{editorStore.mode === EditorModeType.EDIT && (
 				<div style={{ position: "relative", height: "100%" }}>
-					<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
-						<Editor />
-					</div>
-					<EditorBottomBar width="100%" />
+					<Editor width={"100%"} />
 				</div>
 			)}
 

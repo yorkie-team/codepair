@@ -18,9 +18,15 @@ import { imageUploader } from "../../utils/imageUploader";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { urlHyperlinkInserter } from "../../utils/urlHyperlinkInserter";
 import { yorkieCodeMirror } from "../../utils/yorkie";
+import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
 
-function Editor() {
+interface EditorProps {
+	width: number | string;
+}
+
+function Editor(props: EditorProps) {
+	const { width } = props;
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
@@ -112,26 +118,34 @@ function Editor() {
 	]);
 
 	return (
-		<ScrollSyncPane>
-			<div
-				style={{
-					height: "100%",
-					overflow: "auto",
-				}}
-			>
-				<div
-					ref={ref}
-					style={{
-						display: "flex",
-						alignItems: "stretch",
-						minHeight: "100%",
-					}}
-				/>
-				{Boolean(toolBarState.show) && (
-					<ToolBar toolBarState={toolBarState} onChangeToolBarState={setToolBarState} />
-				)}
+		<>
+			<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
+				<ScrollSyncPane>
+					<div
+						style={{
+							height: "100%",
+							overflow: "auto",
+						}}
+					>
+						<div
+							ref={ref}
+							style={{
+								display: "flex",
+								alignItems: "stretch",
+								minHeight: "100%",
+							}}
+						/>
+						{Boolean(toolBarState.show) && (
+							<ToolBar
+								toolBarState={toolBarState}
+								onChangeToolBarState={setToolBarState}
+							/>
+						)}
+					</div>
+				</ScrollSyncPane>
 			</div>
-		</ScrollSyncPane>
+			<EditorBottomBar width={width} />
+		</>
 	);
 }
 
