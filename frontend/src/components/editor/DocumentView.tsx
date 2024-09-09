@@ -8,7 +8,7 @@ import Editor from "./Editor";
 import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import Preview from "./Preview";
 
-const DocumentView = () => {
+function DocumentView() {
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
 
@@ -93,6 +93,6 @@ const DocumentView = () => {
 			)}
 		</>
 	);
-};
+}
 
 export default DocumentView;
