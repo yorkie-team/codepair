@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, Menu, MenuItem, Paper } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CodeKeyType, selectEditor, setCodeKeyType } from "../../store/editorSlice";
@@ -30,16 +30,18 @@ function EditorBottomBar(props: EditorBottomBarProps) {
 	};
 
 	return (
-		<div
-			style={{
+		<Paper
+			variant="outlined"
+			sx={{
 				position: "absolute",
 				bottom: 0,
 				left: 0,
 				width,
-				background: "000000",
-				borderTop: "1px solid #ccc",
+				borderTop: 1,
+				borderColor: "divider",
 				height: BOTTOM_BAR_HEIGHT,
 				display: "flex",
+				backgroundColor: "background.paper",
 			}}
 		>
 			<Button variant="text" onClick={handleOpen}>
@@ -65,7 +67,7 @@ function EditorBottomBar(props: EditorBottomBarProps) {
 					</MenuItem>
 				))}
 			</Menu>
-		</div>
+		</Paper>
 	);
 }
 
