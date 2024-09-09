@@ -33,7 +33,7 @@ function DocumentShareIndex() {
 		dispatch(setShareRole(sharedDocument.role));
 
 		if (sharedDocument.role === ShareRole.READ) {
-			dispatch(setMode(EditorModeType.read));
+			dispatch(setMode(EditorModeType.READ));
 		}
 	}, [dispatch, sharedDocument?.role]);
 

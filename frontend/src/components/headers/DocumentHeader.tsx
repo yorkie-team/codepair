@@ -33,7 +33,7 @@ function DocumentHeader() {
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
-			dispatch(setMode(EditorModeType.read));
+			dispatch(setMode(EditorModeType.READ));
 		}
 	}, [dispatch, editorState.shareRole]);
 

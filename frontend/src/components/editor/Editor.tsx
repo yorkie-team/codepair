@@ -68,7 +68,7 @@ function Editor() {
 				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
-				editorStore.codeKey === CodeKeyType.vim ? vim() : [],
+				editorStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,

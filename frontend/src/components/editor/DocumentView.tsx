@@ -21,7 +21,7 @@ function DocumentView() {
 
 	return (
 		<>
-			{editorStore.mode === EditorModeType.both && (
+			{editorStore.mode === EditorModeType.BOTH && (
 				<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
 					{({ position: width, separatorProps }) => (
 						<ScrollSync>
@@ -77,7 +77,7 @@ function DocumentView() {
 				</Resizable>
 			)}
 
-			{editorStore.mode === EditorModeType.edit && (
+			{editorStore.mode === EditorModeType.EDIT && (
 				<div style={{ position: "relative", height: "100%" }}>
 					<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
 						<Editor />
@@ -86,7 +86,7 @@ function DocumentView() {
 				</div>
 			)}
 
-			{editorStore.mode === EditorModeType.read && (
+			{editorStore.mode === EditorModeType.READ && (
 				<Box sx={{ p: 4, overflow: "auto" }} height="100%">
 					<Preview />
 				</Box>

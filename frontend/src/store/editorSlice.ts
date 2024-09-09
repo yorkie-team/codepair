@@ -7,14 +7,14 @@ import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/
 import { RootState } from "./store";
 
 export enum EditorModeType {
-	edit = "edit",
-	both = "both",
-	read = "read",
+	EDIT = "edit",
+	BOTH = "both",
+	READ = "read",
 }
 
 export enum CodeKeyType {
-	sublime = "sublime",
-	vim = "vim",
+	SUBLIME = "sublime",
+	VIM = "vim",
 }
 
 export type CodePairDocType = yorkie.Document<
@@ -32,8 +32,8 @@ export interface EditorState {
 }
 
 const initialState: EditorState = {
-	mode: EditorModeType.both,
-	codeKey: CodeKeyType.sublime,
+	mode: EditorModeType.BOTH,
+	codeKey: CodeKeyType.SUBLIME,
 	shareRole: null,
 	doc: null,
 	client: null,
