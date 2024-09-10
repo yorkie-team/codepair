@@ -38,12 +38,10 @@ function DocumentHeader() {
 	const editorState = useSelector(selectEditor);
 	const workspaceState = useSelector(selectWorkspace);
 	const { presenceList } = useUserPresence(editorState.doc);
+	const [focused, setFocused] = useState(false);
 	const [documentTitle, setDocumentTitle] = useState("");
 	const params = useParams();
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
-	console.log("Workspace ID:", workspace?.id);
-	console.log("Document ID:", params.documentId);
-	console.log("Title:", documentTitle);
 
 	const { data: documentData } = useGetDocumentQuery(
 		workspace?.id || "",
@@ -54,6 +52,10 @@ function DocumentHeader() {
 		workspace?.id || "",
 		params.documentId || ""
 	);
+
+	const handleFocus = () => {
+		setFocused(true);
+	};
 
 	useEffect(() => {
 		if (editorState.shareRole === "READ") {
@@ -78,6 +80,7 @@ function DocumentHeader() {
 
 	const handleUpdateDocumentTitle = async (data: { title: string }) => {
 		await updateDocumentTitle(data);
+		setFocused(false);
 	};
 
 	useEffect(() => {
@@ -125,14 +128,14 @@ function DocumentHeader() {
 							)}
 						</Paper>
 						<DownloadMenu />
-						{/* added field to update document title */}
-						<Stack gap={4}>
+
+						<Stack alignItems="center">
 							<FormControl>
 								<FormContainer
 									defaultValues={{ title: documentTitle }}
 									onSuccess={handleUpdateDocumentTitle}
 								>
-									<Stack gap={4} alignItems="flex-end">
+									<Stack gap={4} alignItems="flex-end" flexDirection="row">
 										<TextFieldElement
 											variant="standard"
 											name="title"
@@ -143,15 +146,19 @@ function DocumentHeader() {
 												maxLength: 255,
 											}}
 											onChange={handleDocumentTitleChange}
+											onFocus={handleFocus}
 										/>
-										<Button type="submit" variant="contained" size="large">
-											OK
-										</Button>
+										{focused && (
+											<Button type="submit" variant="contained" size="large">
+												Update
+											</Button>
+										)}
 									</Stack>
 								</FormContainer>
 							</FormControl>
 						</Stack>
 					</Stack>
+
 					<Stack direction="row" alignItems="center" gap={1}>
 						<UserPresenceList presenceList={presenceList} />
 						{!editorState.shareRole && <ShareButton />}
