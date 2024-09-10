@@ -108,24 +108,18 @@ function App() {
 		const interceptor = axios.interceptors.response.use(
 			(response) => response,
 			async (error) => {
-				if (error.response?.status === 401) {
+				if (error.response?.status === 401 && !error.config._retry) {
 					if (error.config.url === "/auth/refresh") {
+						handleRefreshTokenExpiration();
 						return Promise.reject(error);
-					} else if (!error.config._retry) {
+					} else {
 						error.config._retry = true;
 						const refreshToken = store.getState().auth.refreshToken;
-						try {
-							const response = await axios.post("/auth/refresh", { refreshToken });
-							const newAccessToken = response.data.accessToken;
-							dispatch(setAccessToken(newAccessToken));
-							axios.defaults.headers.common["Authorization"] =
-								`Bearer ${newAccessToken}`;
-							error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-							return axios(error.config);
-						} catch (refreshError) {
-							handleRefreshTokenExpiration();
-							return Promise.reject(refreshError);
-						}
+						const response = await axios.post("/auth/refresh", { refreshToken });
+						const newAccessToken = response.data.newAccessToken;
+						dispatch(setAccessToken(newAccessToken));
+						axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+						return axios(error.config);
 					}
 				}
 				return Promise.reject(error);
