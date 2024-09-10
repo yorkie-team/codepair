@@ -1,0 +1,4 @@
+export const JwtInject = {
+	ACCESS: "JWT_ACCESS_SERVICE",
+	REFRESH: "JWT_REFRESH_SERVICE",
+};
