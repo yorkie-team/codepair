@@ -1,6 +1,7 @@
 import { markdown } from "@codemirror/lang-markdown";
 import { EditorState } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
+import { Vim, vim } from "@replit/codemirror-vim";
 import { xcodeDark, xcodeLight } from "@uiw/codemirror-theme-xcode";
 import { basicSetup, EditorView } from "codemirror";
 import { useCallback, useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../hooks/a
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { useFormatUtils } from "../../hooks/useFormatUtils";
 import { useToolBar } from "../../hooks/useToolBar";
+import { CodeKeyType, selectConfig } from "../../store/configSlice";
 import { selectEditor, setCmView } from "../../store/editorSlice";
 import { selectSetting } from "../../store/settingSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
@@ -17,13 +19,20 @@ import { imageUploader } from "../../utils/imageUploader";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
 import { urlHyperlinkInserter } from "../../utils/urlHyperlinkInserter";
 import { yorkieCodeMirror } from "../../utils/yorkie";
+import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
 
-function Editor() {
+interface EditorProps {
+	width: number | string;
+}
+
+function Editor(props: EditorProps) {
+	const { width } = props;
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
+	const configStore = useSelector(selectConfig);
 	const settingStore = useSelector(selectSetting);
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
@@ -66,6 +75,7 @@ function Editor() {
 				keymap.of(setKeymapConfig()),
 				basicSetup,
 				markdown(),
+				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,
@@ -83,8 +93,10 @@ function Editor() {
 			],
 		});
 
-		const view = new EditorView({ state, parent: element });
+		// Vim key mapping: Map 'jj' to '<Esc>' in insert mode
+		Vim.map("jj", "<Esc>", "insert");
 
+		const view = new EditorView({ state, parent: element });
 		dispatch(setCmView(view));
 
 		return () => {
@@ -94,6 +106,7 @@ function Editor() {
 		element,
 		editorStore.client,
 		editorStore.doc,
+		configStore.codeKey,
 		themeMode,
 		workspaceStore.data,
 		settingStore.fileUpload?.enable,
@@ -106,26 +119,34 @@ function Editor() {
 	]);
 
 	return (
-		<ScrollSyncPane>
-			<div
-				style={{
-					height: "100%",
-					overflow: "auto",
-				}}
-			>
-				<div
-					ref={ref}
-					style={{
-						display: "flex",
-						alignItems: "stretch",
-						minHeight: "100%",
-					}}
-				/>
-				{Boolean(toolBarState.show) && (
-					<ToolBar toolBarState={toolBarState} onChangeToolBarState={setToolBarState} />
-				)}
+		<>
+			<div style={{ height: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)` }}>
+				<ScrollSyncPane>
+					<div
+						style={{
+							height: "100%",
+							overflow: "auto",
+						}}
+					>
+						<div
+							ref={ref}
+							style={{
+								display: "flex",
+								alignItems: "stretch",
+								minHeight: "100%",
+							}}
+						/>
+						{Boolean(toolBarState.show) && (
+							<ToolBar
+								toolBarState={toolBarState}
+								onChangeToolBarState={setToolBarState}
+							/>
+						)}
+					</div>
+				</ScrollSyncPane>
 			</div>
-		</ScrollSyncPane>
+			<EditorBottomBar width={width} />
+		</>
 	);
 }
 
