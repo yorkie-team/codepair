@@ -119,6 +119,7 @@ function App() {
 						const newAccessToken = response.data.newAccessToken;
 						dispatch(setAccessToken(newAccessToken));
 						axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+						error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
 						return axios(error.config);
 					}
 				}
