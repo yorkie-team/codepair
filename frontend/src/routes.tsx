@@ -3,17 +3,17 @@ import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import MainLayout from "./components/layouts/MainLayout";
+import SettingLayout from "./components/layouts/SettingLayout";
 import WorkspaceLayout from "./components/layouts/WorkspaceLayout";
 import Index from "./pages/Index";
 import CallbackIndex from "./pages/auth/callback/Index";
+import NotFound from "./pages/error";
+import ProfileIndex from "./pages/settings/profile/Index";
 import WorkspaceIndex from "./pages/workspace/Index";
 import DocumentIndex from "./pages/workspace/document/Index";
 import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import JoinIndex from "./pages/workspace/join/Index";
 import MemberIndex from "./pages/workspace/member/Index";
-import NotFound from "./pages/error";
-import ProfileIndex from "./pages/settings/profile/Index";
-import SettingLayout from "./components/layouts/SettingLayout";
 
 interface CodePairRoute {
 	path: string;
@@ -29,7 +29,7 @@ interface CodePairRoute {
 
 const enum AccessType {
 	PUBLIC, // Everyone can access (Default)
-	PRIVATE, // Authroized user can access only
+	PRIVATE, // Authorized user can access only
 	GUEST, // Not authorized user can access only
 }
 

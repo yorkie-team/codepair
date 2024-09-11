@@ -2,7 +2,7 @@
 	"name": "codepair-frontend",
 	"description": "CodePair Frontend",
 	"private": true,
-	"version": "0.1.6",
+	"version": "0.1.10",
 	"type": "module",
 	"author": "yorkie-team",
 	"license": "Apache-2.0",
@@ -22,9 +22,9 @@
 		]
 	},
 	"dependencies": {
-		"@codemirror/commands": "^6.3.3",
+		"@codemirror/commands": "6.1.2",
 		"@codemirror/lang-markdown": "^6.2.3",
-		"@codemirror/view": "^6.23.0",
+		"@codemirror/view": "6.23.1",
 		"@emotion/react": "^11.11.3",
 		"@emotion/styled": "^11.11.0",
 		"@fontsource/roboto": "^5.0.8",
@@ -33,6 +33,7 @@
 		"@mui/x-date-pickers": "^7.13.0",
 		"@react-hook/window-size": "^3.1.1",
 		"@reduxjs/toolkit": "^2.0.1",
+		"@replit/codemirror-vim": "^6.2.1",
 		"@sentry/react": "^7.99.0",
 		"@swc/helpers": "^0.5.3",
 		"@tanstack/react-query": "^5.17.15",
@@ -71,9 +72,11 @@
 		"rehype-external-links": "^3.0.0",
 		"rehype-katex": "^7.0.1",
 		"rehype-rewrite": "^4.0.2",
+		"rehype-sanitize": "^6.0.0",
 		"remark-math": "^6.0.0",
+		"validator": "^13.12.0",
 		"vite-plugin-package-version": "^1.1.0",
-		"yorkie-js-sdk": "^0.4.31"
+		"yorkie-js-sdk": "0.5.0"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^2.20.1",
@@ -86,6 +89,7 @@
 		"@types/react-dom": "^18.2.17",
 		"@types/react-infinite-scroller": "^1.2.5",
 		"@types/react-scroll-sync": "^0.9.0",
+		"@types/validator": "^13.12.1",
 		"@typescript-eslint/eslint-plugin": "^6.14.0",
 		"@typescript-eslint/parser": "^6.14.0",
 		"@vitejs/plugin-react": "^4.2.1",

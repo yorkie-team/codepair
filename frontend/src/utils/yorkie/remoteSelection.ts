@@ -1,17 +1,15 @@
-import * as cmView from "@codemirror/view";
-
 import * as cmState from "@codemirror/state";
+import * as cmView from "@codemirror/view";
 import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
+import _ from "lodash";
 import * as yorkie from "yorkie-js-sdk";
-
 import {
-	YorkieSyncConfig,
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType,
+	YorkieSyncConfig,
 	yorkieSyncFacet,
 } from "./yorkieSync.js";
-import _ from "lodash";
 
 export const yorkieRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	".cm-ySelection": {},
@@ -151,15 +149,18 @@ export class YorkieRemoteSelectionsPluginValue {
 
 			if (sel && root.content) {
 				const selection = root.content.indexRangeToPosRange([sel.anchor, sel.head]);
+				const cursor = root.content.posRangeToIndexRange(selection);
 
 				if (!_.isEqual(selection, presence.get("selection"))) {
 					presence.set({
 						selection,
+						cursor,
 					});
 				}
 			} else if (presence.get("selection")) {
 				presence.set({
 					selection: null,
+					cursor: null,
 				});
 			}
 		});

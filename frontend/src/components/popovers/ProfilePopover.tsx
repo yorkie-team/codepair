@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { logout } from "../../store/authSlice";
-import { setTheme } from "../../store/configSlice";
+import { setTheme, ThemeType } from "../../store/configSlice";
 import { setUserData } from "../../store/userSlice";
 
 function ProfilePopover(props: PopoverProps) {
@@ -32,7 +32,7 @@ function ProfilePopover(props: PopoverProps) {
 	};
 
 	const handleChangeTheme = () => {
-		dispatch(setTheme(themeMode == "light" ? "dark" : "light"));
+		dispatch(setTheme(themeMode == ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
 	};
 
 	return (

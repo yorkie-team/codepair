@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeKatex from "rehype-katex";
 import { getCodeString } from "rehype-rewrite";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import remarkMath from "remark-math";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { selectEditor } from "../../store/editorSlice";
@@ -57,7 +58,20 @@ function Preview() {
 				},
 			}}
 			remarkPlugins={[remarkMath]}
-			rehypePlugins={[rehypeKatex, [rehypeExternalLinks, { target: "_blank" }]]}
+			rehypePlugins={[
+				[
+					rehypeSanitize,
+					{
+						...defaultSchema,
+						attributes: {
+							...defaultSchema.attributes,
+							code: [["className", /^language-./, "math-inline", "math-display"]],
+						},
+					},
+				],
+				rehypeKatex,
+				[rehypeExternalLinks, { target: "_blank" }],
+			]}
 			components={{
 				code: ({ children = [], className, ...props }) => {
 					// https://www.npmjs.com/package/@uiw/react-markdown-preview#support-custom-katex-preview

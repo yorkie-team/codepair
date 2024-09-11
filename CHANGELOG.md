@@ -7,6 +7,44 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.10] - 20204-09-05
+
+### Added
+
+- Add hyperlink creation feature by @choidabom in https://github.com/yorkie-team/codepair/pull/332
+
+### Changed
+
+- Update `yorkie-js-sdk` to 0.4.31 by @devleejb in https://github.com/yorkie-team/codepair/pull/331
+- Ensure correct representation of logged-in users in shared document view by @choidabom in https://github.com/yorkie-team/codepair/pull/333
+- Bump up `yorkie-js-sdk` to `0.5.0` by @devleejb in https://github.com/yorkie-team/codepair/pull/334
+
+## [0.1.9] - 20204-09-02
+
+### Changed
+
+- Change version of `codemirror`, `yorkie-js-sdk` dependencies by @devleejb in https://github.com/yorkie-team/codepair/pull/329
+
+## [0.1.8] - 2024-09-01
+
+### Changed
+
+- Downgrade `yorkie-js-sdk` to `v0.4.27` by @devleejb in https://github.com/yorkie-team/codepair/pull/327
+
+### Fixed
+
+- Disable retry logic for 401 errors during login by @devleejb in https://github.com/yorkie-team/codepair/pull/325
+
+## [0.1.7] - 2024-08-29
+
+### Added
+
+- Add scroll navigation to user's location from profile view by @choidabom in https://github.com/yorkie-team/codepair/pull/316
+
+### Fixed
+
+- Added rehypeSanitize to improve preview xss issues by @taeng0204 in https://github.com/yorkie-team/codepair/pull/323
+
 ## [0.1.6] - 2024-08-24
 
 ### Fixed
