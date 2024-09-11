@@ -13,7 +13,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { setAccessToken } from "../../store/authSlice";
+import { logout } from "../../store/authSlice";
 import { setTheme, ThemeType } from "../../store/configSlice";
 import { setUserData } from "../../store/userSlice";
 
@@ -23,7 +23,7 @@ function ProfilePopover(props: PopoverProps) {
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		dispatch(setAccessToken(null));
+		dispatch(logout());
 		dispatch(setUserData(null));
 	};
 
