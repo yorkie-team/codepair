@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { selectAuth, setAccessToken } from "../../store/authSlice";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { GetUserResponse, UpdateUserRequest } from "./types/user";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectAuth } from "../../store/authSlice";
 import { User, setUserData } from "../../store/userSlice";
+import { GetUserResponse, UpdateUserRequest } from "./types/user";
 
 export const generateGetUserQueryKey = (accessToken: string) => {
 	return ["users", accessToken];
@@ -28,7 +28,7 @@ export const useGetUserQuery = () => {
 		if (query.isSuccess) {
 			dispatch(setUserData(query.data as User));
 		} else if (query.isError) {
-			dispatch(setAccessToken(null));
+			dispatch(logout());
 			dispatch(setUserData(null));
 			axios.defaults.headers.common["Authorization"] = "";
 		}
