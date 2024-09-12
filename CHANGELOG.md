@@ -7,6 +7,17 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.11] - 20204-09-12
+
+### Added
+
+- Add Vim binding support for CodePair using CodeMirror 6 by @choidabom in https://github.com/yorkie-team/codepair/pull/340
+- Implement Refresh Token by @xet-a in https://github.com/yorkie-team/codepair/pull/317
+
+### Changed
+
+- Remove unnecessary `LANGCHAIN_ENDPOINT` environment variable due to LangSmith API Key update by @devleejb in https://github.com/yorkie-team/codepair/pull/336
+
 ## [0.1.10] - 20204-09-05
 
 ### Added
