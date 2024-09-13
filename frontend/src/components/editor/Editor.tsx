@@ -94,9 +94,6 @@ function Editor(props: EditorProps) {
 			],
 		});
 
-		// Vim key mapping: Map 'jj' to '<Esc>' in insert mode
-		Vim.map("jj", "<Esc>", "insert");
-
 		const view = new EditorView({ state, parent: element });
 		dispatch(setCmView(view));
 
