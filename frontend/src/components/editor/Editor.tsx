@@ -73,10 +73,10 @@ function Editor(props: EditorProps) {
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
 			extensions: [
+				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				keymap.of(setKeymapConfig()),
 				basicSetup({ highlightSelectionMatches: false }),
 				markdown(),
-				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,
