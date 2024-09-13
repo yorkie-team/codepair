@@ -2,8 +2,9 @@ import { markdown } from "@codemirror/lang-markdown";
 import { EditorState } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { Vim, vim } from "@replit/codemirror-vim";
+import { basicSetup } from "@uiw/codemirror-extensions-basic-setup";
 import { xcodeDark, xcodeLight } from "@uiw/codemirror-theme-xcode";
-import { basicSetup, EditorView } from "codemirror";
+import { EditorView } from "codemirror";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollSyncPane } from "react-scroll-sync";
@@ -73,7 +74,7 @@ function Editor(props: EditorProps) {
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
 			extensions: [
 				keymap.of(setKeymapConfig()),
-				basicSetup,
+				basicSetup({ highlightSelectionMatches: false }),
 				markdown(),
 				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				themeMode == "light" ? xcodeLight : xcodeDark,
