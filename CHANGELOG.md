@@ -7,7 +7,20 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-## [0.1.11] - 20204-09-12
+## [0.1.12] - 2024-09-13
+
+### Changed
+
+- Add missing refresh token settings in `docker-compose-full.yml` by @choidabom in https://github.com/yorkie-team/codepair/pull/344
+- Prevent dragging selection of identical characters in CodeMirror by @choidabom in https://github.com/yorkie-team/codepair/pull/345
+- Reorder keybinding addition for VIM in CodeMirror6 by @devleejb in https://github.com/yorkie-team/codepair/pull/346
+
+### Fixed
+
+- Fix issue where `jj` could not be entered in Vim mode by @hackerwins in https://github.com/yorkie-team/codepair/pull/347
+- Change font color of the panel in VIM mode for improved visibility by @devleejb in https://github.com/yorkie-team/codepair/pull/349
+
+## [0.1.11] - 2024-09-12
 
 ### Added
 
