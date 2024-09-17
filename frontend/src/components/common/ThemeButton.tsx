@@ -1,21 +1,21 @@
-import { IconButton } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import { IconButton } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setTheme } from "../../store/configSlice";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { setTheme, ThemeType } from "../../store/configSlice";
 
 function ThemeButton() {
 	const dispatch = useDispatch();
 	const themeMode = useCurrentTheme();
 
 	const handleChangeTheme = () => {
-		dispatch(setTheme(themeMode == "light" ? "dark" : "light"));
+		dispatch(setTheme(themeMode == ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
 	};
 
 	return (
 		<IconButton onClick={handleChangeTheme} color="inherit">
-			{themeMode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
+			{themeMode === ThemeType.LIGHT ? <LightModeIcon /> : <DarkModeIcon />}
 		</IconButton>
 	);
 }

@@ -7,6 +7,58 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.12] - 2024-09-13
+
+### Changed
+
+- Add missing refresh token settings in `docker-compose-full.yml` by @choidabom in https://github.com/yorkie-team/codepair/pull/344
+- Prevent dragging selection of identical characters in CodeMirror by @choidabom in https://github.com/yorkie-team/codepair/pull/345
+- Reorder keybinding addition for VIM in CodeMirror6 by @devleejb in https://github.com/yorkie-team/codepair/pull/346
+
+### Fixed
+
+- Fix issue where `jj` could not be entered in Vim mode by @hackerwins in https://github.com/yorkie-team/codepair/pull/347
+- Change font color of the panel in VIM mode for improved visibility by @devleejb in https://github.com/yorkie-team/codepair/pull/349
+
+## [0.1.11] - 2024-09-12
+
+### Added
+
+- Add Vim binding support for CodePair using CodeMirror 6 by @choidabom in https://github.com/yorkie-team/codepair/pull/340
+- Implement Refresh Token by @xet-a in https://github.com/yorkie-team/codepair/pull/317
+
+### Changed
+
+- Remove unnecessary `LANGCHAIN_ENDPOINT` environment variable due to LangSmith API Key update by @devleejb in https://github.com/yorkie-team/codepair/pull/336
+
+## [0.1.10] - 20204-09-05
+
+### Added
+
+- Add hyperlink creation feature by @choidabom in https://github.com/yorkie-team/codepair/pull/332
+
+### Changed
+
+- Update `yorkie-js-sdk` to 0.4.31 by @devleejb in https://github.com/yorkie-team/codepair/pull/331
+- Ensure correct representation of logged-in users in shared document view by @choidabom in https://github.com/yorkie-team/codepair/pull/333
+- Bump up `yorkie-js-sdk` to `0.5.0` by @devleejb in https://github.com/yorkie-team/codepair/pull/334
+
+## [0.1.9] - 20204-09-02
+
+### Changed
+
+- Change version of `codemirror`, `yorkie-js-sdk` dependencies by @devleejb in https://github.com/yorkie-team/codepair/pull/329
+
+## [0.1.8] - 2024-09-01
+
+### Changed
+
+- Downgrade `yorkie-js-sdk` to `v0.4.27` by @devleejb in https://github.com/yorkie-team/codepair/pull/327
+
+### Fixed
+
+- Disable retry logic for 401 errors during login by @devleejb in https://github.com/yorkie-team/codepair/pull/325
+
 ## [0.1.7] - 2024-08-29
 
 ### Added

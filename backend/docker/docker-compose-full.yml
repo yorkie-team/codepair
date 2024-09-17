@@ -7,10 +7,13 @@ services:
         environment:
             DATABASE_URL: "mongodb://mongo:27017/codepair"
             # Environment variables need to be passed to the container
-            GITHUB_CLIENT_ID: "Iv23li1CysRsALb97SET"
-            GITHUB_CLIENT_SECRET: "55d8a3062aebb7fc25af27930d8556506930b67f"
+            GITHUB_CLIENT_ID: "your_github_client_id_here"
+            GITHUB_CLIENT_SECRET: "your_github_client_secret_here"
             GITHUB_CALLBACK_URL: "http://localhost:3000/auth/login/github"
-            JWT_AUTH_SECRET: "you_should_change_this_secret_key_in_production"
+            JWT_ACCESS_TOKEN_SECRET: "you_should_change_this_access_token_secret_key_in_production"
+            JWT_ACCESS_TOKEN_EXPIRATION_TIME: 86400
+            JWT_REFRESH_TOKEN_SECRET: "you_should_change_this_refresh_token_secret_key_in_production"
+            JWT_REFRESH_TOKEN_EXPIRATION_TIME: 604800
             FRONTEND_BASE_URL: "http://localhost:5173"
             YORKIE_API_ADDR: "http://yorkie:8080"
             YORKIE_PROJECT_NAME: "default"
@@ -19,7 +22,7 @@ services:
             YORKIE_INTELLIGENCE: "ollama:gemma2:2b"
             OLLAMA_HOST_URL: http://yorkie-intelligence:11434
             OPENAI_API_KEY: "your_openai_api_key_here"
-            LANGCHAIN_ENDPOINT: "https://www.langchain.com/langsmith"
+            LANGCHAIN_TRACING_V2: "false"
             LANGCHAIN_API_KEY: "your_langsmith_api_key_here"
             LANGCHAIN_PROJECT: "your_langsmith_project_name_here"
             FILE_UPLOAD: false
@@ -34,7 +37,7 @@ services:
             - "yorkie:yorkie"
 
     yorkie:
-        image: "yorkieteam/yorkie:0.4.31"
+        image: "yorkieteam/yorkie:0.5.0"
         command: ["server", "--enable-pprof"]
         restart: always
         ports:

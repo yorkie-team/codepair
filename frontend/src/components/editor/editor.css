@@ -1,3 +1,7 @@
 .wmde-markdown {
 	background-color: transparent;
 }
+
+.cm-vim-panel input {
+	color: inherit;
+}

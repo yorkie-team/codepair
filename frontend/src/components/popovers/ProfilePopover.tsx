@@ -1,3 +1,7 @@
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import {
 	ListItemIcon,
 	ListItemText,
@@ -6,16 +10,12 @@ import {
 	Popover,
 	PopoverProps,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useDispatch } from "react-redux";
-import { setAccessToken } from "../../store/authSlice";
-import { setUserData } from "../../store/userSlice";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { setTheme } from "../../store/configSlice";
 import { useNavigate } from "react-router-dom";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
+import { logout } from "../../store/authSlice";
+import { setTheme, ThemeType } from "../../store/configSlice";
+import { setUserData } from "../../store/userSlice";
 
 function ProfilePopover(props: PopoverProps) {
 	const dispatch = useDispatch();
@@ -23,7 +23,7 @@ function ProfilePopover(props: PopoverProps) {
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		dispatch(setAccessToken(null));
+		dispatch(logout());
 		dispatch(setUserData(null));
 	};
 
@@ -32,7 +32,7 @@ function ProfilePopover(props: PopoverProps) {
 	};
 
 	const handleChangeTheme = () => {
-		dispatch(setTheme(themeMode == "light" ? "dark" : "light"));
+		dispatch(setTheme(themeMode == ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
 	};
 
 	return (

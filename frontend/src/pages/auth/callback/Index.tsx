@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { setAccessToken } from "../../../store/authSlice";
+import { setAccessToken, setRefreshToken } from "../../../store/authSlice";
 
 function CallbackIndex() {
 	const dispatch = useDispatch();
@@ -10,14 +10,16 @@ function CallbackIndex() {
 	const [searchParams] = useSearchParams();
 
 	useEffect(() => {
-		const token = searchParams.get("token");
+		const accessToken = searchParams.get("accessToken");
+		const refreshToken = searchParams.get("refreshToken");
 
-		if (!token) {
+		if (!accessToken || !refreshToken) {
 			navigate("/");
 			return;
 		}
 
-		dispatch(setAccessToken(token));
+		dispatch(setAccessToken(accessToken));
+		dispatch(setRefreshToken(refreshToken));
 	}, [dispatch, navigate, searchParams]);
 
 	return <Box></Box>;
