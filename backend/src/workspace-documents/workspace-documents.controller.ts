@@ -38,8 +38,7 @@ import { FindWorkspaceDocumentResponse } from "./types/find-workspace-document-r
 export class WorkspaceDocumentsController {
 	constructor(private workspaceDocumentsService: WorkspaceDocumentsService) {}
 
-	// PUT endpoint for updating document title
-	@Put(":document_id/title")
+	@Put(":document_id")
 	@ApiOperation({
 		summary: "Update the title of a document in the workspace",
 		description: "If the user has the access permissions, update the document's title.",
@@ -69,8 +68,6 @@ export class WorkspaceDocumentsController {
 			updateDocumentTitleDto.title
 		);
 	}
-
-	// Get the list of documents in the workspace
 	@Get("")
 	@ApiOperation({
 		summary: "Retrieve the Documents in Workspace",
@@ -102,8 +99,6 @@ export class WorkspaceDocumentsController {
 	): Promise<FindWorkspaceDocumentsResponse> {
 		return this.workspaceDocumentsService.findMany(req.user.id, workspaceId, pageSize, cursor);
 	}
-
-	// Get a specific document by ID
 	@Get(":document_id")
 	@ApiOperation({
 		summary: "Retrieve a Document in the Workspace",
@@ -122,8 +117,6 @@ export class WorkspaceDocumentsController {
 	): Promise<FindWorkspaceDocumentResponse> {
 		return this.workspaceDocumentsService.findOne(req.user.id, workspaceId, documentId);
 	}
-
-	// Create a new document in the workspace
 	@Post()
 	@ApiOperation({
 		summary: "Create a Document in a Workspace",
@@ -146,8 +139,6 @@ export class WorkspaceDocumentsController {
 			createWorkspaceDocumentDto.title
 		);
 	}
-
-	// Generate a share token for a document
 	@Post(":document_id/share-token")
 	@ApiOperation({
 		summary: "Retrieve a Share Token for the Document",

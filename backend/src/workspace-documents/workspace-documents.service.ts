@@ -23,6 +23,19 @@ export class WorkspaceDocumentsService {
 		documentId: string,
 		title: string
 	): Promise<void> {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
+		}
+
 		const document = await this.prismaService.document.findFirst({
 			where: {
 				id: documentId,
@@ -34,7 +47,6 @@ export class WorkspaceDocumentsService {
 			throw new NotFoundException("Document not found");
 		}
 
-		// Update the document's title
 		await this.prismaService.document.update({
 			where: { id: documentId },
 			data: { title: title },

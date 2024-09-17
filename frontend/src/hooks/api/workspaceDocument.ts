@@ -114,7 +114,7 @@ export const useUpdateDocumentTitleMutation = (workspaceId: string, documentId: 
 	return useMutation({
 		mutationFn: async (data: UpdateDocumentRequest) => {
 			const res = await axios.put<void>(
-				`/workspaces/${workspaceId}/documents/${documentId}/title`,
+				`/workspaces/${workspaceId}/documents/${documentId}/`,
 				data
 			);
 
