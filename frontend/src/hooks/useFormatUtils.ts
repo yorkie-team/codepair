@@ -143,10 +143,26 @@ export const useFormatUtils = () => {
 		[cmView, applyFormat]
 	);
 
+	const checkAndAddFormat = useCallback(
+		(
+			selectedTextStart: string,
+			selectedTextEnd: string,
+			marker: string,
+			format: FormatType,
+			formats: Set<FormatType>
+		) => {
+			if (selectedTextStart.includes(marker) && selectedTextEnd.includes(marker)) {
+				formats.add(format);
+			}
+		},
+		[]
+	);
+
 	return {
 		getFormatMarkerLength,
 		applyFormat,
 		setKeymapConfig,
 		toggleButtonChangeHandler,
+		checkAndAddFormat,
 	};
 };

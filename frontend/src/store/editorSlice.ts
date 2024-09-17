@@ -1,12 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
-import * as yorkie from "yorkie-js-sdk";
-import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
-import { ShareRole } from "../utils/share";
+import { createSlice } from "@reduxjs/toolkit";
 import { EditorView } from "codemirror";
+import * as yorkie from "yorkie-js-sdk";
+import { ShareRole } from "../utils/share";
+import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import { RootState } from "./store";
 
-export type EditorModeType = "edit" | "both" | "read";
+export enum EditorModeType {
+	EDIT = "edit",
+	BOTH = "both",
+	READ = "read",
+}
+
 export type CodePairDocType = yorkie.Document<
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType
@@ -21,7 +26,7 @@ export interface EditorState {
 }
 
 const initialState: EditorState = {
-	mode: "both",
+	mode: EditorModeType.BOTH,
 	shareRole: null,
 	doc: null,
 	client: null,
@@ -50,7 +55,7 @@ export const editorSlice = createSlice({
 	},
 });
 
-export const { setMode, setDoc, setClient, setShareRole, setCmView } = editorSlice.actions;
+export const { setMode, setShareRole, setDoc, setClient, setCmView } = editorSlice.actions;
 
 export const selectEditor = (state: RootState) => state.editor;
 

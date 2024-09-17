@@ -1,27 +1,39 @@
 import { Box } from "@mui/material";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import DocumentView from "../../../../components/editor/DocumentView";
 import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
-import { Navigate, useLocation, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo } from "react";
 import { useYorkieDocument } from "../../../../hooks/useYorkieDocument";
-import { useDispatch } from "react-redux";
-import { setClient, setDoc, setMode, setShareRole } from "../../../../store/editorSlice";
+import {
+	EditorModeType,
+	setClient,
+	setDoc,
+	setMode,
+	setShareRole,
+} from "../../../../store/editorSlice";
+import { selectUser } from "../../../../store/userSlice";
+import { ShareRole } from "../../../../utils/share";
 
 function DocumentShareIndex() {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const [searchParams] = useSearchParams();
+	const userStore = useSelector(selectUser);
 	const shareToken = useMemo(() => searchParams.get("token"), [searchParams]);
 	const { data: sharedDocument } = useGetDocumentBySharingTokenQuery(shareToken);
-	const { doc, client } = useYorkieDocument(sharedDocument?.yorkieDocumentId, "Anonymous");
+	const { doc, client } = useYorkieDocument(
+		sharedDocument?.yorkieDocumentId,
+		userStore.data?.nickname ?? "Anonymous"
+	);
 
 	useEffect(() => {
 		if (!sharedDocument?.role) return;
 
 		dispatch(setShareRole(sharedDocument.role));
 
-		if (sharedDocument.role === "READ") {
-			dispatch(setMode("read"));
+		if (sharedDocument.role === ShareRole.READ) {
+			dispatch(setMode(EditorModeType.READ));
 		}
 	}, [dispatch, sharedDocument?.role]);
 

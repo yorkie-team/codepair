@@ -20,6 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
+import { ShareRole } from "../../utils/share";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
@@ -58,8 +59,8 @@ function DocumentHeader() {
 	};
 
 	useEffect(() => {
-		if (editorState.shareRole === "READ") {
-			dispatch(setMode("read"));
+		if (editorState.shareRole === ShareRole.READ) {
+			dispatch(setMode(EditorModeType.READ));
 		}
 	}, [dispatch, editorState.shareRole]);
 
@@ -102,7 +103,7 @@ function DocumentHeader() {
 							</Tooltip>
 						)}
 						<Paper>
-							{editorState.shareRole !== "READ" && (
+							{editorState.shareRole !== ShareRole.READ && (
 								<ToggleButtonGroup
 									value={editorState.mode}
 									exclusive
