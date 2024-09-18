@@ -5,6 +5,9 @@ export function createDocumentKey() {
 export function addSoftLineBreak(text: string) {
 	return text
 		.split("\n")
-		.map((line) => line + "  ")
+		.map((line) => {
+			if (line.trim() === "") return "";
+			else return line + "  ";
+		})
 		.join("\n");
 }
