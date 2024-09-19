@@ -27,7 +27,7 @@ import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
-import { selectDocument, setDocumentData } from "../../store/documentSlice";
+import { selectDocument } from "../../store/documentSlice";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 import { UpdateDocumentRequest } from "../../hooks/api/types/document";
 
@@ -44,7 +44,7 @@ function DocumentHeader() {
 		documentStore.data?.id || ""
 	);
 
-	const isEditingDisabled = editorState.shareRole === "READ";
+	const isEditingDisabled = Boolean(editorState.shareRole);
 
 	const handleFocus = () => {
 		setFocused(true);
@@ -65,21 +65,7 @@ function DocumentHeader() {
 		navigate(`/${workspaceState.data?.slug}`);
 	};
 
-	const handleDocumentTitleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		if (documentStore.data) {
-			dispatch(
-				setDocumentData({
-					...documentStore.data,
-					title: e.target.value,
-				})
-			);
-		}
-	};
-
 	const handleUpdateDocumentTitle = async (data: UpdateDocumentRequest) => {
-		console.log(data);
 		await updateDocumentTitle(data);
 		setFocused(false);
 	};
@@ -153,7 +139,6 @@ function DocumentHeader() {
 												inputProps={{
 													maxLength: 255,
 												}}
-												onChange={handleDocumentTitleChange}
 												onFocus={handleFocus}
 												rules={validationRules}
 												helperText={

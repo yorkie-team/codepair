@@ -36,17 +36,6 @@ export class WorkspaceDocumentsService {
 			);
 		}
 
-		const document = await this.prismaService.document.findFirst({
-			where: {
-				id: documentId,
-				workspaceId: workspaceId,
-			},
-		});
-
-		if (!document) {
-			throw new NotFoundException("Document not found");
-		}
-
 		await this.prismaService.document.update({
 			where: { id: documentId },
 			data: { title: title },

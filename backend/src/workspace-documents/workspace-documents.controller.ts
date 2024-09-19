@@ -19,6 +19,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
+	ApiParam,
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
@@ -42,6 +43,14 @@ export class WorkspaceDocumentsController {
 	@ApiOperation({
 		summary: "Update the title of a document in the workspace",
 		description: "If the user has the access permissions, update the document's title.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace",
+	})
+	@ApiParam({
+		name: "document_id",
+		description: "ID of document to change title",
 	})
 	@ApiOkResponse({
 		description: "Document title updated successfully",
