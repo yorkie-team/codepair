@@ -8,9 +8,11 @@ import {
 	GetWorkspaceDocumentResponse,
 	GetWorkspaceDocumentListResponse,
 } from "./types/workspaceDocument";
-import { useDispatch } from "react-redux";
+
 import { useEffect } from "react";
 import { setDocumentData } from "../../store/documentSlice";
+import { UpdateDocumentRequest } from "./types/document";
+import { useDispatch } from "react-redux";
 
 export const generateGetWorkspaceDocumentListQueryKey = (workspaceId: string) => {
 	return ["workspaces", workspaceId, "documents"];
@@ -102,6 +104,26 @@ export const useCreateWorkspaceSharingTokenMutation = (workspaceId: string, docu
 			);
 
 			return res.data;
+		},
+	});
+};
+
+export const useUpdateDocumentTitleMutation = (workspaceId: string, documentId: string) => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (data: UpdateDocumentRequest) => {
+			const res = await axios.put<void>(
+				`/workspaces/${workspaceId}/documents/${documentId}/`,
+				data
+			);
+
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: generateGetDocumentQueryKey(workspaceId, documentId),
+			});
 		},
 	});
 };

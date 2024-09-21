@@ -6,6 +6,7 @@ import {
 	Param,
 	ParseIntPipe,
 	Post,
+	Put,
 	Query,
 	Req,
 } from "@nestjs/common";
@@ -18,12 +19,14 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
+	ApiParam,
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
 import { AuthroizedRequest } from "src/utils/types/req.type";
 import { CreateWorkspaceDocumentDto } from "./dto/create-workspace-document.dto";
 import { CreateWorkspaceDocumentResponse } from "./types/create-workspace-document-response.type";
+import { UpdateDocumentTitleDto } from "./dto/update-document-title.dto";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 import { FindWorkspaceDocumentsResponse } from "./types/find-workspace-documents-response.type";
 import { CreateWorkspaceDocumentShareTokenResponse } from "./types/create-workspace-document-share-token-response.type";
@@ -36,6 +39,44 @@ import { FindWorkspaceDocumentResponse } from "./types/find-workspace-document-r
 export class WorkspaceDocumentsController {
 	constructor(private workspaceDocumentsService: WorkspaceDocumentsService) {}
 
+	@Put(":document_id")
+	@ApiOperation({
+		summary: "Update the title of a document in the workspace",
+		description: "If the user has the access permissions, update the document's title.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace",
+	})
+	@ApiParam({
+		name: "document_id",
+		description: "ID of document to change title",
+	})
+	@ApiOkResponse({
+		description: "Document title updated successfully",
+	})
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description:
+			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
+	})
+	@ApiBody({
+		description: "The new title of the document",
+		type: UpdateDocumentTitleDto,
+	})
+	async updateTitle(
+		@Param("workspace_id") workspaceId: string,
+		@Param("document_id") documentId: string,
+		@Body() updateDocumentTitleDto: UpdateDocumentTitleDto,
+		@Req() req: AuthroizedRequest
+	): Promise<void> {
+		await this.workspaceDocumentsService.updateTitle(
+			req.user.id,
+			workspaceId,
+			documentId,
+			updateDocumentTitleDto.title
+		);
+	}
 	@Get("")
 	@ApiOperation({
 		summary: "Retrieve the Documents in Workspace",
@@ -67,7 +108,6 @@ export class WorkspaceDocumentsController {
 	): Promise<FindWorkspaceDocumentsResponse> {
 		return this.workspaceDocumentsService.findMany(req.user.id, workspaceId, pageSize, cursor);
 	}
-
 	@Get(":document_id")
 	@ApiOperation({
 		summary: "Retrieve a Document in the Workspace",
@@ -86,7 +126,6 @@ export class WorkspaceDocumentsController {
 	): Promise<FindWorkspaceDocumentResponse> {
 		return this.workspaceDocumentsService.findOne(req.user.id, workspaceId, documentId);
 	}
-
 	@Post()
 	@ApiOperation({
 		summary: "Create a Document in a Workspace",
@@ -109,7 +148,6 @@ export class WorkspaceDocumentsController {
 			createWorkspaceDocumentDto.title
 		);
 	}
-
 	@Post(":document_id/share-token")
 	@ApiOperation({
 		summary: "Retrieve a Share Token for the Document",
