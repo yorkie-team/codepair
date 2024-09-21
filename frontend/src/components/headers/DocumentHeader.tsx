@@ -11,8 +11,11 @@ import {
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
+	Button,
+	FormControl,
+	Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
@@ -23,13 +26,29 @@ import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { selectDocument } from "../../store/documentSlice";
+import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
+import { UpdateDocumentRequest } from "../../hooks/api/types/document";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const editorState = useSelector(selectEditor);
 	const workspaceState = useSelector(selectWorkspace);
+	const documentStore = useSelector(selectDocument);
 	const { presenceList } = useUserPresence(editorState.doc);
+	const [focused, setFocused] = useState(false);
+	const { mutateAsync: updateDocumentTitle } = useUpdateDocumentTitleMutation(
+		workspaceState.data?.id || "",
+		documentStore.data?.id || ""
+	);
+
+	const isEditingDisabled = Boolean(editorState.shareRole);
+
+	const handleFocus = () => {
+		setFocused(true);
+	};
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -44,6 +63,22 @@ function DocumentHeader() {
 
 	const handleToPrevious = () => {
 		navigate(`/${workspaceState.data?.slug}`);
+	};
+
+	const handleUpdateDocumentTitle = async (data: UpdateDocumentRequest) => {
+		await updateDocumentTitle(data);
+		setFocused(false);
+	};
+
+	const validationRules = {
+		required: "Title is required",
+		maxLength: {
+			value: 255,
+			message: "Title must be less than 255 characters",
+		},
+		validate: {
+			notEmpty: (value: string) => value.trim() !== "" || "Title cannot be just whitespace",
+		},
 	};
 
 	return (
@@ -85,7 +120,47 @@ function DocumentHeader() {
 							)}
 						</Paper>
 						<DownloadMenu />
+						<Stack alignItems="center">
+							{isEditingDisabled ? (
+								<Typography variant="h5">{documentStore.data?.title}</Typography>
+							) : (
+								<FormControl>
+									<FormContainer
+										defaultValues={{ title: documentStore.data?.title }}
+										onSuccess={handleUpdateDocumentTitle}
+									>
+										<Stack gap={4} alignItems="flex-end" flexDirection="row">
+											<TextFieldElement
+												variant="standard"
+												name="title"
+												label={documentStore.data?.title}
+												required
+												fullWidth
+												inputProps={{
+													maxLength: 255,
+												}}
+												onFocus={handleFocus}
+												rules={validationRules}
+												helperText={
+													focused ? "Please provide a valid title." : ""
+												}
+											/>
+											{focused && (
+												<Button
+													type="submit"
+													variant="contained"
+													size="large"
+												>
+													Update
+												</Button>
+											)}
+										</Stack>
+									</FormContainer>
+								</FormControl>
+							)}
+						</Stack>
 					</Stack>
+
 					<Stack direction="row" alignItems="center" gap={1}>
 						<UserPresenceList presenceList={presenceList} />
 						{!editorState.shareRole && <ShareButton />}

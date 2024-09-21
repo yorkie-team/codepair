@@ -17,6 +17,31 @@ export class WorkspaceDocumentsService {
 		private configService: ConfigService
 	) {}
 
+	async updateTitle(
+		userId: string,
+		workspaceId: string,
+		documentId: string,
+		title: string
+	): Promise<void> {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch (e) {
+			throw new NotFoundException(
+				"The workspace does not exist, or the user lacks the appropriate permissions."
+			);
+		}
+
+		await this.prismaService.document.update({
+			where: { id: documentId },
+			data: { title: title },
+		});
+	}
+
 	async create(userId: string, workspaceId: string, title: string) {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
