@@ -14,9 +14,10 @@ function AuthProvider(props: AuthProviderProps) {
 		() => isSuccess && !user.nickname,
 		[isSuccess, user?.nickname]
 	);
+	const isAuthLoading = isLoading || isPending;
 
 	return (
-		<AuthContext.Provider value={{ isLoggedIn: isSuccess, isLoading: isPending || isLoading }}>
+		<AuthContext.Provider value={{ isLoggedIn: isSuccess, isLoading: isAuthLoading }}>
 			{shouldChangeNickname ? <ChangeNicknameModal open /> : children}
 		</AuthContext.Provider>
 	);
