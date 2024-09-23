@@ -13,7 +13,7 @@ export const generateGetUserQueryKey = (accessToken: string) => {
 export const useGetUserQuery = () => {
 	const dispatch = useDispatch();
 	const authStore = useSelector(selectAuth);
-	const [axiosIntercepterAdded, setAxiosIntercepterAdded] = useState(false);
+	const [axiosInterceptorAdded, setAxiosInterceptorAdded] = useState(false);
 
 	useEffect(() => {
 		const interceptor = axios.interceptors.response.use(
@@ -39,17 +39,17 @@ export const useGetUserQuery = () => {
 			}
 		);
 
-		setAxiosIntercepterAdded(true);
+		setAxiosInterceptorAdded(true);
 
 		return () => {
-			setAxiosIntercepterAdded(false);
+			setAxiosInterceptorAdded(false);
 			axios.interceptors.response.eject(interceptor);
 		};
 	}, [authStore, dispatch]);
 
 	const query = useQuery({
 		queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
-		enabled: Boolean(axiosIntercepterAdded && authStore.accessToken),
+		enabled: Boolean(axiosInterceptorAdded && authStore.accessToken),
 		queryFn: async () => {
 			axios.defaults.headers.common["Authorization"] = `Bearer ${authStore.accessToken}`;
 			const res = await axios.get<GetUserResponse>("/users");
