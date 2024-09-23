@@ -11,11 +11,10 @@ import {
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
-	Button,
-	FormControl,
+	Grid2 as Grid,
 	Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
@@ -26,10 +25,9 @@ import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { selectDocument } from "../../store/documentSlice";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
-import { UpdateDocumentRequest } from "../../hooks/api/types/document";
+import { useSnackbar } from "notistack";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -38,17 +36,12 @@ function DocumentHeader() {
 	const workspaceState = useSelector(selectWorkspace);
 	const documentStore = useSelector(selectDocument);
 	const { presenceList } = useUserPresence(editorState.doc);
-	const [focused, setFocused] = useState(false);
 	const { mutateAsync: updateDocumentTitle } = useUpdateDocumentTitleMutation(
 		workspaceState.data?.id || "",
 		documentStore.data?.id || ""
 	);
-
 	const isEditingDisabled = Boolean(editorState.shareRole);
-
-	const handleFocus = () => {
-		setFocused(true);
-	};
+	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -65,108 +58,100 @@ function DocumentHeader() {
 		navigate(`/${workspaceState.data?.slug}`);
 	};
 
-	const handleUpdateDocumentTitle = async (data: UpdateDocumentRequest) => {
-		await updateDocumentTitle(data);
-		setFocused(false);
-	};
+	const handleUpdateDocumentTitle = async (e: React.FocusEvent<HTMLSpanElement, Element>) => {
+		const title = e.target.textContent as string;
 
-	const validationRules = {
-		required: "Title is required",
-		maxLength: {
-			value: 255,
-			message: "Title must be less than 255 characters",
-		},
-		validate: {
-			notEmpty: (value: string) => value.trim() !== "" || "Title cannot be just whitespace",
-		},
+		if (title === documentStore.data?.title) return;
+
+		let errorString = "";
+
+		if (!title.trim()) {
+			errorString = "Title cannot be empty";
+		}
+
+		if (title.length > 255) {
+			errorString = "Title must be less than 255 characters";
+		}
+
+		if (errorString) {
+			enqueueSnackbar(errorString, { variant: "error" });
+			e.target.textContent = documentStore.data?.title as string;
+			return;
+		}
+
+		await updateDocumentTitle({ title });
+		enqueueSnackbar("The title is changed successfully", { variant: "success" });
 	};
 
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
 			<Toolbar>
-				<Stack width="100%" direction="row" justifyContent="space-between">
-					<Stack direction="row" spacing={1} alignItems="center">
-						{!editorState.shareRole && (
-							<Tooltip title="Back to Previous Page">
-								<IconButton color="inherit" onClick={handleToPrevious}>
-									<ArrowBackIosNewIcon />
-								</IconButton>
-							</Tooltip>
-						)}
-						<Paper>
-							{editorState.shareRole !== ShareRole.READ && (
-								<ToggleButtonGroup
-									value={editorState.mode}
-									exclusive
-									onChange={(_, newMode) => handleChangeMode(newMode)}
-									size="small"
-								>
-									<ToggleButton value="edit" aria-label="edit">
-										<Tooltip title="Edit Mode">
-											<EditIcon />
-										</Tooltip>
-									</ToggleButton>
-									<ToggleButton value="both" aria-label="both">
-										<Tooltip title="Both Mode">
-											<VerticalSplitIcon />
-										</Tooltip>
-									</ToggleButton>
-									<ToggleButton value="read" aria-label="read">
-										<Tooltip title="Read Mode">
-											<VisibilityIcon />
-										</Tooltip>
-									</ToggleButton>
-								</ToggleButtonGroup>
+				<Grid container spacing={2} width="100%">
+					<Grid size={4}>
+						<Stack direction="row" spacing={1} alignItems="center">
+							{!editorState.shareRole && (
+								<Tooltip title="Back to Previous Page">
+									<IconButton color="inherit" onClick={handleToPrevious}>
+										<ArrowBackIosNewIcon />
+									</IconButton>
+								</Tooltip>
 							)}
-						</Paper>
-						<DownloadMenu />
-						<Stack alignItems="center">
-							{isEditingDisabled ? (
-								<Typography variant="h5">{documentStore.data?.title}</Typography>
-							) : (
-								<FormControl>
-									<FormContainer
-										defaultValues={{ title: documentStore.data?.title }}
-										onSuccess={handleUpdateDocumentTitle}
+							<Paper>
+								{editorState.shareRole !== ShareRole.READ && (
+									<ToggleButtonGroup
+										value={editorState.mode}
+										exclusive
+										onChange={(_, newMode) => handleChangeMode(newMode)}
+										size="small"
 									>
-										<Stack gap={4} alignItems="flex-end" flexDirection="row">
-											<TextFieldElement
-												variant="standard"
-												name="title"
-												label={documentStore.data?.title}
-												required
-												fullWidth
-												inputProps={{
-													maxLength: 255,
-												}}
-												onFocus={handleFocus}
-												rules={validationRules}
-												helperText={
-													focused ? "Please provide a valid title." : ""
-												}
-											/>
-											{focused && (
-												<Button
-													type="submit"
-													variant="contained"
-													size="large"
-												>
-													Update
-												</Button>
-											)}
-										</Stack>
-									</FormContainer>
-								</FormControl>
-							)}
+										<ToggleButton value="edit" aria-label="edit">
+											<Tooltip title="Edit Mode">
+												<EditIcon />
+											</Tooltip>
+										</ToggleButton>
+										<ToggleButton value="both" aria-label="both">
+											<Tooltip title="Both Mode">
+												<VerticalSplitIcon />
+											</Tooltip>
+										</ToggleButton>
+										<ToggleButton value="read" aria-label="read">
+											<Tooltip title="Read Mode">
+												<VisibilityIcon />
+											</Tooltip>
+										</ToggleButton>
+									</ToggleButtonGroup>
+								)}
+							</Paper>
+							<DownloadMenu />
 						</Stack>
-					</Stack>
-
-					<Stack direction="row" alignItems="center" gap={1}>
-						<UserPresenceList presenceList={presenceList} />
-						{!editorState.shareRole && <ShareButton />}
-						<ThemeButton />
-					</Stack>
-				</Stack>
+					</Grid>
+					<Grid size={4}>
+						<Stack alignItems="center" justifyContent="center" height="100%">
+							<Typography
+								contentEditable={!isEditingDisabled}
+								suppressContentEditableWarning={true}
+								sx={{
+									":focus": {
+										outline: "none",
+										border: "none",
+									},
+								}}
+								onBlur={(e) => handleUpdateDocumentTitle(e)}
+								maxWidth={300}
+								noWrap
+							>
+								{documentStore.data?.title}
+							</Typography>
+						</Stack>
+					</Grid>
+					<Grid size={4}>
+						<Stack direction="row" justifyContent="end" gap={1}>
+							<UserPresenceList presenceList={presenceList} />
+							{!editorState.shareRole && <ShareButton />}
+							<ThemeButton />
+						</Stack>
+					</Grid>
+				</Grid>
 			</Toolbar>
 		</AppBar>
 	);
