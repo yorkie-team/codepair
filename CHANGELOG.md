@@ -7,6 +7,18 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.13] - 2024-09-23
+
+### Added
+
+- Add ability to modify document titles by @hugosandsjo in https://github.com/yorkie-team/codepair/pull/342
+- Apply design changes for document title update feature by @devleejb in https://github.com/yorkie-team/codepair/pull/357
+
+### Fixed
+
+- Fix abnormal line spacing in Markdown lists caused by Soft Line Breaks by @devleejb in https://github.com/yorkie-team/codepair/pull/353
+- Fix Race Condition in Axios Interceptor for Refresh Token by @devleejb in https://github.com/yorkie-team/codepair/pull/356
+
 ## [0.1.12] - 2024-09-13
 
 ### Changed
