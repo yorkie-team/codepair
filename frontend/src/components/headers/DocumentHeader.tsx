@@ -27,7 +27,7 @@ import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
 import { selectDocument } from "../../store/documentSlice";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -41,6 +41,7 @@ function DocumentHeader() {
 		documentStore.data?.id || ""
 	);
 	const isEditingDisabled = Boolean(editorState.shareRole);
+	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
