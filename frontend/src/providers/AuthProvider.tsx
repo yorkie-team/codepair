@@ -9,14 +9,14 @@ interface AuthProviderProps {
 
 function AuthProvider(props: AuthProviderProps) {
 	const { children } = props;
-	const { data: user, isSuccess, isLoading } = useGetUserQuery();
+	const { data: user, isSuccess, isLoading, isPending } = useGetUserQuery();
 	const shouldChangeNickname = useMemo(
 		() => isSuccess && !user.nickname,
 		[isSuccess, user?.nickname]
 	);
 
 	return (
-		<AuthContext.Provider value={{ isLoggedIn: isSuccess, isLoading }}>
+		<AuthContext.Provider value={{ isLoggedIn: isSuccess, isLoading: isPending || isLoading }}>
 			{shouldChangeNickname ? <ChangeNicknameModal open /> : children}
 		</AuthContext.Provider>
 	);
