@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectAuth } from "../../store/authSlice";
+import { logout, selectAuth, setAccessToken } from "../../store/authSlice";
 import { User, setUserData } from "../../store/userSlice";
 import { GetUserResponse, UpdateUserRequest } from "./types/user";
 
@@ -13,10 +13,43 @@ export const generateGetUserQueryKey = (accessToken: string) => {
 export const useGetUserQuery = () => {
 	const dispatch = useDispatch();
 	const authStore = useSelector(selectAuth);
+	const [axiosIntercepterAdded, setAxiosIntercepterAdded] = useState(false);
+
+	useEffect(() => {
+		const interceptor = axios.interceptors.response.use(
+			(response) => response,
+			async (error) => {
+				if (error.response?.status === 401 && !error.config._retry) {
+					if (error.config.url === "/auth/refresh") {
+						dispatch(logout());
+						dispatch(setUserData(null));
+						return Promise.reject(error);
+					} else {
+						error.config._retry = true;
+						const { refreshToken } = authStore;
+						const response = await axios.post("/auth/refresh", { refreshToken });
+						const newAccessToken = response.data.newAccessToken;
+						dispatch(setAccessToken(newAccessToken));
+						axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+						error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+						return axios(error.config);
+					}
+				}
+				return Promise.reject(error);
+			}
+		);
+
+		setAxiosIntercepterAdded(true);
+
+		return () => {
+			setAxiosIntercepterAdded(false);
+			axios.interceptors.response.eject(interceptor);
+		};
+	}, [authStore, dispatch]);
 
 	const query = useQuery({
 		queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
-		enabled: Boolean(authStore.accessToken),
+		enabled: Boolean(axiosIntercepterAdded && authStore.accessToken),
 		queryFn: async () => {
 			axios.defaults.headers.common["Authorization"] = `Bearer ${authStore.accessToken}`;
 			const res = await axios.get<GetUserResponse>("/users");
