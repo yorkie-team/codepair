@@ -67,7 +67,7 @@ export const useGetUserQuery = () => {
 		}
 	}, [dispatch, query.data, query.isError, query.isSuccess]);
 
-	return query;
+	return { ...query, isLoading: query.isLoading || !axiosInterceptorAdded };
 };
 
 export const useUpdateUserNicknameMutation = () => {
