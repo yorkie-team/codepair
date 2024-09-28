@@ -27,15 +27,24 @@ This project is the backend part of the CodePair service developed using NestJS.
     docker-compose -f ./backend/docker/docker-compose.yml up -d
     ```
 
-4. Run the Backend application:
+4. Install dependencies from the root.
 
     ```bash
-    cd backend
-    npm install
-    npm run start:dev
+    pnpm install
     ```
 
-5. Visit http://localhost:3000 to enjoy your CodePair.
+5. Run the Backend application:
+
+    ```bash
+    # In the root directory of the repository and run.
+    pnpm backend start:dev
+
+    # Navigate to the 'backend' directory and run application.
+    cd backend
+    pnpm run start:dev
+    ```
+
+6. Visit http://localhost:3000 to enjoy your CodePair.
 
 ## API Specification
 
@@ -46,7 +55,7 @@ You can access the Swagger-based REST API specification at `<API_URL>/api` when 
 ### Building the Project:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Builds the project.
@@ -54,7 +63,7 @@ Builds the project.
 ### Linting the Code:
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 Lints TypeScript files using ESLint. Fixes any fixable linting errors.
@@ -62,7 +71,7 @@ Lints TypeScript files using ESLint. Fixes any fixable linting errors.
 ### Testing:
 
 ```bash
-npm test
+pnpm test
 ```
 
 Runs unit tests using Jest.
@@ -70,7 +79,7 @@ Runs unit tests using Jest.
 ### Running in Production:
 
 ```bash
-npm start
+pnpm start
 ```
 
 Starts the server in production mode.

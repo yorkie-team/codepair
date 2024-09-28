@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
+import { Observable } from "rxjs";
 import { IS_PUBLIC_PATH } from "src/utils/decorators/auth.decorator";
 import { AuthorizedUser } from "src/utils/types/req.type";
 
@@ -15,7 +16,7 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 		super();
 	}
 
-	canActivate(context: ExecutionContext) {
+	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_PATH, [
 			context.getHandler(),
 			context.getClass(),

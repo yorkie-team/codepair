@@ -5,7 +5,7 @@
 ### 1. Update the version number.
 
 - Update `version` in [package.json in `frontend/`](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/frontend/package.json#L5) and [package.json in `backend/`](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/backend/package.json#L3).
-- Update `version` in `package-lock.json` in `frontend/` and `backend/`. It will be automatically updated when you run `npm install`.
+- Update `version` in `pnpm-lock.yaml` will be automatically updated when you run `pnpm install`.
 
 ### 2. Write changelog of this version in [CHANGELOG.md](https://github.com/yorkie-team/codepair/blob/main/CHANGELOG.md).
 

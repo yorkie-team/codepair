@@ -1,25 +1,17 @@
 {
-	"name": "codepair-frontend",
-	"description": "CodePair Frontend",
-	"private": true,
+	"name": "@codepair/frontend",
 	"version": "0.1.14",
+	"description": "CodePair Frontend",
 	"type": "module",
 	"author": "yorkie-team",
 	"license": "Apache-2.0",
 	"scripts": {
-		"prepare": "cd .. && husky .husky",
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview",
+		"lint": "eslint . --report-unused-disable-directives --max-warnings 0",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check"
-	},
-	"lint-staged": {
-		"*.{ts,tsx}": [
-			"npm run lint",
-			"npm run format"
-		]
 	},
 	"dependencies": {
 		"@codemirror/commands": "6.1.2",
@@ -91,16 +83,9 @@
 		"@types/react-infinite-scroller": "^1.2.5",
 		"@types/react-scroll-sync": "^0.9.0",
 		"@types/validator": "^13.12.1",
-		"@typescript-eslint/eslint-plugin": "^6.14.0",
-		"@typescript-eslint/parser": "^6.14.0",
 		"@vitejs/plugin-react": "^4.2.1",
-		"eslint": "^8.55.0",
-		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
-		"husky": "^9.1.4",
-		"prettier": "3.1.1",
-		"typescript": "^5.2.2",
 		"vite": "^5.0.8"
 	},
 	"peerDependencies": {

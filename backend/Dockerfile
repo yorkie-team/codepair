@@ -23,10 +23,10 @@ RUN apk add --no-cache \
     ttf-freefont
 
 # Install dependencies
-RUN npm ci
+RUN pnpm ci
 
 # Build codepair backend
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: copy build outputs and dependencies for actual image
 FROM node:alpine3.18
@@ -66,4 +66,4 @@ ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 EXPOSE 3000
 
 # Run the backend server
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]
