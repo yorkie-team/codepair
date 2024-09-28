@@ -38,10 +38,6 @@ This project is the backend part of the CodePair service developed using NestJS.
     ```bash
     # In the root directory of the repository and run.
     pnpm backend start:dev
-
-    # Navigate to the 'backend' directory and run application.
-    cd backend
-    pnpm run start:dev
     ```
 
 6. Visit http://localhost:3000 to enjoy your CodePair.

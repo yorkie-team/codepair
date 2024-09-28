@@ -38,10 +38,6 @@ This project is the frontend part of the CodePair service developed using Vite a
     ```bash
     # In the root directory of the repository and run.
     pnpm frontend dev
-
-    # Navigate to the 'frontend' directory and run application.
-    cd frontend
-    pnpm dev
     ```
 
 6. Visit [http://localhost:5173](http://localhost:5173) to enjoy your CodePair.
