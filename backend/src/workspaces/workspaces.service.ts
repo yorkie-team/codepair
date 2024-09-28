@@ -18,7 +18,7 @@ export class WorkspacesService {
 	constructor(
 		private prismaService: PrismaService,
 		private checkService: CheckService
-	) { }
+	) {}
 
 	async create(userId: string, title: string): Promise<Workspace> {
 		const { conflict } = await this.checkService.checkNameConflict(title);
