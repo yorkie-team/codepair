@@ -4,8 +4,9 @@
 
 ### 1. Update the version number.
 
-- Update `version` in [package.json in `frontend/`](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/frontend/package.json#L5) and [package.json in `backend/`](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/backend/package.json#L3).
-- Update `version` in `pnpm-lock.yaml` will be automatically updated when you run `pnpm install`.
+- For packages that are independently versioned (e.g., `frontend/`, `backend/`), update the `version` field in their respective `package.json` files when making a release.
+- Otherwise, centralize version management at the root `package.json` if using a unified versioning strategy.
+- The `version` in `pnpm-lock.yaml` will be automatically updated when you run `pnpm install` at the root of the mono repo.
 
 ### 2. Write changelog of this version in [CHANGELOG.md](https://github.com/yorkie-team/codepair/blob/main/CHANGELOG.md).
 
