@@ -22,7 +22,12 @@ jobs:
     env:
       working-directory: ./backend
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -30,7 +35,7 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
       - name: Install packages
-        run: pnpm ci
+        run: pnpm i
         working-directory: ${{ env.working-directory }}
       - name: Prettier
         run: pnpm run format:check

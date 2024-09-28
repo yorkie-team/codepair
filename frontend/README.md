@@ -36,7 +36,7 @@ This project is the frontend part of the CodePair service developed using Vite a
 5. Run the Frontend application:
 
     ```bash
-    # In the root directory of the repository and run frontend.
+    # In the root directory of the repository and run.
     pnpm frontend dev
 
     # Navigate to the 'frontend' directory and run application.

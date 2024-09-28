@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
-
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Setup Node 🔧
         uses: actions/setup-node@v4
         with:
@@ -32,7 +35,7 @@ jobs:
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
-          pnpm ci
+          pnpm i
           pnpm run build
 
       - name: Deploy 🚀

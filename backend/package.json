@@ -19,6 +19,12 @@
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
 	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"pnpm run lint",
+			"pnpm run format"
+		]
+	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.509.0",
 		"@aws-sdk/s3-request-presigner": "^3.509.0",

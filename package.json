@@ -2,25 +2,18 @@
   "name": "codepair",
   "version": "0.1.13",
   "description": "Build your own AI-powered collaborative markdown editor in just 5 minutes",
-  "keywords": [],
+  "keywords": [ ],
   "author": "yorkie-team",
   "license": "Apache-2.0",
   "scripts": {
     "prepare": "husky .husky",
     "preinstall": "npx only-allow pnpm",
-    "dev": "pnpm --filer=frontend dev && pnpm --fliter=backend start:dev",
     "frontend": "pnpm --filter=frontend",
     "backend": "pnpm --filter=backend",
     "lint": "pnpm run --parallel lint",
     "lint:check": "pnpm run --parallel lint:check",
     "format": "pnpm run --parallel format",
     "format:check": "pnpm run --parallel format:check"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "pnpm run lint",
-      "pnpm run format"
-    ]
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.7.0",
