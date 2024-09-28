@@ -1,6 +1,10 @@
 # Stage 1: build codepair backend
 # Start from the node base image
 FROM node:alpine3.18 AS builder
+# Set pnpm installation directory and add it to the PATH
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -23,13 +27,17 @@ RUN apk add --no-cache \
     ttf-freefont
 
 # Install dependencies
-RUN pnpm ci
+RUN pnpm i
 
 # Build codepair backend
 RUN pnpm run build
 
 # Stage 2: copy build outputs and dependencies for actual image
 FROM node:alpine3.18
+# Set pnpm installation directory and add it to the PATH
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
