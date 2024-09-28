@@ -101,10 +101,11 @@ We offer two options. Choose the one that best suits your needs:
    pnpm install
    ```
 
-4. Run application:
+4. Run the Backend application and the Frontend application:
 
    ```bash
-   pnpm run dev
+   pnpm backend start:dev
+   pnpm frontend dev
    ```
 
 5. Visit http://localhost:5173 to enjoy your CodePair.
