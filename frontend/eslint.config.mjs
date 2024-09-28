@@ -7,7 +7,7 @@ import reactRefreshPlugin from "eslint-plugin-react-refresh";
 export default [
 	{
 		files: ["**/*.ts", "**/*.tsx"],
-		ignores: ["dist", "eslint.config.mjs"],
+		ignores: ["dist", "eslint.config.mjs", "vite.config.ts"],
 		languageOptions: {
 			parser: typescriptParser,
 			parserOptions: {
