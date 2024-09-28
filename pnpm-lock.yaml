@@ -165,6 +165,9 @@ importers:
       '@codemirror/lang-markdown':
         specifier: ^6.2.3
         version: 6.2.5
+      '@codemirror/state':
+        specifier: ^6.4.1
+        version: 6.4.1
       '@codemirror/view':
         specifier: 6.23.1
         version: 6.23.1
@@ -288,6 +291,9 @@ importers:
       react-resizable-layout:
         specifier: ^0.7.2
         version: 0.7.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router:
+        specifier: ^6.26.2
+        version: 6.26.2(react@18.3.1)
       react-router-dom:
         specifier: ^6.21.1
         version: 6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

@@ -22,6 +22,7 @@
 	"dependencies": {
 		"@codemirror/commands": "6.1.2",
 		"@codemirror/lang-markdown": "^6.2.3",
+		"@codemirror/state": "^6.4.1",
 		"@codemirror/view": "6.23.1",
 		"@emotion/react": "^11.11.3",
 		"@emotion/styled": "^11.11.0",
@@ -63,6 +64,7 @@
 		"react-infinite-scroller": "^1.2.6",
 		"react-redux": "^9.0.4",
 		"react-resizable-layout": "^0.7.2",
+		"react-router": "^6.26.2",
 		"react-router-dom": "^6.21.1",
 		"react-scroll-sync": "^0.11.2",
 		"react-social-login-buttons": "^3.9.1",
