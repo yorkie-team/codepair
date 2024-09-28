@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.14] - 2024-09-28
+
+### Fixed
+
+- Fix loading behavior when Access Token is absent by @devleejb in https://github.com/yorkie-team/codepair/pull/359
+
 ## [0.1.13] - 2024-09-23
 
 ### Added
