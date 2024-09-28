@@ -6,6 +6,7 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"build": "nest build",
+		"db:generate": "prisma generate --schema=prisma/schema.prisma",
 		"start": "nest start",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",

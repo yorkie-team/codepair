@@ -35,6 +35,9 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
         working-directory: ${{ env.working-directory }}
+      - name: Generate prisma
+        run: pnpm db:generate
+        working-directory: ${{ env.working-directory }}
       - name: Prettier
         run: pnpm run format:check
         working-directory: ${{ env.working-directory }}
