@@ -1,3 +1,5 @@
+# @format
+
 name: CI Frontend
 on:
   push:
@@ -32,6 +34,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
       - name: Install packages
         run: pnpm install --frozen-lockfile
         working-directory: ${{ env.working-directory }}
