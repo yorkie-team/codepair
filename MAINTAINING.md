@@ -1,12 +1,12 @@
+<!-- @format -->
+
 # Maintaining CodePair
 
 ## Releasing a New Version
 
 ### 1. Update the version number.
 
-- For packages that are independently versioned (e.g., `frontend/`, `backend/`), update the `version` field in their respective `package.json` files when making a release.
-- Otherwise, centralize version management at the root `package.json` if using a unified versioning strategy.
-- The `version` in `pnpm-lock.yaml` will be automatically updated when you run `pnpm install` at the root of the mono repo.
+- CodePair uses global version management. Update the `version` field only in the root `package.json` file when making a release.
 
 ### 2. Write changelog of this version in [CHANGELOG.md](https://github.com/yorkie-team/codepair/blob/main/CHANGELOG.md).
 
