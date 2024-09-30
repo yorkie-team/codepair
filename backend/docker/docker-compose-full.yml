@@ -3,7 +3,7 @@ version: "3.8"
 services:
     codepair-backend:
         build:
-            context: ../
+            context: ../../
         environment:
             DATABASE_URL: "mongodb://mongo:27017/codepair"
             # Environment variables need to be passed to the container
