@@ -1,5 +1,6 @@
 {
 	"name": "@codepair/frontend",
+	"version": "0.1.14",
 	"description": "CodePair Frontend",
 	"type": "module",
 	"author": "yorkie-team",
