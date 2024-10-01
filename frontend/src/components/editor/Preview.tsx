@@ -49,6 +49,9 @@ function Preview() {
 
 	return (
 		<MarkdownPreview
+			style={{
+				paddingBottom: "2rem",
+			}}
 			source={addSoftLineBreak(content)}
 			wrapperElement={{
 				"data-color-mode": currentTheme,
