@@ -2,6 +2,7 @@
     "name": "@codepair/backend",
     "version": "0.1.14",
     "description": "CodePair Backend",
+    "type": "module",
     "author": "yorkie-team",
     "license": "Apache-2.0",
     "scripts": {
@@ -17,8 +18,8 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
+        "format": "prettier . --write",
+        "format:check": "prettier . --check"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
