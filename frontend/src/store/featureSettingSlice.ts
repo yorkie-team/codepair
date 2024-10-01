@@ -17,18 +17,18 @@ interface FileUploadSetting {
 	enable: boolean;
 }
 
-export interface SettingState {
+export interface FeatureSettingState {
 	yorkieIntelligence: YorkieIntelligenceSetting | null;
 	fileUpload: FileUploadSetting | null;
 }
 
-const initialState: SettingState = {
+const initialState: FeatureSettingState = {
 	yorkieIntelligence: null,
 	fileUpload: null,
 };
 
-export const settingSlice = createSlice({
-	name: "setting",
+export const featureSettingSlice = createSlice({
+	name: "featureSetting",
 	initialState,
 	reducers: {
 		setYorkieIntelligence: (state, action: PayloadAction<YorkieIntelligenceSetting>) => {
@@ -40,8 +40,8 @@ export const settingSlice = createSlice({
 	},
 });
 
-export const { setYorkieIntelligence, setFileUpload } = settingSlice.actions;
+export const { setYorkieIntelligence, setFileUpload } = featureSettingSlice.actions;
 
-export const selectSetting = (state: RootState) => state.setting;
+export const selectFeatureSetting = (state: RootState) => state.featureSetting;
 
-export default settingSlice.reducer;
+export default featureSettingSlice.reducer;

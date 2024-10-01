@@ -14,7 +14,7 @@ import { useFormatUtils } from "../../hooks/useFormatUtils";
 import { useToolBar } from "../../hooks/useToolBar";
 import { CodeKeyType, selectConfig } from "../../store/configSlice";
 import { selectEditor, setCmView } from "../../store/editorSlice";
-import { selectSetting } from "../../store/settingSlice";
+import { selectFeatureSetting } from "../../store/featureSettingSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { imageUploader } from "../../utils/imageUploader";
 import { intelligencePivot } from "../../utils/intelligence/intelligencePivot";
@@ -34,7 +34,7 @@ function Editor(props: EditorProps) {
 	const [element, setElement] = useState<HTMLElement>();
 	const editorStore = useSelector(selectEditor);
 	const configStore = useSelector(selectConfig);
-	const settingStore = useSelector(selectSetting);
+	const settingStore = useSelector(selectFeatureSetting);
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();

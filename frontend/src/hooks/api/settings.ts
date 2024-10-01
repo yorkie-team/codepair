@@ -1,9 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { GetSettingsResponse } from "./types/settings";
-import { useDispatch, useSelector } from "react-redux";
-import { selectSetting, setFileUpload, setYorkieIntelligence } from "../../store/settingSlice";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	selectFeatureSetting,
+	setFileUpload,
+	setYorkieIntelligence,
+} from "../../store/featureSettingSlice";
+import { GetSettingsResponse } from "./types/settings";
 
 export const generateGetSettingsQueryKey = () => {
 	return ["settings"];
@@ -11,10 +15,12 @@ export const generateGetSettingsQueryKey = () => {
 
 export const useGetSettingsQuery = () => {
 	const dispatch = useDispatch();
-	const settingStore = useSelector(selectSetting);
+	const featureSettingStore = useSelector(selectFeatureSetting);
 	const query = useQuery({
 		queryKey: generateGetSettingsQueryKey(),
-		enabled: settingStore.yorkieIntelligence === null && settingStore.fileUpload === null,
+		enabled:
+			featureSettingStore.yorkieIntelligence === null &&
+			featureSettingStore.fileUpload === null,
 		queryFn: async () => {
 			const res = await axios.get<GetSettingsResponse>("/settings");
 			return res.data;
