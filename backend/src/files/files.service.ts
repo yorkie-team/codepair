@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
@@ -13,6 +13,7 @@ import * as htmlPdf from "html-pdf-node";
 import * as MarkdownIt from "markdown-it";
 import { PrismaService } from "src/db/prisma.service";
 import { generateRandomKey } from "src/utils/functions/random-string";
+import { StorageType } from "src/utils/types/storage.type";
 import { CreateUploadPresignedUrlResponse } from "./types/create-upload-url-response.type";
 import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.type";
 
@@ -25,7 +26,7 @@ export class FilesService {
 		private configService: ConfigService,
 		private prismaService: PrismaService
 	) {
-		this.s3Client = new S3Client();
+		this.s3Client = new S3Client(this.getStorageConfig());
 		this.markdown = new MarkdownIt({
 			html: true,
 			breaks: true,
@@ -55,7 +56,7 @@ export class FilesService {
 
 		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
 		const command = new PutObjectCommand({
-			Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+			Bucket: this.configService.get("BUCKET_NAME"),
 			Key: fileKey,
 			StorageClass: "INTELLIGENT_TIERING",
 			ContentType: contentType,
@@ -70,7 +71,7 @@ export class FilesService {
 	async createDownloadPresignedUrl(fileKey: string) {
 		try {
 			const command = new GetObjectCommand({
-				Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+				Bucket: this.configService.get("BUCKET_NAME"),
 				Key: fileKey,
 			});
 			return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
@@ -125,4 +126,27 @@ export class FilesService {
 			fileName: `${fileName}.pdf`,
 		};
 	}
+
+	private getStorageConfig = (): S3ClientConfig => {
+		const bucketType: StorageType = this.configService.get("BUCKET_TYPE") || "S3";
+		const region = this.configService.get("AWS_REGION") || "us-east-1";
+		if (bucketType === "MINIO") {
+			const endpoint = this.configService.get("MINIO_ENDPOINT");
+			const accessKeyId = this.configService.get("MINIO_ACCESS_KEY");
+			const secretAccessKey = this.configService.get("MINIO_SECRET_KEY");
+			return {
+				region,
+				endpoint,
+				forcePathStyle: true,
+				credentials: {
+					accessKeyId,
+					secretAccessKey,
+				},
+			};
+		}
+
+		return {
+			region,
+		};
+	};
 }
