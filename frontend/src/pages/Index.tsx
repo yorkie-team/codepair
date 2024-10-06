@@ -1,6 +1,7 @@
 import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import CodePairIcon from "../components/icons/CodePairIcon";
 import { GithubLoginButton } from "react-social-login-buttons";
+import { useLocation } from "react-router-dom";
 
 const socialLoginList = [
 	{
@@ -10,8 +11,13 @@ const socialLoginList = [
 ];
 
 function Index() {
+	const location = useLocation();
+	const from = location.state?.from?.pathname || "/";
+
 	const handleLogin = (provider: string) => {
-		window.location.href = `${import.meta.env.VITE_API_ADDR}/auth/login/${provider}`;
+		window.location.href = `${
+			import.meta.env.VITE_API_ADDR
+		}/auth/login/${provider}?redirect=${from}`;
 	};
 
 	return (

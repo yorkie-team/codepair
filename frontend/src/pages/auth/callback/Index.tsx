@@ -20,6 +20,9 @@ function CallbackIndex() {
 
 		dispatch(setAccessToken(accessToken));
 		dispatch(setRefreshToken(refreshToken));
+
+		const redirect = searchParams.get("redirect") || "/";
+		navigate(redirect);
 	}, [dispatch, navigate, searchParams]);
 
 	return <Box></Box>;
