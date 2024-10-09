@@ -47,7 +47,7 @@ This project is the frontend part of the CodePair service developed using Vite a
 ### Running the Development Server:
 
 ```bash
-pnpm run dev
+pnpm frontend dev
 ```
 
 Starts the development server using Vite.
@@ -55,7 +55,7 @@ Starts the development server using Vite.
 ### Building the Project:
 
 ```bash
-pnpm run build
+pnpm frontend build
 ```
 
 Compiles TypeScript files (`tsc`) and builds the project using Vite.
@@ -63,7 +63,7 @@ Compiles TypeScript files (`tsc`) and builds the project using Vite.
 ### Linting the Code:
 
 ```bash
-pnpm run lint
+pnpm frontend lint
 ```
 
 Lints TypeScript and TypeScript React files using ESLint. Reports any linting errors or warnings.
@@ -71,7 +71,7 @@ Lints TypeScript and TypeScript React files using ESLint. Reports any linting er
 ### Previewing the Production Build:
 
 ```bash
-pnpm run preview
+pnpm frontend preview
 ```
 
 Previews the production build of the project using Vite.
@@ -79,7 +79,7 @@ Previews the production build of the project using Vite.
 ### Formatting the Code:
 
 ```bash
-pnpm run format
+pnpm frontend format
 ```
 
 Formats the code using Prettier according to project configurations. Automatically fixes any formatting issues.
@@ -87,7 +87,7 @@ Formats the code using Prettier according to project configurations. Automatical
 ### Checking Code Formatting:
 
 ```bash
-pnpm run format:check
+pnpm frontend format:check
 ```
 
 Checks if the code is formatted correctly according to Prettier configurations. Reports any formatting issues without fixing them.

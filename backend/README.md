@@ -51,7 +51,7 @@ You can access the Swagger-based REST API specification at `<API_URL>/api` when 
 ### Building the Project:
 
 ```bash
-pnpm run build
+pnpm backend build
 ```
 
 Builds the project.
@@ -59,7 +59,7 @@ Builds the project.
 ### Linting the Code:
 
 ```bash
-pnpm run lint
+pnpm backend lint
 ```
 
 Lints TypeScript files using ESLint. Fixes any fixable linting errors.
@@ -67,7 +67,7 @@ Lints TypeScript files using ESLint. Fixes any fixable linting errors.
 ### Testing:
 
 ```bash
-pnpm test
+pnpm backend test
 ```
 
 Runs unit tests using Jest.
@@ -75,7 +75,7 @@ Runs unit tests using Jest.
 ### Running in Production:
 
 ```bash
-pnpm start
+pnpm backend start
 ```
 
 Starts the server in production mode.
