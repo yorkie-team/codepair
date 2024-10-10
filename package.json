@@ -6,7 +6,7 @@
     "author": "yorkie-team",
     "license": "Apache-2.0",
     "scripts": {
-        "prepare": "husky .husky",
+        "prepare": "husky install",
         "preinstall": "npx only-allow pnpm",
         "frontend": "pnpm --filter=frontend",
         "backend": "pnpm --filter=backend",

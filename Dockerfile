@@ -17,7 +17,9 @@ RUN apk add --no-cache \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    wget \
+    unzip
 
 # Download Korean font for Puppeteer
 RUN mkdir /usr/share/fonts/nanumfont && \
@@ -34,6 +36,7 @@ ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 FROM base AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
+RUN sed -i 's/"prepare": "husky install"/"prepare": ""/' ./package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm backend db:generate
 RUN pnpm backend build
