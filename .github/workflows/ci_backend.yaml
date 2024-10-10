@@ -22,20 +22,27 @@ jobs:
     env:
       working-directory: ./backend
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
       - name: Install packages
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.working-directory }}
+      - name: Generate prisma
+        run: pnpm db:generate
         working-directory: ${{ env.working-directory }}
       - name: Prettier
-        run: npm run format:check
+        run: pnpm run format:check
         working-directory: ${{ env.working-directory }}
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
         working-directory: ${{ env.working-directory }}
       - name: Build
-        run: npm run build
+        run: pnpm run build
         working-directory: ${{ env.working-directory }}

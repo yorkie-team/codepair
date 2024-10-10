@@ -62,15 +62,19 @@ We offer two options. Choose the one that best suits your needs:
    docker-compose -f ./backend/docker/docker-compose-full.yml up -d
    ```
 
-3. Run the Frontend application:
+3. Install dependencies from the root.
 
    ```bash
-   cd frontend
-   npm install
-   npm run dev
+   pnpm install
    ```
 
-4. Visit http://localhost:5173 to enjoy your CodePair.
+4. Run the Frontend application.
+
+   ```bash
+   pnpm frontend dev
+   ```
+
+5. Visit http://localhost:5173 to enjoy your CodePair.
 
 ### 3-2. Full Stack Development Mode
 
@@ -91,20 +95,17 @@ We offer two options. Choose the one that best suits your needs:
    docker-compose -f ./backend/docker/docker-compose.yml up -d
    ```
 
-3. Run the Backend application:
+3. Install dependencies from the root.
 
    ```bash
-   cd backend
-   npm install
-   npm run start:dev
+   pnpm install
    ```
 
-4. Run the Frontend application:
+4. Run the Backend application and the Frontend application:
 
    ```bash
-   cd ../frontend
-   npm install
-   npm run dev
+   pnpm backend start:dev
+   pnpm frontend dev
    ```
 
 5. Visit http://localhost:5173 to enjoy your CodePair.
