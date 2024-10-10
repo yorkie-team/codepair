@@ -114,7 +114,7 @@ frontend/
 │   ├── routes.tsx          # Routing settings
 │   └── vite-env.d.ts       # Types for environment variables.
 ├── .env.example            # Example .env file with environment variable definitions
-├── .eslintrc.cjs           # ESLint configuration file in CommonJS format
+├── eslint.config.mjs       # ESLint configuration file in ES module format
 ├── .gitignore              # Git ignore settings file
 ├── .prettierignore         # Files and directories to ignore for Prettier formatting
 ├── .prettierrc             # Prettier configuration file
