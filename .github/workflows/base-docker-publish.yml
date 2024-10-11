@@ -26,4 +26,4 @@ jobs:
       - name: Build & Push Image
         env:
           VERSION: ${{ inputs.version }}
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t yorkieteam/codepair:$VERSION --push ./backend
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t yorkieteam/codepair:$VERSION --push .

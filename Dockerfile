@@ -38,7 +38,7 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN sed -i 's/"prepare": "husky install"/"prepare": ""/' ./package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm backend db:generate
+RUN pnpx prisma generate --schema=./backend/prisma/schema.prisma
 RUN pnpm backend build
 RUN pnpm deploy --filter=backend --prod /prod/backend
 WORKDIR /prod/backend
