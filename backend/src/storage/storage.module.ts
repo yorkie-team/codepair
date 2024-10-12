@@ -25,10 +25,6 @@ const s3ClientFactory = {
 				}
 			: {
 					region,
-					credentials: {
-						accessKeyId,
-						secretAccessKey,
-					},
 				};
 
 		return new S3Client(config);
