@@ -1,19 +1,20 @@
 import { Module } from "@nestjs/common";
-import { PrismaService } from "./db/prisma.service";
-import { UsersModule } from "./users/users.module";
-import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core/constants";
+import { AuthModule } from "./auth/auth.module";
 import { JwtAuthGuard } from "./auth/jwt.guard";
-import { WorkspacesModule } from "./workspaces/workspaces.module";
-import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
-import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
-import { DocumentsModule } from "./documents/documents.module";
 import { CheckModule } from "./check/check.module";
+import { PrismaService } from "./db/prisma.service";
+import { DocumentsModule } from "./documents/documents.module";
+import { FilesModule } from "./files/files.module";
 import { IntelligenceModule } from "./intelligence/intelligence.module";
 import { LangchainModule } from "./langchain/langchain.module";
-import { FilesModule } from "./files/files.module";
 import { SettingsModule } from "./settings/settings.module";
+import { StorageModule } from "./storage/storage.module";
+import { UsersModule } from "./users/users.module";
+import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
+import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
+import { WorkspacesModule } from "./workspaces/workspaces.module";
 
 @Module({
 	imports: [
@@ -34,6 +35,7 @@ import { SettingsModule } from "./settings/settings.module";
 		FilesModule,
 		ConfigModule,
 		SettingsModule,
+		StorageModule,
 	],
 	controllers: [],
 	providers: [

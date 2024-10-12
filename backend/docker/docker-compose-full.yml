@@ -27,11 +27,12 @@ services:
             LANGCHAIN_API_KEY: "your_langsmith_api_key_here"
             LANGCHAIN_PROJECT: "your_langsmith_project_name_here"
             FILE_UPLOAD: false
-            BUCKET_TYPE: "S3 or MINIO"
             BUCKET_NAME: "your_s3_bucket_name_here"
+            AWS_REGION: "your_aws_region_here"
             MINIO_ENDPOINT: "your_minio_endpoint_here"
-            MINIO_ACCESS_KEY: "your_minio_access_key_here"
-            MINIO_SECRET_KEY: "your_minio_secret_key_here"
+            # Make sure to also set STORAGE_ACCESS_KEY and STORAGE_SECRET_KEY for the MinIO service below
+            STORAGE_ACCESS_KEY: "your_storage_access_key_here"
+            STORAGE_SECRET_KEY: "your_storage_secret_key_here"
         ports:
             - "3000:3000"
         depends_on:
@@ -77,6 +78,7 @@ services:
             timeout: 2s
             retries: 20
 
+    # If you are not using MinIO, comment out this service and related configurations.
     minio:
         image: minio/minio
         ports:
@@ -85,8 +87,8 @@ services:
         volumes:
             - minio_data:/data
         environment:
-            MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
-            MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+            MINIO_ROOT_USER: "your_storage_access_key_here"
+            MINIO_ROOT_PASSWORD: "your_storage_secret_key_here"
         command: server --console-address ":9001" /data
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
