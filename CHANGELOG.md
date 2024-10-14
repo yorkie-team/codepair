@@ -7,6 +7,17 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.15] - 2024-10-14
+
+### Added
+
+- Introduce mono repo by @choidabom in https://github.com/yorkie-team/codepair/pull/361
+
+### Changed
+
+- Add bottom padding to MarkdownPreview by @blurfx in https://github.com/yorkie-team/codepair/pull/363
+- Bump JamesIves/github-pages-deploy-action from 4.6.3 to 4.6.8 by @dependabot in https://github.com/yorkie-team/codepair/pull/364
+
 ## [0.1.14] - 2024-09-28
 
 ### Fixed
