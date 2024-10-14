@@ -5,7 +5,8 @@ import { ConfigService } from "@nestjs/config";
 const s3ClientFactory = {
 	provide: "STORAGE_CLIENT",
 	useFactory: (configService: ConfigService): S3Client | null => {
-		if (configService.get<boolean>("FILE_UPLOAD") === false) {
+		const fileUpload = configService.get<boolean>("FILE_UPLOAD");
+		if (!fileUpload) {
 			return null;
 		}
 		const region = configService.get<string>("AWS_REGION") || "us-east-1";
@@ -13,7 +14,7 @@ const s3ClientFactory = {
 		const accessKeyId = configService.get<string>("STORAGE_ACCESS_KEY");
 		const secretAccessKey = configService.get<string>("STORAGE_SECRET_KEY");
 
-		const config: S3ClientConfig = endpoint
+		const config: S3ClientConfig = fileUpload
 			? {
 					region,
 					endpoint,
