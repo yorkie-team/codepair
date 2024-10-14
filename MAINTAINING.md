@@ -1,5 +1,3 @@
-<!-- @format -->
-
 # Maintaining CodePair
 
 ## Releasing a New Version
