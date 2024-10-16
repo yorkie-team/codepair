@@ -9,7 +9,7 @@ const s3ClientFactory = {
 		if (!fileUpload) {
 			return null;
 		}
-		const region = configService.get<string>("AWS_REGION") || "us-east-1";
+		const region = configService.get<string>("AWS_REGION");
 		const endpoint = configService.get<string>("MINIO_ENDPOINT");
 		const accessKeyId = configService.get<string>("STORAGE_ACCESS_KEY");
 		const secretAccessKey = configService.get<string>("STORAGE_SECRET_KEY");
