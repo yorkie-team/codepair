@@ -2,6 +2,7 @@ import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
+	Inject,
 	Injectable,
 	NotFoundException,
 	UnauthorizedException,
@@ -18,14 +19,13 @@ import { ExportFileRequestBody, ExportFileResponse } from "./types/export-file.t
 
 @Injectable()
 export class FilesService {
-	private s3Client: S3Client;
 	private readonly markdown: MarkdownIt;
 
 	constructor(
+		@Inject("STORAGE_CLIENT") private s3Client: S3Client,
 		private configService: ConfigService,
 		private prismaService: PrismaService
 	) {
-		this.s3Client = new S3Client();
 		this.markdown = new MarkdownIt({
 			html: true,
 			breaks: true,
@@ -55,7 +55,7 @@ export class FilesService {
 
 		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
 		const command = new PutObjectCommand({
-			Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+			Bucket: this.configService.get("BUCKET_NAME"),
 			Key: fileKey,
 			StorageClass: "INTELLIGENT_TIERING",
 			ContentType: contentType,
@@ -70,7 +70,7 @@ export class FilesService {
 	async createDownloadPresignedUrl(fileKey: string) {
 		try {
 			const command = new GetObjectCommand({
-				Bucket: this.configService.get("AWS_S3_BUCKET_NAME"),
+				Bucket: this.configService.get("BUCKET_NAME"),
 				Key: fileKey,
 			});
 			return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
