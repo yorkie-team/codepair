@@ -101,14 +101,20 @@ We offer two options. Choose the one that best suits your needs:
    pnpm install
    ```
 
-4. Run the Backend application and the Frontend application:
+4. After installing dependencies, generate the database schema.
+
+   ```bash
+   pnpm backend db:generate
+   ```
+
+5. Run the Backend application and the Frontend application.
 
    ```bash
    pnpm backend start:dev
    pnpm frontend dev
    ```
 
-5. Visit http://localhost:5173 to enjoy your CodePair.
+6. Visit http://localhost:5173 to enjoy your CodePair.
 
 ## Contributing
 

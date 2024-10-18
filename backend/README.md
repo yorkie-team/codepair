@@ -33,14 +33,20 @@ This project is the backend part of the CodePair service developed using NestJS.
     pnpm install
     ```
 
-5. Run the Backend application:
+5. After installing dependencies, generate the database schema.
+
+    ```bash
+    pnpm backend db:generate
+    ```
+
+6. Run the Backend application.
 
     ```bash
     # In the root directory of the repository and run.
     pnpm backend start:dev
     ```
 
-6. Visit http://localhost:3000 to enjoy your CodePair.
+7. Visit http://localhost:3000 to enjoy your CodePair.
 
 ## API Specification
 
