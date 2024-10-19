@@ -6,7 +6,7 @@ This document covers the structure of the Auth Webhook to prevent users from acc
 
 A webhook is an HTTP POST that is called when something happens. If the Auth Webhook has been configured, when a Server receives a request from a Client, the Server checks if the Client has been authorized for a certain Document by asking an outside service with a REST request.
 
-- [Yorkie Auth Webhook](https://yorkie.dev/docs/cli#auth-webhook)
+-   [Yorkie Auth Webhook](https://yorkie.dev/docs/cli#auth-webhook)
 
 In a production environment, it is strongly recommended to enable the Auth Webhook.
 
@@ -27,6 +27,7 @@ In a production environment, it is strongly recommended to enable the Auth Webho
                                 - dockey
                                 - verb: r or rw
 ```
+
 **Webhook URL**: `<BACKEND_URL>/check/yorkie`  
 **Token Format**: `share:<SHARE_TOKEN>` or `default:<ACCESS_TOKEN>`
 

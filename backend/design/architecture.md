@@ -19,11 +19,11 @@ If you want to add a new component, you can use the command `nest generate contr
 
 ```
 
-- Pipe: Handles data transformation/validation in the request/response pipeline.
-- Guard: Implements access control and validation logic for routes.
-- Controller: Defines the endpoints/routes and their corresponding request handling logic.
-- Service: Contains the business logic and performs operations required by the application.
-- Repository: Handles data persistence and retrieval operations from the data source.
+-   Pipe: Handles data transformation/validation in the request/response pipeline.
+-   Guard: Implements access control and validation logic for routes.
+-   Controller: Defines the endpoints/routes and their corresponding request handling logic.
+-   Service: Contains the business logic and performs operations required by the application.
+-   Repository: Handles data persistence and retrieval operations from the data source.
 
 Note that the naming for the Repository Layer is `PrismaService`.
 
