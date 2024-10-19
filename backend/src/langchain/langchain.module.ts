@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatOllama } from "@langchain/ollama";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 
 const chatModelFactory = {
 	provide: "ChatModel",
@@ -16,13 +16,15 @@ const chatModelFactory = {
 			if (provider === "ollama") {
 				chatModel = new ChatOllama({
 					model: model,
-					baseUrl: process.env.OLLAMA_HOST_URL,
+					baseUrl: configService.get("OLLAMA_HOST_URL"),
 					checkOrPullModel: true,
 					streaming: true,
 				});
 			} else if (provider === "openai") {
 				chatModel = new ChatOpenAI({ modelName: model });
 			}
+
+			if (!chatModel) throw new Error();
 
 			return chatModel;
 		} catch {
