@@ -28,7 +28,6 @@ RUN mkdir /usr/share/fonts/nanumfont && \
     fc-cache -f -v
 
 # Set the environment variables
-ENV NODE_ENV production
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
