@@ -7,6 +7,15 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.16] - 2024-10-24
+
+### Changed
+
+- Update `yorkie-js-sdk` to `v0.5.1` by @devleejb in https://github.com/yorkie-team/codepair/pull/369
+- Remove model type and refactor code for Yorkie Intelligence by @sihyeong671 in https://github.com/yorkie-team/codepair/pull/374
+- Update `yorkie-js-sdk` to `v0.5.2` by @hackerwins in https://github.com/yorkie-team/codepair/pull/380
+- Update `yorkie-js-sdk` to `v0.5.3` by @hackerwins in https://github.com/yorkie-team/codepair/pull/381
+
 ## [0.1.15] - 2024-10-14
 
 ### Added
