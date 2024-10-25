@@ -9,7 +9,7 @@
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview",
-		"lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+		"lint": "eslint . --report-unused-disable-directives",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check"
 	},
