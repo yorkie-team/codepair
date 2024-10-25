@@ -6,11 +6,7 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 // https://vitejs.dev/config/
 export default defineConfig({
 	build: {
-		// Source map generation must be turned on
-		// Only enable Sentry plugin if the environment variables are set
-		sourcemap: Boolean(
-			process.env.SENTRY_ORG && process.env.SENTRY_PROJECT && process.env.SENTRY_AUTH_TOKEN
-		),
+		sourcemap: true,
 	},
 	plugins: [
 		react(),
@@ -19,6 +15,10 @@ export default defineConfig({
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,
 			authToken: process.env.SENTRY_AUTH_TOKEN,
+			// sourcemaps: {
+			// 	assets: "./dist/**",
+			// 	filesToDeleteAfterUpload: "./dist/**/*.map", // Delete after upload sourcemap
+			// },
 		}),
 	],
 });
