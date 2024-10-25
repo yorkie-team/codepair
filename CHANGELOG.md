@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.17] - 2024-10-25
+
+### Changed
+
+- Disable devtools by @hackerwins in https://github.com/yorkie-team/codepair/pull/383
+- Activate SourceMap for Sentry and resolve TypeScript version conflict with ESLint by @devleejb in https://github.com/yorkie-team/codepair/pull/384
+
 ## [0.1.16] - 2024-10-24
 
 ### Changed
