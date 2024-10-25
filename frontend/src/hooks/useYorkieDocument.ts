@@ -41,7 +41,7 @@ export const useYorkieDocument = (
 			const newDocument = new yorkie.Document<
 				YorkieCodeMirrorDocType,
 				YorkieCodeMirrorPresenceType
-			>(yorkieDocumentId, { enableDevtools: true });
+			>(yorkieDocumentId, { enableDevtools: false });
 			return client.attach(newDocument, {
 				initialPresence: {
 					name: presenceName,
