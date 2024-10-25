@@ -1,0 +1,3 @@
+dist
+eslint.config.mjs
+vite.config.ts
