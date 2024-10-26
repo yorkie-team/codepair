@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.18] - 2024-10-26
+
+### Changed
+
+- Change default `syncLoopDuration` and Expose `yorkie.Document` by @devleejb in https://github.com/yorkie-team/codepair/pull/386
+
 ## [0.1.17] - 2024-10-25
 
 ### Changed
