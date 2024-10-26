@@ -28,9 +28,11 @@ export const useYorkieDocument = (
 	}, [authStore.accessToken, searchParams]);
 
 	const createYorkieClient = useCallback(async (yorkieToken: string) => {
+		const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
 		const newClient = new yorkie.Client(YORKIE_API_ADDR, {
 			apiKey: YORKIE_API_KEY,
 			token: yorkieToken,
+			syncLoopDuration,
 		});
 		await newClient.activate();
 		return newClient;
@@ -88,6 +90,8 @@ export const useYorkieDocument = (
 
 				setClient(newClient);
 				setDoc(newDoc);
+				// Expose the document to the window for debugging purposes
+				window.doc = newDoc;
 			} catch (error) {
 				console.error("Error initializing Yorkie: ", error);
 			}
