@@ -8,6 +8,9 @@ const chatModelFactory = {
 	provide: "ChatModel",
 	useFactory: (configService: ConfigService) => {
 		const modelType = configService.get("YORKIE_INTELLIGENCE");
+
+		if (modelType === "false") return null;
+
 		try {
 			// Split the modelType string into provider and model
 			// ex) "ollama:gemma2:2b" => ["ollama", "gemma2:2b"]
