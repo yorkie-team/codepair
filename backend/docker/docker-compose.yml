@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     yorkie:
-        image: "yorkieteam/yorkie:0.5.0"
+        image: "yorkieteam/yorkie:0.5.4"
         command: ["server", "--enable-pprof"]
         restart: always
         ports:
