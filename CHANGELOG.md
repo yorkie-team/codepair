@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.19] - 2024-10-28
+
+### Fixed
+
+- Disable model checking when intelligence is `false` by @devleejb in https://github.com/yorkie-team/codepair/pull/388
+
 ## [0.1.18] - 2024-10-26
 
 ### Changed
