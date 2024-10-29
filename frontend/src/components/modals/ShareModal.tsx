@@ -23,7 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
 import { selectDocument } from "../../store/documentSlice";
 
-interface ShareModalProps extends Omit<ModalProps, "children"> {}
+type ShareModalProps = Omit<ModalProps, "children">;
 
 function ShareModal(props: ShareModalProps) {
 	const { ...modalProps } = props;

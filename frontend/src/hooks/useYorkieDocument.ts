@@ -27,16 +27,19 @@ export const useYorkieDocument = (
 		return shareToken ? `share:${shareToken}` : `default:${authStore.accessToken}`;
 	}, [authStore.accessToken, searchParams]);
 
-	const createYorkieClient = useCallback(async (yorkieToken: string) => {
-		const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
-		const newClient = new yorkie.Client(YORKIE_API_ADDR, {
-			apiKey: YORKIE_API_KEY,
-			token: yorkieToken,
-			syncLoopDuration,
-		});
-		await newClient.activate();
-		return newClient;
-	}, []);
+	const createYorkieClient = useCallback(
+		async (yorkieToken: string) => {
+			const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
+			const newClient = new yorkie.Client(YORKIE_API_ADDR, {
+				apiKey: YORKIE_API_KEY,
+				token: yorkieToken,
+				syncLoopDuration,
+			});
+			await newClient.activate();
+			return newClient;
+		},
+		[searchParams]
+	);
 
 	const createYorkieDocument = useCallback(
 		(client: yorkie.Client, yorkieDocumentId: string, presenceName: string) => {

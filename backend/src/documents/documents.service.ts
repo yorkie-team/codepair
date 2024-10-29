@@ -30,7 +30,7 @@ export class DocumentsService {
 			) {
 				throw new Error();
 			}
-		} catch (e) {
+		} catch {
 			throw new UnauthorizedException("Invalid sharing token");
 		}
 
@@ -42,7 +42,7 @@ export class DocumentsService {
 					id: documentId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException("Document not found");
 		}
 

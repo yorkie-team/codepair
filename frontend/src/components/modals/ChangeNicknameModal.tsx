@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { useUpdateUserNicknameMutation } from "../../hooks/api/user";
 
-interface ChangeNicknameModalProps extends Omit<ModalProps, "children"> {}
+type ChangeNicknameModalProps = Omit<ModalProps, "children">;
 
 function ChangeNicknameModal(props: ChangeNicknameModalProps) {
 	const [nickname, setNickname] = useState("");

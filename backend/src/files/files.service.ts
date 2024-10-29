@@ -45,7 +45,7 @@ export class FilesService {
 					id: workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new UnauthorizedException("Client unauthorized.");
 		}
 
@@ -74,7 +74,7 @@ export class FilesService {
 				Key: fileKey,
 			});
 			return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
-		} catch (e) {
+		} catch {
 			throw new NotFoundException("File not found.");
 		}
 	}
