@@ -334,8 +334,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(vite@5.4.7(@types/node@20.16.6)(terser@5.33.0))
       yorkie-js-sdk:
-        specifier: 0.5.3
-        version: 0.5.3
+        specifier: 0.5.4
+        version: 0.5.4
     devDependencies:
       '@sentry/vite-plugin':
         specifier: ^2.20.1
@@ -6537,8 +6537,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  yorkie-js-sdk@0.5.3:
-    resolution: {integrity: sha512-psMg/cICvgFeH2FxZ0wKxJpciaKlNq2DhU4eJpdxhn0mv3kuXdDtKev1qJkTk/KXPVW91QMpyLlR9un4akLlGw==}
+  yorkie-js-sdk@0.5.4:
+    resolution: {integrity: sha512-D7DwdeyE2/CrVIAva/yHAb8hgp/YdmIdvNpq1J8YlyEjsb9XmCMcsu+dG0vX8+0+JtugOuKxoF5Kq7B7WaI71w==}
     engines: {node: '>=18.0.0', npm: '>=7.1.0'}
 
   zod-to-json-schema@3.23.3:
@@ -13599,7 +13599,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  yorkie-js-sdk@0.5.3:
+  yorkie-js-sdk@0.5.4:
     dependencies:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect': 1.5.0(@bufbuild/protobuf@1.10.0)
