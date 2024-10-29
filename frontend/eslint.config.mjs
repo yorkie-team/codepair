@@ -25,7 +25,9 @@ export default [
 		},
 		rules: {
 			"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-			"prettier/prettier": "error",
+			...reactHooksPlugin.configs.recommended.rules,
+			...prettierPlugin.configs.recommended.rules,
+			...typescriptPlugin.configs.recommended.rules,
 		},
 		settings: {
 			react: {
