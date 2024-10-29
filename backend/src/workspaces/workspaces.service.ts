@@ -61,7 +61,7 @@ export class WorkspacesService {
 			});
 
 			return foundWorkspace;
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"Workspace not found, or the user lacks the appropriate permissions."
 			);
@@ -114,7 +114,7 @@ export class WorkspacesService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"Worksapce does not exist, or the user lacks the appropriate permissions."
 			);
@@ -154,7 +154,7 @@ export class WorkspacesService {
 			) {
 				throw new Error();
 			}
-		} catch (err) {
+		} catch {
 			throw new UnauthorizedException("Invitation token is invalid or expired.");
 		}
 
@@ -164,7 +164,7 @@ export class WorkspacesService {
 					id: workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException("The workspace is deleted.");
 		}
 

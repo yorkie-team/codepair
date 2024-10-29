@@ -32,8 +32,6 @@ describe("DocumentsService", () => {
 	});
 
 	it("should be defined", async () => {
-		prismaService;
-
 		expect(documentsService).toBeDefined();
 	});
 

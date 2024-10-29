@@ -30,7 +30,7 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace does not exist, or the user lacks the appropriate permissions."
 			);
@@ -50,7 +50,7 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace does not exist, or the user lacks the appropriate permissions."
 			);
@@ -78,7 +78,7 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace does not exist, or the user lacks the appropriate permissions."
 			);
@@ -146,7 +146,7 @@ export class WorkspaceDocumentsService {
 				},
 			});
 			return document;
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace or document does not exist, or the user lacks the appropriate permissions."
 			);
@@ -176,7 +176,7 @@ export class WorkspaceDocumentsService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace or document does not exist, or the user lacks the appropriate permissions."
 			);
