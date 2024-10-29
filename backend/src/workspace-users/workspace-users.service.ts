@@ -20,7 +20,7 @@ export class WorkspaceUsersService {
 					workspaceId,
 				},
 			});
-		} catch (e) {
+		} catch {
 			throw new NotFoundException(
 				"The workspace does not exist, or the user lacks the appropriate permissions."
 			);
