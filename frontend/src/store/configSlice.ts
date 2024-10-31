@@ -17,12 +17,14 @@ export interface ConfigState {
 	theme: ThemeType;
 	drawerOpen: boolean;
 	codeKey: CodeKeyType;
+	disableScrollSync: boolean;
 }
 
 const initialState: ConfigState = {
 	theme: ThemeType.DEFAULT,
 	drawerOpen: true,
 	codeKey: CodeKeyType.SUBLIME,
+	disableScrollSync: false,
 };
 
 export const configSlice = createSlice({
@@ -38,10 +40,14 @@ export const configSlice = createSlice({
 		setCodeKeyType: (state, action: PayloadAction<CodeKeyType>) => {
 			state.codeKey = action.payload;
 		},
+		setDisableScrollSync: (state, action: PayloadAction<boolean>) => {
+			state.disableScrollSync = action.payload;
+		},
 	},
 });
 
-export const { setTheme, setDrawerOpen, setCodeKeyType } = configSlice.actions;
+export const { setTheme, setDrawerOpen, setCodeKeyType, setDisableScrollSync } =
+	configSlice.actions;
 
 export const selectConfig = (state: RootState) => state.config;
 
