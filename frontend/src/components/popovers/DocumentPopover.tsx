@@ -20,7 +20,7 @@ function DocumentPopover(props: PopoverProps) {
 	const configStore = useSelector(selectConfig);
 
 	const handleChangeTheme = () => {
-		dispatch(setTheme(themeMode == ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
+		dispatch(setTheme(themeMode === ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
 	};
 
 	const handleScrollSyncChange = () => {
