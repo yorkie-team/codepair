@@ -77,7 +77,7 @@ function Editor(props: EditorProps) {
 				keymap.of(setKeymapConfig()),
 				basicSetup({ highlightSelectionMatches: false }),
 				markdown(),
-				themeMode == "light" ? xcodeLight : xcodeDark,
+				themeMode === "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),
 				EditorView.lineWrapping,
 				EditorView.updateListener.of((update) => {

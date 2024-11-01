@@ -32,7 +32,7 @@ function ProfilePopover(props: PopoverProps) {
 	};
 
 	const handleChangeTheme = () => {
-		dispatch(setTheme(themeMode == ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
+		dispatch(setTheme(themeMode === ThemeType.LIGHT ? ThemeType.DARK : ThemeType.LIGHT));
 	};
 
 	return (

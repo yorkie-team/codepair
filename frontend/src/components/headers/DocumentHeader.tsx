@@ -14,7 +14,7 @@ import {
 	Grid2 as Grid,
 	Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserPresence } from "../../hooks/useUserPresence";
@@ -23,11 +23,12 @@ import { selectWorkspace } from "../../store/workspaceSlice";
 import { ShareRole } from "../../utils/share";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
-import ThemeButton from "../common/ThemeButton";
 import UserPresenceList from "./UserPresenceList";
 import { selectDocument } from "../../store/documentSlice";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 import { useSnackbar } from "notistack";
+import DocumentPopover from "../popovers/DocumentPopover";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function DocumentHeader() {
 	);
 	const isEditingDisabled = Boolean(editorState.shareRole);
 	const { enqueueSnackbar } = useSnackbar();
+	const [moreButtonanchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -81,6 +83,14 @@ function DocumentHeader() {
 
 		await updateDocumentTitle({ title });
 		enqueueSnackbar("The title is changed successfully", { variant: "success" });
+	};
+
+	const handleMoreButtonClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+		setMoreButtonAnchorEl(e.currentTarget);
+	};
+
+	const handleDocumentMenuClose = () => {
+		setMoreButtonAnchorEl(null);
 	};
 
 	return (
@@ -148,7 +158,14 @@ function DocumentHeader() {
 						<Stack direction="row" justifyContent="end" gap={1}>
 							<UserPresenceList presenceList={presenceList} />
 							{!editorState.shareRole && <ShareButton />}
-							<ThemeButton />
+							<IconButton color="inherit" onClick={handleMoreButtonClick}>
+								<MoreVertIcon />
+							</IconButton>
+							<DocumentPopover
+								open={Boolean(moreButtonanchorEl)}
+								anchorEl={moreButtonanchorEl}
+								onClose={handleDocumentMenuClose}
+							/>
 						</Stack>
 					</Grid>
 				</Grid>
