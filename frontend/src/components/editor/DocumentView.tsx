@@ -6,10 +6,12 @@ import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import { EditorModeType, selectEditor } from "../../store/editorSlice";
 import Editor from "./Editor";
 import Preview from "./Preview";
+import { selectConfig } from "../../store/configSlice";
 
 function DocumentView() {
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
+	const configStore = useSelector(selectConfig);
 
 	if (!editorStore.doc || !editorStore.client)
 		return (
@@ -23,7 +25,7 @@ function DocumentView() {
 			{editorStore.mode === EditorModeType.BOTH && (
 				<Resizable axis={"x"} initial={windowWidth / 2} min={400}>
 					{({ position: width, separatorProps }) => (
-						<ScrollSync>
+						<ScrollSync enabled={!configStore.disableScrollSync}>
 							<div
 								id="wrapper"
 								style={{
