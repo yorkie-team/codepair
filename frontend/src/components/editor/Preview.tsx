@@ -9,14 +9,14 @@ import MarkdownIt from "markdown-it";
 import { toHtml } from "hast-util-to-html";
 import markdownItKatex from "@vscode/markdown-it-katex";
 import { refractor } from "refractor";
-import { Root } from "hast";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import markdownItIncrementalDOM from "markdown-it-incremental-dom";
-import * as IncrementalDOM from "incremental-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import markdownItSanitizer from "markdown-it-sanitizer";
+// eslint-disable-next-line
+const IncrementalDOM = require("incremental-dom");
 import "./editor.css";
 import "./preview.css";
 
@@ -24,10 +24,16 @@ const md = new MarkdownIt({
 	html: true,
 	linkify: true,
 	breaks: true,
-	highlight(code: string, lang: string) {
-		return `<pre class="language-${lang}"><code>${toHtml(
-			refractor.highlight(code, lang) as Root
-		)}</code></pre>`;
+	highlight: (code: string, lang: string): string => {
+		try {
+			return `<pre class="language-${lang}"><code>${toHtml(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				refractor.highlight(code, lang) as any
+			)}</code></pre>`;
+		} catch (error) {
+			console.error(`Error highlighting code with language '${lang}':`, error);
+			return `<pre class="language-"><code>${md.utils.escapeHtml(code)}</code></pre>`;
+		}
 	},
 })
 	.use(markdownItIncrementalDOM, IncrementalDOM)
@@ -69,7 +75,7 @@ const Preview = () => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		IncrementalDOM.patch(containerRef.current, md.renderToIncrementalDOM(content));
-	}, [content, md]);
+	}, [content]);
 
 	if (!editorStore?.doc) {
 		return (
