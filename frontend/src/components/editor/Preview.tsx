@@ -15,8 +15,7 @@ import markdownItIncrementalDOM from "markdown-it-incremental-dom";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import markdownItSanitizer from "markdown-it-sanitizer";
-// eslint-disable-next-line
-const IncrementalDOM = require("incremental-dom");
+import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
 import "./preview.css";
 
@@ -36,7 +35,9 @@ const md = new MarkdownIt({
 		}
 	},
 })
-	.use(markdownItIncrementalDOM, IncrementalDOM)
+	.use(markdownItIncrementalDOM, IncrementalDOM, {
+		incrementalizeDefaultRules: false,
+	})
 	.use(markdownItKatex)
 	.use(markdownItSanitizer);
 
