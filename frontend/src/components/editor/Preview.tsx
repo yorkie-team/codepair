@@ -1,23 +1,51 @@
 import { CircularProgress, Stack } from "@mui/material";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import katex from "katex";
 import "katex/dist/katex.min.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import rehypeExternalLinks from "rehype-external-links";
-import rehypeKatex from "rehype-katex";
-import { getCodeString } from "rehype-rewrite";
-import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
-import remarkMath from "remark-math";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { selectEditor } from "../../store/editorSlice";
 import { addSoftLineBreak } from "../../utils/document";
+import MarkdownIt from "markdown-it";
+import { toHtml } from "hast-util-to-html";
+import markdownItKatex from "@vscode/markdown-it-katex";
+import { refractor } from "refractor";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import markdownItIncrementalDOM from "markdown-it-incremental-dom";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import markdownItSanitizer from "markdown-it-sanitizer";
+import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
+import "./preview.css";
 
-function Preview() {
+const md = new MarkdownIt({
+	html: true,
+	linkify: true,
+	breaks: true,
+	highlight: (code: string, lang: string): string => {
+		try {
+			return `<pre class="language-${lang}"><code>${toHtml(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				refractor.highlight(code, lang) as any
+			)}</code></pre>`;
+		} catch (error) {
+			console.error(`Error highlighting code with language '${lang}':`, error);
+			return `<pre class="language-"><code>${md.utils.escapeHtml(code)}</code></pre>`;
+		}
+	},
+})
+	.use(markdownItIncrementalDOM, IncrementalDOM, {
+		incrementalizeDefaultRules: false,
+	})
+	.use(markdownItKatex)
+	.use(markdownItSanitizer);
+
+const Preview = () => {
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!editorStore.doc) return;
@@ -30,89 +58,42 @@ function Preview() {
 
 		updatePreviewContent();
 
-		const unsubsribe = editorStore.doc.subscribe("$.content", () => {
+		const unsubscribe = editorStore.doc.subscribe("$.content", () => {
 			updatePreviewContent();
 		});
 
 		return () => {
-			unsubsribe();
+			unsubscribe();
 			setContent("");
 		};
 	}, [editorStore.doc]);
 
-	if (!editorStore?.doc)
+	useEffect(() => {
+		if (containerRef.current == null) {
+			return;
+		}
+
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		IncrementalDOM.patch(containerRef.current, md.renderToIncrementalDOM(content));
+	}, [content]);
+
+	if (!editorStore?.doc) {
 		return (
 			<Stack direction="row" justifyContent="center">
 				<CircularProgress sx={{ mt: 2 }} />
 			</Stack>
 		);
+	}
 
 	return (
-		<MarkdownPreview
-			style={{
-				paddingBottom: "2rem",
-			}}
-			source={addSoftLineBreak(content)}
-			wrapperElement={{
-				"data-color-mode": currentTheme,
-				style: {
-					whiteSpace: "wrap !important",
-					WebkitUserModify: "read-only",
-				},
-			}}
-			remarkPlugins={[remarkMath]}
-			rehypePlugins={[
-				[
-					rehypeSanitize,
-					{
-						...defaultSchema,
-						attributes: {
-							...defaultSchema.attributes,
-							code: [["className", /^language-./, "math-inline", "math-display"]],
-						},
-					},
-				],
-				rehypeKatex,
-				[rehypeExternalLinks, { target: "_blank" }],
-			]}
-			components={{
-				code: ({ children = [], className, ...props }) => {
-					// https://www.npmjs.com/package/@uiw/react-markdown-preview#support-custom-katex-preview
-					if (typeof children === "string" && /^\$\$(.*)\$\$/.test(children)) {
-						const html = katex.renderToString(children.replace(/^\$\$(.*)\$\$/, "$1"), {
-							throwOnError: false,
-						});
-						return (
-							<code
-								dangerouslySetInnerHTML={{ __html: html }}
-								style={{ background: "transparent" }}
-							/>
-						);
-					}
-					const code =
-						props.node && props.node.children
-							? getCodeString(props.node.children)
-							: children;
-					if (
-						typeof code === "string" &&
-						typeof className === "string" &&
-						/^language-katex/.test(className.toLocaleLowerCase())
-					) {
-						const html = katex.renderToString(code, {
-							throwOnError: false,
-						});
-						return (
-							<code
-								style={{ fontSize: "150%" }}
-								dangerouslySetInnerHTML={{ __html: html }}
-							/>
-						);
-					}
-					return <code className={String(className)}>{children}</code>;
-				},
-			}}
+		<div
+			ref={containerRef}
+			data-color-mode={currentTheme}
+			style={{ paddingBottom: "2rem" }}
+			className="markdown-preview"
 		/>
 	);
-}
+};
 
 export default Preview;
