@@ -53,10 +53,22 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 
 			// The text is replaced to snapshot and must be re-synced.
 			const text = this._doc.getRoot().content;
-			view.dispatch({
+			const selection = this._doc.getMyPresence().selection;
+			const transactionSpec: cmState.TransactionSpec = {
 				changes: { from: 0, to: view.state.doc.length, insert: text.toString() },
 				annotations: [cmState.Transaction.remote.of(true)],
-			});
+			};
+
+			if (selection) {
+				// Restore the cursor position when the text is replaced.
+				const cursor = text.posRangeToIndexRange(selection);
+				transactionSpec["selection"] = {
+					anchor: cursor[0],
+					head: cursor[1],
+				};
+			}
+
+			view.dispatch(transactionSpec);
 		});
 
 		this._doc.update((root) => {
