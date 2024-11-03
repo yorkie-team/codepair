@@ -7,6 +7,22 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.20] - 2024-11-04
+
+### Added
+
+- Add option to toggle Scroll Sync On/Off by @devleejb in https://github.com/yorkie-team/codepair/pull/394
+
+### Changed
+
+- Apply incremental dom update by @blurfx in https://github.com/yorkie-team/codepair/pull/397
+- Update `yorkie-js-sdk` to `v0.5.4` by @devleejb in https://github.com/yorkie-team/codepair/pull/390
+
+### Fixed
+
+- Fix ESLint Rules to Ensure Proper Code Compliance by @devleejb in https://github.com/yorkie-team/codepair/pull/392
+- Fix cursor movement logic during Snapshot Event by @devleejb in https://github.com/yorkie-team/codepair/pull/398
+
 ## [0.1.19] - 2024-10-28
 
 ### Fixed
