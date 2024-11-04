@@ -9,12 +9,9 @@ import MarkdownIt from "markdown-it";
 import { toHtml } from "hast-util-to-html";
 import markdownItKatex from "@vscode/markdown-it-katex";
 import { refractor } from "refractor";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import markdownItIncrementalDOM from "markdown-it-incremental-dom";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import markdownItSanitizer from "markdown-it-sanitizer";
+import markdownItTaskCheckbox from "markdown-it-task-checkbox";
 import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
 import "./preview.css";
@@ -35,6 +32,7 @@ const md = new MarkdownIt({
 		}
 	},
 })
+	.use(markdownItTaskCheckbox)
 	.use(markdownItIncrementalDOM, IncrementalDOM, {
 		incrementalizeDefaultRules: false,
 	})
