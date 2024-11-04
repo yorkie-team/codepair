@@ -276,6 +276,9 @@ importers:
       markdown-it-sanitizer:
         specifier: ^0.4.3
         version: 0.4.3
+      markdown-it-task-checkbox:
+        specifier: ^1.0.6
+        version: 1.0.6
       match-sorter:
         specifier: ^6.3.3
         version: 6.3.4
@@ -5263,6 +5266,9 @@ packages:
 
   markdown-it-sanitizer@0.4.3:
     resolution: {integrity: sha512-0Q2ua8+oDN7/3r5UXMnbVq8C+LRfT2pzVKA+h4nXTLEMBFQDwp7qJZOe7DkBa79C7V2cSBXJyScxJ7vYs9kE2w==}
+
+  markdown-it-task-checkbox@1.0.6:
+    resolution: {integrity: sha512-7pxkHuvqTOu3iwVGmDPeYjQg+AIS9VQxzyLP9JCg9lBjgPAJXGEkChK6A2iFuj3tS0GV3HG2u5AMNhcQqwxpJw==}
 
   markdown-it@14.1.0:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
@@ -12763,6 +12769,8 @@ snapshots:
       prismjs: 1.29.0
 
   markdown-it-sanitizer@0.4.3: {}
+
+  markdown-it-task-checkbox@1.0.6: {}
 
   markdown-it@14.1.0:
     dependencies:
