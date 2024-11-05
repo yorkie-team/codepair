@@ -65,7 +65,7 @@ const Preview = () => {
 				// Set trailing true to prevent ignoring last call
 				{ trailing: true }
 			),
-		[editorStore.doc]
+		[editorStore.doc, editorStore.cmView]
 	);
 
 	useEffect(() => {
