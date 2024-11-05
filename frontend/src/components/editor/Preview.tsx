@@ -1,10 +1,9 @@
 import { CircularProgress, Stack } from "@mui/material";
 import "katex/dist/katex.min.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { selectEditor } from "../../store/editorSlice";
-import { addSoftLineBreak } from "../../utils/document";
 import MarkdownIt from "markdown-it";
 import { toHtml } from "hast-util-to-html";
 import markdownItKatex from "@vscode/markdown-it-katex";
@@ -15,6 +14,10 @@ import markdownItTaskCheckbox from "markdown-it-task-checkbox";
 import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
 import "./preview.css";
+import _ from "lodash";
+import { addSoftLineBreak } from "../../utils/document";
+
+const DELAY = 500;
 
 const md = new MarkdownIt({
 	html: true,
@@ -44,27 +47,39 @@ const Preview = () => {
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
 	const containerRef = useRef<HTMLDivElement>(null);
+	const throttledUpdatePreviewContent = useMemo(
+		() =>
+			_.throttle(
+				() => {
+					const editorText =
+						editorStore.cmView?.state.doc.toString() ||
+						editorStore.doc?.getRoot().content?.toString() ||
+						"";
+
+					// Add soft line break
+					setContent(addSoftLineBreak(editorText));
+				},
+				DELAY,
+				// Set trailing true to prevent ignoring last call
+				{ trailing: true }
+			),
+		[editorStore.doc, editorStore.cmView]
+	);
 
 	useEffect(() => {
 		if (!editorStore.doc) return;
 
-		const updatePreviewContent = () => {
-			const editorText = editorStore.doc?.getRoot().content?.toString() || "";
-			// Add soft line break
-			setContent(addSoftLineBreak(editorText));
-		};
-
-		updatePreviewContent();
+		throttledUpdatePreviewContent();
 
 		const unsubscribe = editorStore.doc.subscribe("$.content", () => {
-			updatePreviewContent();
+			throttledUpdatePreviewContent();
 		});
 
 		return () => {
 			unsubscribe();
 			setContent("");
 		};
-	}, [editorStore.doc]);
+	}, [editorStore.doc, throttledUpdatePreviewContent]);
 
 	useEffect(() => {
 		if (containerRef.current == null) {
