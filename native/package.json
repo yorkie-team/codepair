@@ -1,0 +1,63 @@
+{
+  "name": "@codepair/native",
+  "version": "1.0.1",
+  "main": "dist/main.js",
+  "description": "Codepair Native",
+  "author": "yorkie-team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/minai621/codepair"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc src/main.ts --outDir dist",
+    "start": "pnpm run build && cross-env NODE_ENV=production pnpx electron dist/main.js",
+    "start:dev": "pnpm run start:codepair:dev && pnpm run build && cross-env NODE_ENV=development pnpx electron dist/main.js",
+    "start:codepair:dev": "cd ../frontend && Pnpm run dev & ",
+    "electron-builder": "pnpm run build && electron-builder",
+    "release": "pnpm run build && electron-builder --publish always"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.6",
+    "cross-env": "^7.0.3",
+    "electron": "^33.0.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.3.3"
+  },
+  "build": {
+    "publish": {
+      "provider": "github"
+    },
+    "appId": "com.example.codepair",
+    "productName": "codepair",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "!node_modules/**/*.{ts,map}"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
