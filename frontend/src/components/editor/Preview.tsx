@@ -53,7 +53,10 @@ const Preview = () => {
 		() =>
 			_.throttle(
 				() => {
-					const editorText = editorStore.doc?.getRoot().content?.toString() || "";
+					const editorText =
+						editorStore.cmView?.state.doc.toString() ||
+						editorStore.doc?.getRoot().content?.toString() ||
+						"";
 
 					// Add soft line break
 					setContent(addSoftLineBreak(editorText));
