@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.21] - 2024-11-05
+
+### Added
+
+- Add markdown render checkbox plugin by @blurfx in https://github.com/yorkie-team/codepair/pull/400
+- Add Envs for Github Enterprise Oauth App by @emplam27 in https://github.com/yorkie-team/codepair/pull/404
+
 ## [0.1.20] - 2024-11-04
 
 ### Added
