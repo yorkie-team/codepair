@@ -49,7 +49,7 @@ const Preview = () => {
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
 	const containerRef = useRef<HTMLDivElement>(null);
-	const throttledUpdatePreviewConetent = useMemo(
+	const throttledUpdatePreviewContent = useMemo(
 		() =>
 			_.throttle(
 				() => {
@@ -71,17 +71,17 @@ const Preview = () => {
 	useEffect(() => {
 		if (!editorStore.doc) return;
 
-		throttledUpdatePreviewConetent();
+		throttledUpdatePreviewContent();
 
 		const unsubscribe = editorStore.doc.subscribe("$.content", () => {
-			throttledUpdatePreviewConetent();
+			throttledUpdatePreviewContent();
 		});
 
 		return () => {
 			unsubscribe();
 			setContent("");
 		};
-	}, [editorStore.doc, throttledUpdatePreviewConetent]);
+	}, [editorStore.doc, throttledUpdatePreviewContent]);
 
 	useEffect(() => {
 		if (containerRef.current == null) {
