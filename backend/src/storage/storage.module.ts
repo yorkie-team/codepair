@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 const s3ClientFactory = {
 	provide: "STORAGE_CLIENT",
 	useFactory: (configService: ConfigService): S3Client | null => {
-		const fileUpload = configService.get<boolean>("FILE_UPLOAD");
+		const fileUpload = configService.get<boolean | "s3" | "minio">("FILE_UPLOAD");
 		if (!fileUpload) {
 			return null;
 		}
@@ -14,19 +14,17 @@ const s3ClientFactory = {
 		const accessKeyId = configService.get<string>("STORAGE_ACCESS_KEY");
 		const secretAccessKey = configService.get<string>("STORAGE_SECRET_KEY");
 
-		const config: S3ClientConfig = fileUpload
-			? {
-					region,
-					endpoint,
-					forcePathStyle: true,
-					credentials: {
-						accessKeyId,
-						secretAccessKey,
-					},
-				}
-			: {
-					region,
-				};
+		const config: S3ClientConfig = {
+			region,
+			...(fileUpload === "minio" && {
+				endpoint,
+				forcePathStyle: true,
+				credentials: {
+					accessKeyId,
+					secretAccessKey,
+				},
+			}),
+		};
 
 		return new S3Client(config);
 	},
