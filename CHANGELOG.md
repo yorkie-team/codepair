@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.22] - 2024-11-05
+
+### Added
+
+- Add `throttle` to prevent preview's indiscriminate updates by @JOOHOJANG in https://github.com/yorkie-team/codepair/pull/391
+
 ## [0.1.21] - 2024-11-05
 
 ### Added
