@@ -7,6 +7,7 @@ import * as yorkie from "yorkie-js-sdk";
 import { selectAuth } from "../store/authSlice";
 import { CodePairDocType } from "../store/editorSlice";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import { useRefreshTokenMutation } from "./api/user";
 
 const YORKIE_API_ADDR = import.meta.env.VITE_YORKIE_API_ADDR;
 const YORKIE_API_KEY = import.meta.env.VITE_YORKIE_API_KEY;
@@ -21,25 +22,41 @@ export const useYorkieDocument = (
 	const authStore = useSelector(selectAuth);
 	const [client, setClient] = useState<yorkie.Client | null>(null);
 	const [doc, setDoc] = useState<CodePairDocType | null>(null);
+	const { mutateAsync: mutateRefreshToken } = useRefreshTokenMutation();
 
-	const getYorkieToken = useCallback(() => {
-		const shareToken = searchParams.get("token");
-		return shareToken ? `share:${shareToken}` : `default:${authStore.accessToken}`;
-	}, [authStore.accessToken, searchParams]);
+	const getYorkieToken = useCallback(
+		async (reason?: string) => {
+			const shareToken = searchParams.get("token");
+			let accessToken = authStore.accessToken;
+			const isShare = Boolean(shareToken);
 
-	const createYorkieClient = useCallback(
-		async (yorkieToken: string) => {
-			const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
-			const newClient = new yorkie.Client(YORKIE_API_ADDR, {
-				apiKey: YORKIE_API_KEY,
-				token: yorkieToken,
-				syncLoopDuration,
-			});
-			await newClient.activate();
-			return newClient;
+			if (reason) {
+				if (isShare) {
+					throw new Error("Cannot refresh token for shared documents");
+				} else {
+					try {
+						accessToken = await mutateRefreshToken();
+					} catch {
+						throw new Error("Failed to refresh token");
+					}
+				}
+			}
+
+			return isShare ? `share:${shareToken}` : `default:${accessToken}`;
 		},
-		[searchParams]
+		[authStore.accessToken, mutateRefreshToken, searchParams]
 	);
+
+	const createYorkieClient = useCallback(async () => {
+		const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
+		const newClient = new yorkie.Client(YORKIE_API_ADDR, {
+			apiKey: YORKIE_API_KEY,
+			authTokenInjector: getYorkieToken,
+			syncLoopDuration,
+		});
+		await newClient.activate();
+		return newClient;
+	}, [getYorkieToken, searchParams]);
 
 	const createYorkieDocument = useCallback(
 		(client: yorkie.Client, yorkieDocumentId: string, presenceName: string) => {
@@ -76,8 +93,7 @@ export const useYorkieDocument = (
 
 		const initializeYorkie = async () => {
 			try {
-				const yorkieToken = getYorkieToken();
-				const newClient = await createYorkieClient(yorkieToken);
+				const newClient = await createYorkieClient();
 				const newDoc = await createYorkieDocument(
 					newClient,
 					yorkieDocumentId,

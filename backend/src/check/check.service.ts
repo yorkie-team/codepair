@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as moment from "moment";
 import { PrismaService } from "src/db/prisma.service";
@@ -33,64 +33,91 @@ export class CheckService {
 	}
 
 	async checkYorkie(checkYorkieDto: CheckYorkieDto): Promise<CheckYorkieResponse> {
-		let reason = "";
-		let allowed = false;
 		const [type, token] = checkYorkieDto.token.split(":");
 
+		// In `ActivateClient`, `DeactivateClient` methods, the `checkYorkieDto.attributes` is empty.
 		if (
 			[YorkieMethod.ActivateClient, YorkieMethod.DeactivateClient].includes(
 				checkYorkieDto.method
 			)
 		) {
-			allowed = true;
-			reason = `Pass ${checkYorkieDto.method}`;
+			return {
+				allowed: true,
+				reason: `Pass ${checkYorkieDto.method} method`,
+			};
+		}
+
+		const { key: yorkieDocumentId } = checkYorkieDto.attributes?.[0];
+		if (type == "default") {
+			await this.checkDefaultAccessToken(yorkieDocumentId, token);
+		} else if (type == "share") {
+			await this.checkSharingAccessToken(yorkieDocumentId, token);
 		} else {
-			const { key: yorkieDocumentId } = checkYorkieDto.attributes?.[0];
-			if (type === "default") {
-				const { sub } = this.jwtService.verify<JwtPayload>(token);
-
-				const res = await this.prismaService.document.findFirst({
-					select: {
-						id: true,
-					},
-					where: {
-						yorkieDocumentId,
-						workspace: {
-							userWorkspaceList: {
-								every: {
-									userId: sub,
-								},
-							},
-						},
-					},
-				});
-
-				allowed = Boolean(res);
-			} else if (type === "share") {
-				const documentSharingToken =
-					await this.prismaService.documentSharingToken.findFirst({
-						where: {
-							token,
-							document: {
-								yorkieDocumentId,
-							},
-						},
-					});
-
-				allowed = Boolean(documentSharingToken);
-
-				if (
-					documentSharingToken?.expiredAt &&
-					moment().isAfter(documentSharingToken?.expiredAt)
-				) {
-					allowed = false;
-				}
-			}
+			throw new ForbiddenException({ allowed: false, reason: "Invalid token type" });
 		}
 
 		return {
-			allowed,
-			reason,
+			allowed: true,
+			reason: "Valid token",
 		};
+	}
+
+	private async checkDefaultAccessToken(
+		yorkieDocumentId: string,
+		accessToken: string
+	): Promise<string> {
+		let sub = "";
+		try {
+			sub = this.jwtService.verify<JwtPayload>(accessToken).sub;
+		} catch {
+			throw new UnauthorizedException({
+				allowed: false,
+				reason: "Token is expired or invalid",
+			});
+		}
+
+		const document = await this.prismaService.document.findFirst({
+			select: {
+				id: true,
+			},
+			where: {
+				yorkieDocumentId,
+				workspace: {
+					userWorkspaceList: {
+						every: {
+							userId: sub,
+						},
+					},
+				},
+			},
+		});
+
+		if (!document) {
+			throw new ForbiddenException({
+				allowed: false,
+				reason: "User does not have access to the document",
+			});
+		}
+
+		return sub;
+	}
+
+	private async checkSharingAccessToken(yorkieDocumentId: string, accessToken: string) {
+		const documentSharingToken = await this.prismaService.documentSharingToken.findFirst({
+			where: {
+				token: accessToken,
+				document: {
+					yorkieDocumentId,
+				},
+			},
+		});
+
+		if (!documentSharingToken) {
+			throw new ForbiddenException({ allowed: false, reason: "Sharing token is invalid" });
+		}
+
+		if (documentSharingToken?.expiredAt && moment().isAfter(documentSharingToken?.expiredAt)) {
+			throw new ForbiddenException({ allowed: false, reason: "Sharing token is expired" });
+		}
 	}
 }
