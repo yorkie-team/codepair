@@ -4,15 +4,40 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectAuth, setAccessToken } from "../../store/authSlice";
 import { User, setUserData } from "../../store/userSlice";
-import { GetUserResponse, UpdateUserRequest } from "./types/user";
+import {
+	GetUserResponse,
+	RefreshTokenRequest,
+	RefreshTokenResponse,
+	UpdateUserRequest,
+} from "./types/user";
 
 export const generateGetUserQueryKey = (accessToken: string) => {
 	return ["users", accessToken];
 };
 
+export const useRefreshTokenMutation = () => {
+	const dispatch = useDispatch();
+	const authStore = useSelector(selectAuth);
+
+	return useMutation({
+		mutationFn: async () => {
+			const response = await axios.post<RefreshTokenResponse>("/auth/refresh", {
+				refreshToken: authStore.refreshToken,
+			} as RefreshTokenRequest);
+
+			return response.data.newAccessToken;
+		},
+		onSuccess: (accessToken) => {
+			dispatch(setAccessToken(accessToken));
+			axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+		},
+	});
+};
+
 export const useGetUserQuery = () => {
 	const dispatch = useDispatch();
 	const authStore = useSelector(selectAuth);
+	const { mutateAsync: mutateRefreshToken } = useRefreshTokenMutation();
 	const [axiosInterceptorAdded, setAxiosInterceptorAdded] = useState(false);
 
 	useEffect(() => {
@@ -26,11 +51,7 @@ export const useGetUserQuery = () => {
 						return Promise.reject(error);
 					} else {
 						error.config._retry = true;
-						const { refreshToken } = authStore;
-						const response = await axios.post("/auth/refresh", { refreshToken });
-						const newAccessToken = response.data.newAccessToken;
-						dispatch(setAccessToken(newAccessToken));
-						axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+						const newAccessToken = await mutateRefreshToken();
 						error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
 						return axios(error.config);
 					}
@@ -45,7 +66,7 @@ export const useGetUserQuery = () => {
 			setAxiosInterceptorAdded(false);
 			axios.interceptors.response.eject(interceptor);
 		};
-	}, [authStore, dispatch]);
+	}, [authStore, dispatch, mutateRefreshToken]);
 
 	const query = useQuery({
 		queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
