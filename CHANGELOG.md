@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.23] - 2024-11-10
+
+### Changed
+
+- Update `yorkie-js-sdk` to `v0.5.5` by @devleejb in https://github.com/yorkie-team/codepair/pull/407
+
 ## [0.1.22] - 2024-11-05
 
 ### Added
