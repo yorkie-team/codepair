@@ -1,8 +1,7 @@
 name: electron-build
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 jobs:
   release:
@@ -14,7 +13,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./native
+        working-directory: ./desktop
 
     steps:
       - name: Check out Git repository
