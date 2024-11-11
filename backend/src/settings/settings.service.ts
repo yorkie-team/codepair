@@ -16,7 +16,7 @@ export class SettingsService {
 				},
 			},
 			fileUpload: {
-				enable: this.configService.get("FILE_UPLOAD") === "true",
+				enable: this.configService.get("FILE_UPLOAD") !== "false",
 			},
 		};
 	}
