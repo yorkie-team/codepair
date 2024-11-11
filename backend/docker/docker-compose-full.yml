@@ -26,11 +26,11 @@ services:
             LANGCHAIN_TRACING_V2: "false"
             LANGCHAIN_API_KEY: "your_langsmith_api_key_here"
             LANGCHAIN_PROJECT: "your_langsmith_project_name_here"
-            FILE_UPLOAD: false
+            FILE_UPLOAD: minio
             AWS_REGION: "your_aws_region_here"
             # Default configuration values for using Minio
             BUCKET_NAME: "default-storage"
-            MINIO_ENDPOINT: "http://localhost:9000"
+            MINIO_ENDPOINT: "http://minio:9000"
             STORAGE_ACCESS_KEY: "minioadmin"
             STORAGE_SECRET_KEY: "minioadmin"
         ports:
