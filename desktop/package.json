@@ -1,22 +1,24 @@
 {
-  "name": "@codepair/native",
+  "name": "@codepair/desktop",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.1.22",
   "main": "dist/main.js",
-  "description": "Codepair Native",
+  "description": "Codepair Desktop",
   "author": "yorkie-team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/minai621/codepair"
+    "url": "https://github.com/yorkie-team/codepair"
   },
   "license": "Apache-2.0",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "pnpm run build && cross-env NODE_ENV=production pnpx electron dist/main.js",
-    "start:dev": "pnpm run start:codepair:dev && pnpm run build && cross-env NODE_ENV=development pnpx electron dist/main.js",
-    "start:codepair:dev": "cd ../frontend && pnpm run dev & ",
+    "start:dev": "pnpm run build && cross-env NODE_ENV=development pnpx electron dist/main.js",
     "electron-builder": "pnpm run build && electron-builder",
-    "release": "pnpm run build && electron-builder --publish always"
+    "release": "pnpm run build && electron-builder --publish always",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
@@ -29,7 +31,7 @@
     "publish": {
       "provider": "github"
     },
-    "appId": "com.example.codepair",
+    "appId": "com.yorkie-team.codepair",
     "productName": "codepair",
     "files": [
       "dist/**/*",
