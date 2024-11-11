@@ -5,8 +5,8 @@ import { ConfigService } from "@nestjs/config";
 const s3ClientFactory = {
 	provide: "STORAGE_CLIENT",
 	useFactory: (configService: ConfigService): S3Client | null => {
-		const fileUpload = configService.get<boolean | "s3" | "minio">("FILE_UPLOAD");
-		if (!fileUpload) {
+		const fileUpload = configService.get<"false" | "s3" | "minio">("FILE_UPLOAD");
+		if (fileUpload === "false") {
 			return null;
 		}
 		const region = configService.get<string>("AWS_REGION");
