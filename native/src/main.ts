@@ -15,16 +15,9 @@ function createWindow() {
         console.error("Failed to load dev server:", err);
       });
     } else {
-      win
-        .loadURL("https://codepair.yorkie.dev", {
-          httpHeaders: {
-            "Content-Security-Policy":
-              "default-src 'self' https://codepair.yorkie.dev",
-          },
-        })
-        .catch((err) => {
-          console.error("Failed to load production URL:", err);
-        });
+      win.loadURL("https://codepair.yorkie.dev").catch((err) => {
+        console.error("Failed to load production URL:", err);
+      });
     }
   } catch (error) {
     console.error("Error creating the browser window:", error);
