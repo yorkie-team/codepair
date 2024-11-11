@@ -1,6 +1,7 @@
 {
   "name": "@codepair/native",
-  "version": "1.0.1",
+  "type": "module",
+  "version": "1.0.0",
   "main": "dist/main.js",
   "description": "Codepair Native",
   "author": "yorkie-team",
@@ -10,15 +11,15 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "tsc src/main.ts --outDir dist",
+    "build": "tsc -p tsconfig.json",
     "start": "pnpm run build && cross-env NODE_ENV=production pnpx electron dist/main.js",
     "start:dev": "pnpm run start:codepair:dev && pnpm run build && cross-env NODE_ENV=development pnpx electron dist/main.js",
-    "start:codepair:dev": "cd ../frontend && Pnpm run dev & ",
+    "start:codepair:dev": "cd ../frontend && pnpm run dev & ",
     "electron-builder": "pnpm run build && electron-builder",
     "release": "pnpm run build && electron-builder --publish always"
   },
   "devDependencies": {
-    "@types/node": "^22.7.6",
+    "@types/node": "^22.9.0",
     "cross-env": "^7.0.3",
     "electron": "^33.0.1",
     "electron-builder": "^25.1.8",
