@@ -11,6 +11,7 @@ import { refractor } from "refractor";
 import markdownItIncrementalDOM from "markdown-it-incremental-dom";
 import markdownItSanitizer from "markdown-it-sanitizer";
 import markdownItTaskCheckbox from "markdown-it-task-checkbox";
+import mila from "markdown-it-link-attributes";
 import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
 import "./preview.css";
@@ -36,6 +37,12 @@ const md = new MarkdownIt({
 	},
 })
 	.use(markdownItTaskCheckbox)
+	.use(mila, {
+		attrs: {
+			target: "_blank",
+			rel: "noopener noreferrer",
+		},
+	})
 	.use(markdownItIncrementalDOM, IncrementalDOM, {
 		incrementalizeDefaultRules: false,
 	})
