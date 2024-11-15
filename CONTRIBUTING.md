@@ -17,12 +17,14 @@ If you have any questions along the way, please don’t hesitate to ask us
 
 This is a rough outline of what a contributor's workflow looks like:
 
-- Create a topic branch from where to base the contribution. This is usually main
-- Make commits of logical units
-- Make sure commit messages are in the proper format
-- Push changes in a topic branch to a personal fork of the repository
-- Submit a pull request to yorkie-team/codepair
-- The PR must receive a LGTM from maintainers
+1. Create a topic branch from where to base the contribution (usually main).
+2. Make commits of logical units.
+   - Make sure all tests pass, and add any new tests as appropriate.
+   - Make sure commit messages are in the proper format (see below).
+3. Push changes in a topic branch to the forked repository.
+4. Submit a pull request to the original repository.
+5. Address any review comments from CodeRabbit and maintainers.
+6. After receiving LGTM from maintainers, the PR will be merged.
 
 Thanks for contributing!
 
@@ -78,6 +80,11 @@ The first line is the subject and should be no longer than 70 characters, the se
 
 6. **Pull Request**  
    Submit a pull request for review.
+
+## Code Review
+
+We use GitHub's pull request review feature to review code. We also use CodeRabbit to automate code review for reducing the effort of maintainers. CodeRabbit will automatically review your pull request and provide feedback on code quality, test coverage, and more.
+We require that all code is reviewed by at least one maintainer before being merged. We may ask for changes to be made to the code before it is merged.
 
 ## Contributor License Agreement
 
