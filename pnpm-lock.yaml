@@ -270,6 +270,9 @@ importers:
       markdown-it-incremental-dom:
         specifier: ^2.1.0
         version: 2.1.0(incremental-dom@0.6.0)(markdown-it@14.1.0)
+      markdown-it-link-attributes:
+        specifier: ^4.0.1
+        version: 4.0.1
       markdown-it-prism:
         specifier: ^2.3.0
         version: 2.3.0
@@ -5259,6 +5262,9 @@ packages:
     peerDependencies:
       incremental-dom: '>=0.5.0'
       markdown-it: '>=4.0.0'
+
+  markdown-it-link-attributes@4.0.1:
+    resolution: {integrity: sha512-pg5OK0jPLg62H4k7M9mRJLT61gUp9nvG0XveKYHMOOluASo9OEF13WlXrpAp2aj35LbedAy3QOCgQCw0tkLKAQ==}
 
   markdown-it-prism@2.3.0:
     resolution: {integrity: sha512-ePtHY80gZyeje4bn3R3SL0jpd1C9HFaYffJW2Ma0YD+tspqa2v9TuVwUyFwboFu4jnFNcO8oPQROgbcYJbmBvw==}
@@ -12763,6 +12769,8 @@ snapshots:
       htmlparser2: 3.10.1
       incremental-dom: 0.6.0
       markdown-it: 14.1.0
+
+  markdown-it-link-attributes@4.0.1: {}
 
   markdown-it-prism@2.3.0:
     dependencies:

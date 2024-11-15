@@ -1,3 +1,4 @@
 declare module "markdown-it-incremental-dom";
 declare module "markdown-it-sanitizer";
 declare module "markdown-it-task-checkbox";
+declare module "markdown-it-link-attributes";
