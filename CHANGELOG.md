@@ -7,6 +7,20 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.24] - 2024-11-20
+
+### Added
+
+- Add markdown preview image lazy loading by @devleejb in https://github.com/yorkie-team/codepair/pull/411
+
+### Changed
+
+- Change to open url in new tab by @devleejb in https://github.com/yorkie-team/codepair/pull/409
+
+### Fixed
+
+- Fix intermittent image display issue during Image Upload by @devleejb in https://github.com/yorkie-team/codepair/pull/410
+
 ## [0.1.23] - 2024-11-10
 
 ### Changed
