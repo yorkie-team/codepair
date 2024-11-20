@@ -11,6 +11,7 @@ import { refractor } from "refractor";
 import markdownItIncrementalDOM from "markdown-it-incremental-dom";
 import markdownItSanitizer from "markdown-it-sanitizer";
 import markdownItTaskCheckbox from "markdown-it-task-checkbox";
+import markdownItImageLazyLoading from "markdown-it-image-lazy-loading";
 import mila from "markdown-it-link-attributes";
 import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
@@ -47,7 +48,8 @@ const md = new MarkdownIt({
 		incrementalizeDefaultRules: false,
 	})
 	.use(markdownItKatex)
-	.use(markdownItSanitizer);
+	.use(markdownItSanitizer)
+	.use(markdownItImageLazyLoading);
 
 const Preview = () => {
 	const currentTheme = useCurrentTheme();

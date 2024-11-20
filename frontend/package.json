@@ -55,6 +55,7 @@
 		"lib0": "^0.2.88",
 		"lodash": "^4.17.21",
 		"markdown-it": "^14.1.0",
+		"markdown-it-image-lazy-loading": "^2.0.1",
 		"markdown-it-incremental-dom": "^2.1.0",
 		"markdown-it-link-attributes": "^4.0.1",
 		"markdown-it-prism": "^2.3.0",

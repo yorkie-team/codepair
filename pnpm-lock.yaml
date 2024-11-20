@@ -267,6 +267,9 @@ importers:
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
+      markdown-it-image-lazy-loading:
+        specifier: ^2.0.1
+        version: 2.0.1
       markdown-it-incremental-dom:
         specifier: ^2.1.0
         version: 2.1.0(incremental-dom@0.6.0)(markdown-it@14.1.0)
@@ -4425,6 +4428,11 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
+  image-size@1.1.1:
+    resolution: {integrity: sha512-541xKlUw6jr/6gGuk92F+mYM5zaFAc5ahphvkqvNe2bQ6gVBkd6bfrmVJ2t4KDAfikAYZyIqTnktX3i6/aQDrQ==}
+    engines: {node: '>=16.x'}
+    hasBin: true
+
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
 
@@ -5256,6 +5264,9 @@ packages:
     resolution: {integrity: sha512-7N/q3lyZ+LVCp7PzuxrJr4KMbBE2hW7BT7YNia330OFxIf4d3r5zVpicP2650l7CPN6RM9zOJRl3NGpqSiw3Eg==}
     engines: {node: '>=0.10.0'}
 
+  markdown-it-image-lazy-loading@2.0.1:
+    resolution: {integrity: sha512-IN1DNE2ubw8yn0I7G2conoxSz0R5GgMuOczbxtV+k20MtXeHrDvMQPkQYYGQSd+ejy4eSKQOhqu3gk676Ca//A==}
+
   markdown-it-incremental-dom@2.1.0:
     resolution: {integrity: sha512-dmTobpLZHkRbO57TPCrp0ci8ZJD4Bw6o6RToqgNsAPCSUgN/t/c+HTn/q62+Ox9zBwfU2+837NVjkt37bYnYDQ==}
     engines: {node: '>=6.14.4'}
@@ -6032,6 +6043,9 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  queue@6.0.2:
+    resolution: {integrity: sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -11813,6 +11827,10 @@ snapshots:
 
   ignore@5.3.2: {}
 
+  image-size@1.1.1:
+    dependencies:
+      queue: 6.0.2
+
   immediate@3.0.6: {}
 
   immer@10.1.1: {}
@@ -12763,6 +12781,10 @@ snapshots:
       tmpl: 1.0.5
 
   map-obj@1.0.1: {}
+
+  markdown-it-image-lazy-loading@2.0.1:
+    dependencies:
+      image-size: 1.1.1
 
   markdown-it-incremental-dom@2.1.0(incremental-dom@0.6.0)(markdown-it@14.1.0):
     dependencies:
@@ -13761,6 +13783,10 @@ snapshots:
       side-channel: 1.0.6
 
   queue-microtask@1.2.3: {}
+
+  queue@6.0.2:
+    dependencies:
+      inherits: 2.0.4
 
   randombytes@2.1.0:
     dependencies:
