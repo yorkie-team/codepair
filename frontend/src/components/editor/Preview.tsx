@@ -58,10 +58,7 @@ const Preview = () => {
 		() =>
 			_.throttle(
 				() => {
-					const editorText =
-						editorStore.cmView?.state.doc.toString() ||
-						editorStore.doc?.getRoot().content?.toString() ||
-						"";
+					const editorText = editorStore.doc?.getRoot().content?.toString() || "";
 
 					// Add soft line break
 					setContent(addSoftLineBreak(editorText));
@@ -70,7 +67,7 @@ const Preview = () => {
 				// Set trailing true to prevent ignoring last call
 				{ trailing: true }
 			),
-		[editorStore.doc, editorStore.cmView]
+		[editorStore.doc]
 	);
 
 	useEffect(() => {
