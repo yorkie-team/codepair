@@ -1,66 +1,67 @@
 {
-  "name": "@codepair/desktop",
-  "type": "module",
-  "version": "0.1.22",
-  "main": "dist/main.js",
-  "description": "Codepair Desktop",
-  "author": "yorkie-team",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yorkie-team/codepair"
-  },
-  "license": "Apache-2.0",
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "pnpm run build && cross-env NODE_ENV=production pnpx electron dist/main.js",
-    "start:dev": "pnpm run build && cross-env NODE_ENV=development pnpx electron dist/main.js",
-    "electron-builder": "pnpm run build && electron-builder",
-    "release": "pnpm run build && electron-builder --publish always",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check"
-  },
-  "devDependencies": {
-    "@types/node": "^22.9.0",
-    "cross-env": "^7.0.3",
-    "electron": "^33.0.1",
-    "electron-builder": "^25.1.8",
-    "typescript": "^5.3.3"
-  },
-  "build": {
-    "publish": {
-      "provider": "github"
-    },
-    "appId": "com.yorkie-team.codepair",
-    "productName": "codepair",
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "package.json",
-      "!node_modules/**/*.{ts,map}"
-    ],
-    "directories": {
-      "output": "release"
-    },
-    "mac": {
-      "target": "dmg"
-    },
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
-    },
-    "linux": {
-      "target": "AppImage"
-    }
-  }
+	"name": "@codepair/desktop",
+	"type": "module",
+	"version": "0.1.24",
+	"main": "dist/main.js",
+	"description": "Codepair Desktop",
+	"author": "yorkie-team",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yorkie-team/codepair"
+	},
+	"license": "Apache-2.0",
+	"scripts": {
+		"start": "pnpm run build-ts && cross-env NODE_ENV=production electron .",
+		"start:dev": "pnpm run build-ts && cross-env NODE_ENV=development electron .",
+		"build-ts": "tsc -p tsconfig.json",
+		"build-electron": "pnpm run build-ts && electron-builder",
+		"release": "pnpm run build-ts && electron-builder --publish always",
+		"lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
+	},
+	"devDependencies": {
+		"@types/node": "^22.9.0",
+		"cross-env": "^7.0.3",
+		"electron": "^33.0.1",
+		"electron-builder": "^25.1.8",
+		"dotenv": "^16.4.5"
+	},
+	"build": {
+		"publish": {
+			"provider": "github"
+		},
+		"appId": "com.yorkie-team.codepair",
+		"productName": "codepair",
+		"icon": "build/icon.png",
+		"files": [
+			"dist/**/*",
+			"node_modules/**/*",
+			"package.json",
+			"!node_modules/**/*.{ts,map}"
+		],
+		"directories": {
+			"output": "release"
+		},
+		"mac": {
+			"target": "dmg"
+		},
+		"win": {
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64"
+					]
+				}
+			]
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true
+		},
+		"linux": {
+			"target": "AppImage"
+		}
+	}
 }

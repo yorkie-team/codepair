@@ -1,18 +1,18 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ESNext",
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+		/* Bundler mode */
+		"moduleResolution": "node",
 
-    /* Linting */
-    "strict": true
-  },
-  "include": ["src"],
-  "exclude": ["dist"]
+		/* Linting */
+		"strict": true
+	},
+	"include": ["src"],
+	"exclude": ["dist"]
 }

@@ -1,4 +1,4 @@
-name: electron-build
+name: desktop-release
 on:
   release:
     types: [published]
@@ -30,14 +30,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build Electron App
-        run: pnpm run build
-
       - name: Build and publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm run electron-builder --publish always
+          pnpm run release
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
