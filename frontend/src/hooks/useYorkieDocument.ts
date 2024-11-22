@@ -80,8 +80,7 @@ export const useYorkieDocument = (
 		if (!client || !doc) return;
 
 		try {
-			await client.detach(doc);
-			await client.deactivate();
+			await client.deactivate({ keepalive: true });
 		} catch (error) {
 			console.error("Error during Yorkie cleanup:", error);
 		}
@@ -102,8 +101,7 @@ export const useYorkieDocument = (
 
 				// Clean up if the component is unmounted before the initialization is done
 				if (!mounted) {
-					await newClient.detach(newDoc);
-					await newClient.deactivate();
+					await newClient.deactivate({ keepalive: true });
 					return;
 				}
 
@@ -134,6 +132,18 @@ export const useYorkieDocument = (
 	useEffect(() => {
 		return () => {
 			cleanUpYorkieDocument();
+		};
+	}, [cleanUpYorkieDocument]);
+
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			cleanUpYorkieDocument();
+		};
+
+		window.addEventListener("beforeunload", handleBeforeUnload);
+
+		return () => {
+			window.removeEventListener("beforeunload", handleBeforeUnload);
 		};
 	}, [cleanUpYorkieDocument]);
 
