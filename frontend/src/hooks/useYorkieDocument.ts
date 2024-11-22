@@ -2,7 +2,7 @@ import Color from "color";
 import randomColor from "randomcolor";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useBeforeUnload, useSearchParams } from "react-router-dom";
 import * as yorkie from "yorkie-js-sdk";
 import { selectAuth } from "../store/authSlice";
 import { CodePairDocType } from "../store/editorSlice";
@@ -80,8 +80,7 @@ export const useYorkieDocument = (
 		if (!client || !doc) return;
 
 		try {
-			await client.detach(doc);
-			await client.deactivate();
+			await client.deactivate({ keepalive: true });
 		} catch (error) {
 			console.error("Error during Yorkie cleanup:", error);
 		}
@@ -102,8 +101,7 @@ export const useYorkieDocument = (
 
 				// Clean up if the component is unmounted before the initialization is done
 				if (!mounted) {
-					await newClient.detach(newDoc);
-					await newClient.deactivate();
+					await newClient.deactivate({ keepalive: true });
 					return;
 				}
 
@@ -131,11 +129,17 @@ export const useYorkieDocument = (
 		createYorkieDocument,
 	]);
 
+	// Clean up yorkie document on unmount
+	// For example, when the user navigates to a different page
 	useEffect(() => {
 		return () => {
 			cleanUpYorkieDocument();
 		};
 	}, [cleanUpYorkieDocument]);
+
+	// Clean up yorkie document on beforeunload
+	// For example, when the user closes the tab or refreshes the page
+	useBeforeUnload(cleanUpYorkieDocument);
 
 	return { client, doc };
 };
