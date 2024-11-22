@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.25] - 2024-11-23
+
+### Changed
+
+- Update `yorkie` to `v0.5.6` by @devleejb in https://github.com/yorkie-team/codepair/pull/413
+
 ## [0.1.24] - 2024-11-20
 
 ### Added
