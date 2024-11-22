@@ -2,7 +2,7 @@ import Color from "color";
 import randomColor from "randomcolor";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useBeforeUnload, useSearchParams } from "react-router-dom";
 import * as yorkie from "yorkie-js-sdk";
 import { selectAuth } from "../store/authSlice";
 import { CodePairDocType } from "../store/editorSlice";
@@ -129,23 +129,17 @@ export const useYorkieDocument = (
 		createYorkieDocument,
 	]);
 
+	// Clean up yorkie document on unmount
+	// For example, when the user navigates to a different page
 	useEffect(() => {
 		return () => {
 			cleanUpYorkieDocument();
 		};
 	}, [cleanUpYorkieDocument]);
 
-	useEffect(() => {
-		const handleBeforeUnload = () => {
-			cleanUpYorkieDocument();
-		};
-
-		window.addEventListener("beforeunload", handleBeforeUnload);
-
-		return () => {
-			window.removeEventListener("beforeunload", handleBeforeUnload);
-		};
-	}, [cleanUpYorkieDocument]);
+	// Clean up yorkie document on beforeunload
+	// For example, when the user closes the tab or refreshes the page
+	useBeforeUnload(cleanUpYorkieDocument);
 
 	return { client, doc };
 };
