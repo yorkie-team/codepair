@@ -1,20 +1,20 @@
-import { default as dotenv } from "dotenv";
-import { app, BrowserWindow } from "electron";
 
-dotenv.config({
-	path: process.env.NODE_ENV === "development" ? ".env.development" : ".env.production",
-});
+import { config } from "dotenv";
+import { app, BrowserWindow } from "electron";
+config();
+
 
 async function createWindow() {
 	try {
 		const win = new BrowserWindow({ maximizable: true });
 		win.maximize();
-		const serviceUrl = process.env.DESKTOP_CODEPAIR_URL as string;
+		// In the future, migrate to a proper build tool and environment variable management.
+		const serviceUrl = "https://codepair.yorkie.dev";
 
 		await win.loadURL(serviceUrl);
 	} catch (error) {
 		console.error("Error creating the browser window:", error);
-		app.quit();
+	app.quit();
 	}
 }
 
