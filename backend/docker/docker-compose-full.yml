@@ -38,10 +38,6 @@ services:
             - mongo
             - minio
         restart: unless-stopped
-        links:
-            - "mongo:mongo"
-            - "yorkie:yorkie"
-            - "minio:minio"
 
     yorkie:
         image: "yorkieteam/yorkie:0.5.6"
