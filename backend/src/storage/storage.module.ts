@@ -9,10 +9,11 @@ const s3ClientFactory = {
 		if (fileUpload === "false") {
 			return null;
 		}
+
 		const region = configService.get<string>("AWS_REGION");
 		const endpoint = configService.get<string>("MINIO_ENDPOINT");
-		const accessKeyId = configService.get<string>("STORAGE_ACCESS_KEY");
-		const secretAccessKey = configService.get<string>("STORAGE_SECRET_KEY");
+		const accessKeyId = configService.get<string>("MINIO_ACCESS_KEY");
+		const secretAccessKey = configService.get<string>("MINIO_SECRET_KEY");
 
 		const config: S3ClientConfig = {
 			region,
