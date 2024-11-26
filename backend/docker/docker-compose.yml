@@ -53,7 +53,8 @@ services:
     init_minio:
         image: minio/mc
         depends_on:
-            - minio
+            minio:
+                condition: service_healthy
         entrypoint: >
             /bin/sh -c "
             mc alias set codepair http://minio:9000 minioadmin minioadmin --api S3v4;
