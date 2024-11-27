@@ -44,3 +44,5 @@ dist-ssr/
 # Tests
 coverage/
 .nyc_output/
+
+release/
