@@ -168,9 +168,6 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
       electron:
         specifier: ^33.0.1
         version: 33.2.0
