@@ -1,7 +1,7 @@
 {
 	"name": "@codepair/desktop",
 	"type": "module",
-	"version": "0.1.24",
+	"version": "0.1.25",
 	"main": "dist/main.js",
 	"description": "Codepair Desktop",
 	"author": "yorkie-team",
@@ -24,8 +24,7 @@
 		"@types/node": "^22.9.0",
 		"cross-env": "^7.0.3",
 		"electron": "^33.0.1",
-		"electron-builder": "^25.1.8",
-		"dotenv": "^16.4.5"
+		"electron-builder": "^25.1.8"
 	},
 	"build": {
 		"publish": {
