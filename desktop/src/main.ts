@@ -1,8 +1,4 @@
-
-import { config } from "dotenv";
-import { app, BrowserWindow } from "electron";
-config();
-
+import { app, BrowserWindow, dialog } from "electron";
 
 async function createWindow() {
 	try {
@@ -13,8 +9,16 @@ async function createWindow() {
 
 		await win.loadURL(serviceUrl);
 	} catch (error) {
-		console.error("Error creating the browser window:", error);
-	app.quit();
+		if (error instanceof Error) {
+			console.error("Error creating the browser window:", error.message);
+
+			dialog.showErrorBox(
+				"Application Error",
+				`Failed to start application: ${error.message}\n\nThe application will now quit.`
+			);
+
+			app.quit();
+		}
 	}
 }
 
