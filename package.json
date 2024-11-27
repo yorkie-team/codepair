@@ -10,6 +10,7 @@
     "preinstall": "npx only-allow pnpm",
     "frontend": "pnpm --filter=frontend",
     "backend": "pnpm --filter=backend",
+    "desktop": "pnpm --filter=desktop",
     "lint": "pnpm run --parallel lint",
     "lint:check": "pnpm run --parallel lint:check",
     "format": "pnpm run --parallel format",
