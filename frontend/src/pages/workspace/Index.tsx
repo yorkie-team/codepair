@@ -4,7 +4,7 @@ import {
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
-import { Backdrop, Box, Button, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Grid2, Stack, Typography } from "@mui/material";
 import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo, useState } from "react";
 import { Document } from "../../hooks/api/types/document.d";
@@ -51,8 +51,8 @@ function WorkspaceIndex() {
 	};
 
 	return (
-		<Stack gap={2}>
-			<Stack direction="row" justifyContent="space-between" alignItems="center" px={2}>
+		<Stack gap={4} py={6}>
+			<Stack direction="row" justifyContent="space-between" alignItems="center">
 				<Typography variant="h5" fontWeight="bold">
 					{workspace?.title}{" "}
 					<Typography component="span" variant="inherit" color="primary">
@@ -67,38 +67,30 @@ function WorkspaceIndex() {
 					New Note
 				</Button>
 			</Stack>
-			<Stack
-				style={{
-					maxHeight: "calc(100vh - 144px)",
-					overflow: "auto",
-				}}
+			<InfiniteScroll
+				pageStart={0}
+				loadMore={() => fetchNextPage()}
+				hasMore={hasNextPage}
+				loader={
+					<Stack className="loader" key={0} alignItems="center">
+						<CircularProgress size={20} />
+					</Stack>
+				}
 			>
-				<InfiniteScroll
-					pageStart={0}
-					loadMore={() => fetchNextPage()}
-					hasMore={hasNextPage}
-					loader={
-						<Stack className="loader" key={0} alignItems="center">
-							<CircularProgress size={20} />
-						</Stack>
-					}
-					useWindow={false}
-				>
-					<Box p={2} width={1}>
-						<Grid
-							container
-							spacing={{ xs: 2, md: 3 }}
-							columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-						>
-							{documentList.map((document) => (
-								<Grid key={document.id} item xs={4} sm={4} md={4} lg={3}>
-									<DocumentCard document={document} />
-								</Grid>
-							))}
-						</Grid>
-					</Box>
-				</InfiniteScroll>
-			</Stack>
+				<Box width={1}>
+					<Grid2
+						container
+						spacing={{ xs: 2, md: 3 }}
+						columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
+					>
+						{documentList.map((document) => (
+							<Grid2 key={document.id} size={4}>
+								<DocumentCard document={document} />
+							</Grid2>
+						))}
+					</Grid2>
+				</Box>
+			</InfiniteScroll>
 			<CreateModal
 				open={createDocumentModalOpen}
 				title="Note"
