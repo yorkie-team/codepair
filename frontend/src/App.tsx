@@ -1,7 +1,3 @@
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 import { Box, CssBaseline, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import * as Sentry from "@sentry/react";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -67,6 +63,7 @@ function App() {
 				button: {
 					textTransform: "none",
 				},
+				fontFamily: `"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;`,
 			},
 			palette: {
 				mode: config.theme == "default" ? defaultMode : config.theme,
