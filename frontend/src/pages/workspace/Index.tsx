@@ -4,13 +4,29 @@ import {
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
-import { Backdrop, Box, Button, CircularProgress, Grid2, Stack, Typography } from "@mui/material";
+import {
+	Backdrop,
+	Box,
+	Button,
+	CircularProgress,
+	Grid2,
+	Paper,
+	Stack,
+	Tab,
+	Tabs,
+	Typography,
+} from "@mui/material";
 import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo, useState } from "react";
 import { Document } from "../../hooks/api/types/document.d";
 import InfiniteScroll from "react-infinite-scroller";
 import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
+
+const tabs = [
+	"BOARD",
+	// "TABLE"
+];
 
 function WorkspaceIndex() {
 	const params = useParams();
@@ -51,22 +67,41 @@ function WorkspaceIndex() {
 	};
 
 	return (
-		<Stack gap={4} py={6}>
-			<Stack direction="row" justifyContent="space-between" alignItems="center">
-				<Typography variant="h5" fontWeight="bold">
-					{workspace?.title}{" "}
-					<Typography component="span" variant="inherit" color="primary">
-						{documentPageList?.pages[0].totalLength}
+		<Stack position="relative" pb={6}>
+			<Paper
+				elevation={0}
+				sx={{
+					position: "sticky",
+					top: 64,
+					left: 0,
+					width: "100%",
+					pb: 4,
+					zIndex: 3,
+				}}
+			>
+				<Stack direction="row" justifyContent="space-between" alignItems="center" pt={6}>
+					<Typography variant="h5" fontWeight="bold">
+						{workspace?.title}{" "}
+						<Typography component="span" variant="inherit" color="primary">
+							{documentPageList?.pages[0].totalLength}
+						</Typography>
 					</Typography>
-				</Typography>
-				<Button
-					variant="contained"
-					startIcon={<AddIcon />}
-					onClick={handleCreateDocumentModalOpen}
-				>
-					New Note
-				</Button>
-			</Stack>
+					<Button
+						variant="contained"
+						startIcon={<AddIcon />}
+						onClick={handleCreateDocumentModalOpen}
+					>
+						New Note
+					</Button>
+				</Stack>
+			</Paper>
+			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={4}>
+				<Tabs value={tabs[0]}>
+					{tabs.map((tab) => (
+						<Tab key={tab} label={tab} value={tab} />
+					))}
+				</Tabs>
+			</Box>
 			<InfiniteScroll
 				pageStart={0}
 				loadMore={() => fetchNextPage()}

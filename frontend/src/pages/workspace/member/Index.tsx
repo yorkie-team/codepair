@@ -45,7 +45,7 @@ function MemberIndex() {
 
 	return (
 		<Container maxWidth="lg">
-			<Stack gap={4}>
+			<Stack gap={4} py={6}>
 				<Stack direction="row" justifyContent="space-between" alignItems="center" px={2}>
 					<Typography variant="h5" fontWeight="bold">
 						{workspace?.title}{" "}
