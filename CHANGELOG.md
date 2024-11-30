@@ -7,6 +7,16 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.26] - 2024-11-30
+
+### Added
+
+- Support MinIO for file storage by @minai621 in https://github.com/yorkie-team/codepair/pull/365
+
+### Changed
+
+- Apply workspace page design from Figma by @devleejb in https://github.com/yorkie-team/codepair/pull/418
+
 ## [0.1.25] - 2024-11-23
 
 ### Changed
