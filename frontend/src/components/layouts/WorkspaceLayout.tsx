@@ -20,16 +20,18 @@ function WorkspaceLayout() {
 	const { drawerOpen } = useSelector(selectConfig);
 
 	return (
-		<Box sx={{ display: "flex" }}>
+		<Stack gap={0}>
 			<WorkspaceHeader />
-			<Stack direction="row" sx={{ width: "100%" }}>
+			<Stack direction="row">
 				<WorkspaceDrawer open={drawerOpen} />
-				<Box flexGrow={1} padding={3}>
+				<Box flexGrow={1} maxWidth="100%" px={2}>
 					<WorkspaceDrawerHeader />
-					<Outlet />
+					<Box mx="auto" maxWidth={1440} width="100%">
+						<Outlet />
+					</Box>
 				</Box>
 			</Stack>
-		</Box>
+		</Stack>
 	);
 }
 
