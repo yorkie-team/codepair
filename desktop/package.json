@@ -1,7 +1,7 @@
 {
 	"name": "@codepair/desktop",
 	"type": "module",
-	"version": "0.1.26",
+	"version": "0.1.27",
 	"main": "dist/main.js",
 	"description": "Codepair Desktop",
 	"author": "yorkie-team",

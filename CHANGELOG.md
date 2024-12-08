@@ -7,6 +7,14 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.27] - 2024-12-08
+
+### Changed
+
+- Bump softprops/action-gh-release from 1 to 2 by @dependabot in https://github.com/yorkie-team/codepair/pull/420
+- Bump JamesIves/github-pages-deploy-action from 4.6.8 to 4.7.1 by @dependabot in https://github.com/yorkie-team/codepair/pull/421
+- Change desktop publishing options to upload artifacts by @devleejb in https://github.com/yorkie-team/codepair/pull/423
+
 ## [0.1.26] - 2024-11-30
 
 ### Added
