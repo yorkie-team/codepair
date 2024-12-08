@@ -28,10 +28,11 @@
 	},
 	"build": {
 		"publish": {
-			"provider": "github"
+			"provider": "github",
+			"releaseType": "release"
 		},
 		"appId": "com.yorkie-team.codepair",
-		"productName": "codepair",
+		"productName": "CodePair",
 		"icon": "build/icon.png",
 		"files": [
 			"dist/**/*",
