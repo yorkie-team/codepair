@@ -32,18 +32,6 @@ jobs:
 
       - name: Build and publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm run release
-
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ./release/**/*.exe
-            ./release/**/*.dmg
-            ./release/**/*.AppImage
-            ./release/**/*.yml
-            ./release/latest*.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
