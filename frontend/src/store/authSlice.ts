@@ -35,4 +35,13 @@ export const { setAccessToken, setRefreshToken, logout } = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.auth;
 
-export default authSlice.reducer;
+/**
+ * Manages user authentication state, including login information and tokens.
+ *
+ *  * This slice handles:
+ * - `accessToken`: The user's access token for authenticated API requests.
+ * - `refreshToken`: The user's refresh token for obtaining new access tokens.
+ */
+const reducer = authSlice.reducer;
+
+export default reducer;

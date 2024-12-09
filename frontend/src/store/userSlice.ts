@@ -32,4 +32,17 @@ export const { setUserData } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 
-export default userSlice.reducer;
+/**
+ * Manage user profile and user-specific information.
+ *
+ *  * This slice handles:
+ * - Storing user data, including:
+ *   - `id`: Unique identifier for the user.
+ *   - `nickname`: User's nickname, or `null` if not set.
+ *   - `lastWorkspaceSlug`: The last accessed workspace's slug.
+ *   - `updatedAt`: Timestamp of the last user update.
+ *   - `createdAt`: Timestamp of when the user was created.
+ */
+const reducer = userSlice.reducer;
+
+export default reducer;

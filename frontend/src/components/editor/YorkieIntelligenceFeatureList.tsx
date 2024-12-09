@@ -7,10 +7,10 @@ import {
 	Stack,
 	TextField,
 } from "@mui/material";
-import { useMemo, useState } from "react";
 import { matchSorter } from "match-sorter";
-import { selectSetting } from "../../store/settingSlice";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { selectFeatureSetting } from "../../store/featureSettingSlice";
 
 interface YorkieIntelligenceFeatureListProps {
 	onSelectFeature: (feature: string, title: string) => void;
@@ -18,13 +18,17 @@ interface YorkieIntelligenceFeatureListProps {
 
 function YorkieIntelligenceFeatureList(props: YorkieIntelligenceFeatureListProps) {
 	const { onSelectFeature } = props;
-	const settingStore = useSelector(selectSetting);
+	const featureSettingStore = useSelector(selectFeatureSetting);
 	const [featureText, setFeatureText] = useState("");
 	const filteredFeatureInfoList = useMemo(() => {
-		return matchSorter(settingStore.yorkieIntelligence?.config.features ?? [], featureText, {
-			keys: ["title", "feature"],
-		});
-	}, [featureText, settingStore.yorkieIntelligence?.config.features]);
+		return matchSorter(
+			featureSettingStore.yorkieIntelligence?.config.features ?? [],
+			featureText,
+			{
+				keys: ["title", "feature"],
+			}
+		);
+	}, [featureText, featureSettingStore.yorkieIntelligence?.config.features]);
 
 	const handleFeatureTextChange: React.ChangeEventHandler<
 		HTMLInputElement | HTMLTextAreaElement

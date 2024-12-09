@@ -51,4 +51,15 @@ export const { setTheme, setDrawerOpen, setCodeKeyType, setDisableScrollSync } =
 
 export const selectConfig = (state: RootState) => state.config;
 
-export default configSlice.reducer;
+/**
+ * Handles global application settings.
+ *
+ *  * This slice handles:
+ * - `theme`: The application theme (default, dark, or light).
+ * - `drawerOpen`: Whether the application drawer (sidebar) is open.
+ * - `codeKey`: The preferred keybinding type for code editing (Sublime, Vim, etc.).
+ * - `disableScrollSync`: A flag to enable or disable scroll synchronization.
+ */
+const reducer = configSlice.reducer;
+
+export default reducer;
