@@ -44,4 +44,13 @@ export const { setYorkieIntelligence, setFileUpload } = featureSettingSlice.acti
 
 export const selectFeatureSetting = (state: RootState) => state.featureSetting;
 
-export default featureSettingSlice.reducer;
+/**
+ *  Manages settings for specific features (e.g., experimental feature toggles).
+ *
+ *  * This slice handles:
+ * - `yorkieIntelligence`: Settings for the Yorkie Intelligence feature
+ * - `fileUpload`: Settings for file upload functionality
+ */
+const reducer = featureSettingSlice.reducer;
+
+export default reducer;

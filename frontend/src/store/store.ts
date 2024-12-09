@@ -17,11 +17,17 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-	// Persistent slices
+	/*
+	 * Persistent slices:
+	 * These slices persist their state in local storage and can restore it when the app restarts.
+	 */
 	auth: authSlice,
 	config: configSlice,
 
-	// Volatile slices
+	/**
+	 * Volatile slices:
+	 * These slices only retain their state during a session. Their state is reset when the app restarts.
+	 */
 	user: userSlice,
 	editor: editorSlice,
 	workspace: workspaceSlice,

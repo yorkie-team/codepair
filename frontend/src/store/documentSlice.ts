@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 export interface Document {
@@ -20,7 +20,7 @@ const initialState: DocumentState = {
 	data: null,
 };
 
-export const documentSlice = createSlice({
+const documentSlice = createSlice({
 	name: "document",
 	initialState,
 	reducers: {
@@ -34,4 +34,10 @@ export const { setDocumentData } = documentSlice.actions;
 
 export const selectDocument = (state: RootState) => state.document;
 
-export default documentSlice.reducer;
+/**
+ * Handles document management state.
+ * This slice is designed to manage the currently active document, its metadata, and related state in the application.
+ */
+const reducer = documentSlice.reducer;
+
+export default reducer;

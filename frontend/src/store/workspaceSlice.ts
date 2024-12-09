@@ -32,4 +32,9 @@ export const { setWorkspaceData } = workspaceSlice.actions;
 
 export const selectWorkspace = (state: RootState) => state.workspace;
 
-export default workspaceSlice.reducer;
+/**
+ * Manages workspace-related state.
+ */
+const reducer = workspaceSlice.reducer;
+
+export default reducer;
