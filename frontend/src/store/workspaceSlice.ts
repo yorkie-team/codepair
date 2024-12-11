@@ -34,6 +34,14 @@ export const selectWorkspace = (state: RootState) => state.workspace;
 
 /**
  * Manages workspace-related state.
+ *
+ *  * This slice handles:
+ * - `data`: The currently active workspace, including:
+ *   - `id`: Unique identifier for the workspace.
+ *   - `title`: The name of the workspace.
+ *   - `slug`: A URL-friendly identifier for the workspace.
+ *   - `updatedAt`: The timestamp of the last update to the workspace.
+ *   - `createdAt`: The timestamp when the workspace was created.
  */
 const reducer = workspaceSlice.reducer;
 
