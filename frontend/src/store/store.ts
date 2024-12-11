@@ -1,33 +1,41 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import editorSlice from "./editorSlice";
-import configSlice from "./configSlice";
-import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
+import persistStore from "redux-persist/es/persistStore";
+import storage from "redux-persist/lib/storage";
 import authSlice from "./authSlice";
+import configSlice from "./configSlice";
+import documentSlice from "./documentSlice";
+import editorSlice from "./editorSlice";
+import featureSettingSlice from "./featureSettingSlice";
 import userSlice from "./userSlice";
 import workspaceSlice from "./workspaceSlice";
-import documentSlice from "./documentSlice";
-import settingSlice from "./settingSlice";
 
-const reducers = combineReducers({
-	// Persistence
+const persistConfig = {
+	key: "root",
+	storage, // Use local storage
+	whitelist: ["auth", "config"], // Only persis these slices
+};
+
+const rootReducer = combineReducers({
+	/*
+	 * Persistent slices:
+	 * These slices persist their state in local storage and can restore it when the app restarts.
+	 */
 	auth: authSlice,
 	config: configSlice,
-	// Volatile
+
+	/**
+	 * Volatile slices:
+	 * These slices only retain their state during a session. Their state is reset when the app restarts.
+	 */
 	user: userSlice,
 	editor: editorSlice,
 	workspace: workspaceSlice,
 	document: documentSlice,
-	setting: settingSlice,
+	featureSetting: featureSettingSlice,
 });
 
-const persistConfig = {
-	key: "root",
-	storage, // Local Storage
-	whitelist: ["auth", "config"],
-};
-
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
 	reducer: persistedReducer,
@@ -47,6 +55,8 @@ export const store = configureStore({
 			},
 		}),
 });
+
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

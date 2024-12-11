@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 export interface Workspace {
@@ -32,4 +32,17 @@ export const { setWorkspaceData } = workspaceSlice.actions;
 
 export const selectWorkspace = (state: RootState) => state.workspace;
 
-export default workspaceSlice.reducer;
+/**
+ * Manages workspace-related state.
+ *
+ *  * This slice handles:
+ * - `data`: The currently active workspace, including:
+ *   - `id`: Unique identifier for the workspace.
+ *   - `title`: The name of the workspace.
+ *   - `slug`: A URL-friendly identifier for the workspace.
+ *   - `updatedAt`: The timestamp of the last update to the workspace.
+ *   - `createdAt`: The timestamp when the workspace was created.
+ */
+const reducer = workspaceSlice.reducer;
+
+export default reducer;

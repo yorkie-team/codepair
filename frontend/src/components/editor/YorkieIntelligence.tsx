@@ -1,16 +1,16 @@
 import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { INTELLIGENCE_FOOTER_ID } from "../../constants/intelligence";
-import YorkieIntelligenceFooter from "./YorkieIntelligenceFooter";
 import { useSelector } from "react-redux";
-import { selectSetting } from "../../store/settingSlice";
+import { INTELLIGENCE_FOOTER_ID } from "../../constants/intelligence";
+import { selectFeatureSetting } from "../../store/featureSettingSlice";
+import YorkieIntelligenceFooter from "./YorkieIntelligenceFooter";
 
 function YorkieIntelligence() {
 	const [footerOpen, setFooterOpen] = useState(false);
 	const [intelligenceFooterPivot, setIntelligenceFooterPivot] = useState<Element | null>(null);
 
-	const { yorkieIntelligence } = useSelector(selectSetting);
+	const { yorkieIntelligence } = useSelector(selectFeatureSetting);
 
 	useEffect(() => {
 		// initialize intelligence footer pivot

@@ -59,4 +59,16 @@ export const { setMode, setShareRole, setDoc, setClient, setCmView } = editorSli
 
 export const selectEditor = (state: RootState) => state.editor;
 
-export default editorSlice.reducer;
+/**
+ * Manages the state of the collaborative code editor
+ *
+ *  * This slice handles:
+ * - `mode`: The editor's current mode (edit, read, or both).
+ * - `shareRole`: The user's role in the session (e.g., viewer, editor).
+ * - `doc`: The Yorkie document for real-time collaboration.
+ * - `client`: The Yorkie client for syncing data with the server.
+ * - `cmView`: The CodeMirror editor instance.
+ */
+const reducer = editorSlice.reducer;
+
+export default reducer;

@@ -1,9 +1,11 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
 	AppBar,
+	Grid2 as Grid,
 	IconButton,
 	Paper,
 	Stack,
@@ -11,24 +13,22 @@ import {
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
-	Grid2 as Grid,
 	Typography,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 import { useUserPresence } from "../../hooks/useUserPresence";
+import { selectDocument } from "../../store/documentSlice";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ShareRole } from "../../utils/share";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
-import UserPresenceList from "./UserPresenceList";
-import { selectDocument } from "../../store/documentSlice";
-import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
-import { useSnackbar } from "notistack";
 import DocumentPopover from "../popovers/DocumentPopover";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import UserPresenceList from "./UserPresenceList";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -43,7 +43,7 @@ function DocumentHeader() {
 	);
 	const isEditingDisabled = Boolean(editorState.shareRole);
 	const { enqueueSnackbar } = useSnackbar();
-	const [moreButtonanchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const [moreButtonAnchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -162,8 +162,8 @@ function DocumentHeader() {
 								<MoreVertIcon />
 							</IconButton>
 							<DocumentPopover
-								open={Boolean(moreButtonanchorEl)}
-								anchorEl={moreButtonanchorEl}
+								open={Boolean(moreButtonAnchorEl)}
+								anchorEl={moreButtonAnchorEl}
 								onClose={handleDocumentMenuClose}
 							/>
 						</Stack>
