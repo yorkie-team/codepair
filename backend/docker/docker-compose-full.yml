@@ -40,7 +40,7 @@ services:
         restart: unless-stopped
 
     yorkie:
-        image: "yorkieteam/yorkie:0.5.6"
+        image: "yorkieteam/yorkie:0.5.7"
         command: ["server", "--enable-pprof"]
         restart: always
         ports:
