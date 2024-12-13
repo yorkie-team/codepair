@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.28] - 2024-12-13
+
+### Changed
+
+- Enhance comments in Redux Store configuration for clarity on Persistence and Volatile slices by @choidabom in https://github.com/yorkie-team/codepair/pull/425
+- Bump up Yorkie to v0.5.7 by @hackerwins in https://github.com/yorkie-team/codepair/pull/427
+
 ## [0.1.27] - 2024-12-08
 
 ### Changed
