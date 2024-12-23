@@ -58,7 +58,7 @@ function DocumentCard(props: DocumentCardProps) {
 							}}
 						/>
 						<Typography variant="body2" color="text.secondary" noWrap>
-							{moment(document.updatedAt).format("D MMM YYYY")}
+							{moment(document.updatedAt).fromNow()}
 						</Typography>
 					</Stack>
 					{/* TODO(devleejb): When the fetching presemces from yorkie is implemented, uncomment the following code */}
