@@ -1,0 +1,28 @@
+# This config file contains "safe" or non-sensitive default settings that can be
+# committed to version control. Secret or sensitive values should go in .env
+# or in environment variables managed by your deployment platform.
+
+github:
+  callback_url: "http://localhost:3000/auth/login/github"
+  authorization_url: "https://github.com/login/oauth/authorize"
+  token_url: "https://github.com/login/oauth/access_token"
+  user_profile_url: "https://api.github.com/user"
+
+jwt:
+  access_token_expiration_time: 86400
+  refresh_token_expiration_time: 604800
+
+frontend_base_url: "http://localhost:5173"
+
+yorkie:
+  api_addr: "http://localhost:8080"
+  project_name: "default"
+  project_secret_key: ""
+
+storage:
+  type: "minio"
+  bucket_name: "default-storage"
+  minio_endpoint: "http://localhost:9000"
+  minio_access_key: "minioadmin"
+  minio_secret_key: "minioadmin"
+  aws_region: "your_aws_region_here"
