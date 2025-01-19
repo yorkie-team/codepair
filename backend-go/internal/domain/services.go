@@ -1,33 +1,44 @@
 package domain
 
 import (
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/yorkie-team/codepair/backend-go/internal/config"
+	"github.com/yorkie-team/codepair/backend-go/internal/database"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/auth"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/document"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/files"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/intelligence"
+	"github.com/yorkie-team/codepair/backend-go/internal/domain/settings"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/user"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/workspace"
-	"go.mongodb.org/mongo-driver/v2/mongo"
+	"github.com/yorkie-team/codepair/backend-go/internal/server"
+	"github.com/yorkie-team/codepair/backend-go/internal/storage"
+	"github.com/yorkie-team/codepair/backend-go/internal/token"
+	"github.com/yorkie-team/codepair/backend-go/internal/yorkie"
 )
 
 type Services struct {
-	Github       *auth.Service
+	Auth         *auth.Service
 	User         *user.Service
 	Workspace    *workspace.Service
 	Document     *document.Service
 	File         *files.Service
 	Intelligence *intelligence.Service
+	Settings     *settings.Service
 }
 
-func NewServices(db *mongo.Database, storage s3.StorageClassAnalysis, cfg *config.Config) *Services {
+func NewServices(
+	cfg *server.Config,
+	db database.Database,
+	st storage.Provider,
+	tk *token.Manager,
+	yk *yorkie.Yorkie,
+) *Services {
 	return &Services{
-		Github:       auth.NewService(cfg),
+		Auth:         auth.NewService(cfg.Auth, db, tk),
 		User:         user.NewService(db),
-		Workspace:    workspace.NewService(db, cfg),
-		Document:     document.NewService(db, cfg),
-		File:         files.NewService(storage, cfg.BucketName),
+		Workspace:    workspace.NewService(db),
+		Document:     document.NewService(db, yk),
+		File:         files.NewService(st),
 		Intelligence: intelligence.NewService(),
+		Settings:     settings.NewService(),
 	}
 }

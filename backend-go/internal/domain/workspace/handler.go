@@ -1,9 +1,7 @@
 package workspace
 
 import (
-	"github.com/yorkie-team/codepair/backend-go/internal/domain/workspace/dto"
-	"net/http"
-
+	"errors"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,55 +16,17 @@ func NewHandler(workspaceService *Service) *Handler {
 }
 
 func (h *Handler) Create(c echo.Context) error {
-	var req dto.CreateWorkspaceRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	userID := c.Get("userID").(string)
-	workspace, err := h.workspaceService.Create(userID, req.Title)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, workspace)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) List(c echo.Context) error {
-	userID := c.Get("userID").(string)
-	workspaces, err := h.workspaceService.List(userID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, workspaces)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) Get(c echo.Context) error {
-	workspaceID := c.Param("id")
-	userID := c.Get("userID").(string)
-
-	workspace, err := h.workspaceService.Get(workspaceID, userID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, workspace)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) CreateInvitationToken(c echo.Context) error {
-	var req dto.CreateInvitationTokenRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	userID := c.Get("userID").(string)
-	token, err := h.workspaceService.CreateInvitationToken(req.WorkspaceID, userID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, dto.CreateInvitationTokenResponse{
-		InvitationToken: token,
-	})
+	return errors.New("not implemented")
 }

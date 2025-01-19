@@ -1,9 +1,7 @@
 package files
 
 import (
-	"github.com/yorkie-team/codepair/backend-go/internal/domain/files/dto"
-	"net/http"
-
+	"errors"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,39 +16,13 @@ func NewHandler(fileService *Service) *Handler {
 }
 
 func (h *Handler) CreateUploadPresignedURL(c echo.Context) error {
-	var req dto.CreateUploadPresignedUrlRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	resp, err := h.service.CreateUploadPresignedURL(req)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, resp)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) CreateDownloadPresignedURL(c echo.Context) error {
-	fileKey := c.Param("file_name")
-	url, err := h.service.CreateDownloadPresignedURL(fileKey)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(http.StatusFound, url)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) ExportMarkdown(c echo.Context) error {
-	var req dto.ExportFileRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	resp, err := h.service.ExportMarkdown(req)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.Blob(http.StatusOK, resp.MimeType, resp.FileContent)
+	return errors.New("not implemented")
 }

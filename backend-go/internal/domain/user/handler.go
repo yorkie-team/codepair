@@ -1,8 +1,7 @@
 package user
 
 import (
-	"net/http"
-
+	"errors"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,25 +16,9 @@ func NewHandler(userService *Service) *Handler {
 }
 
 func (h *Handler) GetProfile(c echo.Context) error {
-	userID := c.Get("userID").(string)
-	user, err := h.service.FindByID(userID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "user not found")
-	}
-
-	return c.JSON(http.StatusOK, user)
+	return errors.New("not implemented")
 }
 
 func (h *Handler) UpdateProfile(c echo.Context) error {
-	var req dto.ChangeNicknameRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	userID := c.Get("userID").(string)
-	if err := h.service.ChangeNickname(userID, req.Nickname); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.NoContent(http.StatusOK)
+	return errors.New("not implemented")
 }

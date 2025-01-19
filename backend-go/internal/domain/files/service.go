@@ -1,54 +1,29 @@
 package files
 
 import (
-	"fmt"
-	"github.com/yorkie-team/codepair/backend-go/internal/domain/files/dto"
+	"errors"
 	"github.com/yorkie-team/codepair/backend-go/internal/storage"
-	"math/rand"
 )
 
 type Service struct {
-	storage    storage.Provider
-	bucketName string
+	storage storage.Provider
 }
 
-func NewService(storage storage.Provider, bucketName string) *Service {
+func NewService(storage storage.Provider) *Service {
 	return &Service{
-		storage:    storage,
-		bucketName: bucketName,
+		storage: storage,
 	}
 }
 
-func (s *Service) CreateUploadPresignedURL(req dto.CreateUploadPresignedUrlRequest) (*dto.CreateUploadPresignedUrlResponse, error) {
-
-	return &dto.CreateUploadPresignedUrlResponse{}, nil
+func (s *Service) CreateUploadPresignedURL() (string, error) {
+	return "", errors.New("not implemented")
 }
 
 func (s *Service) CreateDownloadPresignedURL(fileKey string) (string, error) {
 
-	return "", nil
+	return "", errors.New("not implemented")
 }
 
-func (s *Service) ExportMarkdown(req dto.ExportFileRequest) (*dto.ExportFileResponse, error) {
-	switch req.ExportType {
-	case "markdown":
-		return &dto.ExportFileResponse{}, nil
-	case "html":
-		// TODO: Implement HTML conversion
-		return nil, fmt.Errorf("HTML export not implemented")
-	case "pdf":
-		// TODO: Implement PDF conversion
-		return nil, fmt.Errorf("PDF export not implemented")
-	default:
-		return nil, fmt.Errorf("invalid export type")
-	}
-}
-
-func generateRandomKey() string {
-	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-	result := make([]byte, 8)
-	for i := range result {
-		result[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(result)
+func (s *Service) ExportMarkdown() error {
+	return errors.New("not implemented")
 }
