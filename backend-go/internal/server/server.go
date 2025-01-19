@@ -2,33 +2,46 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/yorkie-team/codepair/backend-go/internal/api/routes"
-	"github.com/yorkie-team/codepair/backend-go/internal/config"
-	"github.com/yorkie-team/codepair/backend-go/internal/database/mongodb"
+	"github.com/yorkie-team/codepair/backend-go/internal/database/mongo"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain"
+	"github.com/yorkie-team/codepair/backend-go/internal/storage"
+	"github.com/yorkie-team/codepair/backend-go/internal/storage/minio"
+	"github.com/yorkie-team/codepair/backend-go/internal/storage/s3"
+	"github.com/yorkie-team/codepair/backend-go/internal/token"
+	"github.com/yorkie-team/codepair/backend-go/internal/transport/routes"
+	"github.com/yorkie-team/codepair/backend-go/internal/yorkie"
 )
 
 type CodePair struct {
-	config     *config.Config
+	config     *Config
 	httpServer *echo.Echo
 }
 
-func New(c *config.Config) *CodePair {
-	db, err := mongodb.New()
+func New(config *Config) (*CodePair, error) {
+	db, err := mongo.Dial(config.Mongo)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	storage,err:=
 
-	services := domain.NewServices(db, c)
+	var stg storage.Provider
+	if config.Storage.Provider == "s3" {
+		stg = s3.New(config.Storage.S3)
+	} else {
+		stg = minio.New(config.Storage.Minio)
+	}
+
+	tok := token.New(config.JWT)
+	y := yorkie.New(config.Yorkie)
+
+	services := domain.NewServices(config, db, stg, tok, y)
 	handlers := domain.NewHandlers(services)
 	e := echo.New()
-	routes.RegisterRoutes(e, handlers)
+	routes.RegisterRoutes(e, handlers, tok)
 	return &CodePair{
-		config: c,
-	}
+		config: config,
+	}, nil
 }
 
-func (c *CodePair) Start() {
-
+func (c *CodePair) Start() error {
+	return c.httpServer.Start(":" + c.config.Port)
 }
