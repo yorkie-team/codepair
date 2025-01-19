@@ -3,8 +3,6 @@ module github.com/yorkie-team/codepair/backend-go
 go 1.23.3
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.32.8
-	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.17.48
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.72.2
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/labstack/echo/v4 v4.13.3
