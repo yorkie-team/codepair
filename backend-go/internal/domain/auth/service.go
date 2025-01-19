@@ -1,112 +1,71 @@
 package auth
 
 import (
+	"context"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend-go/internal/config"
-	"github.com/yorkie-team/codepair/backend-go/internal/domain/auth/dto"
-	"net/http"
-	"time"
-
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/yorkie-team/codepair/backend-go/internal/database"
+	"github.com/yorkie-team/codepair/backend-go/internal/domain/auth/github"
+	"github.com/yorkie-team/codepair/backend-go/internal/token"
 )
 
 type Service struct {
-	cfg        *config.GithubConfig
-	httpClient *http.Client
+	github       *github.OAuth
+	tokenManager token.Manager
+	database     database.Database
+	config       *Config
 }
 
-func NewService(cfg *config.GithubConfig) *Service {
+func NewService(config *Config, db database.Database, tm *token.Manager) *Service {
+	g := github.New(config.Github)
 	return &Service{
-		cfg:        cfg,
-		httpClient: &http.Client{},
+		database:     db,
+		tokenManager: *tm,
+		github:       g,
+		config:       config,
 	}
+}
+
+func (s *Service) GetFrontendURL() string {
+	return s.config.FrontendURL
 }
 
 func (s *Service) GetGithubAuthURL() string {
-	return fmt.Sprintf(
-		"https://github.com/login/oauth/authorize?client_id=%s&scope=user",
-		s.cfg.ClientID,
-	)
+	return s.github.AuthCodeURL()
 }
 
-func (s *Service) HandleGithubCallback(code string) (*dto.GithubAccessTokenResponse, error) {
-	// Exchange code for access token
-	githubToken, err := s.exchangeCodeForToken(code)
+func (s *Service) GithubCallback(ctx context.Context, code string) (string, string, error) {
+	socialID, err := s.github.GetSocialID(ctx, code)
 	if err != nil {
-		return nil, err
+		return "", "", fmt.Errorf("failed to fetch user info from GitHub: %w", err)
 	}
 
-	// Get user info from GitHub
-	user, err := s.getGithubUser(githubToken)
+	user, err := s.database.FindUserBySocialUID(ctx, "github", socialID, true)
 	if err != nil {
-		return nil, err
+		return "", "", fmt.Errorf("failed to find or create user: %w", err)
 	}
 
-	// Generate JWT tokens
-	accessToken, err := s.generateAccessToken(user.ID)
+	accessToken, err := s.tokenManager.GenerateAccessToken(user.GetID())
 	if err != nil {
-		return nil, err
+		return "", "", fmt.Errorf("failed to generate access token: %w", err)
 	}
-
-	refreshToken, err := s.generateRefreshToken(user.ID)
+	refreshToken, err := s.tokenManager.GenerateRefreshToken(user.GetID())
 	if err != nil {
-		return nil, err
+		return "", "", fmt.Errorf("failed to generate refresh token: %w", err)
 	}
 
-	return &dto.GithubAccessTokenResponse{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}, nil
+	return accessToken, refreshToken, nil
 }
 
-func (s *Service) RefreshToken(refreshToken string) (*models2.TokenResponse, error) {
-	// Validate refresh token
-	claims := &jwt.RegisteredClaims{}
-	token, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(s.cfg.JWTSecret), nil
-	})
-
-	if err != nil || !token.Valid {
-		return nil, fmt.Errorf("invalid refresh token")
-	}
-
-	// Generate new access token
-	accessToken, err := s.generateAccessToken(claims.Subject)
+func (s *Service) RefreshToken(refreshToken string) (string, error) {
+	id, err := s.tokenManager.VerifyRefreshToken(refreshToken)
 	if err != nil {
-		return nil, err
+		return "", fmt.Errorf("invalid refresh token: %w", err)
 	}
 
-	return &dto.TokenResponse{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}, nil
-}
-
-func (s *Service) generateAccessToken(userID string) (string, error) {
-	claims := jwt.RegisteredClaims{
-		Subject:   userID,
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+	newAccessToken, err := s.tokenManager.GenerateAccessToken(id)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate new access token: %w", err)
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(s.cfg.JWTSecret))
-}
 
-func (s *Service) generateRefreshToken(userID string) (string, error) {
-	claims := jwt.RegisteredClaims{
-		Subject:   userID,
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(s.cfg.JWTSecret))
-}
-
-// Helper methods for GitHub OAuth flow
-func (s *Service) exchangeCodeForToken(code string) (string, error) {
-	// Implementation for GitHub OAuth token exchange
-	return "", nil
-}
-
-func (s *Service) getGithubUser(token string) (*dto.GithubUser, error) {
-	// Implementation for getting GitHub user info
-	return nil, nil
+	return newAccessToken, nil
 }

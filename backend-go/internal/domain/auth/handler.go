@@ -1,7 +1,8 @@
 package auth
 
 import (
-	"github.com/yorkie-team/codepair/backend-go/internal/domain/auth/dto"
+	"fmt"
+	"github.com/yorkie-team/codepair/backend-go/api/dto"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -18,8 +19,7 @@ func NewHandler(authService *Service) *Handler {
 }
 
 func (h *Handler) GithubLogin(c echo.Context) error {
-	url := h.service.GetGithubAuthURL()
-	return c.Redirect(http.StatusTemporaryRedirect, url)
+	return c.Redirect(http.StatusTemporaryRedirect, h.service.GetGithubAuthURL())
 }
 
 func (h *Handler) GithubCallback(c echo.Context) error {
@@ -28,24 +28,32 @@ func (h *Handler) GithubCallback(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "missing code parameter")
 	}
 
-	tokens, err := h.service.HandleGithubCallback(code)
+	access, refresh, err := h.service.GithubCallback(c.Request().Context(), code)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, tokens)
+	return c.Redirect(
+		http.StatusFound,
+		fmt.Sprintf(
+			"%s/auth/callback?access_token=%s&refresh_token=%s",
+			h.service.GetFrontendURL(), access, refresh,
+		),
+	)
 }
 
 func (h *Handler) RefreshToken(c echo.Context) error {
-	var req dto.RefreshTokenRequest
+	var req dto.RefreshTokenRequestDto
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	tokens, err := h.service.RefreshToken(req.RefreshToken)
+	accessToken, err := h.service.RefreshToken(req.RefreshToken)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, tokens)
+	return c.JSON(http.StatusOK, dto.RefreshTokenResponseDto{
+		NewAccessToken: accessToken,
+	})
 }
