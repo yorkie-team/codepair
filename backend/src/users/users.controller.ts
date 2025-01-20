@@ -8,7 +8,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
-import { AuthroizedRequest } from "src/utils/types/req.type";
+import { AuthorizedRequest } from "src/utils/types/req.type";
 import { FindUserResponse } from "./types/find-user-response.type";
 import { ChangeNicknameDto } from "./dto/change-nickname.dto";
 
@@ -24,7 +24,7 @@ export class UsersController {
 		description: "Return the user information",
 	})
 	@ApiOkResponse({ type: FindUserResponse })
-	async findOne(@Req() req: AuthroizedRequest): Promise<FindUserResponse> {
+	async findOne(@Req() req: AuthorizedRequest): Promise<FindUserResponse> {
 		return this.usersService.findOne(req.user.id);
 	}
 
@@ -39,7 +39,7 @@ export class UsersController {
 	@ApiOkResponse()
 	@ApiConflictResponse({ description: "The nickname conflicts" })
 	async changeNickname(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Body() changeNicknameDto: ChangeNicknameDto
 	): Promise<void> {
 		return this.usersService.changeNickname(req.user.id, changeNicknameDto.nickname);

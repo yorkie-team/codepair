@@ -23,7 +23,7 @@ import {
 	ApiQuery,
 	ApiTags,
 } from "@nestjs/swagger";
-import { AuthroizedRequest } from "src/utils/types/req.type";
+import { AuthorizedRequest } from "src/utils/types/req.type";
 import { CreateWorkspaceDocumentDto } from "./dto/create-workspace-document.dto";
 import { CreateWorkspaceDocumentResponse } from "./types/create-workspace-document-response.type";
 import { UpdateDocumentTitleDto } from "./dto/update-document-title.dto";
@@ -68,7 +68,7 @@ export class WorkspaceDocumentsController {
 		@Param("workspace_id") workspaceId: string,
 		@Param("document_id") documentId: string,
 		@Body() updateDocumentTitleDto: UpdateDocumentTitleDto,
-		@Req() req: AuthroizedRequest
+		@Req() req: AuthorizedRequest
 	): Promise<void> {
 		await this.workspaceDocumentsService.updateTitle(
 			req.user.id,
@@ -101,7 +101,7 @@ export class WorkspaceDocumentsController {
 		required: false,
 	})
 	async findMany(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
@@ -120,7 +120,7 @@ export class WorkspaceDocumentsController {
 			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
 	})
 	async findOne(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Param("document_id") documentId: string
 	): Promise<FindWorkspaceDocumentResponse> {
@@ -138,7 +138,7 @@ export class WorkspaceDocumentsController {
 		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
 	})
 	async create(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Body() createWorkspaceDocumentDto: CreateWorkspaceDocumentDto
 	): Promise<CreateWorkspaceDocumentResponse> {
@@ -161,7 +161,7 @@ export class WorkspaceDocumentsController {
 			"The workspace or document does not exist, or the user lacks the appropriate permissions.",
 	})
 	async createShareToken(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Param("document_id") documentId: string,
 		@Body() createWorkspaceDocumentShareTokenDto: CreateWorkspaceDocumentShareTokenDto
