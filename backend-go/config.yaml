@@ -1,40 +1,43 @@
-port: 3000
+Port: 3000
 
-auth:
-  github:
-    client_id: "your_client_id"
-    client_secret: "your_client_secret"
-    callback_url: "http://localhost:3000/auth/login/github"
-    authorization_url: "https://github.com/login/oauth/authorize"
-    token_url: "https://github.com/login/oauth/access_token"
-    user_profile_url: "https://api.github.com/user"
-  frontend_base_url: "http://localhost:5173"
+Auth:
+  Github:
+    ClientID: "your_client_id"
+    ClientSecret: "your_client_secret"
+    CallbackURL: "http://localhost:3000/auth/login/github"
+    AuthorizationURL: "https://github.com/login/oauth/authorize"
+    TokenURL: "https://github.com/login/oauth/access_token"
+    UserProfileURL: "https://api.github.com/user"
+  FrontendBaseURL: "http://localhost:5173"
 
-jwt:
-  access_token_secret: "your_access_token_secret"
-  access_token_expiration_time: "1d"
-  refresh_token_secret: "your_refresh_token_secret"
-  refresh_token_expiration_time: "7d"
+JWT:
+  AccessTokenSecret: "your_access_token_secret"
+  AccessTokenExpirationTime: "1d"
+  RefreshTokenSecret: "your_refresh_token_secret"
+  RefreshTokenExpirationTime: "7d"
 
-yorkie:
-  api_addr: "http://localhost:8080"
-  project_name: "default"
-  project_secret_key: ""
+Yorkie:
+  APIAddr: "http://localhost:8080"
+  ProjectName: "default"
+  ProjectSecretKey: ""
 
-mongo:
-  database_url: "mongodb://localhost:27017/codepair"
+Mongo:
+  ConnectionTimeout: "10s"
+  ConnectionURI: "mongodb://localhost:27017/codepair"
+  PingTimeout: "5s"
+  DatabaseName: "codepair"
 
-storage:
-  provider: "minio"       # or "s3"
+Storage:
+  Provider: "minio"       # or "s3"
 
-  minio:
-    bucket: "default-storage"
-    endpoint: "http://localhost:9000"
-    access_key: "minioadmin"
-    secret_key: "minioadmin"
+  Minio:
+    Bucket: "default-storage"
+    Endpoint: "http://localhost:9000"
+    AccessKey: "minioadmin"
+    SecretKey: "minioadmin"
 
-  s3:
-    bucket: "default-storage"
-    region: "us-east-1"
-    access_key: "aws_access_key"
-    secret_key: "aws_secret_key"
+  S3:
+    Bucket: "default-storage"
+    Region: "us-east-1"
+    AccessKey: "aws_access_key"
+    SecretKey: "aws_secret_key"

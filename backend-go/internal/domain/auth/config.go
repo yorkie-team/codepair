@@ -5,8 +5,8 @@ import "github.com/yorkie-team/codepair/backend-go/internal/domain/auth/github"
 const DefaultFrontendURL = "http://localhost:5173"
 
 type Config struct {
-	Github      *github.Config `yaml:"github"`
-	FrontendURL string         `yaml:"frontendURL"`
+	Github      *github.Config `yaml:"Github"`
+	FrontendURL string         `yaml:"FrontendBaseURL"`
 }
 
 func (c *Config) EnsureDefaultValue() {

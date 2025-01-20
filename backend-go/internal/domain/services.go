@@ -9,7 +9,6 @@ import (
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/settings"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/user"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain/workspace"
-	"github.com/yorkie-team/codepair/backend-go/internal/server"
 	"github.com/yorkie-team/codepair/backend-go/internal/storage"
 	"github.com/yorkie-team/codepair/backend-go/internal/token"
 	"github.com/yorkie-team/codepair/backend-go/internal/yorkie"
@@ -25,15 +24,16 @@ type Services struct {
 	Settings     *settings.Service
 }
 
+// NewServices wires up all domain services in one place.
 func NewServices(
-	cfg *server.Config,
+	cfg *auth.Config,
 	db database.Database,
 	st storage.Provider,
 	tk *token.Manager,
 	yk *yorkie.Yorkie,
 ) *Services {
 	return &Services{
-		Auth:         auth.NewService(cfg.Auth, db, tk),
+		Auth:         auth.NewService(cfg, db, tk),
 		User:         user.NewService(db),
 		Workspace:    workspace.NewService(db),
 		Document:     document.NewService(db, yk),

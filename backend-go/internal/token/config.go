@@ -14,10 +14,10 @@ const (
 )
 
 type Config struct {
-	AccessTokenSecret          string `yaml:"accessTokenSecret"`
-	AccessTokenExpirationTime  string `yaml:"accessTokenExpirationTime"`
-	RefreshTokenSecret         string `yaml:"refreshTokenSecret"`
-	RefreshTokenExpirationTime string `yaml:"refreshTokenExpirationTime"`
+	AccessTokenSecret          string `yaml:"AccessTokenSecret"`
+	AccessTokenExpirationTime  string `yaml:"AccessTokenExpirationTime"`
+	RefreshTokenSecret         string `yaml:"RefreshTokenSecret"`
+	RefreshTokenExpirationTime string `yaml:"RefreshTokenExpirationTime"`
 }
 
 func (c *Config) EnsureDefaultConfig() {

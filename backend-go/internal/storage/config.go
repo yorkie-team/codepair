@@ -20,11 +20,9 @@ func (c *Config) EnsureDefaultValue() {
 		c.Provider = DefaultProvider
 	}
 
-	if c.Provider == "s3" && c.S3 == nil {
-		c.S3 = &s3.Config{}
+	if c.Provider == "s3" {
 		c.S3.EnsureDefaultValue()
-	} else if c.Provider == "minio" && c.Minio == nil {
-		c.Minio = &minio.Config{}
+	} else if c.Provider == "minio" {
 		c.Minio.EnsureDefaultValue()
 	} else {
 		log.Println("invalid storage provider")

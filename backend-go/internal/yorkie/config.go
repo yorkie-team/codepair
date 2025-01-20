@@ -1,25 +1,25 @@
 package yorkie
 
 const (
-	DefaultAddress          = "localhost:8080"
+	DefaultApiAddr          = "localhost:8080"
 	DefaultProjectName      = "default"
 	DefaultProjectSecretKey = ""
 )
 
 type Config struct {
-	address          string `yaml:"address"`
-	projectName      string `yaml:"projectName"`
-	projectSecretKey string `yaml:"projectSecretKey"`
+	ApiAddr          string `yaml:"ApiAddr"`
+	ProjectName      string `yaml:"ProjectName"`
+	ProjectSecretKey string `yaml:"ProjectSecretKey"`
 }
 
 func (c *Config) EnsureDefaultValue() {
-	if c.address == "" {
-		c.address = DefaultAddress
+	if c.ApiAddr == "" {
+		c.ApiAddr = DefaultApiAddr
 	}
-	if c.projectName == "" {
-		c.projectName = DefaultProjectName
+	if c.ProjectName == "" {
+		c.ProjectName = DefaultProjectName
 	}
-	if c.projectSecretKey == "" {
-		c.projectSecretKey = DefaultProjectSecretKey
+	if c.ProjectSecretKey == "" {
+		c.ProjectSecretKey = DefaultProjectSecretKey
 	}
 }
