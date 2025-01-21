@@ -21,5 +21,13 @@ poetry install --without dev
 ## How To Start
 
 ```sh
-uvicorn src.main:app
+cd src
+uvicorn main:app
 ```
+
+## TODO list
+- [x] env setting
+- [ ] connect with langchain
+- [ ] create pr, issue api
+- [ ] write test code
+- [ ] logging
