@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 	"github.com/yorkie-team/codepair/backend-go/internal/database"
 	"github.com/yorkie-team/codepair/backend-go/internal/database/mongo"
 	"github.com/yorkie-team/codepair/backend-go/internal/domain"
@@ -45,7 +46,9 @@ func New(config *Config) (*CodePair, error) {
 
 // Start runs the HTTP server on the configured port.
 func (c *CodePair) Start() error {
-	addr := ":" + c.config.Port
+	addr := fmt.Sprintf(":%d", c.config.Port)
+
+	log.Infof("Starting server on port %d...", c.config.Port)
 	return c.httpServer.Start(addr)
 }
 

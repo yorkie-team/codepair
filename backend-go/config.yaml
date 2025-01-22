@@ -8,7 +8,7 @@ Auth:
     AuthorizationURL: "https://github.com/login/oauth/authorize"
     TokenURL: "https://github.com/login/oauth/access_token"
     UserProfileURL: "https://api.github.com/user"
-  FrontendBaseURL: "http://localhost:5173"
+  FrontendURL: "http://localhost:5173"
 
 JWT:
   AccessTokenSecret: "your_access_token_secret"
