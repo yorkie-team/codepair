@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+//
+service FilesService {
+  // POST /files
+  // Create Presigned URL for Upload
+  rpc CreateUploadPresignedUrl (CreateUploadPresignedUrlRequest) returns (CreateUploadPresignedUrlResponse);
+
+  // GET /files/{file_name}
+  // Create Presigned URL for Download
+  rpc CreateDownloadPresignedUrl (CreateDownloadPresignedUrlRequest) returns (CreateDownloadPresignedUrlResponse);
+
+  // POST /files/export-markdown (or a more general "export-file" route)
+  rpc ExportFile (ExportFileRequest) returns (ExportFileResponse);
+}
+
+//
+// Messages
+//
+
+// "CreateUploadPresignedUrlDto"
+message CreateUploadPresignedUrlRequest {
+  string workspaceId = 1;
+  int64 contentLength = 2; // 'number' from your spec
+  string contentType = 3;
+}
+
+// "CreateUploadPresignedUrlResponse"
+message CreateUploadPresignedUrlResponse {
+  string url = 1;
+  string fileKey = 2;
+}
+
+message CreateDownloadPresignedUrlRequest {
+  string fileName = 1; // path param
+}
+
+message CreateDownloadPresignedUrlResponse {
+  string url = 1;
+}
+
+// "ExportFileRequestBody"
+message ExportFileRequest {
+  string exportType = 1; // e.g., "markdown", "pdf", etc.
+  string content = 2;    // the data (often markdown)
+  string fileName = 3;
+}
+
+// "ExportFileResponse"
+message ExportFileResponse {
+  // If you want to return the raw file content in-line:
+  bytes fileContent = 1;
+  string mimeType = 2;
+  string fileName = 3;
+}

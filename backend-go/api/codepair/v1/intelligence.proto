@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+// IntelligenceService
+//
+service IntelligenceService {
+  // POST /intelligence
+  // Run Follow Up Yorkie Intelligence after feature running
+  rpc RunFollowUpIntelligence (RunFollowUpIntelligenceRequest) returns (RunFollowUpIntelligenceResponse);
+
+  // POST /intelligence/{feature}
+  // Run the Yorkie Intelligence Feature
+  rpc RunIntelligenceFeature (RunIntelligenceFeatureRequest) returns (RunIntelligenceFeatureResponse);
+}
+
+//
+// Messages
+//
+
+// "RunFollowUpDto"
+message RunFollowUpIntelligenceRequest {
+  string documentId = 1;
+  string memoryKey = 2;
+  string content = 3;
+}
+
+message RunFollowUpIntelligenceResponse {
+  // e.g., processed output or summary
+  string result = 1;
+}
+
+// "RunFeatureDto"
+message RunIntelligenceFeatureRequest {
+  string documentId = 1;
+  string content = 2;
+  // "feature" path param might be part of the RPC method name or an extra field
+  // (In REST, you'd have something like /intelligence/summarize)
+}
+
+message RunIntelligenceFeatureResponse {
+  // e.g., processed output or summary
+  string result = 1;
+}

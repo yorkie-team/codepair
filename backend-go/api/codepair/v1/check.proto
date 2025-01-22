@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+
+service CheckService {
+  // POST /check/name-conflict
+  rpc CheckNameConflict (CheckNameConflictRequest) returns (CheckNameConflictResponse);
+
+  // POST /check/yorkie
+  rpc CheckYorkie (CheckYorkieRequest) returns (CheckYorkieResponse);
+}
+
+message CheckNameConflictRequest {
+  string name = 1;
+}
+
+message CheckNameConflictResponse {
+  bool conflict = 1;
+}
+
+message CheckYorkieRequest {
+  string token = 1;
+  YorkieMethod method = 2; // [ActivateClient, DeactivateClient, etc...]
+  repeated string attributes = 3;
+}
+
+enum YorkieMethod {
+  YORKIE_METHOD_UNSPECIFIED = 0;
+  ACTIVATE_CLIENT = 1;
+  DEACTIVATE_CLIENT = 2;
+  ATTACH_DOCUMENT = 3;
+  DETACH_DOCUMENT = 4;
+  WATCH_DOCUMENTS = 5;
+  PUSH_PULL = 6;
+}
+
+message CheckYorkieResponse {
+  bool allowed = 1;
+  string reason = 2;
+}

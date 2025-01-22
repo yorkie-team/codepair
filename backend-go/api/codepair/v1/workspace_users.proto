@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+//
+// WorkspaceUsersService
+//
+service WorkspaceUsersService {
+  // GET /workspaces/{workspace_id}/users
+  rpc GetWorkspaceUsers (GetWorkspaceUsersRequest) returns (GetWorkspaceUsersResponse);
+}
+
+//
+// Messages
+//
+
+message GetWorkspaceUsersRequest {
+  string workspaceId = 1;
+}
+
+// "FindWorkspaceUsersResponse"
+message GetWorkspaceUsersResponse {
+  repeated WorkspaceUser workspaceUsers = 1;
+  string cursor = 2;
+}

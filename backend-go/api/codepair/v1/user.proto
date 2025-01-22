@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+service UsersService {
+  // GET /users
+  // Retrieve info about the currently authenticated user
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+
+  // PUT /users
+  // Change the Nickname of the User
+  rpc ChangeNickname (ChangeNicknameRequest) returns (ChangeNicknameResponse);
+}
+
+message GetUserRequest {
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message ChangeNicknameRequest {
+  string nickname = 1; // minLength: 2
+}
+
+message ChangeNicknameResponse {
+}

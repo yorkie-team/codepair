@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+
+service AuthService {
+  // GET /auth/login/github
+  // SignUp/LogIn with GitHub
+  rpc LoginWithGithub (LoginWithGithubRequest) returns (LoginWithGithubResponse);
+
+  // POST /auth/refresh
+  // Refresh Access Token
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+}
+
+
+message LoginWithGithubRequest {
+}
+
+message LoginWithGithubResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message RefreshTokenRequest {
+  string refreshToken = 1;
+}
+
+message RefreshTokenResponse {
+  string newAccessToken = 1;
+}

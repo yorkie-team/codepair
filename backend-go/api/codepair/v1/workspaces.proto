@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import "api/codepair/v1/resources.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+
+//
+// WorkspacesService
+//
+service WorkspacesService {
+  // POST /workspaces
+  rpc CreateWorkspace (CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
+
+  // GET /workspaces
+  rpc GetWorkspaces (GetWorkspacesRequest) returns (GetWorkspacesResponse);
+
+  // GET /workspaces/{workspace_slug}
+  rpc GetWorkspace (GetWorkspaceRequest) returns (GetWorkspaceResponse);
+
+  // POST /workspaces/{workspace_id}/invite-token
+  rpc CreateInvitationToken (CreateInvitationTokenRequest) returns (CreateInvitationTokenResponse);
+
+  // POST /workspaces/join
+  rpc JoinWorkspace (JoinWorkspaceRequest) returns (JoinWorkspaceResponse);
+}
+
+message CreateWorkspaceRequest {
+  string title = 1; // minLength: 2
+}
+
+message CreateWorkspaceResponse {
+  Workspace workspace = 1;
+}
+
+message GetWorkspacesRequest {
+}
+
+message GetWorkspacesResponse {
+  repeated Workspace workspaces = 1;
+  string cursor = 2;
+}
+
+message GetWorkspaceRequest {
+}
+
+message GetWorkspaceResponse {
+  Workspace workspace = 1;
+}
+
+message CreateInvitationTokenRequest {
+  string expiredAt = 2; // date-time
+}
+
+// "CreateInvitationTokenResponse"
+message CreateInvitationTokenResponse {
+  string invitationToken = 1;
+}
+
+// "JoinWorkspaceDto"
+message JoinWorkspaceRequest {
+  string invitationToken = 1;
+}
+
+// "JoinWorkspaceResponse"
+message JoinWorkspaceResponse {
+  // If you want to return the entire workspace object:
+  string id = 1;
+  string title = 2;
+  string slug = 3;
+  string createdAt = 4;
+  string updatedAt = 5;
+}
