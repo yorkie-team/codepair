@@ -23,7 +23,7 @@ import {
 	ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
-import { AuthroizedRequest } from "src/utils/types/req.type";
+import { AuthorizedRequest } from "src/utils/types/req.type";
 import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
@@ -48,7 +48,7 @@ export class WorkspacesController {
 	@ApiBody({ type: CreateWorkspaceDto })
 	@ApiCreatedResponse({ type: CreateWorkspaceResponse })
 	async create(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Body() createWorkspaceDto: CreateWorkspaceDto
 	): Promise<CreateWorkspaceResponse> {
 		return this.workspacesService.create(req.user.id, createWorkspaceDto.title);
@@ -65,7 +65,7 @@ export class WorkspacesController {
 		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
 	})
 	async findOne(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_slug") workspaceSlug: string
 	): Promise<FindWorkspaceResponse> {
 		return this.workspacesService.findOneBySlug(req.user.id, encodeURI(workspaceSlug));
@@ -91,7 +91,7 @@ export class WorkspacesController {
 		required: false,
 	})
 	async findMany(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
 	): Promise<FindWorkspacesResponse> {
@@ -115,7 +115,7 @@ export class WorkspacesController {
 		description: "The workspace does not exist, or the user lacks the appropriate permissions.",
 	})
 	async createInvitationToken(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Body() createInvitationTokenDto: CreateInvitationTokenDto
 	): Promise<CreateInvitationTokenResponse> {
@@ -143,7 +143,7 @@ export class WorkspacesController {
 		type: HttpExceptionResponse,
 	})
 	async join(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Body() joinWorkspaceDto: JoinWorkspaceDto
 	): Promise<JoinWorkspaceResponse> {
 		return this.workspacesService.join(req.user.id, joinWorkspaceDto.invitationToken);

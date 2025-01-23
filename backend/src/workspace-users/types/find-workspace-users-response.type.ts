@@ -7,4 +7,7 @@ export class FindWorkspaceUsersResponse {
 
 	@ApiProperty({ type: String, description: "The ID of last workspace user" })
 	cursor: string | null;
+
+	@ApiProperty({ type: Number, description: "The number of total workspace users" })
+	totalLength: number;
 }
