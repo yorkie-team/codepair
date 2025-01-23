@@ -1,5 +1,4 @@
-import { useParams } from "react-router-dom";
-import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
+import AddIcon from "@mui/icons-material/Add";
 import {
 	Box,
 	Button,
@@ -15,16 +14,18 @@ import {
 	TableRow,
 	Typography,
 } from "@mui/material";
-import InfiniteScroll from "react-infinite-scroller";
-import { useGetWorkspaceUserListQuery } from "../../../hooks/api/workspaceUser";
 import { useMemo, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { User } from "../../../hooks/api/types/user";
+import InfiniteScroll from "react-infinite-scroller";
+import { useParams } from "react-router-dom";
 import MemberModal from "../../../components/modals/MemberModal";
+import { User } from "../../../hooks/api/types/user";
+import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
+import { useGetWorkspaceUserListQuery } from "../../../hooks/api/workspaceUser";
 
 function MemberIndex() {
 	const params = useParams();
 	const { data: workspace } = useGetWorkspaceQuery(params.workspaceSlug);
+
 	const {
 		data: workspaceUserPageList,
 		fetchNextPage,
@@ -51,7 +52,7 @@ function MemberIndex() {
 					<Typography variant="h5" fontWeight="bold">
 						{workspace?.title}{" "}
 						<Typography component="span" variant="inherit" color="primary">
-							{userList.length}
+							{workspaceUserPageList?.pages[0].totalLength}
 						</Typography>
 					</Typography>
 					<Button

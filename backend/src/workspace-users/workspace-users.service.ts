@@ -55,9 +55,22 @@ export class WorkspaceUsersService {
 			...additionalOptions,
 		});
 
+		const totalLength = await this.prismaService.user.count({
+			where: {
+				userWorkspaceList: {
+					some: {
+						workspaceId: {
+							equals: workspaceId,
+						},
+					},
+				},
+			},
+		});
+
 		return {
 			workspaceUsers: workspaceUserList.slice(0, pageSize),
 			cursor: workspaceUserList.length > pageSize ? workspaceUserList[pageSize].id : null,
+			totalLength,
 		};
 	}
 }
