@@ -8,7 +8,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { FindWorkspaceUsersResponse } from "./types/find-workspace-users-response.type";
-import { AuthroizedRequest } from "src/utils/types/req.type";
+import { AuthorizedRequest } from "src/utils/types/req.type";
 import { WorkspaceUsersService } from "./workspace-users.service";
 import { HttpExceptionResponse } from "src/utils/types/http-exception-response.type";
 
@@ -42,7 +42,7 @@ export class WorkspaceUsersController {
 		required: false,
 	})
 	async findMany(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
 		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string

@@ -8,7 +8,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { IntelligenceService } from "./intelligence.service";
-import { AuthroizedRequest } from "src/utils/types/req.type";
+import { AuthorizedRequest } from "src/utils/types/req.type";
 import { Feature } from "./types/feature.type";
 import { RunFeatureDto } from "./dto/run-feature.dto";
 import { Response } from "express";
@@ -30,7 +30,7 @@ export class IntelligenceController {
 	})
 	@ApiOkResponse({ type: String })
 	async runFollowUp(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Res() res: Response,
 		@Body() runFollowUpDto: RunFollowUpDto
 	): Promise<void> {
@@ -53,7 +53,7 @@ export class IntelligenceController {
 	})
 	@ApiOkResponse({ type: String })
 	async runFeature(
-		@Req() req: AuthroizedRequest,
+		@Req() req: AuthorizedRequest,
 		@Res() res: Response,
 		@Param("feature") feature: Feature,
 		@Body() runFeatureDto: RunFeatureDto
