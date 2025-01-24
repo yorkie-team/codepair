@@ -2,18 +2,28 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import  "codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
 service UsersService {
   // GET /users
   // Retrieve info about the currently authenticated user
-  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/users"
+    };
+  }
 
   // PUT /users
   // Change the Nickname of the User
-  rpc ChangeNickname (ChangeNicknameRequest) returns (ChangeNicknameResponse);
+  rpc ChangeNickname (ChangeNicknameRequest) returns (ChangeNicknameResponse) {
+    option (google.api.http) = {
+      put: "/users"
+      body: "*"
+    };
+  }
 }
 
 message GetUserRequest {

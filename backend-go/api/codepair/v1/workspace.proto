@@ -1,0 +1,198 @@
+syntax = "proto3";
+
+package codepair.v1;
+
+import  "codepair/v1/resources.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
+
+service WorkspacesService {
+  rpc CreateWorkspace (CreateWorkspaceRequest) returns (CreateWorkspaceResponse) {
+    option (google.api.http) = {
+      post: "/workspaces"
+      body: "*"
+    };
+  }
+
+  rpc GetWorkspaces (GetWorkspacesRequest) returns (GetWorkspacesResponse) {
+    option (google.api.http) = {
+      get: "/workspaces"
+    };
+  }
+
+  rpc GetWorkspace (GetWorkspaceRequest) returns (GetWorkspaceResponse) {
+    option (google.api.http) = {
+      get: "/workspaces/{workspace_slug}"
+    };
+  }
+
+  rpc CreateInvitationToken (CreateInvitationTokenRequest) returns (CreateInvitationTokenResponse) {
+    option (google.api.http) = {
+      post: "/workspaces/{workspace_id}/invite-token"
+      body: "*"
+    };
+  }
+
+  rpc JoinWorkspace (JoinWorkspaceRequest) returns (JoinWorkspaceResponse) {
+    option (google.api.http) = {
+      post: "/workspaces/join"
+      body: "*"
+    };
+  }
+
+  // PUT /workspaces/{workspace_id}/documents/{document_id}
+  rpc UpdateDocumentTitle (UpdateDocumentTitleRequest) returns (UpdateDocumentTitleResponse) {
+    option (google.api.http) = {
+      put: "/workspaces/{workspace_id}/documents/{document_id}"
+      body: "*"
+    };
+  }
+
+  // GET /workspaces/{workspace_id}/documents/{document_id}
+  rpc GetDocument (GetDocumentRequest) returns (GetDocumentResponse) {
+    option (google.api.http) = {
+      get: "/workspaces/{workspace_id}/documents/{document_id}"
+    };
+  }
+
+  // GET /workspaces/{workspace_id}/documents
+  rpc GetDocuments (GetDocumentsRequest) returns (GetDocumentsResponse) {
+    option (google.api.http) = {
+      get: "/workspaces/{workspace_id}/documents"
+    };
+  }
+
+  // POST /workspaces/{workspace_id}/documents
+  rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentResponse) {
+    option (google.api.http) = {
+      post: "/workspaces/{workspace_id}/documents"
+      body: "*"
+    };
+  }
+
+  // POST /workspaces/{workspace_id}/documents/{document_id}/share-token
+  rpc CreateDocumentShareToken (CreateDocumentShareTokenRequest) returns (CreateDocumentShareTokenResponse) {
+    option (google.api.http) = {
+      post: "/workspaces/{workspace_id}/documents/{document_id}/share-token"
+      body: "*"
+    };
+  }
+
+  // GET /workspaces/{workspace_id}/users
+  rpc GetWorkspaceUsers (GetWorkspaceUsersRequest) returns (GetWorkspaceUsersResponse) {
+    option (google.api.http) = {
+      get: "/workspaces/{workspace_id}/users"
+    };
+  }
+}
+
+message CreateWorkspaceRequest {
+  string title = 1; // minLength: 2
+}
+
+message CreateWorkspaceResponse {
+  Workspace workspace = 1;
+}
+
+message GetWorkspacesRequest {
+}
+
+message GetWorkspacesResponse {
+  repeated Workspace workspaces = 1;
+  string cursor = 2;
+}
+
+// We add the workspaceSlug field to map GET /workspaces/{workspace_slug}
+message GetWorkspaceRequest {
+  string workspace_slug = 1;
+}
+
+message GetWorkspaceResponse {
+  Workspace workspace = 1;
+}
+
+// We add the workspaceId field to map POST /workspaces/{workspace_id}/invite-token
+message CreateInvitationTokenRequest {
+  string workspace_id = 1;
+  string expired_at = 2; // date-time
+}
+
+message CreateInvitationTokenResponse {
+  string invitation_token = 1;
+}
+
+message JoinWorkspaceRequest {
+  string invitation_token = 1;
+}
+
+message JoinWorkspaceResponse {
+  string id = 1;
+  string title = 2;
+  string slug = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message UpdateDocumentTitleRequest {
+  string workspace_id = 1;
+  string document_id = 2;
+  string title = 3;
+}
+
+message UpdateDocumentTitleResponse {
+  bool success = 1;
+}
+
+message GetDocumentRequest {
+  string workspace_id = 1;
+  string document_id = 2;
+}
+
+message GetDocumentResponse {
+  Document document = 1;
+}
+
+message GetDocumentsRequest {
+  string workspace_id = 1;
+}
+
+message GetDocumentsResponse {
+  repeated Document documents = 1;
+}
+
+message CreateDocumentRequest {
+  string workspace_id = 1;
+  string title = 2; // required
+  // If you also want initial content, add: string content = 3;
+}
+
+message CreateDocumentResponse {
+  string id = 1;
+  string yorkie_document_id = 2;
+  string title = 3;
+  string content = 4;
+  string created_at = 5;
+  string updated_at = 6;
+  string workspace_id = 7;
+}
+
+message CreateDocumentShareTokenRequest {
+  string workspace_id = 1;
+  string document_id = 2;
+  DocumentShareRole role = 3; // [DOCUMENT_SHARE_ROLE_READ, DOCUMENT_SHARE_ROLE_EDIT]
+  string expired_at = 4;       // date-time
+}
+
+message CreateDocumentShareTokenResponse {
+  string sharing_token = 1;
+}
+
+message GetWorkspaceUsersRequest {
+  string workspace_id = 1;
+}
+
+message GetWorkspaceUsersResponse {
+  repeated WorkspaceUser workspace_users = 1;
+  string cursor = 2;
+}

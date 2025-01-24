@@ -2,17 +2,26 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
-
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
 service CheckService {
   // POST /check/name-conflict
-  rpc CheckNameConflict (CheckNameConflictRequest) returns (CheckNameConflictResponse);
+  rpc CheckNameConflict (CheckNameConflictRequest) returns (CheckNameConflictResponse) {
+    option (google.api.http) = {
+      post: "/check/name-conflict"
+      body: "*"
+    };
+  }
 
   // POST /check/yorkie
-  rpc CheckYorkie (CheckYorkieRequest) returns (CheckYorkieResponse);
+  rpc CheckYorkie (CheckYorkieRequest) returns (CheckYorkieResponse) {
+    option (google.api.http) = {
+      post: "/check/yorkie"
+      body: "*"
+    };
+  }
 }
 
 message CheckNameConflictRequest {
@@ -25,18 +34,18 @@ message CheckNameConflictResponse {
 
 message CheckYorkieRequest {
   string token = 1;
-  YorkieMethod method = 2; // [ActivateClient, DeactivateClient, etc...]
+  YorkieMethod method = 2; // [YORKIE_METHOD_ACTIVATE_CLIENT, YORKIE_METHOD_DEACTIVATE_CLIENT, etc...]
   repeated string attributes = 3;
 }
 
 enum YorkieMethod {
   YORKIE_METHOD_UNSPECIFIED = 0;
-  ACTIVATE_CLIENT = 1;
-  DEACTIVATE_CLIENT = 2;
-  ATTACH_DOCUMENT = 3;
-  DETACH_DOCUMENT = 4;
-  WATCH_DOCUMENTS = 5;
-  PUSH_PULL = 6;
+  YORKIE_METHOD_ACTIVATE_CLIENT = 1;
+  YORKIE_METHOD_DEACTIVATE_CLIENT = 2;
+  YORKIE_METHOD_ATTACH_DOCUMENT = 3;
+  YORKIE_METHOD_DETACH_DOCUMENT = 4;
+  YORKIE_METHOD_WATCH_DOCUMENTS = 5;
+  YORKIE_METHOD_PUSH_PULL = 6;
 }
 
 message CheckYorkieResponse {

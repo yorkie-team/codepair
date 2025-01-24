@@ -2,35 +2,41 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import  "codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
 // DocumentsService
 //
 service DocumentsService {
   // GET /documents/share
-  // Retrieve a Shared Document using Sharing Token
-  rpc GetDocumentFromShareToken (GetDocumentFromShareTokenRequest) returns (GetDocumentFromShareTokenResponse);
+  // Retrieve a Shared Document using Sharing Token (passed as query param)
+  //
+  // If you plan to do: GET /documents/share?sharing_token=xxx
+  // you typically just do "get: /documents/share" and parse query yourself.
+  // Or, if you'd rather do GET /documents/share/{sharing_token}, adjust below:
+  rpc GetDocumentFromShareToken (GetDocumentFromShareTokenRequest) returns (GetDocumentFromShareTokenResponse) {
+    option (google.api.http) = {
+      get: "/documents/share"
+    };
+  }
 }
 
-//
 // Messages
-//
-
-// Possibly pass the token as a query param or in the request message
 message GetDocumentFromShareTokenRequest {
-  string sharingToken = 1;
+  // Possibly passed in as a query param;
+  // you'll handle the parsing in your server code.
+  string sharing_token = 1;
 }
 
-// "FindDocumentFromSharingTokenResponse"
 message GetDocumentFromShareTokenResponse {
   string id = 1;
-  string yorkieDocumentId = 2;
+  string yorkie_document_id = 2;
   string title = 3;
   string content = 4;
-  string createdAt = 5;
-  string updatedAt = 6;
-  string workspaceId = 7;
-  DocumentShareRole role = 8; // [READ, EDIT]
+  string created_at = 5;
+  string updated_at = 6;
+  string workspace_id = 7;
+  DocumentShareRole role = 8; // [DOCUMENT_SHARE_ROLE_READ, DOCUMENT_SHARE_ROLE_EDIT]
 }

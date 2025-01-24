@@ -2,34 +2,37 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
-
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
 service AuthService {
-  // GET /auth/login/github
-  // SignUp/LogIn with GitHub
-  rpc LoginWithGithub (LoginWithGithubRequest) returns (LoginWithGithubResponse);
+  rpc LoginWithGithub (LoginWithGithubRequest) returns (LoginWithGithubResponse) {
+    option (google.api.http) = {
+      get: "/auth/login/github"
+    };
+  }
 
-  // POST /auth/refresh
-  // Refresh Access Token
-  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      post: "/auth/refresh"
+      body: "*"
+    };
+  }
 }
-
 
 message LoginWithGithubRequest {
 }
 
 message LoginWithGithubResponse {
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message RefreshTokenRequest {
-  string refreshToken = 1;
+  string refresh_token = 1;
 }
 
 message RefreshTokenResponse {
-  string newAccessToken = 1;
+  string new_access_token = 1;
 }

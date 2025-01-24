@@ -2,38 +2,29 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
-//
-// SettingsService
-//
 service SettingsService {
   // GET /settings
-  rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse);
+  rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse) {
+    option (google.api.http) = {
+      get: "/settings"
+    };
+  }
 }
-
-//
-// Messages
-//
 
 message GetSettingsRequest {
-  // Possibly no input, or user ID, etc.
 }
 
-// "GetSettingsResponse"
 message GetSettingsResponse {
-  // Yorkie Intelligence config
-  YorkieIntelligenceConfig yorkieIntelligence = 1;
-  // File upload config
-  FileUploadConfig fileUpload = 2;
+  YorkieIntelligenceConfig yorkie_intelligence = 1;
+  FileUploadConfig file_upload = 2;
 }
 
 message YorkieIntelligenceConfig {
   bool enable = 1;
-  // If you want to keep the config as a JSON object, you can store it as string
-  // or define a more detailed structure. For now, let's keep it simple:
   string config = 2;
 }
 

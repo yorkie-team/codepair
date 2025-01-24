@@ -2,60 +2,69 @@ syntax = "proto3";
 
 package codepair.v1;
 
-import "api/codepair/v1/resources.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/yorkie-team/codepair/backend-go/api/codepair/v1;v1";
+option go_package = "github.com/yorkie-team/codepair/backend-go/api/codeapir/v1;v1";
 
-//
+
 service FilesService {
   // POST /files
   // Create Presigned URL for Upload
-  rpc CreateUploadPresignedUrl (CreateUploadPresignedUrlRequest) returns (CreateUploadPresignedUrlResponse);
+  rpc CreateUploadPresignedUrl (CreateUploadPresignedUrlRequest) returns (CreateUploadPresignedUrlResponse) {
+    option (google.api.http) = {
+      post: "/files"
+      body: "*"
+    };
+  }
 
   // GET /files/{file_name}
   // Create Presigned URL for Download
-  rpc CreateDownloadPresignedUrl (CreateDownloadPresignedUrlRequest) returns (CreateDownloadPresignedUrlResponse);
+  rpc CreateDownloadPresignedUrl (CreateDownloadPresignedUrlRequest) returns (CreateDownloadPresignedUrlResponse) {
+    option (google.api.http) = {
+      get: "/files/{file_name}"
+    };
+  }
 
-  // POST /files/export-markdown (or a more general "export-file" route)
-  rpc ExportFile (ExportFileRequest) returns (ExportFileResponse);
+  // POST /files/export-markdown
+  // or a more general route (like "/files/export")
+  rpc ExportFile (ExportFileRequest) returns (ExportFileResponse) {
+    option (google.api.http) = {
+      post: "/files/export-markdown"
+      body: "*"
+    };
+  }
 }
 
-//
 // Messages
-//
 
-// "CreateUploadPresignedUrlDto"
 message CreateUploadPresignedUrlRequest {
-  string workspaceId = 1;
-  int64 contentLength = 2; // 'number' from your spec
-  string contentType = 3;
+  string workspace_id = 1;
+  int64 content_length = 2;
+  string content_type = 3;
 }
 
-// "CreateUploadPresignedUrlResponse"
 message CreateUploadPresignedUrlResponse {
   string url = 1;
-  string fileKey = 2;
+  string file_key = 2;
 }
 
 message CreateDownloadPresignedUrlRequest {
-  string fileName = 1; // path param
+  // Matches the path param {file_name} in the method annotation
+  string file_name = 1;
 }
 
 message CreateDownloadPresignedUrlResponse {
   string url = 1;
 }
 
-// "ExportFileRequestBody"
 message ExportFileRequest {
-  string exportType = 1; // e.g., "markdown", "pdf", etc.
-  string content = 2;    // the data (often markdown)
-  string fileName = 3;
+  string export_type = 1; // e.g., "markdown", "pdf", etc.
+  string content = 2;
+  string file_name = 3;
 }
 
-// "ExportFileResponse"
 message ExportFileResponse {
-  // If you want to return the raw file content in-line:
-  bytes fileContent = 1;
-  string mimeType = 2;
-  string fileName = 3;
+  bytes file_content = 1;
+  string mime_type = 2;
+  string file_name = 3;
 }
