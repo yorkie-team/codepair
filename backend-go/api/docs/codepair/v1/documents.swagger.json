@@ -1,0 +1,122 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "codepair/v1/documents.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "DocumentsService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/documents/share": {
+      "get": {
+        "summary": "GET /documents/share\nRetrieve a Shared Document using Sharing Token (passed as query param)",
+        "description": "If you plan to do: GET /documents/share?sharing_token=xxx\nyou typically just do \"get: /documents/share\" and parse query yourself.\nOr, if you'd rather do GET /documents/share/{sharing_token}, adjust below:",
+        "operationId": "DocumentsService_GetDocumentFromShareToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDocumentFromShareTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "sharingToken",
+            "description": "Possibly passed in as a query param;\nyou'll handle the parsing in your server code.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DocumentsService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1DocumentShareRole": {
+      "type": "string",
+      "enum": [
+        "DOCUMENT_SHARE_ROLE_UNSPECIFIED",
+        "DOCUMENT_SHARE_ROLE_READ",
+        "DOCUMENT_SHARE_ROLE_EDIT"
+      ],
+      "default": "DOCUMENT_SHARE_ROLE_UNSPECIFIED"
+    },
+    "v1GetDocumentFromShareTokenResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "yorkieDocumentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "workspaceId": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/v1DocumentShareRole",
+          "title": "[DOCUMENT_SHARE_ROLE_READ, DOCUMENT_SHARE_ROLE_EDIT]"
+        }
+      }
+    }
+  }
+}

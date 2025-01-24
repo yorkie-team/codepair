@@ -1,0 +1,174 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "codepair/v1/check.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CheckService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/check/name-conflict": {
+      "post": {
+        "summary": "POST /check/name-conflict",
+        "operationId": "CheckService_CheckNameConflict",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckNameConflictResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CheckNameConflictRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CheckService"
+        ]
+      }
+    },
+    "/check/yorkie": {
+      "post": {
+        "summary": "POST /check/yorkie",
+        "operationId": "CheckService_CheckYorkie",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckYorkieResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CheckYorkieRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CheckService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CheckNameConflictRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CheckNameConflictResponse": {
+      "type": "object",
+      "properties": {
+        "conflict": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1CheckYorkieRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "method": {
+          "$ref": "#/definitions/v1YorkieMethod",
+          "title": "[YORKIE_METHOD_ACTIVATE_CLIENT, YORKIE_METHOD_DEACTIVATE_CLIENT, etc...]"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1CheckYorkieResponse": {
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "v1YorkieMethod": {
+      "type": "string",
+      "enum": [
+        "YORKIE_METHOD_UNSPECIFIED",
+        "YORKIE_METHOD_ACTIVATE_CLIENT",
+        "YORKIE_METHOD_DEACTIVATE_CLIENT",
+        "YORKIE_METHOD_ATTACH_DOCUMENT",
+        "YORKIE_METHOD_DETACH_DOCUMENT",
+        "YORKIE_METHOD_WATCH_DOCUMENTS",
+        "YORKIE_METHOD_PUSH_PULL"
+      ],
+      "default": "YORKIE_METHOD_UNSPECIFIED"
+    }
+  }
+}

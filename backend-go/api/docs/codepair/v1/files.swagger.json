@@ -1,0 +1,212 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "codepair/v1/files.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FilesService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/files": {
+      "post": {
+        "summary": "POST /files\nCreate Presigned URL for Upload",
+        "operationId": "FilesService_CreateUploadPresignedUrl",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateUploadPresignedUrlResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateUploadPresignedUrlRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FilesService"
+        ]
+      }
+    },
+    "/files/export-markdown": {
+      "post": {
+        "summary": "POST /files/export-markdown\nor a more general route (like \"/files/export\")",
+        "operationId": "FilesService_ExportFile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ExportFileResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ExportFileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FilesService"
+        ]
+      }
+    },
+    "/files/{fileName}": {
+      "get": {
+        "summary": "GET /files/{file_name}\nCreate Presigned URL for Download",
+        "operationId": "FilesService_CreateDownloadPresignedUrl",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDownloadPresignedUrlResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileName",
+            "description": "Matches the path param {file_name} in the method annotation",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FilesService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CreateDownloadPresignedUrlResponse": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateUploadPresignedUrlRequest": {
+      "type": "object",
+      "properties": {
+        "workspaceId": {
+          "type": "string"
+        },
+        "contentLength": {
+          "type": "string",
+          "format": "int64"
+        },
+        "contentType": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateUploadPresignedUrlResponse": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "fileKey": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ExportFileRequest": {
+      "type": "object",
+      "properties": {
+        "exportType": {
+          "type": "string",
+          "description": "e.g., \"markdown\", \"pdf\", etc."
+        },
+        "content": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ExportFileResponse": {
+      "type": "object",
+      "properties": {
+        "fileContent": {
+          "type": "string",
+          "format": "byte"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

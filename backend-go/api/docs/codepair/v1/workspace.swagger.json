@@ -1,0 +1,691 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "codepair/v1/workspace.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "WorkspacesService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/workspaces": {
+      "get": {
+        "operationId": "WorkspacesService_GetWorkspaces",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetWorkspacesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "WorkspacesService"
+        ]
+      },
+      "post": {
+        "operationId": "WorkspacesService_CreateWorkspace",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateWorkspaceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateWorkspaceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/join": {
+      "post": {
+        "operationId": "WorkspacesService_JoinWorkspace",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1JoinWorkspaceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1JoinWorkspaceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceId}/documents": {
+      "get": {
+        "summary": "GET /workspaces/{workspace_id}/documents",
+        "operationId": "WorkspacesService_GetDocuments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDocumentsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      },
+      "post": {
+        "summary": "POST /workspaces/{workspace_id}/documents",
+        "operationId": "WorkspacesService_CreateDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkspacesServiceCreateDocumentBody"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceId}/documents/{documentId}": {
+      "get": {
+        "summary": "GET /workspaces/{workspace_id}/documents/{document_id}",
+        "operationId": "WorkspacesService_GetDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      },
+      "put": {
+        "summary": "PUT /workspaces/{workspace_id}/documents/{document_id}",
+        "operationId": "WorkspacesService_UpdateDocumentTitle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDocumentTitleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkspacesServiceUpdateDocumentTitleBody"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceId}/documents/{documentId}/share-token": {
+      "post": {
+        "summary": "POST /workspaces/{workspace_id}/documents/{document_id}/share-token",
+        "operationId": "WorkspacesService_CreateDocumentShareToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDocumentShareTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkspacesServiceCreateDocumentShareTokenBody"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceId}/invite-token": {
+      "post": {
+        "operationId": "WorkspacesService_CreateInvitationToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateInvitationTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkspacesServiceCreateInvitationTokenBody"
+            }
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceId}/users": {
+      "get": {
+        "summary": "GET /workspaces/{workspace_id}/users",
+        "operationId": "WorkspacesService_GetWorkspaceUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetWorkspaceUsersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    },
+    "/workspaces/{workspaceSlug}": {
+      "get": {
+        "operationId": "WorkspacesService_GetWorkspace",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetWorkspaceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceSlug",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "WorkspacesService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "WorkspacesServiceCreateDocumentBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "required"
+        }
+      }
+    },
+    "WorkspacesServiceCreateDocumentShareTokenBody": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "$ref": "#/definitions/v1DocumentShareRole",
+          "title": "[DOCUMENT_SHARE_ROLE_READ, DOCUMENT_SHARE_ROLE_EDIT]"
+        },
+        "expiredAt": {
+          "type": "string",
+          "title": "date-time"
+        }
+      }
+    },
+    "WorkspacesServiceCreateInvitationTokenBody": {
+      "type": "object",
+      "properties": {
+        "expiredAt": {
+          "type": "string",
+          "title": "date-time"
+        }
+      },
+      "title": "We add the workspaceId field to map POST /workspaces/{workspace_id}/invite-token"
+    },
+    "WorkspacesServiceUpdateDocumentTitleBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CreateDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "yorkieDocumentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "workspaceId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateDocumentShareTokenResponse": {
+      "type": "object",
+      "properties": {
+        "sharingToken": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateInvitationTokenResponse": {
+      "type": "object",
+      "properties": {
+        "invitationToken": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateWorkspaceRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "minLength: 2"
+        }
+      }
+    },
+    "v1CreateWorkspaceResponse": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "$ref": "#/definitions/v1Workspace"
+        }
+      }
+    },
+    "v1Document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "yorkieDocumentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "workspaceId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DocumentShareRole": {
+      "type": "string",
+      "enum": [
+        "DOCUMENT_SHARE_ROLE_UNSPECIFIED",
+        "DOCUMENT_SHARE_ROLE_READ",
+        "DOCUMENT_SHARE_ROLE_EDIT"
+      ],
+      "default": "DOCUMENT_SHARE_ROLE_UNSPECIFIED"
+    },
+    "v1GetDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1Document"
+        }
+      }
+    },
+    "v1GetDocumentsResponse": {
+      "type": "object",
+      "properties": {
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Document"
+          }
+        }
+      }
+    },
+    "v1GetWorkspaceResponse": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "$ref": "#/definitions/v1Workspace"
+        }
+      }
+    },
+    "v1GetWorkspaceUsersResponse": {
+      "type": "object",
+      "properties": {
+        "workspaceUsers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1WorkspaceUser"
+          }
+        },
+        "cursor": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetWorkspacesResponse": {
+      "type": "object",
+      "properties": {
+        "workspaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Workspace"
+          }
+        },
+        "cursor": {
+          "type": "string"
+        }
+      }
+    },
+    "v1JoinWorkspaceRequest": {
+      "type": "object",
+      "properties": {
+        "invitationToken": {
+          "type": "string"
+        }
+      }
+    },
+    "v1JoinWorkspaceResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdateDocumentTitleResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1Workspace": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "v1WorkspaceUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

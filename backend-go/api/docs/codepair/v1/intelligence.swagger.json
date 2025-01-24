@@ -1,0 +1,164 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "codepair/v1/intelligence.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "IntelligenceService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/intelligence": {
+      "post": {
+        "summary": "POST /intelligence\nRun Follow Up Yorkie Intelligence after feature running",
+        "operationId": "IntelligenceService_RunFollowUpIntelligence",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RunFollowUpIntelligenceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RunFollowUpIntelligenceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "IntelligenceService"
+        ]
+      }
+    },
+    "/intelligence/{feature}": {
+      "post": {
+        "summary": "POST /intelligence/{feature}\nRun the Yorkie Intelligence Feature",
+        "operationId": "IntelligenceService_RunIntelligenceFeature",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RunIntelligenceFeatureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "feature",
+            "description": "Add 'feature' if you want to map path param {feature}.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IntelligenceServiceRunIntelligenceFeatureBody"
+            }
+          }
+        ],
+        "tags": [
+          "IntelligenceService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "IntelligenceServiceRunIntelligenceFeatureBody": {
+      "type": "object",
+      "properties": {
+        "documentId": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1RunFollowUpIntelligenceRequest": {
+      "type": "object",
+      "properties": {
+        "documentId": {
+          "type": "string"
+        },
+        "memoryKey": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RunFollowUpIntelligenceResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RunIntelligenceFeatureResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
