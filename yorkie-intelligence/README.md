@@ -27,7 +27,12 @@ uvicorn main:app
 
 ## TODO list
 - [x] env setting
-- [ ] connect with langchain
-- [ ] create pr, issue api
-- [ ] write test code
+- [ ] pr feature
+- [ ] issue feature
+- [ ] writing document feature
+- [x] few shot prompting
 - [ ] logging
+- [ ] test code
+- [ ] create endpoint docs
+
+
