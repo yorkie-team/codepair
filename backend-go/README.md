@@ -7,7 +7,7 @@ It is being migrated from the NestJS framework to Go. (Related Issue: [#430](htt
 
 ### Requirements
 
-Below are needed for developing and building Yorkie.
+Below are needed for developing and building CodePair.
 
 - [Go](https://golang.org) (version 1.18+)
 
