@@ -1,4 +1,4 @@
-module codepair/backend
+module github.com/yorkie-team/codepair/backend
 
 go 1.23.3
 
