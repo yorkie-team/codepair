@@ -1,0 +1,23 @@
+run:
+  deadline: 5m
+
+linters:
+  enable:
+    - errcheck
+    - goimports
+    - govet
+    - goconst
+    - gocyclo
+    - gofmt
+    - revive
+    - goprintffuncname
+    - gosec
+    - lll
+    - misspell
+    - nakedret
+    - wrapcheck
+  disable:
+    - gosimple
+    - staticcheck
+    - structcheck
+    - unused
