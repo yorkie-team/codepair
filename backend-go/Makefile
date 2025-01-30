@@ -14,9 +14,15 @@ fmt: ## applies format and simplify codes
 lint: ## runs the golang-ci lint, checks for lint violations
 	golangci-lint run
 
+test: ## run tests
+	go test -v ./...
+
+clean: ## remove build artifacts
+	rm -rf ./bin
+
 help:
 	@echo 'Commands:'
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    %-20s %s\n", $$1, $$2}'
 	@echo
 
-.PHONY: tools build fmt lint help
+.PHONY: tools build fmt lint test clean help
