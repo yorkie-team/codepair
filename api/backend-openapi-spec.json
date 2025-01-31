@@ -668,7 +668,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CheckNameConflicReponse"
+                  "$ref": "#/components/schemas/CheckNameConflictResponse"
                 }
               }
             }
@@ -1249,7 +1249,7 @@
         },
         "required": ["name"]
       },
-      "CheckNameConflicReponse": {
+      "CheckNameConflictResponse": {
         "type": "object",
         "properties": {
           "conflict": {
