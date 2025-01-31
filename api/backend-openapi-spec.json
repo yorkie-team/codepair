@@ -1,1404 +1,1449 @@
 {
-	"openapi": "3.0.0",
-	"paths": {
-		"/users": {
-			"get": {
-				"operationId": "UsersController_findOne",
-				"summary": "Retrieve the Users Information (Myself)",
-				"description": "Return the user information",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/FindUserResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Users"],
-				"security": [{ "bearer": [] }]
-			},
-			"put": {
-				"operationId": "UsersController_changeNickname",
-				"summary": "Change the Nickname of the User",
-				"description": "Change the nickname of the user",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/ChangeNicknameDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": { "description": "" },
-					"409": { "description": "The nickname conflicts" }
-				},
-				"tags": ["Users"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/auth/login/github": {
-			"get": {
-				"operationId": "AuthController_login",
-				"summary": "SignUp/LogIn with GitHub",
-				"description": "SignUp/Login with GitHub social login",
-				"parameters": [],
-				"responses": {
-					"default": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/LoginResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Auth"]
-			}
-		},
-		"/auth/refresh": {
-			"post": {
-				"operationId": "AuthController_refresh",
-				"summary": "Refresh Access Token",
-				"description": "Generates a new Access Token using the user's Refresh Token.",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/RefreshTokenRequestDto" }
-						}
-					}
-				},
-				"responses": {
-					"default": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/RefreshTokenResponseDto" }
-							}
-						}
-					}
-				},
-				"tags": ["Auth"]
-			}
-		},
-		"/workspaces": {
-			"post": {
-				"operationId": "WorkspacesController_create",
-				"summary": "Create a Workspace",
-				"description": "Create a workspace with the title.",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CreateWorkspaceDto" }
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/CreateWorkspaceResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspaces"],
-				"security": [{ "bearer": [] }]
-			},
-			"get": {
-				"operationId": "WorkspacesController_findMany",
-				"summary": "Retrieve the Workspaces",
-				"description": "Return the user's workspaces. This API supports KeySet pagination.",
-				"parameters": [
-					{
-						"name": "page_size",
-						"required": false,
-						"in": "query",
-						"description": "Page size to fetch (Default to 10)",
-						"schema": { "type": "number" }
-					},
-					{
-						"name": "cursor",
-						"required": false,
-						"in": "query",
-						"description": "API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/FindWorkspacesResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspaces"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_slug}": {
-			"get": {
-				"operationId": "WorkspacesController_findOne",
-				"summary": "Retrieve a Workspace",
-				"description": "If the user has the access permissions, return a workspace.",
-				"parameters": [
-					{
-						"name": "workspace_slug",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/FindWorkspaceResponse" }
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspaces"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_id}/invite-token": {
-			"post": {
-				"operationId": "WorkspacesController_createInvitationToken",
-				"summary": "Create a Invitation Token",
-				"description": "Create a inviation token using JWT.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"description": "ID of workspace to create invitation token",
-						"schema": { "type": "string" }
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CreateInvitationTokenDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CreateInvitationTokenResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspaces"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/join": {
-			"post": {
-				"operationId": "WorkspacesController_join",
-				"summary": "Join to the Workspace",
-				"description": "Join to the workspace using JWT invitation token.",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/JoinWorkspaceDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/JoinWorkspaceResponse" }
-							}
-						}
-					},
-					"401": {
-						"description": "Invitation token is invalid or expired.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspaces"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_id}/users": {
-			"get": {
-				"operationId": "WorkspaceUsersController_findMany",
-				"summary": "Retrieve the Users in Workspace",
-				"description": "Return the users in the workspace. This API supports KeySet pagination.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					},
-					{
-						"name": "page_size",
-						"required": false,
-						"in": "query",
-						"description": "Page size to fetch (Default to 10)",
-						"schema": { "type": "number" }
-					},
-					{
-						"name": "cursor",
-						"required": false,
-						"in": "query",
-						"description": "API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FindWorkspaceUsersResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Users"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_id}/documents/{document_id}": {
-			"put": {
-				"operationId": "WorkspaceDocumentsController_updateTitle",
-				"summary": "Update the title of a document in the workspace",
-				"description": "If the user has the access permissions, update the document's title.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"description": "ID of workspace",
-						"schema": { "type": "string" }
-					},
-					{
-						"name": "document_id",
-						"required": true,
-						"in": "path",
-						"description": "ID of document to change title",
-						"schema": { "type": "string" }
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"description": "The new title of the document",
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/UpdateDocumentTitleDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": { "description": "Document title updated successfully" },
-					"404": {
-						"description": "The workspace or document does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Documents"],
-				"security": [{ "bearer": [] }]
-			},
-			"get": {
-				"operationId": "WorkspaceDocumentsController_findOne",
-				"summary": "Retrieve a Document in the Workspace",
-				"description": "If the user has the access permissions, return a document.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					},
-					{
-						"name": "document_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FindWorkspaceDocumentResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace or document does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Documents"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_id}/documents": {
-			"get": {
-				"operationId": "WorkspaceDocumentsController_findMany",
-				"summary": "Retrieve the Documents in Workspace",
-				"description": "Return the documents in the workspace. This API supports KeySet pagination.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					},
-					{
-						"name": "page_size",
-						"required": false,
-						"in": "query",
-						"description": "Page size to fetch (Default to 10)",
-						"schema": { "type": "number" }
-					},
-					{
-						"name": "cursor",
-						"required": false,
-						"in": "query",
-						"description": "API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FindWorkspaceDocumentsResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Documents"],
-				"security": [{ "bearer": [] }]
-			},
-			"post": {
-				"operationId": "WorkspaceDocumentsController_create",
-				"summary": "Create a Document in a Workspace",
-				"description": "Create a document with the title in a workspace",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CreateWorkspaceDocumentDto" }
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CreateWorkspaceDocumentResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Documents"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/workspaces/{workspace_id}/documents/{document_id}/share-token": {
-			"post": {
-				"operationId": "WorkspaceDocumentsController_createShareToken",
-				"summary": "Retrieve a Share Token for the Document",
-				"description": "If the user has the access permissions, return a share token.",
-				"parameters": [
-					{
-						"name": "workspace_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					},
-					{
-						"name": "document_id",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateWorkspaceDocumentShareTokenDto"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CreateWorkspaceDocumentShareTokenResponse"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The workspace or document does not exist, or the user lacks the appropriate permissions.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Workspace.Documents"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/documents/share": {
-			"get": {
-				"operationId": "DocumentsController_findDocumentFromSharingToken",
-				"summary": "Retrieve a Shared Document using Sharing Token",
-				"description": "If the user has the access permissions, return a shared document.",
-				"parameters": [
-					{
-						"name": "token",
-						"required": true,
-						"in": "query",
-						"description": "Sharing Token",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FindDocumentFromSharingTokenResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "The sharing token is expired or invalid.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					},
-					"404": {
-						"description": "The document does not exist.",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/HttpExceptionResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Documents"]
-			}
-		},
-		"/check/name-conflict": {
-			"post": {
-				"operationId": "CheckController_checkNameConflict",
-				"summary": "Check Whether The Name Conflicts with Username or Title of Workspace.",
-				"description": "If the name is conflict, it returns true.",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CheckNameConflictDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/CheckNameConflicReponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Check"]
-			}
-		},
-		"/check/yorkie": {
-			"post": {
-				"operationId": "CheckController_checkYorkie",
-				"summary": "Check Whether The Access is Authorized",
-				"description": "If the user doesn't have the permission, reject the access",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CheckYorkieDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/CheckYorkieResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Check"]
-			}
-		},
-		"/intelligence": {
-			"post": {
-				"operationId": "IntelligenceController_runFollowUp",
-				"summary": "Run the Follow Up Yorkie Intelligence after Feature Running",
-				"description": "Run the follow up requests",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/RunFollowUpDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": { "application/json": { "schema": { "type": "string" } } }
-					}
-				},
-				"tags": ["Intelligences"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/intelligence/{feature}": {
-			"post": {
-				"operationId": "IntelligenceController_runFeature",
-				"summary": "Run the Yorkie Intelligence Feature",
-				"description": "Run the selected yorkie intelligence",
-				"parameters": [
-					{
-						"name": "feature",
-						"required": true,
-						"in": "path",
-						"description": "Feature of intelligence to run",
-						"schema": {
-							"enum": ["github-issue", "github-pr", "document-writing"],
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/RunFeatureDto" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": { "application/json": { "schema": { "type": "string" } } }
-					}
-				},
-				"tags": ["Intelligences"],
-				"security": [{ "bearer": [] }]
-			}
-		},
-		"/files": {
-			"post": {
-				"operationId": "FilesController_createUploadPresignedUrl",
-				"summary": "Create Presigned URL for Upload",
-				"description": "Create rresigned URL for upload",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/CreateUploadPresignedUrlDto" }
-						}
-					}
-				},
-				"responses": {
-					"default": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CreateUploadPresignedUrlResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": ["Files"]
-			}
-		},
-		"/files/{file_name}": {
-			"get": {
-				"operationId": "FilesController_createDownloadPresignedUrl",
-				"summary": "Create Presigned URL for Download",
-				"description": "Create Presigned URL for download",
-				"parameters": [
-					{
-						"name": "file_name",
-						"required": true,
-						"in": "path",
-						"schema": { "type": "string" }
-					}
-				],
-				"responses": { "200": { "description": "" } },
-				"tags": ["Files"]
-			}
-		},
-		"/files/export-markdown": {
-			"post": {
-				"operationId": "FilesController_exportMarkdown",
-				"summary": "Export Markdown",
-				"description": "Export Markdown to various formats",
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": { "$ref": "#/components/schemas/ExportFileRequestBody" }
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/ExportFileResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Files"]
-			}
-		},
-		"/settings": {
-			"get": {
-				"operationId": "SettingsController_getSettings",
-				"summary": "Get Settings",
-				"description": "Get Settings of CodePair",
-				"parameters": [],
-				"responses": {
-					"302": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": { "$ref": "#/components/schemas/GetSettingsResponse" }
-							}
-						}
-					}
-				},
-				"tags": ["Settings"]
-			}
-		}
-	},
-	"info": {
-		"title": "CodePair",
-		"description": "The CodePair API description",
-		"version": "1.0",
-		"contact": {}
-	},
-	"tags": [],
-	"servers": [],
-	"components": {
-		"securitySchemes": {
-			"bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" }
-		},
-		"schemas": {
-			"FindUserResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of user" },
-					"nickname": { "type": "string", "description": "Nickname of user" },
-					"lastWorkspaceSlug": {
-						"type": "string",
-						"description": "Last worksace slug of user"
-					},
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of user"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of user"
-					}
-				},
-				"required": ["id", "createdAt", "updatedAt"]
-			},
-			"ChangeNicknameDto": {
-				"type": "object",
-				"properties": {
-					"nickname": {
-						"type": "string",
-						"description": "Nickname of user to update",
-						"minLength": 2
-					}
-				},
-				"required": ["nickname"]
-			},
-			"LoginResponse": {
-				"type": "object",
-				"properties": {
-					"accessToken": { "type": "string", "description": "Access token for CodePair" },
-					"refreshToken": {
-						"type": "string",
-						"description": "Refresh token to get a new access token"
-					}
-				},
-				"required": ["accessToken", "refreshToken"]
-			},
-			"RefreshTokenRequestDto": {
-				"type": "object",
-				"properties": {
-					"refreshToken": {
-						"type": "string",
-						"description": "The refresh token to request a new access token"
-					}
-				},
-				"required": ["refreshToken"]
-			},
-			"RefreshTokenResponseDto": {
-				"type": "object",
-				"properties": {
-					"newAccessToken": { "type": "string", "description": "The new access token" }
-				},
-				"required": ["newAccessToken"]
-			},
-			"CreateWorkspaceDto": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Title of project to create",
-						"minLength": 2
-					}
-				},
-				"required": ["title"]
-			},
-			"CreateWorkspaceResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the workspace" },
-					"title": { "type": "string", "description": "Title of the workspace" },
-					"slug": { "type": "string", "description": "Slug of the workspace" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the workspace"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the workspace"
-					}
-				},
-				"required": ["id", "title", "slug", "createdAt", "updatedAt"]
-			},
-			"FindWorkspaceResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the workspace" },
-					"title": { "type": "string", "description": "Title of the workspace" },
-					"slug": { "type": "string", "description": "Slug of the workspace" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the workspace"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the workspace"
-					}
-				},
-				"required": ["id", "title", "slug", "createdAt", "updatedAt"]
-			},
-			"HttpExceptionResponse": {
-				"type": "object",
-				"properties": {
-					"statusCode": {
-						"type": "number",
-						"enum": [
-							100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 300, 301, 302,
-							303, 304, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409,
-							410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 424, 428, 429,
-							500, 501, 502, 503, 504, 505
-						],
-						"description": "Status Code of HTTP Response"
-					},
-					"message": { "type": "string", "description": "Description about the error" }
-				},
-				"required": ["statusCode", "message"]
-			},
-			"WorkspaceDomain": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the workspace" },
-					"title": { "type": "string", "description": "Title of the workspace" },
-					"slug": { "type": "string", "description": "Slug of the workspace" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the workspace"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the workspace"
-					}
-				},
-				"required": ["id", "title", "slug", "createdAt", "updatedAt"]
-			},
-			"FindWorkspacesResponse": {
-				"type": "object",
-				"properties": {
-					"workspaces": {
-						"description": "List of found workspaces",
-						"type": "array",
-						"items": { "$ref": "#/components/schemas/WorkspaceDomain" }
-					},
-					"cursor": { "type": "string", "description": "The ID of last workspace" }
-				},
-				"required": ["workspaces", "cursor"]
-			},
-			"CreateInvitationTokenDto": {
-				"type": "object",
-				"properties": {
-					"expiredAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Expiration date of invitation token"
-					}
-				},
-				"required": ["expiredAt"]
-			},
-			"CreateInvitationTokenResponse": {
-				"type": "object",
-				"properties": {
-					"invitationToken": { "type": "string", "description": "Token for invitation" }
-				},
-				"required": ["invitationToken"]
-			},
-			"JoinWorkspaceDto": {
-				"type": "object",
-				"properties": {
-					"invitationToken": {
-						"type": "string",
-						"description": "Invitation token of workspace to join"
-					}
-				},
-				"required": ["invitationToken"]
-			},
-			"JoinWorkspaceResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the workspace" },
-					"title": { "type": "string", "description": "Title of the workspace" },
-					"slug": { "type": "string", "description": "Slug of the workspace" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the workspace"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the workspace"
-					}
-				},
-				"required": ["id", "title", "slug", "createdAt", "updatedAt"]
-			},
-			"WorkspaceUserDomain": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the user" },
-					"nickname": { "type": "string", "description": "Nickname of the user" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the user"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the user"
-					}
-				},
-				"required": ["id", "nickname", "createdAt", "updatedAt"]
-			},
-			"FindWorkspaceUsersResponse": {
-				"type": "object",
-				"properties": {
-					"workspaceUsers": {
-						"description": "List of found workspace users",
-						"type": "array",
-						"items": { "$ref": "#/components/schemas/WorkspaceUserDomain" }
-					},
-					"cursor": { "type": "string", "description": "The ID of last workspace user" },
-					"totalLength": {
-						"type": "number",
-						"description": "The number of total workspace users"
-					}
-				},
-				"required": ["workspaceUsers", "cursor", "totalLength"]
-			},
-			"UpdateDocumentTitleDto": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "The new title of the document",
-						"example": "Updated Document Title"
-					}
-				},
-				"required": ["title"]
-			},
-			"WorkspaceDocumentDomain": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the document" },
-					"yorkieDocumentId": {
-						"type": "string",
-						"description": "Yorkie Document ID of the document"
-					},
-					"title": { "type": "string", "description": "Title of the document" },
-					"content": { "type": "string", "description": "Content of the document" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the document"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the document"
-					},
-					"workspaceId": {
-						"type": "string",
-						"description": "ID of the workspace that includes the document"
-					}
-				},
-				"required": [
-					"id",
-					"yorkieDocumentId",
-					"title",
-					"createdAt",
-					"updatedAt",
-					"workspaceId"
-				]
-			},
-			"FindWorkspaceDocumentsResponse": {
-				"type": "object",
-				"properties": {
-					"documents": {
-						"description": "List of found workspace documents",
-						"type": "array",
-						"items": { "$ref": "#/components/schemas/WorkspaceDocumentDomain" }
-					},
-					"cursor": { "type": "string", "description": "The ID of last document" },
-					"totalLength": {
-						"type": "number",
-						"description": "The number of total documents"
-					}
-				},
-				"required": ["documents", "cursor", "totalLength"]
-			},
-			"FindWorkspaceDocumentResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the document" },
-					"yorkieDocumentId": {
-						"type": "string",
-						"description": "Yorkie Document ID of the document"
-					},
-					"title": { "type": "string", "description": "Title of the document" },
-					"content": { "type": "string", "description": "Content of the document" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the document"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the document"
-					},
-					"workspaceId": {
-						"type": "string",
-						"description": "ID of the workspace that includes the document"
-					}
-				},
-				"required": [
-					"id",
-					"yorkieDocumentId",
-					"title",
-					"createdAt",
-					"updatedAt",
-					"workspaceId"
-				]
-			},
-			"CreateWorkspaceDocumentDto": {
-				"type": "object",
-				"properties": {
-					"title": { "type": "string", "description": "Title of document to create" }
-				},
-				"required": ["title"]
-			},
-			"CreateWorkspaceDocumentResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the document" },
-					"yorkieDocumentId": {
-						"type": "string",
-						"description": "Yorkie Document ID of the document"
-					},
-					"title": { "type": "string", "description": "Title of the document" },
-					"content": { "type": "string", "description": "Content of the document" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the document"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the document"
-					},
-					"workspaceId": {
-						"type": "string",
-						"description": "ID of the workspace that includes the document"
-					}
-				},
-				"required": [
-					"id",
-					"yorkieDocumentId",
-					"title",
-					"createdAt",
-					"updatedAt",
-					"workspaceId"
-				]
-			},
-			"CreateWorkspaceDocumentShareTokenDto": {
-				"type": "object",
-				"properties": {
-					"role": {
-						"type": "string",
-						"enum": ["READ", "EDIT"],
-						"description": "Role to share"
-					},
-					"expiredAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Share link expiration date"
-					}
-				},
-				"required": ["role", "expiredAt"]
-			},
-			"CreateWorkspaceDocumentShareTokenResponse": {
-				"type": "object",
-				"properties": {
-					"sharingToken": { "type": "string", "description": "Sharing token" }
-				},
-				"required": ["sharingToken"]
-			},
-			"FindDocumentFromSharingTokenResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "string", "description": "ID of the document" },
-					"yorkieDocumentId": {
-						"type": "string",
-						"description": "Yorkie Document ID of the document"
-					},
-					"title": { "type": "string", "description": "Title of the document" },
-					"content": { "type": "string", "description": "Content of the document" },
-					"createdAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Created date of the document"
-					},
-					"updatedAt": {
-						"format": "date-time",
-						"type": "string",
-						"description": "Updated date of the document"
-					},
-					"workspaceId": {
-						"type": "string",
-						"description": "ID of the workspace that includes the document"
-					},
-					"role": {
-						"type": "string",
-						"enum": ["READ", "EDIT"],
-						"description": "Role of share token"
-					}
-				},
-				"required": [
-					"id",
-					"yorkieDocumentId",
-					"title",
-					"createdAt",
-					"updatedAt",
-					"workspaceId",
-					"role"
-				]
-			},
-			"CheckNameConflictDto": {
-				"type": "object",
-				"properties": {
-					"name": { "type": "string", "description": "Name to check conflict" }
-				},
-				"required": ["name"]
-			},
-			"CheckNameConflicReponse": {
-				"type": "object",
-				"properties": {
-					"conflict": { "type": "boolean", "description": "Whether the name is conflict" }
-				},
-				"required": ["conflict"]
-			},
-			"CheckYorkieDto": {
-				"type": "object",
-				"properties": {
-					"token": { "type": "string", "description": "Token from client" },
-					"method": {
-						"type": "string",
-						"enum": [
-							"ActivateClient",
-							"DeactivateClient",
-							"AttachDocument",
-							"DetachDocument",
-							"WatchDocuments",
-							"PushPull"
-						],
-						"description": "Method of Yorkie to invoke"
-					},
-					"attributes": {
-						"description": "Attribute to check auth",
-						"type": "array",
-						"items": { "type": "string" }
-					}
-				},
-				"required": ["token", "method", "attributes"]
-			},
-			"CheckYorkieResponse": {
-				"type": "object",
-				"properties": {
-					"allowed": {
-						"type": "boolean",
-						"description": "Whether the given token is authorized for this document."
-					},
-					"reason": { "type": "string", "description": "Reason for this response" }
-				},
-				"required": ["allowed", "reason"]
-			},
-			"RunFollowUpDto": {
-				"type": "object",
-				"properties": {
-					"documentId": { "type": "string", "description": "ID of document" },
-					"memoryKey": { "type": "string", "description": "Key of chat history" },
-					"content": { "type": "string", "description": "Content to run feature" }
-				},
-				"required": ["documentId", "memoryKey", "content"]
-			},
-			"RunFeatureDto": {
-				"type": "object",
-				"properties": {
-					"documentId": { "type": "string", "description": "ID of document" },
-					"content": { "type": "string", "description": "Content to run feature" }
-				},
-				"required": ["documentId", "content"]
-			},
-			"CreateUploadPresignedUrlDto": {
-				"type": "object",
-				"properties": {
-					"workspaceId": {
-						"type": "string",
-						"description": "ID of workspace to create file"
-					},
-					"contentLength": {
-						"type": "number",
-						"description": "Length of content to upload"
-					},
-					"contentType": { "type": "string", "description": "Type of file" }
-				},
-				"required": ["workspaceId", "contentLength", "contentType"]
-			},
-			"CreateUploadPresignedUrlResponse": {
-				"type": "object",
-				"properties": {
-					"url": { "type": "string", "description": "Presigned URL for upload" },
-					"fileKey": { "type": "string", "description": "Key of file" }
-				},
-				"required": ["url", "fileKey"]
-			},
-			"ExportFileRequestBody": {
-				"type": "object",
-				"properties": {
-					"exportType": { "type": "string", "description": "export file type" },
-					"content": { "type": "string", "description": "markdown string" },
-					"fileName": { "type": "string", "description": "File name" }
-				},
-				"required": ["exportType", "content", "fileName"]
-			},
-			"Buffer": { "type": "object", "properties": {} },
-			"ExportFileResponse": {
-				"type": "object",
-				"properties": {
-					"fileContent": {
-						"description": "File content",
-						"allOf": [{ "$ref": "#/components/schemas/Buffer" }]
-					},
-					"mimeType": { "type": "string", "description": "File mime type" },
-					"fileName": { "type": "string", "description": "File name" }
-				},
-				"required": ["fileContent", "mimeType", "fileName"]
-			},
-			"YorkieIntelligenceConfig": {
-				"type": "object",
-				"properties": {
-					"enable": { "type": "boolean", "description": "Enable Yorkie Intelligence" },
-					"config": { "type": "object", "description": "Yorkie Intelligence Config" }
-				},
-				"required": ["enable", "config"]
-			},
-			"FileUploadConfig": {
-				"type": "object",
-				"properties": {
-					"enable": { "type": "boolean", "description": "Enable File Upload" }
-				},
-				"required": ["enable"]
-			},
-			"GetSettingsResponse": {
-				"type": "object",
-				"properties": {
-					"yorkieIntelligence": {
-						"description": "Yorkie Intelligence Config",
-						"allOf": [{ "$ref": "#/components/schemas/YorkieIntelligenceConfig" }]
-					},
-					"fileUpload": {
-						"description": "File Upload Config",
-						"allOf": [{ "$ref": "#/components/schemas/FileUploadConfig" }]
-					}
-				},
-				"required": ["yorkieIntelligence", "fileUpload"]
-			}
-		}
-	}
+  "openapi": "3.0.0",
+  "paths": {
+    "/users": {
+      "get": {
+        "operationId": "findOneUser",
+        "summary": "Retrieve Authenticated User",
+        "description": "Returns the authenticated user's information.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FindUserResponse" }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      },
+      "put": {
+        "operationId": "updateUserNickname",
+        "summary": "Update User Nickname",
+        "description": "Updates the nickname of the authenticated user.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChangeNicknameRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "" },
+          "409": { "description": "The nickname conflicts with existing one." }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/auth/login/github": {
+      "get": {
+        "operationId": "loginWithGithub",
+        "summary": "Log In or Sign Up via GitHub",
+        "description": "Authenticates the user using GitHub social login. Returns an access token and refresh token.",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refreshAccessToken",
+        "summary": "Refresh Access Token",
+        "description": "Generates a new access token using the provided refresh token.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/workspaces": {
+      "post": {
+        "operationId": "createWorkspace",
+        "summary": "Create a Workspace",
+        "description": "Creates a new workspace with the given title.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkspaceResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspaces"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "findManyWorkspaces",
+        "summary": "Retrieve Workspaces List",
+        "description": "Returns the authenticated user's workspaces. Supports KeySet pagination.",
+        "parameters": [
+          {
+            "name": "page_size",
+            "required": false,
+            "in": "query",
+            "description": "Page size to fetch (defaults to 10)",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindWorkspacesResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspaces"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_slug}": {
+      "get": {
+        "operationId": "findOneWorkspace",
+        "summary": "Retrieve a Specific Workspace",
+        "description": "Returns the workspace if the user has the required access permissions.",
+        "parameters": [
+          {
+            "name": "workspace_slug",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindWorkspaceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist, or the user lacks the appropriate permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspaces"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_id}/invite-token": {
+      "post": {
+        "operationId": "createWorkspaceInvitationToken",
+        "summary": "Create an Invitation Token",
+        "description": "Generates an invitation token (JWT) for inviting users to the specified workspace.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the workspace to which the token grants access",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvitationTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvitationTokenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist, or the user lacks the appropriate permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspaces"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/join": {
+      "post": {
+        "operationId": "joinWorkspace",
+        "summary": "Join a Workspace",
+        "description": "Joins a workspace using a valid JWT invitation token.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/JoinWorkspaceRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinWorkspaceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invitation token is invalid or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspaces"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_id}/users": {
+      "get": {
+        "operationId": "findManyWorkspaceUsers",
+        "summary": "List Users in a Workspace",
+        "description": "Returns a list of users in the specified workspace. Supports KeySet pagination.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "required": false,
+            "in": "query",
+            "description": "Page size to fetch (defaults to 10)",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindWorkspaceUsersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist, or the user lacks the appropriate permissions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_id}/documents/{document_id}": {
+      "put": {
+        "operationId": "updateWorkspaceDocumentTitle",
+        "summary": "Update a Document Title",
+        "description": "Updates the title of a specific document, if the user has access permissions.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the workspace",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "document_id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the document to rename",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The new title of the document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentTitleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Document title updated successfully." },
+          "404": {
+            "description": "The workspace or document does not exist, or the user lacks permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Documents"],
+        "security": [{ "bearer": [] }]
+      },
+      "get": {
+        "operationId": "findOneWorkspaceDocument",
+        "summary": "Retrieve a Document in a Workspace",
+        "description": "Returns a single document from the workspace if the user has access.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "document_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindWorkspaceDocumentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace or document does not exist, or the user lacks permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Documents"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_id}/documents": {
+      "get": {
+        "operationId": "findManyWorkspaceDocuments",
+        "summary": "List Documents in a Workspace",
+        "description": "Returns a paginated list of documents in the specified workspace. Supports KeySet pagination.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page_size",
+            "required": false,
+            "in": "query",
+            "description": "Page size to fetch (defaults to 10)",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindWorkspaceDocumentsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist, or the user lacks permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Documents"],
+        "security": [{ "bearer": [] }]
+      },
+      "post": {
+        "operationId": "createWorkspaceDocument",
+        "summary": "Create a Document",
+        "description": "Creates a new document with a title in the specified workspace.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceDocumentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkspaceDocumentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace does not exist, or the user lacks permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Documents"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/workspaces/{workspace_id}/documents/{document_id}/share-token": {
+      "post": {
+        "operationId": "createWorkspaceDocumentShareToken",
+        "summary": "Create a Document Share Token",
+        "description": "Generates a share token for a document, if the user has the necessary permissions.",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "document_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceDocumentShareTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkspaceDocumentShareTokenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workspace or document does not exist, or the user lacks permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Workspace.Documents"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/documents/share": {
+      "get": {
+        "operationId": "findDocumentFromSharingToken",
+        "summary": "Retrieve Document by Sharing Token",
+        "description": "Returns a shared document if the sharing token is valid and the user has access.",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "description": "Valid sharing token to retrieve the document.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindDocumentFromSharingTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The sharing token is expired or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The document does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Documents"]
+      }
+    },
+    "/check/name-conflict": {
+      "post": {
+        "operationId": "checkNameConflict",
+        "summary": "Check Name Conflict",
+        "description": "Checks if a given name conflicts with any username or workspace title.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckNameConflictRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameConflicReponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Check"]
+      }
+    },
+    "/check/yorkie": {
+      "post": {
+        "operationId": "checkYorkie",
+        "summary": "Check Yorkie Authorization",
+        "description": "Checks if the user is authorized to perform a given Yorkie operation.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CheckYorkieRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckYorkieResponse" }
+              }
+            }
+          }
+        },
+        "tags": ["Check"]
+      }
+    },
+    "/intelligence": {
+      "post": {
+        "operationId": "runFollowUpIntelligence",
+        "summary": "Run Follow-Up Intelligence",
+        "description": "Executes a follow-up request (Yorkie Intelligence) after a feature run.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RunFollowUpRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          }
+        },
+        "tags": ["Intelligences"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/intelligence/{feature}": {
+      "post": {
+        "operationId": "runIntelligenceFeature",
+        "summary": "Run Specific Intelligence Feature",
+        "description": "Executes the chosen Yorkie Intelligence feature.",
+        "parameters": [
+          {
+            "name": "feature",
+            "required": true,
+            "in": "path",
+            "description": "The intelligence feature to run.",
+            "schema": {
+              "enum": ["github-issue", "github-pr", "document-writing"],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RunFeatureRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          }
+        },
+        "tags": ["Intelligences"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/files": {
+      "post": {
+        "operationId": "createUploadPresignedUrl",
+        "summary": "Create Presigned URL (Upload)",
+        "description": "Generates a presigned URL for file upload.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUploadPresignedUrlRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUploadPresignedUrlResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Files"]
+      }
+    },
+    "/files/{file_name}": {
+      "get": {
+        "operationId": "createDownloadPresignedUrl",
+        "summary": "Create Presigned URL (Download)",
+        "description": "Generates a presigned URL for file download.",
+        "parameters": [
+          {
+            "name": "file_name",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Files"]
+      }
+    },
+    "/files/export-markdown": {
+      "post": {
+        "operationId": "exportMarkdown",
+        "summary": "Export Markdown",
+        "description": "Exports the given Markdown content to various file formats.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ExportFileRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExportFileResponse" }
+              }
+            }
+          }
+        },
+        "tags": ["Files"]
+      }
+    },
+    "/settings": {
+      "get": {
+        "operationId": "getSettings",
+        "summary": "Get Application Settings",
+        "description": "Retrieves the application (CodePair) settings for the client.",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindSettingsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Settings"]
+      }
+    }
+  },
+  "info": {
+    "title": "CodePair",
+    "description": "The CodePair API description",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "FindUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "User ID" },
+          "nickname": { "type": "string", "description": "User nickname" },
+          "lastWorkspaceSlug": {
+            "type": "string",
+            "description": "Last accessed workspace slug"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of user creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last user update"
+          }
+        },
+        "required": ["id", "createdAt", "updatedAt"]
+      },
+      "ChangeNicknameRequest": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "New nickname to update",
+            "minLength": 2
+          }
+        },
+        "required": ["nickname"]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access token for CodePair"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token to obtain new access tokens"
+          }
+        },
+        "required": ["accessToken", "refreshToken"]
+      },
+      "RefreshTokenRequestRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token for requesting a new access token"
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "RefreshTokenResponseRequest": {
+        "type": "object",
+        "properties": {
+          "newAccessToken": {
+            "type": "string",
+            "description": "The newly issued access token"
+          }
+        },
+        "required": ["newAccessToken"]
+      },
+      "CreateWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title for the new workspace",
+            "minLength": 2
+          }
+        },
+        "required": ["title"]
+      },
+      "CreateWorkspaceResponse": {
+        "$ref": "#/components/schemas/WorkspaceDomain"
+      },
+      "FindWorkspaceResponse": {
+        "$ref": "#/components/schemas/WorkspaceDomain"
+      },
+      "HttpExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "enum": [
+              100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 300, 301,
+              302, 303, 304, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407,
+              408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422,
+              424, 428, 429, 500, 501, 502, 503, 504, 505
+            ],
+            "description": "HTTP status code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          }
+        },
+        "required": ["statusCode", "message"]
+      },
+      "WorkspaceDomain": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Workspace ID" },
+          "title": {
+            "type": "string",
+            "description": "Title of the workspace"
+          },
+          "slug": { "type": "string", "description": "Slug of the workspace" },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of workspace creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last workspace update"
+          }
+        },
+        "required": ["id", "title", "slug", "createdAt", "updatedAt"]
+      },
+      "FindWorkspacesResponse": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "description": "List of retrieved workspaces",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/WorkspaceDomain" }
+          },
+          "cursor": {
+            "type": "string",
+            "description": "The ID of the last workspace (for pagination)"
+          }
+        },
+        "required": ["workspaces", "cursor"]
+      },
+      "CreateInvitationTokenRequest": {
+        "type": "object",
+        "properties": {
+          "expiredAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Expiration timestamp for the invitation token"
+          }
+        },
+        "required": ["expiredAt"]
+      },
+      "CreateInvitationTokenResponse": {
+        "type": "object",
+        "properties": {
+          "invitationToken": {
+            "type": "string",
+            "description": "Generated token for invitation"
+          }
+        },
+        "required": ["invitationToken"]
+      },
+      "JoinWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "invitationToken": {
+            "type": "string",
+            "description": "Valid invitation token to join the workspace"
+          }
+        },
+        "required": ["invitationToken"]
+      },
+      "JoinWorkspaceResponse": {
+        "$ref": "#/components/schemas/WorkspaceDomain"
+      },
+      "WorkspaceUserDomain": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "User ID" },
+          "nickname": { "type": "string", "description": "User nickname" },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of user creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last user update"
+          }
+        },
+        "required": ["id", "nickname", "createdAt", "updatedAt"]
+      },
+      "FindWorkspaceUsersResponse": {
+        "type": "object",
+        "properties": {
+          "workspaceUsers": {
+            "description": "List of workspace users",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/WorkspaceUserDomain" }
+          },
+          "cursor": {
+            "type": "string",
+            "description": "The ID of the last workspace user (for pagination)"
+          },
+          "totalLength": {
+            "type": "number",
+            "description": "Total count of workspace users"
+          }
+        },
+        "required": ["workspaceUsers", "cursor", "totalLength"]
+      },
+      "UpdateDocumentTitleRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "New title for the document",
+            "example": "Updated Document Title"
+          }
+        },
+        "required": ["title"]
+      },
+      "WorkspaceDocumentDomain": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Document ID" },
+          "yorkieDocumentId": {
+            "type": "string",
+            "description": "Yorkie Document ID associated with the document"
+          },
+          "title": { "type": "string", "description": "Document title" },
+          "content": { "type": "string", "description": "Document content" },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of document creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last document update"
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the workspace containing this document"
+          }
+        },
+        "required": [
+          "id",
+          "yorkieDocumentId",
+          "title",
+          "createdAt",
+          "updatedAt",
+          "workspaceId"
+        ]
+      },
+      "FindWorkspaceDocumentsResponse": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "description": "List of retrieved workspace documents",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/WorkspaceDocumentDomain" }
+          },
+          "cursor": {
+            "type": "string",
+            "description": "The ID of the last document (for pagination)"
+          },
+          "totalLength": {
+            "type": "number",
+            "description": "Total count of documents in the workspace"
+          }
+        },
+        "required": ["documents", "cursor", "totalLength"]
+      },
+      "FindWorkspaceDocumentResponse": {
+        "$ref": "#/components/schemas/WorkspaceDocumentDomain"
+      },
+      "CreateWorkspaceDocumentRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title for the new document"
+          }
+        },
+        "required": ["title"]
+      },
+      "CreateWorkspaceDocumentResponse": {
+        "$ref": "#/components/schemas/WorkspaceDocumentDomain"
+      },
+      "CreateWorkspaceDocumentShareTokenRequest": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["READ", "EDIT"],
+            "description": "Share role for the document"
+          },
+          "expiredAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Expiration timestamp for the share link"
+          }
+        },
+        "required": ["role", "expiredAt"]
+      },
+      "CreateWorkspaceDocumentShareTokenResponse": {
+        "type": "object",
+        "properties": {
+          "sharingToken": {
+            "type": "string",
+            "description": "Token used to share the document"
+          }
+        },
+        "required": ["sharingToken"]
+      },
+      "FindDocumentFromSharingTokenResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Document ID" },
+          "yorkieDocumentId": {
+            "type": "string",
+            "description": "Yorkie Document ID associated with the document"
+          },
+          "title": { "type": "string", "description": "Document title" },
+          "content": { "type": "string", "description": "Document content" },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of document creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last document update"
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the workspace containing this document"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["READ", "EDIT"],
+            "description": "Share role from the token"
+          }
+        },
+        "required": [
+          "id",
+          "yorkieDocumentId",
+          "title",
+          "createdAt",
+          "updatedAt",
+          "workspaceId",
+          "role"
+        ]
+      },
+      "CheckNameConflictRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name to check for conflict"
+          }
+        },
+        "required": ["name"]
+      },
+      "CheckNameConflicReponse": {
+        "type": "object",
+        "properties": {
+          "conflict": {
+            "type": "boolean",
+            "description": "Indicates if the name is already in use"
+          }
+        },
+        "required": ["conflict"]
+      },
+      "CheckYorkieRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Authorization token provided by the client"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "ActivateClient",
+              "DeactivateClient",
+              "AttachDocument",
+              "DetachDocument",
+              "WatchDocuments",
+              "PushPull"
+            ],
+            "description": "Yorkie method to be invoked"
+          },
+          "attributes": {
+            "description": "Additional attributes for authorization",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["token", "method", "attributes"]
+      },
+      "CheckYorkieResponse": {
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "type": "boolean",
+            "description": "Whether the token is authorized for the specified method"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason or message explaining the authorization outcome"
+          }
+        },
+        "required": ["allowed", "reason"]
+      },
+      "RunFollowUpRequest": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "Document ID to apply the follow-up"
+          },
+          "memoryKey": {
+            "type": "string",
+            "description": "Key representing the relevant chat history"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content or query to run the follow-up feature on"
+          }
+        },
+        "required": ["documentId", "memoryKey", "content"]
+      },
+      "RunFeatureRequest": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "Document ID on which the feature will be applied"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content or query for the intelligence feature"
+          }
+        },
+        "required": ["documentId", "content"]
+      },
+      "CreateUploadPresignedUrlRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "description": "Workspace ID where the file will be stored"
+          },
+          "contentLength": {
+            "type": "number",
+            "description": "Size of the content to upload"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "MIME type of the file to be uploaded"
+          }
+        },
+        "required": ["workspaceId", "contentLength", "contentType"]
+      },
+      "CreateUploadPresignedUrlResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Presigned URL for uploading the file"
+          },
+          "fileKey": {
+            "type": "string",
+            "description": "Storage key of the uploaded file"
+          }
+        },
+        "required": ["url", "fileKey"]
+      },
+      "ExportFileRequest": {
+        "type": "object",
+        "properties": {
+          "exportType": {
+            "type": "string",
+            "description": "Target format for export (e.g., PDF, HTML)"
+          },
+          "content": {
+            "type": "string",
+            "description": "Markdown content to be exported"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Desired filename (without extension)"
+          }
+        },
+        "required": ["exportType", "content", "fileName"]
+      },
+      "Buffer": {
+        "type": "object",
+        "properties": {}
+      },
+      "ExportFileResponse": {
+        "type": "object",
+        "properties": {
+          "fileContent": {
+            "description": "Binary content of the exported file",
+            "allOf": [{ "$ref": "#/components/schemas/Buffer" }]
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME type of the exported file"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Name of the exported file (with extension)"
+          }
+        },
+        "required": ["fileContent", "mimeType", "fileName"]
+      },
+      "YorkieIntelligenceConfig": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean",
+            "description": "Whether Yorkie Intelligence features are enabled"
+          },
+          "config": {
+            "type": "object",
+            "description": "Additional Yorkie Intelligence configuration"
+          }
+        },
+        "required": ["enable", "config"]
+      },
+      "FileUploadConfig": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean",
+            "description": "Whether file upload is enabled"
+          }
+        },
+        "required": ["enable"]
+      },
+      "FindSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "yorkieIntelligence": {
+            "description": "Settings related to Yorkie Intelligence",
+            "allOf": [
+              { "$ref": "#/components/schemas/YorkieIntelligenceConfig" }
+            ]
+          },
+          "fileUpload": {
+            "description": "Settings related to file uploads",
+            "allOf": [{ "$ref": "#/components/schemas/FileUploadConfig" }]
+          }
+        },
+        "required": ["yorkieIntelligence", "fileUpload"]
+      }
+    }
+  }
 }
