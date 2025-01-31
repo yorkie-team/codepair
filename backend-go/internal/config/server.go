@@ -1,13 +1,9 @@
 package config
 
-import "time"
-
 const (
-	DefaultServerPort  = 3001
-	DefaultReadTimeout = 10 * time.Second
+	DefaultServerPort = 3001
 )
 
 type Server struct {
-	Port        int
-	ReadTimeout time.Duration
+	Port int
 }

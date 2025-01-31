@@ -7,8 +7,7 @@ type Config struct {
 func LoadConfig() *Config {
 	return &Config{
 		Server: &Server{
-			Port:        DefaultServerPort,
-			ReadTimeout: DefaultReadTimeout,
+			Port: DefaultServerPort,
 		},
 	}
 }
