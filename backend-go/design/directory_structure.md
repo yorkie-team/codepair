@@ -5,7 +5,7 @@ This document explains the purpose and structure of the project's directories.
 ## Project Structure
 
 ```
-project-root/
+backend-go/
 ├── api        # API documentation & DTO definitions
 ├── bin        # Compiled binaries
 ├── cmd        # Application entry points
