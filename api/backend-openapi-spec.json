@@ -71,7 +71,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshTokenRequestRequest"
+                "$ref": "#/components/schemas/RefreshTokenRequest"
               }
             }
           }
@@ -82,7 +82,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RefreshTokenResponseRequest"
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
                 }
               }
             }
@@ -928,7 +928,7 @@
         },
         "required": ["accessToken", "refreshToken"]
       },
-      "RefreshTokenRequestRequest": {
+      "RefreshTokenRequest": {
         "type": "object",
         "properties": {
           "refreshToken": {
@@ -938,7 +938,7 @@
         },
         "required": ["refreshToken"]
       },
-      "RefreshTokenResponseRequest": {
+      "RefreshTokenResponse": {
         "type": "object",
         "properties": {
           "newAccessToken": {
