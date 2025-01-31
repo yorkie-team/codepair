@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/yorkie-team/codepair/backend/internal/config"
@@ -35,13 +36,19 @@ func New(conf *config.Config) *Codepair {
 }
 
 func (c *Codepair) Start() error {
+	errCh := make(chan error, 1)
 	go func() {
 		log.Printf("Server starts running on %d\n", c.config.Server.Port)
 		if err := c.httpServer.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			log.Printf("server error: %v", err)
+			errCh <- fmt.Errorf("server error: %v", err)
 		}
 	}()
-	return nil
+	select {
+	case err := <-errCh:
+		return err
+	case <-time.After(100 * time.Millisecond):
+		return nil
+	}
 }
 
 func (c *Codepair) Shutdown(ctx context.Context) error {
