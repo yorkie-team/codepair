@@ -1,17 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"log"
 
-	"github.com/labstack/echo/v4"
+	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/server"
 )
 
 func main() {
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		err := c.String(http.StatusOK, "Hello, World!")
-		return fmt.Errorf("error: %w", err)
-	})
-	e.Logger.Fatal(e.Start(":3001"))
+	conf := config.LoadConfig()
+
+	cp := server.New(conf)
+
+	if err := cp.Start(); err != nil {
+		log.Fatal(err)
+	}
 }
