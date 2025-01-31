@@ -7,6 +7,23 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.29] - 2025-01-31
+
+### Added
+
+- Add `.nvmrc` to specify Node.js version by @DongjaJ in https://github.com/yorkie-team/codepair/pull/429
+- Initialize echo backend project by @devleejb in https://github.com/yorkie-team/codepair/pull/436
+
+### Changed
+
+- Change displaying updated at field in `DocumentCard` by @devleejb in https://github.com/yorkie-team/codepair/pull/431
+- Bump JamesIves/github-pages-deploy-action from 4.7.1 to 4.7.2 by @dependabot in https://github.com/yorkie-team/codepair/pull/433
+
+### Fixed
+
+- Fix incorrect total user count display on members page by @choidabom in https://github.com/yorkie-team/codepair/pull/426
+- Fix authentication webhook to support multi user workspace by @devleejb in https://github.com/yorkie-team/codepair/pull/438
+
 ## [0.1.28] - 2024-12-13
 
 ### Changed
