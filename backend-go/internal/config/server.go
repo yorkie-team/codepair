@@ -1,26 +1,13 @@
 package config
 
-import (
-	"log"
-	"time"
+import "time"
+
+const (
+	DefaultServerPort  = 3001
+	DefaultReadTimeout = 10 * time.Second
 )
 
 type Server struct {
 	Port        int
-	ReadTimeout string
-}
-
-func (s *Server) Validate() {
-}
-
-func (s *Server) ParseReadTimeout() time.Duration {
-	result, err := time.ParseDuration(s.ReadTimeout)
-	if err != nil {
-		log.Fatalf("parse server read timeout duration: %s", err.Error())
-	}
-
-	return result
-}
-
-func (s *Server) ensureDefaultValue() {
+	ReadTimeout time.Duration
 }
