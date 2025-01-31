@@ -84,7 +84,7 @@ export class CheckService {
 				yorkieDocumentId,
 				workspace: {
 					userWorkspaceList: {
-						every: {
+						some: {
 							userId: sub,
 						},
 					},
