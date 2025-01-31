@@ -15,7 +15,7 @@
     "lint:check": "pnpm run --parallel lint:check",
     "format": "pnpm run --parallel format",
     "format:check": "pnpm run --parallel format:check",
-    "generate-backend-types": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g go-echo-server -o ./backend-go/api/codepair/v1 --global-property models"
+    "generate:backend": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g go-echo-server -o ./backend-go/api/codepair/v1 --global-property models"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.11.0",
