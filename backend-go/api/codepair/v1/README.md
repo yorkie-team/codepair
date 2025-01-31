@@ -1,8 +1,9 @@
 # CodePair Backend API
 
-The types in `./models` are all automatically generated from the [OpenAPI spec](../../../../api/backend-openapi-spec.json).
+> [!CAUTION]
+> Never edit the files in `./models` directly. Instead, edit the OpenAPI spec and regenerate the models.
 
-Never edit the files in `./models` directly. Instead, edit the OpenAPI spec and regenerate the models.
+The types in `./models` are all automatically generated from the [OpenAPI spec](../../../../api/backend-openapi-spec.json).
 
 ## How to generate the models
 
