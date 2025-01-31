@@ -55,7 +55,7 @@ internal
 - Organized into:
     - `database/mongo/` → MongoDB implementation for repositories.
     - `storage/` → Object storage implementations (MinIO, S3).
-    - `yorkie/` → Yorkie API client for collaborative editing.
+    - `yorkie/` → Houses the Yorkie admin client, which handles administrative functions.
 
 #### 4. `internal/middleware`
 
