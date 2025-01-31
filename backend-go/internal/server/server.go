@@ -27,16 +27,18 @@ func New(conf *config.Config) *Codepair {
 	return cp
 }
 
-func (c *Codepair) Start() {
-	go func() {
-		if err := c.echo.Start(fmt.Sprintf(":%d", c.config.Server.Port)); !errors.Is(err, http.ErrServerClosed) {
-			c.echo.Logger.Fatal("start the server:")
-		}
-	}()
+func (c *Codepair) Start() error {
+	addr := fmt.Sprintf(":%d", c.config.Server.Port)
+	if err := c.echo.Start(addr); !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("failed to start server: %w", err)
+	}
+	return nil
 }
 
-func (c *Codepair) Shutdown(ctx context.Context) {
+func (c *Codepair) Shutdown(ctx context.Context) error {
 	if err := c.echo.Shutdown(ctx); err != nil {
-		c.echo.Logger.Fatal(err)
+		return fmt.Errorf("shutdown failed: %w", err)
 	}
+
+	return nil
 }
