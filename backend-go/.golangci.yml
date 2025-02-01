@@ -1,6 +1,8 @@
 run:
   deadline: 5m
-  skip-dirs:
+
+issues:
+  exclude-dirs:
     - api/codepair/v1/models
 
 linters:
@@ -21,5 +23,4 @@ linters:
   disable:
     - gosimple
     - staticcheck
-    - structcheck
     - unused
