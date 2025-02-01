@@ -26,10 +26,6 @@ jobs:
         with:
           go-version: "1.21"
 
-      - name: Download Dependencies
-        run: go mod download
-        working-directory: ${{ env.working-directory }}
-
       - name: Install Tools
         run: make tools
         working-directory: ${{ env.working-directory }}
