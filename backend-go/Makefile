@@ -3,7 +3,7 @@ CODEPAIR_VERSION := 0.2.0
 default: help
 
 tools: ## install tools for developing codepair
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.63.4
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.1
 
 build: ## builds an executable that runs in the current environment
 	go build -o ./bin/codepair ./cmd/codepair
