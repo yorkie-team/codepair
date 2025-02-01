@@ -12,8 +12,10 @@ on:
       - "backend-go/**"
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend-go
 
     steps:
       - name: Check out code
