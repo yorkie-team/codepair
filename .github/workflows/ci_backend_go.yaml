@@ -28,15 +28,20 @@ jobs:
 
       - name: Install Tools
         run: make tools
+        working-directory: ${{ env.working-directory }}
 
       - name: Build
         run: make build
+        working-directory: ${{ env.working-directory }}
 
       - name: Format
         run: make fmt
+        working-directory: ${{ env.working-directory }}
 
       - name: Lint
         run: make lint
+        working-directory: ${{ env.working-directory }}
 
       - name: Test
         run: make test
+        working-directory: ${{ env.working-directory }}
