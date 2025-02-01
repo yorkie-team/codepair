@@ -30,6 +30,10 @@ jobs:
         run: make tools
         working-directory: ${{ env.working-directory }}
 
+      - name: Install Dependencies
+        run: go mod download
+        working-directory: ${{ env.working-directory }}
+
       - name: Format
         run: make fmt
         working-directory: ${{ env.working-directory }}
