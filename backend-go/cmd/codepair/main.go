@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/server"
@@ -12,7 +13,7 @@ func main() {
 	cp := server.New(conf)
 
 	if err := cp.Start(); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+		log.Println(err)
+		os.Exit(1)
 	}
-
 }
