@@ -1,15 +1,20 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongo"
 )
 
 func RegisterRoutes(e *echo.Echo) {
-	e.GET("/", func(c echo.Context) error {
-		err := c.String(http.StatusOK, "Hello, World!")
-		return fmt.Errorf("error: %w", err)
-	})
+	// Repositories
+	helloRepository := mongo.NewHelloRepository()
+
+	// Services
+	helloService := hello.NewService(helloRepository)
+
+	// Handlers
+	helloHandler := hello.NewHandler(helloService)
+
+	e.POST("/hello", helloHandler.HelloCodePair)
 }
