@@ -14,7 +14,9 @@
     "lint": "pnpm run --parallel lint",
     "lint:check": "pnpm run --parallel lint:check",
     "format": "pnpm run --parallel format",
-    "format:check": "pnpm run --parallel format:check"
+    "format:check": "pnpm run --parallel format:check",
+    "generate:backend": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g go-echo-server -o ./backend-go/api/codepair/v1 --global-property models",
+    "generate:frontend": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g typescript-axios -o ./frontend/src/api"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.11.0",
@@ -24,7 +26,8 @@
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^9.1.4",
     "prettier": "^3.3.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@openapitools/openapi-generator-cli": "^2.16.3"
   },
   "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
 }

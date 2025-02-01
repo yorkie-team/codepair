@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@openapitools/openapi-generator-cli':
+        specifier: ^2.16.3
+        version: 2.16.3(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)))(class-transformer@0.5.1)(class-validator@0.14.1)(encoding@0.1.13)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.11.0
         version: 8.13.0(@typescript-eslint/parser@8.13.0(eslint@9.12.0)(typescript@5.6.3))(eslint@9.12.0)(typescript@5.6.3)
@@ -76,7 +79,7 @@ importers:
         version: 10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)
       '@nestjs/swagger':
         specifier: ^7.1.17
-        version: 7.4.2(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)
+        version: 7.4.2(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)
       '@prisma/client':
         specifier: ^5.8.1
         version: 5.21.0(prisma@5.21.0)
@@ -94,7 +97,7 @@ importers:
         version: 1.0.8
       langchain:
         specifier: ^0.1.9
-        version: 0.1.37(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.673.0)(@aws-sdk/credential-provider-node@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0))(@smithy/util-utf8@2.3.0)(axios@1.7.7)(encoding@0.1.13)(fast-xml-parser@4.4.1)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.67.3(encoding@0.1.13)(zod@3.23.8))
+        version: 0.1.37(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.673.0)(@aws-sdk/credential-provider-node@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0))(@smithy/util-utf8@2.3.0)(axios@1.7.9)(encoding@0.1.13)(fast-xml-parser@4.4.1)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.67.3(encoding@0.1.13)(zod@3.23.8))
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -122,7 +125,7 @@ importers:
         version: 10.2.0(chokidar@3.6.0)(typescript@5.3.3)
       '@nestjs/testing':
         specifier: ^10.0.0
-        version: 10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@nestjs/platform-express@10.4.5)
+        version: 10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5))
       '@types/express':
         specifier: ^4.17.17
         version: 4.17.21
@@ -173,7 +176,7 @@ importers:
         version: 33.2.0
       electron-builder:
         specifier: ^25.1.8
-        version: 25.1.8(electron-builder-squirrel-windows@25.1.8)
+        version: 25.1.8(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8))
 
   frontend:
     dependencies:
@@ -206,7 +209,7 @@ importers:
         version: 6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/x-date-pickers':
         specifier: ^7.18.0
-        version: 7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-hook/window-size':
         specifier: ^3.1.1
         version: 3.1.1(react@18.3.1)
@@ -326,7 +329,7 @@ importers:
         version: 7.53.0(react@18.3.1)
       react-hook-form-mui:
         specifier: ^7.0.1
-        version: 7.3.1(45pxt7ogda7skfjs5hpsvhml4q)
+        version: 7.3.1(4zjjjbsyvo2jxzbef6gnoiugzm)
       react-infinite-scroller:
         specifier: ^1.2.6
         version: 1.2.6(react@18.3.1)
@@ -1996,6 +1999,13 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
+  '@nestjs/axios@3.1.3':
+    resolution: {integrity: sha512-RZ/63c1tMxGLqyG3iOCVt7A72oy4x1eM6QEhd4KzCYpaVWW0igq0WSREeRoEZhIxRcZfDfIIkvsOMiM7yfVGZQ==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+      axios: ^1.3.1
+      rxjs: ^6.0.0 || ^7.0.0
+
   '@nestjs/cli@10.4.5':
     resolution: {integrity: sha512-FP7Rh13u8aJbHe+zZ7hM0CC4785g9Pw4lz4r2TTgRtf0zTxSWMkJaPEwyjX8SK9oWK2GsYxl+fKpwVZNbmnj9A==}
     engines: {node: '>= 16.14'}
@@ -2007,6 +2017,19 @@ packages:
       '@swc/cli':
         optional: true
       '@swc/core':
+        optional: true
+
+  '@nestjs/common@10.4.15':
+    resolution: {integrity: sha512-vaLg1ZgwhG29BuLDxPA9OAcIlgqzp9/N8iG0wGapyUNTf4IY4O6zAHgN6QalwLhFxq7nOI021vdRojR1oF3bqg==}
+    peerDependencies:
+      class-transformer: '*'
+      class-validator: '*'
+      reflect-metadata: ^0.1.12 || ^0.2.0
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      class-transformer:
+        optional: true
+      class-validator:
         optional: true
 
   '@nestjs/common@10.4.5':
@@ -2027,6 +2050,23 @@ packages:
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
       rxjs: ^7.1.0
+
+  '@nestjs/core@10.4.15':
+    resolution: {integrity: sha512-UBejmdiYwaH6fTsz2QFBlC1cJHM+3UDeLZN+CiP9I1fRv2KlBZsmozGLbV5eS1JAVWJB4T5N5yQ0gjN8ZvcS2w==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0
+      '@nestjs/microservices': ^10.0.0
+      '@nestjs/platform-express': ^10.0.0
+      '@nestjs/websockets': ^10.0.0
+      reflect-metadata: ^0.1.12 || ^0.2.0
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      '@nestjs/microservices':
+        optional: true
+      '@nestjs/platform-express':
+        optional: true
+      '@nestjs/websockets':
+        optional: true
 
   '@nestjs/core@10.4.5':
     resolution: {integrity: sha512-wk0KJ+6tuidqAdeemsQ40BCp1BgMsSuSLG577aqXLxXYoa8FQYPrdxoSzd05znYLwJYM55fisZWb3FLF9HT2qw==}
@@ -2134,6 +2174,11 @@ packages:
   '@nuxtjs/opencollective@0.3.2':
     resolution: {integrity: sha512-um0xL3fO7Mf4fDxcqx9KryrB7zgRM5JSlvGN5AGkP6JLM5XEKyjeAiPbNxdXVXQ16isuAhYpvP88NgL2BGd6aA==}
     engines: {node: '>=8.0.0', npm: '>=5.0.0'}
+    hasBin: true
+
+  '@openapitools/openapi-generator-cli@2.16.3':
+    resolution: {integrity: sha512-HUpxQW45MLoWruXPvwnS2p6PkbnEIeWuDq4AembALRNGbIbg158k3peBCIbnn4PzGura9TnhaPPjOl3BF5PinQ==}
+    engines: {node: '>=16'}
     hasBin: true
 
   '@pkgjs/parseargs@0.11.0':
@@ -2635,6 +2680,9 @@ packages:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
 
+  '@tootallnate/quickjs-emscripten@0.23.0':
+    resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
+
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
 
@@ -3069,6 +3117,10 @@ packages:
     resolution: {integrity: sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==}
     engines: {node: '>= 14'}
 
+  agent-base@7.1.3:
+    resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
+    engines: {node: '>= 14'}
+
   agentkeepalive@4.5.0:
     resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
     engines: {node: '>= 8.0.0'}
@@ -3226,6 +3278,10 @@ packages:
     resolution: {integrity: sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw==}
     engines: {node: '>=0.8'}
 
+  ast-types@0.13.4:
+    resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
+    engines: {node: '>=4'}
+
   astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
@@ -3246,6 +3302,9 @@ packages:
 
   axios@1.7.7:
     resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
+
+  axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   babel-jest@29.7.0:
     resolution: {integrity: sha512-BrvGY3xZSwEcCzKvKsCi2GgHqDqsYkOP4/by5xCgIwGXQxIEh+8ew3gmrE1y7XRR6LHZIj6yLYnUi/mm2KXKBg==}
@@ -3294,6 +3353,10 @@ packages:
   base64url@3.0.1:
     resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
     engines: {node: '>=6.0.0'}
+
+  basic-ftp@5.0.5:
+    resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
+    engines: {node: '>=10.0.0'}
 
   batch@0.6.1:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
@@ -3573,6 +3636,9 @@ packages:
   cliui@5.0.0:
     resolution: {integrity: sha512-PYeGSEmmHM6zvoef2w8TPzlrnNpXIjTipYK780YswmIP9vjxmd6Y2a3CB2Ks6/AU8NHjZugXvo8w3oWM2qnwXA==}
 
+  cliui@7.0.4:
+    resolution: {integrity: sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==}
+
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
@@ -3673,6 +3739,9 @@ packages:
     resolution: {integrity: sha512-pJDh5/4wrEnXX/VWRZvruAGHkzKdr46z11OlTPN+VrATlWWhSKewNCJ1futCO5C7eJB3nPMFZA1LeYtcFboZ2A==}
     engines: {node: '>=0.10.0'}
 
+  compare-versions@4.1.4:
+    resolution: {integrity: sha512-FemMreK9xNyL8gQevsdRMrvO4lFCkQP7qbuktn1q8ndcNk1+0mz7lgE7b/sNvbhVgY4w6tMN1FDp6aADjqw2rw==}
+
   component-emitter@1.3.1:
     resolution: {integrity: sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==}
 
@@ -3687,6 +3756,11 @@ packages:
     resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}
     engines: {'0': node >= 0.8}
 
+  concurrently@6.5.1:
+    resolution: {integrity: sha512-FlSwNpGjWQfRwPLXvJ/OgysbBxPkWpiVjy1042b0U7on7S7qwwMIILRj7WTN1mTgqa582bG6NFuScOoh6Zgdag==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+
   config-file-ts@0.2.8-rc1:
     resolution: {integrity: sha512-GtNECbVI82bT4RiDIzBSVuTKoSHufnU7Ce7/42bkWZJZFLjmDF2WBpVsvRkhKCfKBnTBb3qZrBwPpFBU/Myvhg==}
 
@@ -3699,6 +3773,10 @@ packages:
 
   console-control-strings@1.1.0:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
+
+  console.table@0.10.0:
+    resolution: {integrity: sha512-dPyZofqggxuvSf7WXvNjuRfnsOk1YazkVP8FdxH4tcH2c37wc79/Yl6Bhr7Lsu00KMgy2ql/qCMuNu8xctZM8g==}
+    engines: {node: '> 0.10'}
 
   content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
@@ -3833,6 +3911,14 @@ packages:
     resolution: {integrity: sha512-/fITjgjGU50vjQ4FH6eUoYu+iUoUKIXws2hL15JJpIR+BbTxaXQsMuuyjtNh2WqsSBS5nsaZHFsFecyw5CCAng==}
     engines: {node: '>=0.10.0'}
 
+  data-uri-to-buffer@6.0.2:
+    resolution: {integrity: sha512-7hvf7/GW8e86rW0ptuwS3OcBGDjIi6SZva7hCyWC0yYry2cOPmLIjXAUHI6DK2HsnwJd9ifmt57i8eV2n4YNpw==}
+    engines: {node: '>= 14'}
+
+  date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+
   de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
 
@@ -3906,6 +3992,10 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
+
+  degenerator@5.0.1:
+    resolution: {integrity: sha512-TllpMR/t0M5sqCXfj85i4XaAzxmS5tVA16dqvdkMwGmzI+dXLXnw3J+3Vdv7VKw+ThlTMboK6i9rnZ6Nntj5CQ==}
+    engines: {node: '>= 14'}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -4023,6 +4113,9 @@ packages:
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
+
+  easy-table@1.1.0:
+    resolution: {integrity: sha512-oq33hWOSSnl2Hoh00tZWaIPi1ievrD9aFG82/IgjlycAnW9hHx5PkJiXpxPsgEE+H7BsbVQXFVFST8TEXS6/pA==}
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -4149,6 +4242,11 @@ packages:
   escape-string-regexp@5.0.0:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
+
+  escodegen@2.1.0:
+    resolution: {integrity: sha512-2NlIDTwUWJN0mRPQOdtQBzbUHvdGY2P1VXSyU83Q3xKxM7WHX2Ql8dKq782Q9TgQUNOLEzEYu9bzLNj1q88I5w==}
+    engines: {node: '>=6.0'}
+    hasBin: true
 
   eslint-config-prettier@9.1.0:
     resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
@@ -4532,6 +4630,10 @@ packages:
     resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
     engines: {node: '>=16'}
 
+  get-uri@6.0.4:
+    resolution: {integrity: sha512-E1b1lFFLvLgak2whF2xDBcOy6NLVGZBqqjJjsIhvopKfWWEi64pLVTWWehV8KlLerZkfNTA95sTe2OdJKm1OzQ==}
+    engines: {node: '>= 14'}
+
   github-slugger@2.0.0:
     resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
 
@@ -4785,6 +4887,10 @@ packages:
 
   https-proxy-agent@7.0.5:
     resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
+    engines: {node: '>= 14'}
+
+  https-proxy-agent@7.0.6:
+    resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
   human-signals@2.1.0:
@@ -6109,6 +6215,10 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
+  netmask@2.0.2:
+    resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
+    engines: {node: '>= 0.4.0'}
+
   node-abi@3.71.0:
     resolution: {integrity: sha512-SZ40vRiy/+wRTf21hxkkEjPJZpARzUMVcJoQse2EF8qkUWbbO2z7vd5oA/H6bVH6SZQ5STGcu0KRDS7biNRfxw==}
     engines: {node: '>=10'}
@@ -6331,6 +6441,14 @@ packages:
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
+
+  pac-proxy-agent@7.1.0:
+    resolution: {integrity: sha512-Z5FnLVVZSnX7WjBg0mhDtydeRZ1xMcATZThjySQUHqr+0ksP8kqaw23fNKkaaN/Z8gwLUs/W7xdl0I75eP2Xyw==}
+    engines: {node: '>= 14'}
+
+  pac-resolver@7.0.1:
+    resolution: {integrity: sha512-5NPgf87AT2STgwa2ntRMr45jTKrYBGkVU36yT0ig/n/GMAa3oPqhZfIQ2kMEimReg0+t9kZViDVZ83qfVUlckg==}
+    engines: {node: '>= 14'}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -6581,6 +6699,10 @@ packages:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
 
+  proxy-agent@6.5.0:
+    resolution: {integrity: sha512-TmatMXdr2KlRiA2CyDu8GqR8EjahTG3aY3nXjdzFyoZbmB8hrBsTyMezhULIXKnC0jpfjlmiZ3+EaCzoInSu/A==}
+    engines: {node: '>= 14'}
+
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
@@ -6802,6 +6924,9 @@ packages:
   redux@5.0.1:
     resolution: {integrity: sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==}
 
+  reflect-metadata@0.1.13:
+    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
+
   reflect-metadata@0.1.14:
     resolution: {integrity: sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==}
 
@@ -6986,6 +7111,10 @@ packages:
   rx-lite@3.1.2:
     resolution: {integrity: sha512-1I1+G2gteLB8Tkt8YI1sJvSIfa0lWuRtC8GjvtyPBcLSF5jBCCJJqKrpER5JU5r6Bhe+i9/pK3VMuUcXu0kdwQ==}
 
+  rxjs@6.6.7:
+    resolution: {integrity: sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==}
+    engines: {npm: '>=2.0.0'}
+
   rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
 
@@ -7120,6 +7249,10 @@ packages:
     resolution: {integrity: sha512-Fgl0YPZ902wEsAyiQ+idGd1A7rSFx/ayC1CQVMw5P+EQx2V0SgpGtf6OKFhVjPflPUl9YMmEOnmfjCdMUsygww==}
     engines: {node: '>= 10'}
 
+  socks-proxy-agent@8.0.5:
+    resolution: {integrity: sha512-HehCEsotFqbPW9sJ8WVYB6UbmIMv7kUUORIF2Nncq4VQvBfNBLibW9YZR5dlYCSUhwcD628pRllm7n+E+YTzJw==}
+    engines: {node: '>= 14'}
+
   socks@2.8.3:
     resolution: {integrity: sha512-l5x7VUUWbjVFbafGLxPWkYsHIhEvmF85tbIeFZWc8ZPtoMyybuEhL7Jye/ooC4/d48FgOjSJXgsF/AJPYCW8Zw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
@@ -7152,6 +7285,9 @@ packages:
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
+
+  spawn-command@0.0.2:
+    resolution: {integrity: sha512-zC8zGoGkmc8J9ndvml8Xksr1Amk9qBujgbF0JAIWO7kXr43w0h/0GJNM/Vustixu+YE8N/MTrQ7N31FvHUACxQ==}
 
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -7541,11 +7677,17 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
+  tslib@1.14.1:
+    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
   tslib@2.8.0:
     resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
+
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -7932,12 +8074,20 @@ packages:
   yargs-parser@13.1.2:
     resolution: {integrity: sha512-3lbsNRf/j+A4QuSZfDRA7HRSfWrzO0YjqTJd5kjAq37Zep1CEgaYmrH9Q3GwPiB9cHyd1Y1UwggGhJGoxipbzg==}
 
+  yargs-parser@20.2.9:
+    resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
+    engines: {node: '>=10'}
+
   yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
 
   yargs@13.3.2:
     resolution: {integrity: sha512-AX3Zw5iPruN5ie6xGRIDgqkT+ZhnRlZMLMHAs8tg7nRruy2Nb+i5o9bwghAogtM08q1dpr2LVoS8KSTMYpWXUw==}
+
+  yargs@16.2.0:
+    resolution: {integrity: sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==}
+    engines: {node: '>=10'}
 
   yargs@17.7.2:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
@@ -9626,7 +9776,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.11
 
-  '@mui/x-date-pickers@7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mui/x-date-pickers@7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.25.7
       '@mui/material': 6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -9642,6 +9792,7 @@ snapshots:
     optionalDependencies:
       '@emotion/react': 11.13.3(@types/react@18.3.11)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1)
+      date-fns: 2.30.0
       moment: 2.30.1
     transitivePeerDependencies:
       - '@types/react'
@@ -9653,6 +9804,12 @@ snapshots:
       react: 18.3.1
     transitivePeerDependencies:
       - '@types/react'
+
+  '@nestjs/axios@3.1.3(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(axios@1.7.9)(rxjs@7.8.1)':
+    dependencies:
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      axios: 1.7.9
+      rxjs: 7.8.1
 
   '@nestjs/cli@10.4.5':
     dependencies:
@@ -9680,6 +9837,17 @@ snapshots:
       - uglify-js
       - webpack-cli
 
+  '@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)':
+    dependencies:
+      iterare: 1.2.1
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.1
+      tslib: 2.8.1
+      uid: 2.0.2
+    optionalDependencies:
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+
   '@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)':
     dependencies:
       iterare: 1.2.1
@@ -9698,6 +9866,22 @@ snapshots:
       dotenv-expand: 10.0.0
       lodash: 4.17.21
       rxjs: 7.8.1
+
+  '@nestjs/core@10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)))(encoding@0.1.13)(reflect-metadata@0.1.13)(rxjs@7.8.1)':
+    dependencies:
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nuxtjs/opencollective': 0.3.2(encoding@0.1.13)
+      fast-safe-stringify: 2.1.1
+      iterare: 1.2.1
+      path-to-regexp: 3.3.0
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.1
+      tslib: 2.8.1
+      uid: 2.0.2
+    optionalDependencies:
+      '@nestjs/platform-express': 10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))
+    transitivePeerDependencies:
+      - encoding
 
   '@nestjs/core@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1)':
     dependencies:
@@ -9734,6 +9918,18 @@ snapshots:
       '@nestjs/common': 10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
       passport: 0.7.0
 
+  '@nestjs/platform-express@10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))':
+    dependencies:
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      body-parser: 1.20.3
+      cors: 2.8.5
+      express: 4.21.1
+      multer: 1.4.4-lts.1
+      tslib: 2.7.0
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
+
   '@nestjs/platform-express@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)':
     dependencies:
       '@nestjs/common': 10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -9757,7 +9953,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/swagger@7.4.2(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)':
+  '@nestjs/swagger@7.4.2(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)':
     dependencies:
       '@microsoft/tsdoc': 0.15.0
       '@nestjs/common': 10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -9772,7 +9968,7 @@ snapshots:
       class-transformer: 0.5.1
       class-validator: 0.14.1
 
-  '@nestjs/testing@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@nestjs/platform-express@10.4.5)':
+  '@nestjs/testing@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@10.4.5))':
     dependencies:
       '@nestjs/common': 10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
       '@nestjs/core': 10.4.5(@nestjs/common@10.4.5(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5)(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -9809,6 +10005,36 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
+
+  '@openapitools/openapi-generator-cli@2.16.3(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)))(class-transformer@0.5.1)(class-validator@0.14.1)(encoding@0.1.13)':
+    dependencies:
+      '@nestjs/axios': 3.1.3(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(axios@1.7.9)(rxjs@7.8.1)
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/platform-express@10.4.5(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)))(encoding@0.1.13)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nuxtjs/opencollective': 0.3.2(encoding@0.1.13)
+      axios: 1.7.9
+      chalk: 4.1.2
+      commander: 8.3.0
+      compare-versions: 4.1.4
+      concurrently: 6.5.1
+      console.table: 0.10.0
+      fs-extra: 10.1.0
+      glob: 9.3.5
+      inquirer: 8.2.6
+      lodash: 4.17.21
+      proxy-agent: 6.5.0
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.1
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - '@nestjs/microservices'
+      - '@nestjs/platform-express'
+      - '@nestjs/websockets'
+      - class-transformer
+      - class-validator
+      - debug
+      - encoding
+      - supports-color
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -10423,6 +10649,8 @@ snapshots:
 
   '@tootallnate/once@2.0.0': {}
 
+  '@tootallnate/quickjs-emscripten@0.23.0': {}
+
   '@tsconfig/node10@1.0.11': {}
 
   '@tsconfig/node12@1.0.11': {}
@@ -10959,6 +11187,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  agent-base@7.1.3: {}
+
   agentkeepalive@4.5.0:
     dependencies:
       humanize-ms: 1.2.1
@@ -11033,7 +11263,7 @@ snapshots:
 
   app-builder-bin@5.0.0-alpha.10: {}
 
-  app-builder-lib@25.1.8(dmg-builder@25.1.8)(electron-builder-squirrel-windows@25.1.8):
+  app-builder-lib@25.1.8(dmg-builder@25.1.8(electron-builder-squirrel-windows@25.1.8))(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8)):
     dependencies:
       '@develar/schema-utils': 2.6.5
       '@electron/notarize': 2.5.0
@@ -11145,6 +11375,10 @@ snapshots:
   assert-plus@1.0.0:
     optional: true
 
+  ast-types@0.13.4:
+    dependencies:
+      tslib: 2.8.1
+
   astral-regex@2.0.0:
     optional: true
 
@@ -11157,6 +11391,14 @@ snapshots:
   at-least-node@1.0.0: {}
 
   axios@1.7.7:
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.1
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
+  axios@1.7.9:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.1
@@ -11239,6 +11481,8 @@ snapshots:
   base64-js@1.5.1: {}
 
   base64url@3.0.1: {}
+
+  basic-ftp@5.0.5: {}
 
   batch@0.6.1: {}
 
@@ -11580,6 +11824,12 @@ snapshots:
       strip-ansi: 5.2.0
       wrap-ansi: 5.1.0
 
+  cliui@7.0.4:
+    dependencies:
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 7.0.0
+
   cliui@8.0.1:
     dependencies:
       string-width: 4.2.3
@@ -11680,6 +11930,8 @@ snapshots:
 
   compare-version@0.1.2: {}
 
+  compare-versions@4.1.4: {}
+
   component-emitter@1.3.1: {}
 
   compress-commons@4.1.2:
@@ -11698,6 +11950,17 @@ snapshots:
       readable-stream: 2.3.8
       typedarray: 0.0.6
 
+  concurrently@6.5.1:
+    dependencies:
+      chalk: 4.1.2
+      date-fns: 2.30.0
+      lodash: 4.17.21
+      rxjs: 6.6.7
+      spawn-command: 0.0.2
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 16.2.0
+
   config-file-ts@0.2.8-rc1:
     dependencies:
       glob: 10.4.2
@@ -11715,6 +11978,10 @@ snapshots:
   consola@2.15.3: {}
 
   console-control-strings@1.1.0: {}
+
+  console.table@0.10.0:
+    dependencies:
+      easy-table: 1.1.0
 
   content-disposition@0.5.4:
     dependencies:
@@ -11857,6 +12124,12 @@ snapshots:
     dependencies:
       array-find-index: 1.0.2
 
+  data-uri-to-buffer@6.0.2: {}
+
+  date-fns@2.30.0:
+    dependencies:
+      '@babel/runtime': 7.25.7
+
   de-indent@1.0.2: {}
 
   debug@2.6.9:
@@ -11909,6 +12182,12 @@ snapshots:
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
     optional: true
+
+  degenerator@5.0.1:
+    dependencies:
+      ast-types: 0.13.4
+      escodegen: 2.1.0
+      esprima: 4.0.1
 
   delayed-stream@1.0.0: {}
 
@@ -11980,7 +12259,7 @@ snapshots:
 
   dmg-builder@25.1.8(electron-builder-squirrel-windows@25.1.8):
     dependencies:
-      app-builder-lib: 25.1.8(dmg-builder@25.1.8)(electron-builder-squirrel-windows@25.1.8)
+      app-builder-lib: 25.1.8(dmg-builder@25.1.8(electron-builder-squirrel-windows@25.1.8))(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8))
       builder-util: 25.1.7
       builder-util-runtime: 9.2.10
       fs-extra: 10.1.0
@@ -12047,6 +12326,10 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
+  easy-table@1.1.0:
+    optionalDependencies:
+      wcwidth: 1.0.1
+
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
@@ -12059,7 +12342,7 @@ snapshots:
 
   electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8):
     dependencies:
-      app-builder-lib: 25.1.8(dmg-builder@25.1.8)(electron-builder-squirrel-windows@25.1.8)
+      app-builder-lib: 25.1.8(dmg-builder@25.1.8(electron-builder-squirrel-windows@25.1.8))(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8))
       archiver: 5.3.2
       builder-util: 25.1.7
       fs-extra: 10.1.0
@@ -12068,9 +12351,9 @@ snapshots:
       - dmg-builder
       - supports-color
 
-  electron-builder@25.1.8(electron-builder-squirrel-windows@25.1.8):
+  electron-builder@25.1.8(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8)):
     dependencies:
-      app-builder-lib: 25.1.8(dmg-builder@25.1.8)(electron-builder-squirrel-windows@25.1.8)
+      app-builder-lib: 25.1.8(dmg-builder@25.1.8(electron-builder-squirrel-windows@25.1.8))(electron-builder-squirrel-windows@25.1.8(dmg-builder@25.1.8))
       builder-util: 25.1.7
       builder-util-runtime: 9.2.10
       chalk: 4.1.2
@@ -12201,6 +12484,14 @@ snapshots:
   escape-string-regexp@4.0.0: {}
 
   escape-string-regexp@5.0.0: {}
+
+  escodegen@2.1.0:
+    dependencies:
+      esprima: 4.0.1
+      estraverse: 5.3.0
+      esutils: 2.0.3
+    optionalDependencies:
+      source-map: 0.6.1
 
   eslint-config-prettier@9.1.0(eslint@9.12.0):
     dependencies:
@@ -12667,6 +12958,14 @@ snapshots:
 
   get-stream@8.0.1: {}
 
+  get-uri@6.0.4:
+    dependencies:
+      basic-ftp: 5.0.5
+      data-uri-to-buffer: 6.0.2
+      debug: 4.3.7
+    transitivePeerDependencies:
+      - supports-color
+
   github-slugger@2.0.0: {}
 
   giturl@1.0.3: {}
@@ -13090,6 +13389,13 @@ snapshots:
   https-proxy-agent@7.0.5:
     dependencies:
       agent-base: 7.1.1
+      debug: 4.3.7
+    transitivePeerDependencies:
+      - supports-color
+
+  https-proxy-agent@7.0.6:
+    dependencies:
+      agent-base: 7.1.3
       debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
@@ -13822,7 +14128,7 @@ snapshots:
 
   kleur@3.0.3: {}
 
-  langchain@0.1.37(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.673.0)(@aws-sdk/credential-provider-node@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0))(@smithy/util-utf8@2.3.0)(axios@1.7.7)(encoding@0.1.13)(fast-xml-parser@4.4.1)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.67.3(encoding@0.1.13)(zod@3.23.8)):
+  langchain@0.1.37(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/client-s3@3.673.0)(@aws-sdk/credential-provider-node@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0))(@smithy/util-utf8@2.3.0)(axios@1.7.9)(encoding@0.1.13)(fast-xml-parser@4.4.1)(handlebars@4.7.8)(ignore@5.3.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.67.3(encoding@0.1.13)(zod@3.23.8)):
     dependencies:
       '@anthropic-ai/sdk': 0.9.1(encoding@0.1.13)
       '@langchain/community': 0.0.57(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/credential-provider-node@3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0))(@smithy/util-utf8@2.3.0)(encoding@0.1.13)(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.67.3(encoding@0.1.13)(zod@3.23.8))
@@ -13845,7 +14151,7 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/client-s3': 3.673.0
       '@aws-sdk/credential-provider-node': 3.670.0(@aws-sdk/client-sso-oidc@3.670.0(@aws-sdk/client-sts@3.670.0))(@aws-sdk/client-sts@3.670.0)
-      axios: 1.7.7
+      axios: 1.7.9
       fast-xml-parser: 4.4.1
       handlebars: 4.7.8
       ignore: 5.3.2
@@ -14736,6 +15042,8 @@ snapshots:
 
   neo-async@2.6.2: {}
 
+  netmask@2.0.2: {}
+
   node-abi@3.71.0:
     dependencies:
       semver: 7.6.3
@@ -14999,6 +15307,24 @@ snapshots:
 
   p-try@2.2.0: {}
 
+  pac-proxy-agent@7.1.0:
+    dependencies:
+      '@tootallnate/quickjs-emscripten': 0.23.0
+      agent-base: 7.1.3
+      debug: 4.3.7
+      get-uri: 6.0.4
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      pac-resolver: 7.0.1
+      socks-proxy-agent: 8.0.5
+    transitivePeerDependencies:
+      - supports-color
+
+  pac-resolver@7.0.1:
+    dependencies:
+      degenerator: 5.0.1
+      netmask: 2.0.2
+
   package-json-from-dist@1.0.1: {}
 
   package-json@4.0.1:
@@ -15222,6 +15548,19 @@ snapshots:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
+  proxy-agent@6.5.0:
+    dependencies:
+      agent-base: 7.1.3
+      debug: 4.3.7
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      lru-cache: 7.18.3
+      pac-proxy-agent: 7.1.0
+      proxy-from-env: 1.1.0
+      socks-proxy-agent: 8.0.5
+    transitivePeerDependencies:
+      - supports-color
+
   proxy-from-env@1.1.0: {}
 
   pseudomap@1.0.2: {}
@@ -15298,14 +15637,14 @@ snapshots:
 
   react-ga4@2.1.0: {}
 
-  react-hook-form-mui@7.3.1(45pxt7ogda7skfjs5hpsvhml4q):
+  react-hook-form-mui@7.3.1(4zjjjbsyvo2jxzbef6gnoiugzm):
     dependencies:
       '@mui/material': 6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-hook-form: 7.53.0(react@18.3.1)
     optionalDependencies:
       '@mui/icons-material': 6.1.4(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.11)(react@18.3.1)
-      '@mui/x-date-pickers': 7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/x-date-pickers': 7.20.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@mui/material@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.1.4(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(react@18.3.1))(@types/react@18.3.11)(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   react-hook-form@7.53.0(react@18.3.1):
     dependencies:
@@ -15475,6 +15814,8 @@ snapshots:
       redux: 5.0.1
 
   redux@5.0.1: {}
+
+  reflect-metadata@0.1.13: {}
 
   reflect-metadata@0.1.14: {}
 
@@ -15719,6 +16060,10 @@ snapshots:
 
   rx-lite@3.1.2: {}
 
+  rxjs@6.6.7:
+    dependencies:
+      tslib: 1.14.1
+
   rxjs@7.8.1:
     dependencies:
       tslib: 2.8.0
@@ -15864,6 +16209,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  socks-proxy-agent@8.0.5:
+    dependencies:
+      agent-base: 7.1.3
+      debug: 4.3.7
+      socks: 2.8.3
+    transitivePeerDependencies:
+      - supports-color
+
   socks@2.8.3:
     dependencies:
       ip-address: 9.0.5
@@ -15890,6 +16243,8 @@ snapshots:
   source-map@0.7.4: {}
 
   space-separated-tokens@2.0.2: {}
+
+  spawn-command@0.0.2: {}
 
   spdx-correct@3.2.0:
     dependencies:
@@ -16274,9 +16629,13 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
+  tslib@1.14.1: {}
+
   tslib@2.7.0: {}
 
   tslib@2.8.0: {}
+
+  tslib@2.8.1: {}
 
   type-check@0.4.0:
     dependencies:
@@ -16644,6 +17003,8 @@ snapshots:
       camelcase: 5.3.1
       decamelize: 1.2.0
 
+  yargs-parser@20.2.9: {}
+
   yargs-parser@21.1.1: {}
 
   yargs@13.3.2:
@@ -16658,6 +17019,16 @@ snapshots:
       which-module: 2.0.1
       y18n: 4.0.3
       yargs-parser: 13.1.2
+
+  yargs@16.2.0:
+    dependencies:
+      cliui: 7.0.4
+      escalade: 3.2.0
+      get-caller-file: 2.0.5
+      require-directory: 2.1.1
+      string-width: 4.2.3
+      y18n: 5.0.8
+      yargs-parser: 20.2.9
 
   yargs@17.7.2:
     dependencies:
