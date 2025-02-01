@@ -15,9 +15,7 @@ type CodePair struct {
 	echo   *echo.Echo
 }
 
-func New(conf *config.Config) *CodePair {
-	e := echo.New()
-
+func New(e *echo.Echo, conf *config.Config) *CodePair {
 	RegisterRoutes(e)
 
 	cp := &CodePair{

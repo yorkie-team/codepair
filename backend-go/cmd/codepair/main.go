@@ -1,19 +1,17 @@
 package main
 
 import (
-	"log"
-	"os"
-
+	"github.com/labstack/echo/v4"
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/server"
 )
 
 func main() {
+	e := echo.New()
 	conf := config.LoadConfig()
-	cp := server.New(conf)
+	cp := server.New(e, conf)
 
 	if err := cp.Start(); err != nil {
-		log.Println(err)
-		os.Exit(1)
+		e.Logger.Fatal(err)
 	}
 }
