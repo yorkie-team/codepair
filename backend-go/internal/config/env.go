@@ -1,7 +1,7 @@
 package config
 
 var EnvVarMap = map[string]string{
-	"server.port": "PORT",
+	"server.port": "SERVER_PORT",
 
 	"oauth.github.ClientId":         "OAUTH_GITHUB_CLIENT_ID",
 	"oauth.github.ClientSecret":     "OAUTH_GITHUB_CLIENT_SECRET",
