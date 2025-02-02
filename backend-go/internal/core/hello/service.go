@@ -23,5 +23,6 @@ func (s Service) HelloCodePair(e echo.Context, codePairVisitor CodePairVisitor) 
 		e.Logger().Fatal(err)
 		return "", rest.InternalServerError
 	}
+
 	return helloMessage, nil
 }

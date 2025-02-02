@@ -28,7 +28,6 @@ func (h Handler) HelloCodePair(e echo.Context) error {
 	helloMessage, err := h.helloService.HelloCodePair(e, CodePairVisitor{
 		Nickname: data.Nickname,
 	})
-
 	if err != nil {
 		return rest.NewErrorResponse(e, err)
 	}
