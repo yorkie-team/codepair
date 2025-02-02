@@ -11,11 +11,6 @@ const (
 	DefaultMinioEndpoint  = "localhost:9000"
 	DefaultMinioAccessKey = "minioadmin"
 	DefaultMinioSecretKey = "minioadmin"
-
-	DefaultS3Bucket    = "default-s3-bucket"
-	DefaultS3Region    = "us-west-2"
-	DefaultS3AccessKey = ""
-	DefaultS3SecretKey = ""
 )
 
 type Storage struct {
@@ -27,27 +22,25 @@ type Storage struct {
 type S3 struct {
 	Bucket    string `mapstructure:"bucket"`
 	Region    string `mapstructure:"region"`
-	AccessKey string `mapstructure:"access_key"`
-	SecretKey string `mapstructure:"secret_key"`
+	AccessKey string `mapstructure:"accessKey"`
+	SecretKey string `mapstructure:"secretKey"`
 }
 
 type Minio struct {
 	Bucket    string `mapstructure:"bucket"`
 	Endpoint  string `mapstructure:"endpoint"`
-	AccessKey string `mapstructure:"access_key"`
-	SecretKey string `mapstructure:"secret_key"`
+	AccessKey string `mapstructure:"accessKey"`
+	SecretKey string `mapstructure:"secretKey"`
 }
 
 func (s *Storage) ensureDefaultValue() {
 	if s.Provider == "" {
 		s.Provider = DefaultStorageProvider
 	}
-	if s.Minio != nil {
-		s.Minio.EnsureDefaultValue()
+	if s.Minio == nil {
+		s.Minio = &Minio{}
 	}
-	if s.S3 != nil {
-		s.S3.EnsureDefaultValue()
-	}
+	s.Minio.EnsureDefaultValue()
 }
 
 func (s *Storage) validate() error {
@@ -93,23 +86,8 @@ func (m *Minio) validate() error {
 	return nil
 }
 
-func (s3 *S3) EnsureDefaultValue() {
-	if s3.Bucket == "" {
-		s3.Bucket = DefaultS3Bucket
-	}
-	if s3.Region == "" {
-		s3.Region = DefaultS3Region
-	}
-	if s3.AccessKey == "" {
-		s3.AccessKey = DefaultS3AccessKey
-	}
-	if s3.SecretKey == "" {
-		s3.SecretKey = DefaultS3SecretKey
-	}
-}
-
 func (s3 *S3) validate() error {
-	if s3.Bucket == "" || s3.Region == "" {
+	if s3.Bucket == "" || s3.Region == "" || s3.AccessKey == "" || s3.SecretKey == "" {
 		return fmt.Errorf("s3 requires Bucket and Region to be set")
 	}
 	return nil
