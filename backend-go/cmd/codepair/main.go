@@ -19,7 +19,7 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	conf, err := config.LoadConfig(configPath, e.Logger)
+	conf, err := config.LoadConfig(configPath)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

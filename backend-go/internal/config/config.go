@@ -3,8 +3,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4"
-
 	"github.com/spf13/viper"
 )
 
@@ -20,8 +18,8 @@ type Config struct {
 
 // LoadConfig loads configuration settings from a file (if provided) and from environment variables.
 // It returns the populated Config, a status message describing which sources were used, and an error if any.
-func LoadConfig(filePath string, logger echo.Logger) (*Config, error) {
-	if err := bindEnvironmentVariables(logger); err != nil {
+func LoadConfig(filePath string) (*Config, error) {
+	if err := bindEnvironmentVariables(); err != nil {
 		return nil, err
 	}
 
@@ -44,21 +42,11 @@ func LoadConfig(filePath string, logger echo.Logger) (*Config, error) {
 }
 
 // bindEnvironmentVariables binds each configuration key to its corresponding environment variable.
-func bindEnvironmentVariables(logger echo.Logger) error {
+func bindEnvironmentVariables() error {
 	for key, env := range EnvVarMap {
 		if err := viper.BindEnv(key, env); err != nil {
 			return fmt.Errorf("failed to bind environment variable %s to key %s: %w", env, key, err)
 		}
-	}
-
-	isSet := false
-	for key, _ := range EnvVarMap {
-		if ok := viper.IsSet(key); ok {
-			isSet = true
-		}
-	}
-	if !isSet {
-		logger.Info("no env vars are used")
 	}
 
 	return nil
