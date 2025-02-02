@@ -1,15 +1,13 @@
 # Yorkie Intelligence(WIP)
 
 ## Setting
+install python 3.10.* version(recommend using [pyenv](https://github.com/pyenv/pyenv))<br/>
+install [poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)<br/>
 
 ### dev
 
-- pyenv
-- poetry
-
 ```sh
 poetry install --no-root 
-poetry shell
 ```
 
 ### prod
@@ -21,18 +19,9 @@ poetry install --without dev
 ## How To Start
 
 ```sh
-cd src
-uvicorn main:app
+git clone https://github.com/yorkie-team/codepair.git
+cd yorkie-installigence
+poetry run uvicorn src.main:app --reload
 ```
-
-## TODO list
-- [x] env setting
-- [ ] pr feature
-- [ ] issue feature
-- [ ] writing document feature
-- [x] few shot prompting
-- [ ] logging
-- [ ] test code
-- [ ] create endpoint docs
-
+you can see openapi in http://localhost:8000
 
