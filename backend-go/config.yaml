@@ -14,9 +14,9 @@ FrontendBaseURL: "http://localhost:5173"
 
 JWT:
   AccessTokenSecret: "your_access_token_secret"
-  AccessTokenExpirationTime: "1d"
+  AccessTokenExpirationTime: "24h"
   RefreshTokenSecret: "your_refresh_token_secret"
-  RefreshTokenExpirationTime: "7d"
+  RefreshTokenExpirationTime: "168h"
 
 Yorkie:
   APIAddr: "http://localhost:8080"
