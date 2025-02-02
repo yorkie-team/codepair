@@ -13,10 +13,10 @@ const (
 )
 
 type Mongo struct {
-	ConnectionTimeout time.Duration `yaml:"ConnectionTimeout"`
-	ConnectionURI     string        `yaml:"ConnectionURI"`
-	PingTimeout       time.Duration `yaml:"PingTimeout"`
-	DatabaseName      string        `yaml:"DatabaseName"`
+	ConnectionTimeout time.Duration `mapstructure:"ConnectionTimeout"`
+	ConnectionURI     string        `mapstructure:"ConnectionURI"`
+	PingTimeout       time.Duration `mapstructure:"PingTimeout"`
+	DatabaseName      string        `mapstructure:"DatabaseName"`
 }
 
 func (m *Mongo) ensureDefaultValue() {

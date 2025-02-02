@@ -9,9 +9,9 @@ const (
 )
 
 type Yorkie struct {
-	APIAddr          string `yaml:"APIAddr"`
-	ProjectName      string `yaml:"ProjectName"`
-	ProjectSecretKey string `yaml:"ProjectSecretKey"`
+	APIAddr          string `mapstructure:"APIAddr"`
+	ProjectName      string `mapstructure:"ProjectName"`
+	ProjectSecretKey string `mapstructure:"ProjectSecretKey"`
 }
 
 func (y *Yorkie) ensureDefaultValue() {

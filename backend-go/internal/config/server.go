@@ -8,7 +8,7 @@ const (
 
 // Server holds your server configuration.
 type Server struct {
-	Port int `yaml:"Port"`
+	Port int `mapstructure:"Port"`
 }
 
 // ensureDefaultValue sets a default if Port is not provided.

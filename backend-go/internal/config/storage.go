@@ -19,23 +19,23 @@ const (
 )
 
 type Storage struct {
-	Provider string `yaml:"provider"`
-	S3       *S3    `yaml:"s3"`
-	Minio    *Minio `yaml:"minio"`
+	Provider string `mapstructure:"provider"`
+	S3       *S3    `mapstructure:"s3"`
+	Minio    *Minio `mapstructure:"minio"`
 }
 
 type S3 struct {
-	Bucket    string `yaml:"bucket"`
-	Region    string `yaml:"region"`
-	AccessKey string `yaml:"access_key"`
-	SecretKey string `yaml:"secret_key"`
+	Bucket    string `mapstructure:"bucket"`
+	Region    string `mapstructure:"region"`
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
 }
 
 type Minio struct {
-	Bucket    string `yaml:"bucket"`
-	Endpoint  string `yaml:"endpoint"`
-	AccessKey string `yaml:"access_key"`
-	SecretKey string `yaml:"secret_key"`
+	Bucket    string `mapstructure:"bucket"`
+	Endpoint  string `mapstructure:"endpoint"`
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
 }
 
 func (s *Storage) ensureDefaultValue() {

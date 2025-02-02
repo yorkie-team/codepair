@@ -12,16 +12,16 @@ const (
 )
 
 type OAuth struct {
-	Github *GitHubOAuth `yaml:"Github"`
+	Github *GitHubOAuth `mapstructure:"Github"`
 }
 
 type GitHubOAuth struct {
-	ClientID         string `yaml:"ClientID"`
-	ClientSecret     string `yaml:"ClientSecret"`
-	CallbackURL      string
-	AuthorizationURL string `yaml:"AuthorizationURL"`
-	TokenURL         string
-	UserProfileURL   string `yaml:"UserProfileURL"`
+	ClientID         string `mapstructure:"ClientID"`
+	ClientSecret     string `mapstructure:"ClientSecret"`
+	CallbackURL      string `mapstructure:"CallbackURL"`
+	AuthorizationURL string `mapstructure:"AuthorizationURL"`
+	TokenURL         string `mapstructure:"TokenURL"`
+	UserProfileURL   string `mapstructure:"UserProfileURL"`
 }
 
 func (o *OAuth) ensureDefaultValue() {

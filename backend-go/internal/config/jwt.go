@@ -13,10 +13,10 @@ const (
 )
 
 type JWT struct {
-	AccessTokenSecret          string
-	AccessTokenExpirationTime  time.Duration `yaml:"AccessTokenExpirationTime"`
-	RefreshTokenSecret         string        `yaml:"RefreshTokenSecret"`
-	RefreshTokenExpirationTime time.Duration `yaml:"RefreshTokenExpirationTime" `
+	AccessTokenSecret          string        `mapstructure:"AccessTokenSecret"`
+	AccessTokenExpirationTime  time.Duration `mapstructure:"AccessTokenExpirationTime"`
+	RefreshTokenSecret         string        `mapstructure:"RefreshTokenSecret"`
+	RefreshTokenExpirationTime time.Duration `mapstructure:"RefreshTokenExpirationTime"`
 }
 
 func (j *JWT) ensureDefaultValue() {

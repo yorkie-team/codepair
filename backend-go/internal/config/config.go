@@ -10,12 +10,12 @@ import (
 
 // Config holds the application configuration.
 type Config struct {
-	Server  Server  `yaml:"Server"`
-	OAuth   OAuth   `yaml:"OAuth"`
-	JWT     JWT     `yaml:"JWT"`
-	Yorkie  Yorkie  `yaml:"Yorkie"`
-	Mongo   Mongo   `yaml:"Mongo"`
-	Storage Storage `yaml:"Storage"`
+	Server  Server  `mapstructure:"Server"`
+	OAuth   OAuth   `mapstructure:"OAuth"`
+	JWT     JWT     `mapstructure:"JWT"`
+	Yorkie  Yorkie  `mapstructure:"Yorkie"`
+	Mongo   Mongo   `mapstructure:"Mongo"`
+	Storage Storage `mapstructure:"Storage"`
 }
 
 // LoadConfig loads configuration settings from a file (if provided) and from environment variables.
