@@ -63,11 +63,13 @@ func readConfigFile(filePath string) error {
 
 	if err := viper.ReadInConfig(); err != nil {
 		var nf viper.ConfigFileNotFoundError
-		if filePath != "" && errors.As(err, &nf) {
-			return fmt.Errorf("file path given but not found: %w", err)
-		} else {
-			return fmt.Errorf("failed to read config file: %w", err)
+		if errors.As(err, &nf) {
+			if filePath != "" {
+				return fmt.Errorf("file path given but not found: %w", err)
+			}
+			return nil
 		}
+		return err
 	}
 
 	return nil
