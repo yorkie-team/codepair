@@ -1,11 +1,12 @@
 package rest
 
 import (
-	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"net/http"
+
+	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 )
 
-func newHttpExceptionResponse(statusCode int32, message string) models.HttpExceptionResponse {
+func newHttpExceptionResponse(statusCode int, message string) models.HttpExceptionResponse {
 	return models.HttpExceptionResponse{
 		StatusCode: statusCode,
 		Message:    message,
