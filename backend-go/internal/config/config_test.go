@@ -134,7 +134,7 @@ OAuth:
   Github:
     ClientID: "config_client_id"
     ClientSecret: "config_client_secret"
-    CallbackURL: "http://config.example.com/auth/login/github"
+    CallbackURL: "https://config.example.com/auth/login/github"
     AuthorizationURL: "https://config.example.com/login/oauth/authorize"
     TokenURL: "https://config.example.com/login/oauth/access_token"
     UserProfileURL: "https://config.example.com/api/user"
@@ -184,7 +184,7 @@ Storage:
 		require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
 		assert.Equal(t, "config_client_id", cfg.OAuth.Github.ClientID)
 		assert.Equal(t, "config_client_secret", cfg.OAuth.Github.ClientSecret)
-		assert.Equal(t, "http://config.example.com/auth/login/github", cfg.OAuth.Github.CallbackURL)
+		assert.Equal(t, "https://config.example.com/auth/login/github", cfg.OAuth.Github.CallbackURL)
 		assert.Equal(t, "https://config.example.com/login/oauth/authorize", cfg.OAuth.Github.AuthorizationURL)
 		assert.Equal(t, "https://config.example.com/login/oauth/access_token", cfg.OAuth.Github.TokenURL)
 		assert.Equal(t, "https://config.example.com/api/user", cfg.OAuth.Github.UserProfileURL)
