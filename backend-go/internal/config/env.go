@@ -3,13 +3,13 @@ package config
 var EnvVarMap = map[string]string{
 	"server.port": "SERVER_PORT",
 
-	"oauth.github.ClientId":         "OAUTH_GITHUB_CLIENT_ID",
-	"oauth.github.ClientSecret":     "OAUTH_GITHUB_CLIENT_SECRET",
-	"oauth.github.CallbackUrl":      "OAUTH_GITHUB_CALLBACK_URL",
-	"oauth.github.AuthorizationUrl": "OAUTH_GITHUB_AUTHORIZATION_URL",
-	"oauth.github.TokenUrl":         "OAUTH_GITHUB_TOKEN_URL",
-	"oauth.github.UserProfileUrl":   "OAUTH_GITHUB_USER_PROFILE_URL",
-	"auth.FrontendBaseUrl":          "AUTH_FRONTEND_BASE_URL",
+	"auth.github.ClientId":         "AUTH_GITHUB_CLIENT_ID",
+	"auth.github.ClientSecret":     "AUTH_GITHUB_CLIENT_SECRET",
+	"auth.github.CallbackUrl":      "AUTH_GITHUB_CALLBACK_URL",
+	"auth.github.AuthorizationUrl": "AUTH_GITHUB_AUTHORIZATION_URL",
+	"auth.github.TokenUrl":         "AUTH_GITHUB_TOKEN_URL",
+	"auth.github.UserProfileUrl":   "AUTH_GITHUB_USER_PROFILE_URL",
+	"auth.FrontendBaseUrl":         "AUTH_FRONTEND_BASE_URL",
 
 	"jwt.AccessTokenSecret":          "JWT_ACCESS_TOKEN_SECRET",
 	"jwt.AccessTokenExpirationTime":  "JWT_ACCESS_TOKEN_EXPIRATION_TIME",

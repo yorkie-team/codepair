@@ -33,17 +33,14 @@ func TestConfigWithEnvVars(t *testing.T) {
 		// --- Server ---
 		"SERVER_PORT": "3002",
 
-		// --- OAuth (GitHub) ---
-		"OAUTH_GITHUB_CLIENT_ID":     "test_value",
-		"OAUTH_GITHUB_CLIENT_SECRET": "test_value",
-		// Use valid URLs for fields with url validation.
-		"OAUTH_GITHUB_CALLBACK_URL":      "http://test_value/callback",
-		"OAUTH_GITHUB_AUTHORIZATION_URL": "http://test_value/auth",
-		"OAUTH_GITHUB_TOKEN_URL":         "http://test_value/token",
-		"OAUTH_GITHUB_USER_PROFILE_URL":  "http://test_value/profile",
-
-		// --- (Optional) FrontendBaseURL if needed ---
-		"AUTH_FRONTEND_BASE_URL": "http://test_value",
+		// --- Auth ---
+		"AUTH_GITHUB_CLIENT_ID":         "test_value",
+		"AUTH_GITHUB_CLIENT_SECRET":     "test_value",
+		"AUTH_GITHUB_CALLBACK_URL":      "http://test_value/callback",
+		"AUTH_GITHUB_AUTHORIZATION_URL": "http://test_value/auth",
+		"AUTH_GITHUB_TOKEN_URL":         "http://test_value/token",
+		"AUTH_GITHUB_USER_PROFILE_URL":  "http://test_value/profile",
+		"AUTH_FRONTEND_BASE_URL":        "http://test_value",
 
 		// --- JWT ---
 		"JWT_ACCESS_TOKEN_SECRET":           "test_value",
@@ -88,15 +85,16 @@ func TestConfigWithEnvVars(t *testing.T) {
 	// --- Server ---
 	assert.Equal(t, 3002, cfg.Server.Port, "Server.Port should reflect 'SERVER_PORT' env var")
 
-	// --- OAuth (GitHub) ---
-	require.NotNil(t, cfg.OAuth.Github, "GitHub OAuth config should not be nil")
-	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientID)
-	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientSecret)
+	// --- Auth (GitHub) ---
+	require.NotNil(t, cfg.Auth.Github, "GitHub Auth config should not be nil")
+	assert.Equal(t, "test_value", cfg.Auth.Github.ClientID)
+	assert.Equal(t, "test_value", cfg.Auth.Github.ClientSecret)
 	// Expect the valid URL strings.
-	assert.Equal(t, "http://test_value/callback", cfg.OAuth.Github.CallbackURL)
-	assert.Equal(t, "http://test_value/auth", cfg.OAuth.Github.AuthorizationURL)
-	assert.Equal(t, "http://test_value/token", cfg.OAuth.Github.TokenURL)
-	assert.Equal(t, "http://test_value/profile", cfg.OAuth.Github.UserProfileURL)
+	assert.Equal(t, "http://test_value/callback", cfg.Auth.Github.CallbackURL)
+	assert.Equal(t, "http://test_value/auth", cfg.Auth.Github.AuthorizationURL)
+	assert.Equal(t, "http://test_value/token", cfg.Auth.Github.TokenURL)
+	assert.Equal(t, "http://test_value/profile", cfg.Auth.Github.UserProfileURL)
+	assert.Equal(t, "http://test_value", cfg.Auth.FrontendBaseURL)
 
 	// --- JWT ---
 	assert.Equal(t, "test_value", cfg.JWT.AccessTokenSecret)
@@ -145,7 +143,7 @@ func TestLoadConfigFromFile(t *testing.T) {
 Server:
   Port: 3001
 
-OAuth:
+Auth:
   Github:
     ClientID: "config_client_id"
     ClientSecret: "config_client_secret"
@@ -153,8 +151,7 @@ OAuth:
     AuthorizationURL: "https://config.example.com/login/oauth/authorize"
     TokenURL: "https://config.example.com/login/oauth/access_token"
     UserProfileURL: "https://config.example.com/api/user"
-
-FrontendBaseURL: "http://config-frontend:5173"
+  FrontendBaseURL: "http://config-frontend:5173"
 
 JWT:
   AccessTokenSecret: "config_access_token_secret"
@@ -195,14 +192,15 @@ Storage:
 		// --- Server ---
 		assert.Equal(t, 3001, cfg.Server.Port, "Server.Port should be 3001")
 
-		// --- OAuth (GitHub) ---
-		require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
-		assert.Equal(t, "config_client_id", cfg.OAuth.Github.ClientID)
-		assert.Equal(t, "config_client_secret", cfg.OAuth.Github.ClientSecret)
-		assert.Equal(t, "https://config.example.com/auth/login/github", cfg.OAuth.Github.CallbackURL)
-		assert.Equal(t, "https://config.example.com/login/oauth/authorize", cfg.OAuth.Github.AuthorizationURL)
-		assert.Equal(t, "https://config.example.com/login/oauth/access_token", cfg.OAuth.Github.TokenURL)
-		assert.Equal(t, "https://config.example.com/api/user", cfg.OAuth.Github.UserProfileURL)
+		// --- Auth (GitHub) ---
+		require.NotNil(t, cfg.Auth.Github, "Auth.Github should not be nil")
+		assert.Equal(t, "config_client_id", cfg.Auth.Github.ClientID)
+		assert.Equal(t, "config_client_secret", cfg.Auth.Github.ClientSecret)
+		assert.Equal(t, "https://config.example.com/auth/login/github", cfg.Auth.Github.CallbackURL)
+		assert.Equal(t, "https://config.example.com/login/oauth/authorize", cfg.Auth.Github.AuthorizationURL)
+		assert.Equal(t, "https://config.example.com/login/oauth/access_token", cfg.Auth.Github.TokenURL)
+		assert.Equal(t, "https://config.example.com/api/user", cfg.Auth.Github.UserProfileURL)
+		assert.Equal(t, "http://config-frontend:5173", cfg.Auth.FrontendBaseURL)
 
 		// --- JWT ---
 		assert.Equal(t, "config_access_token_secret", cfg.JWT.AccessTokenSecret)
@@ -244,11 +242,13 @@ func TestConfigWithDefaultValues(t *testing.T) {
 	// In the minimal YAML below, only the required fields that do not have defaults
 	// are provided. For fields with URL validation and defaults, we supply valid values when needed.
 	const minimalYAML = `
-OAuth:
+Auth:
   Github:
     ClientID: "is not default"
     ClientSecret: "is not default"
     TokenURL: "http://is-not-default/token"  # provided but not default; note valid URL format
+  FrontendBaseURL: "http://is-not-default"
+
 
 JWT:
   AccessTokenSecret: "is not default"
@@ -266,16 +266,17 @@ Storage:
 	// --- Server defaults ---
 	assert.Equal(t, config.DefaultServerPort, cfg.Server.Port, "Server.Port should default to DefaultServerPort")
 
-	// --- OAuth (GitHub) defaults and provided values ---
-	require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
+	// --- Auth (GitHub) defaults and provided values ---
+	require.NotNil(t, cfg.Auth.Github, "Auth.Github should not be nil")
 	// Provided values.
-	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientID)
-	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientSecret)
-	assert.Equal(t, "http://is-not-default/token", cfg.OAuth.Github.TokenURL)
+	assert.Equal(t, "is not default", cfg.Auth.Github.ClientID)
+	assert.Equal(t, "is not default", cfg.Auth.Github.ClientSecret)
+	assert.Equal(t, "http://is-not-default/token", cfg.Auth.Github.TokenURL)
 	// Default values.
-	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
-	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
-	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
+	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.Auth.Github.CallbackURL)
+	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.Auth.Github.AuthorizationURL)
+	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.Auth.Github.UserProfileURL)
+	assert.Equal(t, "http://is-not-default", cfg.Auth.FrontendBaseURL)
 
 	// --- JWT defaults ---
 	assert.Equal(t, "is not default", cfg.JWT.AccessTokenSecret)

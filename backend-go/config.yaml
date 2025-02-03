@@ -1,7 +1,7 @@
 Server:
   Port: 3001
 
-OAuth:
+Auth:
   Github:
     # WARNING: Replace these values with your GitHub OAuth credentials
     ClientID: "<GITHUB_CLIENT_ID>"
@@ -10,8 +10,7 @@ OAuth:
     AuthorizationURL: "https://github.com/login/oauth/authorize"
     TokenURL: "https://github.com/login/oauth/access_token"
     UserProfileURL: "https://api.github.com/user"
-
-FrontendBaseURL: "http://localhost:5173"
+  FrontendBaseURL: "http://localhost:5173"
 
 JWT:
   # WARNING: Use strong, unique secrets in production

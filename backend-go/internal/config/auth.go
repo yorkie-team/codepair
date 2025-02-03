@@ -8,8 +8,9 @@ const (
 	DefaultGitHubCallbackURL      = "https://localhost:3000/auth/login/github"
 )
 
-type OAuth struct {
-	Github *Github `mapstructure:"Github" validate:"required"`
+type Auth struct {
+	Github          *Github `mapstructure:"Github" validate:"required"`
+	FrontendBaseURL string  `mapstructure:"FrontendBaseURL" validate:"required,url"`
 }
 
 type Github struct {
@@ -22,17 +23,17 @@ type Github struct {
 }
 
 // ensureDefaultValue applies defaults for GitHub URLs if they are not provided.
-func (o *OAuth) ensureDefaultValue() {
-	if o.Github == nil {
-		o.Github = &Github{}
+func (a *Auth) ensureDefaultValue() {
+	if a.Github == nil {
+		a.Github = &Github{}
 	}
-	o.Github.ensureDefaultValue()
+	a.Github.ensureDefaultValue()
 }
 
 // validate uses the validator library to validate the struct fields.
-func (o *OAuth) validate() error {
-	if err := validate.Struct(o); err != nil {
-		return fmt.Errorf("OAuth config validation failed: %w", err)
+func (a *Auth) validate() error {
+	if err := validate.Struct(a); err != nil {
+		return fmt.Errorf("auth config validation failed: %w", err)
 	}
 	return nil
 }
