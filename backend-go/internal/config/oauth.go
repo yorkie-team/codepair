@@ -6,9 +6,8 @@ import (
 
 const (
 	DefaultGitHubAuthorizationURL = "https://github.com/login/oauth/authorize"
-	DefaultGitHubTokenURL         = "https://github.com/login/oauth/access_token"
 	DefaultGitHubUserProfileURL   = "https://api.github.com/user"
-	DefaultGitHubCallbackURL      = "http://localhost:3000/auth/login/github"
+	DefaultGitHubCallbackURL      = "https://localhost:3000/auth/login/github"
 )
 
 type OAuth struct {
@@ -44,9 +43,6 @@ func (g *GitHubOAuth) ensureDefaultValue() {
 	}
 	if g.AuthorizationURL == "" {
 		g.AuthorizationURL = DefaultGitHubAuthorizationURL
-	}
-	if g.TokenURL == "" {
-		g.TokenURL = DefaultGitHubTokenURL
 	}
 	if g.UserProfileURL == "" {
 		g.UserProfileURL = DefaultGitHubUserProfileURL

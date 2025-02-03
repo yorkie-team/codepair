@@ -6,9 +6,7 @@ import (
 )
 
 const (
-	DefaultAccessTokenSecret          = "your_access_token_secret"
 	DefaultAccessTokenExpirationTime  = 24 * time.Hour
-	DefaultRefreshTokenSecret         = "your_refresh_token_secret"
 	DefaultRefreshTokenExpirationTime = 168 * time.Hour
 )
 
@@ -20,14 +18,8 @@ type JWT struct {
 }
 
 func (j *JWT) ensureDefaultValue() {
-	if j.AccessTokenSecret == "" {
-		j.AccessTokenSecret = DefaultAccessTokenSecret
-	}
 	if j.AccessTokenExpirationTime == 0 {
 		j.AccessTokenExpirationTime = DefaultAccessTokenExpirationTime
-	}
-	if j.RefreshTokenSecret == "" {
-		j.RefreshTokenSecret = DefaultRefreshTokenSecret
 	}
 	if j.RefreshTokenExpirationTime == 0 {
 		j.RefreshTokenExpirationTime = DefaultRefreshTokenExpirationTime
@@ -41,6 +33,11 @@ func (j *JWT) validate() error {
 	if j.RefreshTokenSecret == "" {
 		return fmt.Errorf("refresh token secret cannot be empty")
 	}
-
+	if j.AccessTokenExpirationTime <= 0 {
+		return fmt.Errorf("access token expiration time must be positive")
+	}
+	if j.RefreshTokenExpirationTime <= j.AccessTokenExpirationTime {
+		return fmt.Errorf("refresh token expiration time must be greater than access token expiration time")
+	}
 	return nil
 }

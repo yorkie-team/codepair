@@ -250,13 +250,10 @@ OAuth:
 	// Default values.
 	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
 	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
-	assert.Equal(t, config.DefaultGitHubTokenURL, cfg.OAuth.Github.TokenURL)
 	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
 
 	// --- JWT defaults ---
-	assert.Equal(t, config.DefaultAccessTokenSecret, cfg.JWT.AccessTokenSecret)
 	assert.Equal(t, config.DefaultAccessTokenExpirationTime, cfg.JWT.AccessTokenExpirationTime)
-	assert.Equal(t, config.DefaultRefreshTokenSecret, cfg.JWT.RefreshTokenSecret)
 	assert.Equal(t, config.DefaultRefreshTokenExpirationTime, cfg.JWT.RefreshTokenExpirationTime)
 
 	// --- Mongo defaults ---
@@ -271,8 +268,6 @@ OAuth:
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
 	assert.Equal(t, config.DefaultMinioBucket, cfg.Storage.Minio.Bucket)
 	assert.Equal(t, config.DefaultMinioEndpoint, cfg.Storage.Minio.Endpoint)
-	assert.Equal(t, config.DefaultMinioAccessKey, cfg.Storage.Minio.AccessKey)
-	assert.Equal(t, config.DefaultMinioSecretKey, cfg.Storage.Minio.SecretKey)
 	// S3 should be nil if not provided.
 	assert.Nil(t, cfg.Storage.S3, "Storage.S3 should be nil by default")
 }

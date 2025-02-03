@@ -7,10 +7,8 @@ import (
 const (
 	DefaultStorageProvider = "minio"
 
-	DefaultMinioBucket    = "default-minio-bucket"
-	DefaultMinioEndpoint  = "localhost:9000"
-	DefaultMinioAccessKey = "minioadmin"
-	DefaultMinioSecretKey = "minioadmin"
+	DefaultMinioBucket   = "default-storage"
+	DefaultMinioEndpoint = "http://localhost:9000"
 )
 
 type Storage struct {
@@ -70,12 +68,6 @@ func (m *Minio) EnsureDefaultValue() {
 	}
 	if m.Endpoint == "" {
 		m.Endpoint = DefaultMinioEndpoint
-	}
-	if m.AccessKey == "" {
-		m.AccessKey = DefaultMinioAccessKey
-	}
-	if m.SecretKey == "" {
-		m.SecretKey = DefaultMinioSecretKey
 	}
 }
 

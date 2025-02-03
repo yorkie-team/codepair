@@ -3,8 +3,9 @@ Server:
 
 OAuth:
   Github:
-    ClientID: "your_client_id"
-    ClientSecret: "your_client_secret"
+    # WARNING: Replace these values with your GitHub OAuth credentials
+    ClientID: "<GITHUB_CLIENT_ID>"
+    ClientSecret: "<GITHUB_CLIENT_SECRET>"
     CallbackURL: "http://localhost:3000/auth/login/github"
     AuthorizationURL: "https://github.com/login/oauth/authorize"
     TokenURL: "https://github.com/login/oauth/access_token"
@@ -13,9 +14,10 @@ OAuth:
 FrontendBaseURL: "http://localhost:5173"
 
 JWT:
-  AccessTokenSecret: "your_access_token_secret"
+  # WARNING: Use strong, unique secrets in production
+  AccessTokenSecret: "<STRONG_RANDOM_SECRET>"
   AccessTokenExpirationTime: "24h"
-  RefreshTokenSecret: "your_refresh_token_secret"
+  RefreshTokenSecret: "<STRONG_RANDOM_SECRET>"
   RefreshTokenExpirationTime: "168h"
 
 Yorkie:
