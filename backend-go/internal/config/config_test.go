@@ -231,8 +231,18 @@ func TestConfigWithDefaultValues(t *testing.T) {
 	const minimalYAML = `
 OAuth:
   Github:
-    ClientID: "provided_client_id"
-    ClientSecret: "provided_client_secret"
+    ClientID: "is not default"
+    ClientSecret: "is not default"
+    TokenURL: "is not default"
+
+JWT:
+  AccessTokenSecret: "is not default"
+  RefreshTokenSecret: "is not default"
+
+Storage:
+  Minio:
+    AccessKey: "is not default"
+    SecretKey: "is not default"
 `
 
 	filePath := writeTempConfigFile(t, "minimal_config.yaml", minimalYAML)
@@ -245,15 +255,18 @@ OAuth:
 	// --- OAuth (GitHub) defaults and provided values ---
 	require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
 	// Provided values.
-	assert.Equal(t, "provided_client_id", cfg.OAuth.Github.ClientID)
-	assert.Equal(t, "provided_client_secret", cfg.OAuth.Github.ClientSecret)
+	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientID)
+	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientSecret)
 	// Default values.
 	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
 	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
 	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
+	assert.Equal(t, "is not default", cfg.OAuth.Github.TokenURL)
 
 	// --- JWT defaults ---
+	assert.Equal(t, "is not default", cfg.JWT.AccessTokenSecret)
 	assert.Equal(t, config.DefaultAccessTokenExpirationTime, cfg.JWT.AccessTokenExpirationTime)
+	assert.Equal(t, "is not default", cfg.JWT.RefreshTokenSecret)
 	assert.Equal(t, config.DefaultRefreshTokenExpirationTime, cfg.JWT.RefreshTokenExpirationTime)
 
 	// --- Mongo defaults ---
@@ -268,6 +281,9 @@ OAuth:
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
 	assert.Equal(t, config.DefaultMinioBucket, cfg.Storage.Minio.Bucket)
 	assert.Equal(t, config.DefaultMinioEndpoint, cfg.Storage.Minio.Endpoint)
+	assert.Equal(t, "is not default", cfg.Storage.Minio.AccessKey)
+	assert.Equal(t, "is not default", cfg.Storage.Minio.SecretKey)
+
 	// S3 should be nil if not provided.
 	assert.Nil(t, cfg.Storage.S3, "Storage.S3 should be nil by default")
 }
