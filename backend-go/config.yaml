@@ -4,8 +4,8 @@ Server:
 Auth:
   Github:
     # WARNING: Replace these values with your GitHub OAuth credentials
-    ClientID: "<GITHUB_CLIENT_ID>"
-    ClientSecret: "<GITHUB_CLIENT_SECRET>"
+    ClientID: ""
+    ClientSecret: ""
     CallbackURL: "http://localhost:3000/auth/login/github"
     AuthorizationURL: "https://github.com/login/oauth/authorize"
     TokenURL: "https://github.com/login/oauth/access_token"
