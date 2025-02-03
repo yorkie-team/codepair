@@ -29,39 +29,52 @@ func writeTempConfigFile(t *testing.T, filename, content string) string {
 }
 
 func TestConfigWithEnvVars(t *testing.T) {
-	// Define environment variables in a map.
 	envs := map[string]string{
+		// --- Server ---
 		"SERVER_PORT": "3002",
 
-		"OAUTH_GITHUB_CLIENT_ID":         "test_value",
-		"OAUTH_GITHUB_CLIENT_SECRET":     "test_value",
-		"OAUTH_GITHUB_CALLBACK_URL":      "test_value",
-		"OAUTH_GITHUB_AUTHORIZATION_URL": "test_value",
-		"OAUTH_GITHUB_TOKEN_URL":         "test_value",
-		"OAUTH_GITHUB_USER_PROFILE_URL":  "test_value",
+		// --- OAuth (GitHub) ---
+		"OAUTH_GITHUB_CLIENT_ID":     "test_value",
+		"OAUTH_GITHUB_CLIENT_SECRET": "test_value",
+		// Use valid URLs for fields with url validation.
+		"OAUTH_GITHUB_CALLBACK_URL":      "http://test_value/callback",
+		"OAUTH_GITHUB_AUTHORIZATION_URL": "http://test_value/auth",
+		"OAUTH_GITHUB_TOKEN_URL":         "http://test_value/token",
+		"OAUTH_GITHUB_USER_PROFILE_URL":  "http://test_value/profile",
 
-		"AUTH_FRONTEND_BASE_URL": "test_value",
+		// --- (Optional) FrontendBaseURL if needed ---
+		"AUTH_FRONTEND_BASE_URL": "http://test_value",
 
+		// --- JWT ---
 		"JWT_ACCESS_TOKEN_SECRET":           "test_value",
 		"JWT_ACCESS_TOKEN_EXPIRATION_TIME":  "48h",
 		"JWT_REFRESH_TOKEN_SECRET":          "test_value",
 		"JWT_REFRESH_TOKEN_EXPIRATION_TIME": "72h",
 
-		"YORKIE_API_ADDR":           "test_value",
+		// --- Yorkie ---
+		// APIAddr must be a valid URL.
+		"YORKIE_API_ADDR":           "http://test_value",
 		"YORKIE_PROJECT_NAME":       "test_value",
 		"YORKIE_PROJECT_SECRET_KEY": "test_value",
 
+		// --- Mongo ---
+		// ConnectionURI must be a valid URL; we use a mongodb:// URL.
 		"MONGO_CONNECTION_TIMEOUT": "10s",
-		"MONGO_CONNECTION_URI":     "test_value",
+		"MONGO_CONNECTION_URI":     "mongodb://test_value:27017/codepair",
 		"MONGO_PING_TIMEOUT":       "3s",
 		"MONGO_DATABASE_NAME":      "test_value",
 
-		"STORAGE_PROVIDER":         "minio",
+		// --- Storage ---
+		// Provider must be "minio" or "s3".
+		"STORAGE_PROVIDER": "minio",
+
+		// --- Minio (when provider is minio, Endpoint must be a valid URL) ---
 		"STORAGE_MINIO_BUCKET":     "test_value",
-		"STORAGE_MINIO_ENDPOINT":   "test_value",
+		"STORAGE_MINIO_ENDPOINT":   "http://test_value:9000",
 		"STORAGE_MINIO_ACCESS_KEY": "test_value",
 		"STORAGE_MINIO_SECRET_KEY": "test_value",
 
+		// --- S3 ---
 		"STORAGE_S3_BUCKET":     "test_value",
 		"STORAGE_S3_REGION":     "test_value",
 		"STORAGE_S3_ACCESS_KEY": "test_value",
@@ -79,10 +92,11 @@ func TestConfigWithEnvVars(t *testing.T) {
 	require.NotNil(t, cfg.OAuth.Github, "GitHub OAuth config should not be nil")
 	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientID)
 	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientSecret)
-	assert.Equal(t, "test_value", cfg.OAuth.Github.CallbackURL)
-	assert.Equal(t, "test_value", cfg.OAuth.Github.AuthorizationURL)
-	assert.Equal(t, "test_value", cfg.OAuth.Github.TokenURL)
-	assert.Equal(t, "test_value", cfg.OAuth.Github.UserProfileURL)
+	// Expect the valid URL strings.
+	assert.Equal(t, "http://test_value/callback", cfg.OAuth.Github.CallbackURL)
+	assert.Equal(t, "http://test_value/auth", cfg.OAuth.Github.AuthorizationURL)
+	assert.Equal(t, "http://test_value/token", cfg.OAuth.Github.TokenURL)
+	assert.Equal(t, "http://test_value/profile", cfg.OAuth.Github.UserProfileURL)
 
 	// --- JWT ---
 	assert.Equal(t, "test_value", cfg.JWT.AccessTokenSecret)
@@ -91,13 +105,13 @@ func TestConfigWithEnvVars(t *testing.T) {
 	assert.Equal(t, 72*time.Hour, cfg.JWT.RefreshTokenExpirationTime)
 
 	// --- Yorkie ---
-	assert.Equal(t, "test_value", cfg.Yorkie.APIAddr)
+	assert.Equal(t, "http://test_value", cfg.Yorkie.APIAddr)
 	assert.Equal(t, "test_value", cfg.Yorkie.ProjectName)
 	assert.Equal(t, "test_value", cfg.Yorkie.ProjectSecretKey)
 
 	// --- Mongo ---
 	assert.Equal(t, 10*time.Second, cfg.Mongo.ConnectionTimeout)
-	assert.Equal(t, "test_value", cfg.Mongo.ConnectionURI)
+	assert.Equal(t, "mongodb://test_value:27017/codepair", cfg.Mongo.ConnectionURI)
 	assert.Equal(t, 3*time.Second, cfg.Mongo.PingTimeout)
 	assert.Equal(t, "test_value", cfg.Mongo.DatabaseName)
 
@@ -105,15 +119,14 @@ func TestConfigWithEnvVars(t *testing.T) {
 	assert.Equal(t, "minio", cfg.Storage.Provider, "Storage.Provider must be 'minio' or 's3'")
 
 	// --- Minio ---
-	// For Minio: ensure the block is not nil and values match.
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio must not be nil if provider=minio")
 	assert.Equal(t, "test_value", cfg.Storage.Minio.Bucket)
-	assert.Equal(t, "test_value", cfg.Storage.Minio.Endpoint)
+	assert.Equal(t, "http://test_value:9000", cfg.Storage.Minio.Endpoint)
 	assert.Equal(t, "test_value", cfg.Storage.Minio.AccessKey)
 	assert.Equal(t, "test_value", cfg.Storage.Minio.SecretKey)
 
 	// --- S3 ---
-	// For S3: the struct exists though values may be default or provided.
+	// In this test S3 values are set via environment variables.
 	require.NotNil(t, cfg.Storage.S3, "Storage.S3 struct can still exist")
 	assert.Equal(t, "test_value", cfg.Storage.S3.Bucket)
 	assert.Equal(t, "test_value", cfg.Storage.S3.Region)
@@ -150,7 +163,7 @@ JWT:
   RefreshTokenExpirationTime: "168h"
 
 Yorkie:
-  APIAddr: "http://config-yorkie:8080"
+  APIAddr: "https://config-yorkie:8080"
   ProjectName: "config_project"
   ProjectSecretKey: "config_project_secret"
 
@@ -165,7 +178,7 @@ Storage:
 
   Minio:
     Bucket: "config-storage"
-    Endpoint: "http://config-minio:9000"
+    Endpoint: "https://config-minio:9000"
     AccessKey: "config_minioadmin"
     SecretKey: "config_minioadmin"
 
@@ -198,7 +211,7 @@ Storage:
 		assert.Equal(t, 168*time.Hour, cfg.JWT.RefreshTokenExpirationTime)
 
 		// --- Yorkie ---
-		assert.Equal(t, "http://config-yorkie:8080", cfg.Yorkie.APIAddr)
+		assert.Equal(t, "https://config-yorkie:8080", cfg.Yorkie.APIAddr)
 		assert.Equal(t, "config_project", cfg.Yorkie.ProjectName)
 		assert.Equal(t, "config_project_secret", cfg.Yorkie.ProjectSecretKey)
 
@@ -214,7 +227,7 @@ Storage:
 		// Minio
 		require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil if the provider is 'minio'")
 		assert.Equal(t, "config-storage", cfg.Storage.Minio.Bucket)
-		assert.Equal(t, "http://config-minio:9000", cfg.Storage.Minio.Endpoint)
+		assert.Equal(t, "https://config-minio:9000", cfg.Storage.Minio.Endpoint)
 		assert.Equal(t, "config_minioadmin", cfg.Storage.Minio.AccessKey)
 		assert.Equal(t, "config_minioadmin", cfg.Storage.Minio.SecretKey)
 
@@ -228,12 +241,14 @@ Storage:
 }
 
 func TestConfigWithDefaultValues(t *testing.T) {
+	// In the minimal YAML below, only the required fields that do not have defaults
+	// are provided. For fields with URL validation and defaults, we supply valid values when needed.
 	const minimalYAML = `
 OAuth:
   Github:
     ClientID: "is not default"
     ClientSecret: "is not default"
-    TokenURL: "is not default"
+    TokenURL: "http://is-not-default/token"  # provided but not default; note valid URL format
 
 JWT:
   AccessTokenSecret: "is not default"
@@ -244,7 +259,6 @@ Storage:
     AccessKey: "is not default"
     SecretKey: "is not default"
 `
-
 	filePath := writeTempConfigFile(t, "minimal_config.yaml", minimalYAML)
 	cfg, err := config.LoadConfig(filePath)
 	require.NoError(t, err, "LoadConfig should succeed with a minimal config file")
@@ -257,11 +271,11 @@ Storage:
 	// Provided values.
 	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientID)
 	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientSecret)
+	assert.Equal(t, "http://is-not-default/token", cfg.OAuth.Github.TokenURL)
 	// Default values.
 	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
 	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
 	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
-	assert.Equal(t, "is not default", cfg.OAuth.Github.TokenURL)
 
 	// --- JWT defaults ---
 	assert.Equal(t, "is not default", cfg.JWT.AccessTokenSecret)
