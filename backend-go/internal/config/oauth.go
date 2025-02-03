@@ -1,8 +1,6 @@
 package config
 
-import (
-	"fmt"
-)
+import "fmt"
 
 const (
 	DefaultGitHubAuthorizationURL = "https://github.com/login/oauth/authorize"
@@ -11,33 +9,35 @@ const (
 )
 
 type OAuth struct {
-	Github *GitHubOAuth `mapstructure:"Github"`
+	Github *Github `mapstructure:"Github" validate:"required"`
 }
 
-type GitHubOAuth struct {
-	ClientID         string `mapstructure:"ClientID"`
-	ClientSecret     string `mapstructure:"ClientSecret"`
-	CallbackURL      string `mapstructure:"CallbackURL"`
-	AuthorizationURL string `mapstructure:"AuthorizationURL"`
-	TokenURL         string `mapstructure:"TokenURL"`
-	UserProfileURL   string `mapstructure:"UserProfileURL"`
+type Github struct {
+	ClientID         string `mapstructure:"ClientID" validate:"required"`
+	ClientSecret     string `mapstructure:"ClientSecret" validate:"required"`
+	CallbackURL      string `mapstructure:"CallbackURL" validate:"required,url"`
+	AuthorizationURL string `mapstructure:"AuthorizationURL" validate:"required,url"`
+	TokenURL         string `mapstructure:"TokenURL" validate:"required,url"`
+	UserProfileURL   string `mapstructure:"UserProfileURL" validate:"required,url"`
 }
 
+// ensureDefaultValue applies defaults for GitHub URLs if they are not provided.
 func (o *OAuth) ensureDefaultValue() {
 	if o.Github == nil {
-		o.Github = &GitHubOAuth{}
+		o.Github = &Github{}
 	}
 	o.Github.ensureDefaultValue()
 }
 
+// validate uses the validator library to validate the struct fields.
 func (o *OAuth) validate() error {
-	if err := o.Github.validate(); err != nil {
-		return err
+	if err := validate.Struct(o); err != nil {
+		return fmt.Errorf("OAuth config validation failed: %w", err)
 	}
 	return nil
 }
 
-func (g *GitHubOAuth) ensureDefaultValue() {
+func (g *Github) ensureDefaultValue() {
 	if g.CallbackURL == "" {
 		g.CallbackURL = DefaultGitHubCallbackURL
 	}
@@ -47,15 +47,4 @@ func (g *GitHubOAuth) ensureDefaultValue() {
 	if g.UserProfileURL == "" {
 		g.UserProfileURL = DefaultGitHubUserProfileURL
 	}
-}
-
-func (g *GitHubOAuth) validate() error {
-	if g.ClientID == "" {
-		return fmt.Errorf("github client_id cannot be empty")
-	}
-	if g.ClientSecret == "" {
-		return fmt.Errorf("github client_secret cannot be empty")
-	}
-
-	return nil
 }

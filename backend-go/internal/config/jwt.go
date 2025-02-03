@@ -11,12 +11,13 @@ const (
 )
 
 type JWT struct {
-	AccessTokenSecret          string        `mapstructure:"AccessTokenSecret"`
-	AccessTokenExpirationTime  time.Duration `mapstructure:"AccessTokenExpirationTime"`
-	RefreshTokenSecret         string        `mapstructure:"RefreshTokenSecret"`
-	RefreshTokenExpirationTime time.Duration `mapstructure:"RefreshTokenExpirationTime"`
+	AccessTokenSecret          string        `mapstructure:"AccessTokenSecret" validate:"required"`
+	AccessTokenExpirationTime  time.Duration `mapstructure:"AccessTokenExpirationTime" validate:"gt=0"`
+	RefreshTokenSecret         string        `mapstructure:"RefreshTokenSecret" validate:"required"`
+	RefreshTokenExpirationTime time.Duration `mapstructure:"RefreshTokenExpirationTime" validate:"gt=0"`
 }
 
+// ensureDefaultValue applies default expiration times when not provided.
 func (j *JWT) ensureDefaultValue() {
 	if j.AccessTokenExpirationTime == 0 {
 		j.AccessTokenExpirationTime = DefaultAccessTokenExpirationTime
@@ -26,18 +27,10 @@ func (j *JWT) ensureDefaultValue() {
 	}
 }
 
+// validate uses the validator library to validate the struct fields.
 func (j *JWT) validate() error {
-	if j.AccessTokenSecret == "" {
-		return fmt.Errorf("access token secret cannot be empty")
-	}
-	if j.RefreshTokenSecret == "" {
-		return fmt.Errorf("refresh token secret cannot be empty")
-	}
-	if j.AccessTokenExpirationTime <= 0 {
-		return fmt.Errorf("access token expiration time must be positive")
-	}
-	if j.RefreshTokenExpirationTime <= j.AccessTokenExpirationTime {
-		return fmt.Errorf("refresh token expiration time must be greater than access token expiration time")
+	if err := validate.Struct(j); err != nil {
+		return fmt.Errorf("JWT config validation failed: %w", err)
 	}
 	return nil
 }

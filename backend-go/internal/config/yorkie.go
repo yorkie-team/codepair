@@ -9,11 +9,12 @@ const (
 )
 
 type Yorkie struct {
-	APIAddr          string `mapstructure:"APIAddr"`
-	ProjectName      string `mapstructure:"ProjectName"`
+	APIAddr          string `mapstructure:"APIAddr" validate:"required,url"`
+	ProjectName      string `mapstructure:"ProjectName" validate:"required"`
 	ProjectSecretKey string `mapstructure:"ProjectSecretKey"`
 }
 
+// ensureDefaultValue applies defaults for Yorkie.
 func (y *Yorkie) ensureDefaultValue() {
 	if y.APIAddr == "" {
 		y.APIAddr = DefaultYorkieAPIAddr
@@ -26,9 +27,11 @@ func (y *Yorkie) ensureDefaultValue() {
 	}
 }
 
+// validate uses the validator library to validate the struct fields.
 func (y *Yorkie) validate() error {
-	if y.APIAddr == "" {
-		return fmt.Errorf("yorkie APIAddr cannot be empty")
+	if err := validate.Struct(y); err != nil {
+		return fmt.Errorf("yorkie config validation failed: %w", err)
 	}
+
 	return nil
 }

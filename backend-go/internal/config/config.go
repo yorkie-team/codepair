@@ -4,8 +4,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 )
+
+var validate = validator.New()
 
 // Config holds the application configuration.
 type Config struct {

@@ -6,21 +6,22 @@ const (
 	DefaultServerPort = 3001
 )
 
-// Server holds your server configuration.
 type Server struct {
-	Port int `mapstructure:"Port"`
+	Port int `mapstructure:"Port" validate:"required,min=1,max=65535"`
 }
 
-// ensureDefaultValue sets a default if Port is not provided.
+// ensureDefaultValue sets a default port if none is provided.
 func (s *Server) ensureDefaultValue() {
 	if s.Port == 0 {
 		s.Port = DefaultServerPort
 	}
 }
 
+// validate uses the validator library to validate the struct fields.
 func (s *Server) validate() error {
-	if s.Port < 1 || 65535 < s.Port {
-		return fmt.Errorf("must be between 1 and 65535, given %d", s.Port)
+	if err := validate.Struct(s); err != nil {
+		return fmt.Errorf("server config validation failed: %w", err)
 	}
+
 	return nil
 }

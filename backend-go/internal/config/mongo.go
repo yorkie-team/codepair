@@ -13,12 +13,13 @@ const (
 )
 
 type Mongo struct {
-	ConnectionTimeout time.Duration `mapstructure:"ConnectionTimeout"`
-	ConnectionURI     string        `mapstructure:"ConnectionURI"`
-	PingTimeout       time.Duration `mapstructure:"PingTimeout"`
-	DatabaseName      string        `mapstructure:"DatabaseName"`
+	ConnectionTimeout time.Duration `mapstructure:"ConnectionTimeout" validate:"gt=0"`
+	ConnectionURI     string        `mapstructure:"ConnectionURI" validate:"required,url"`
+	PingTimeout       time.Duration `mapstructure:"PingTimeout" validate:"gt=0"`
+	DatabaseName      string        `mapstructure:"DatabaseName" validate:"required"`
 }
 
+// ensureDefaultValue applies defaults if a field is zero-valued.
 func (m *Mongo) ensureDefaultValue() {
 	if m.ConnectionTimeout == 0 {
 		m.ConnectionTimeout = DefaultConnectionTimeout
@@ -34,13 +35,10 @@ func (m *Mongo) ensureDefaultValue() {
 	}
 }
 
+// validate uses the validator library to validate the struct fields.
 func (m *Mongo) validate() error {
-	if m.ConnectionURI == "" {
-		return fmt.Errorf("mongo connection URI cannot be empty")
+	if err := validate.Struct(m); err != nil {
+		return fmt.Errorf("mongo config validation failed: %w", err)
 	}
-	if m.DatabaseName == "" {
-		return fmt.Errorf("mongo database name cannot be empty")
-	}
-
 	return nil
 }
