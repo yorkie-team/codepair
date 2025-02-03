@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -69,7 +70,7 @@ func readConfigFile(filePath string) error {
 			}
 			return nil
 		}
-		return err
+		return fmt.Errorf("failed to read config file: %w", err)
 	}
 
 	return nil
