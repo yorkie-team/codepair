@@ -23,7 +23,7 @@ func setEnvVars(t *testing.T, envs map[string]string) {
 func writeTempConfigFile(t *testing.T, filename, content string) string {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, filename)
-	err := os.WriteFile(filePath, []byte(content), 0644)
+	err := os.WriteFile(filePath, []byte(content), 0600)
 	require.NoError(t, err, "Should be able to create a temporary config file")
 	return filePath
 }
@@ -104,6 +104,7 @@ func TestConfigWithEnvVars(t *testing.T) {
 	// --- Storage ---
 	assert.Equal(t, "minio", cfg.Storage.Provider, "Storage.Provider must be 'minio' or 's3'")
 
+	// --- Minio ---
 	// For Minio: ensure the block is not nil and values match.
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio must not be nil if provider=minio")
 	assert.Equal(t, "test_value", cfg.Storage.Minio.Bucket)
@@ -111,6 +112,7 @@ func TestConfigWithEnvVars(t *testing.T) {
 	assert.Equal(t, "test_value", cfg.Storage.Minio.AccessKey)
 	assert.Equal(t, "test_value", cfg.Storage.Minio.SecretKey)
 
+	// --- S3 ---
 	// For S3: the struct exists though values may be default or provided.
 	require.NotNil(t, cfg.Storage.S3, "Storage.S3 struct can still exist")
 	assert.Equal(t, "test_value", cfg.Storage.S3.Bucket)
@@ -264,7 +266,7 @@ OAuth:
 	assert.Equal(t, config.DefaultMongoDatabaseName, cfg.Mongo.DatabaseName)
 
 	// --- Storage defaults ---
-	assert.Equal(t, config.DefaultStorageProvider, cfg.Storage.Provider, "Storage.Provider should default to DefaultStorageProvider")
+	assert.Equal(t, config.DefaultStorageProvider, cfg.Storage.Provider, "Default storage provider is minio")
 	// When provider is minio, ensure the Minio block is set with defaults.
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
 	assert.Equal(t, config.DefaultMinioBucket, cfg.Storage.Minio.Bucket)
