@@ -9,12 +9,7 @@ class Settings(BaseSettings):
     model_name: str
     api_key: str
 
-    # src/.env ?
     model_config = SettingsConfigDict(env_file="src/.env")
 
-
-# TODO
-# https://fastapi.tiangolo.com/advanced/settings/#the-env-file
-# what is diffrence between basic define and using lru_cache
 
 SETTINGS = Settings()

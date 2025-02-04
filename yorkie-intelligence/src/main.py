@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api import api_router
+from src.api import router
 
 app = FastAPI(
     title="Yorkie Intelligence",
@@ -15,4 +15,4 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-app.include_router(api_router, prefix="/intelligence")
+app.include_router(router, prefix="/intelligence")

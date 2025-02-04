@@ -9,8 +9,8 @@ from .config import issue_template_prompt
 router = APIRouter()
 
 
-@router.get("/streaming_issue")
-async def get_issue(query: str, llm=Depends(get_model)):
+@router.get("/create")
+async def make_issue(query: str, llm=Depends(get_model)):
     chain = issue_template_prompt | llm | StrOutputParser()
 
     async def event_stream():

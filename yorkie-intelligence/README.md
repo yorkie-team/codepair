@@ -20,8 +20,9 @@ poetry install --without dev
 
 ```sh
 git clone https://github.com/yorkie-team/codepair.git
-cd yorkie-installigence
+cd yorkie-intalligence
 poetry run uvicorn src.main:app --reload
 ```
-you can see openapi in http://localhost:8000
+
+you can see openapi in http://localhost:8000/docs
 

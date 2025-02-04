@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 
-from src.api.pr.views import router as pr_router
+from src.api.pr import api_router as pr_router
+from src.api.issue import api_router as issue_router
 
-api_router = APIRouter()
-api_router.include_router(pr_router, prefix="/pr")
+router = APIRouter()
+
+router.include_router(pr_router, prefix="/pr")
+router.include_router(issue_router, prefix="/issue")
