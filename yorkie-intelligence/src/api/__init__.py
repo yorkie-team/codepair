@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from src.api.pr import api_router as pr_router
-from src.api.issue import api_router as issue_router
+from src.api.pr import router as pr_router
+from src.api.issue import router as issue_router
 
 router = APIRouter()
 

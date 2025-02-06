@@ -19,7 +19,11 @@ pydantic-settings = "^2.7.1"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
 pytest = "^8.3.4"
+pytest-asyncio = "^0.25.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+ignore = ["F401"]

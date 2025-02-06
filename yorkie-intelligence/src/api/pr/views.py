@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from fastapi.responses import StreamingResponse
 from langchain_core.output_parsers import StrOutputParser
 
@@ -9,15 +9,15 @@ from .config import issue_template_prompt
 router = APIRouter()
 
 
-@router.get("/create")
-async def make_pr(query: str, llm=Depends(get_model)):
+@router.post("/create")
+async def make_pr(query: str = Body(embed=True), llm=Depends(get_model)):
     chain = issue_template_prompt | llm | StrOutputParser()
 
     async def event_stream():
         try:
             async for chunk in chain.astream(query):
-                yield f"data: {chunk}\n\n"
+                yield chunk
         except Exception as e:
-            yield f"data: {str(e)}\n\n"
+            yield f"\n\n{str(e)}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
