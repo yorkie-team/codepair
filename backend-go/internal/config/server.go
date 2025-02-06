@@ -7,7 +7,7 @@ const (
 )
 
 type Server struct {
-	Port int `mapstructure:"Port" validate:"required,min=1,max=65535"`
+	Port int `validate:"required,min=1,max=65535"`
 }
 
 // ensureDefaultValue sets a default port if none is provided.

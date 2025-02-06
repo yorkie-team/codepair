@@ -9,17 +9,17 @@ const (
 )
 
 type Auth struct {
-	Github          *Github `mapstructure:"Github" validate:"required"`
-	FrontendBaseURL string  `mapstructure:"FrontendBaseURL" validate:"required,url"`
+	Github          *Github `validate:"required"`
+	FrontendBaseURL string  `validate:"required,url"`
 }
 
 type Github struct {
-	ClientID         string `mapstructure:"ClientID" validate:"required"`
-	ClientSecret     string `mapstructure:"ClientSecret" validate:"required"`
-	CallbackURL      string `mapstructure:"CallbackURL" validate:"required,url"`
-	AuthorizationURL string `mapstructure:"AuthorizationURL" validate:"required,url"`
-	TokenURL         string `mapstructure:"TokenURL" validate:"required,url"`
-	UserProfileURL   string `mapstructure:"UserProfileURL" validate:"required,url"`
+	ClientID         string `validate:"required"`
+	ClientSecret     string `validate:"required"`
+	CallbackURL      string `validate:"required,url"`
+	AuthorizationURL string `validate:"required,url"`
+	TokenURL         string `validate:"required,url"`
+	UserProfileURL   string `validate:"required,url"`
 }
 
 // ensureDefaultValue applies defaults for GitHub URLs if they are not provided.

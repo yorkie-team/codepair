@@ -9,9 +9,9 @@ const (
 )
 
 type Yorkie struct {
-	APIAddr          string `mapstructure:"APIAddr" validate:"required,url"`
-	ProjectName      string `mapstructure:"ProjectName" validate:"required"`
-	ProjectSecretKey string `mapstructure:"ProjectSecretKey"`
+	APIAddr          string `validate:"required,url"`
+	ProjectName      string `validate:"required"`
+	ProjectSecretKey string
 }
 
 // ensureDefaultValue applies defaults for Yorkie.

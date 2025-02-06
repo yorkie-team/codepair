@@ -13,10 +13,10 @@ const (
 )
 
 type Mongo struct {
-	ConnectionTimeout time.Duration `mapstructure:"ConnectionTimeout" validate:"gt=0"`
-	ConnectionURI     string        `mapstructure:"ConnectionURI" validate:"required,url"`
-	PingTimeout       time.Duration `mapstructure:"PingTimeout" validate:"gt=0"`
-	DatabaseName      string        `mapstructure:"DatabaseName" validate:"required"`
+	ConnectionTimeout time.Duration `validate:"gt=0"`
+	ConnectionURI     string        `validate:"required,url"`
+	PingTimeout       time.Duration `validate:"gt=0"`
+	DatabaseName      string        `validate:"required"`
 }
 
 // ensureDefaultValue applies defaults if a field is zero-valued.

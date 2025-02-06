@@ -11,10 +11,10 @@ const (
 )
 
 type JWT struct {
-	AccessTokenSecret          string        `mapstructure:"AccessTokenSecret" validate:"required"`
-	AccessTokenExpirationTime  time.Duration `mapstructure:"AccessTokenExpirationTime" validate:"gt=0"`
-	RefreshTokenSecret         string        `mapstructure:"RefreshTokenSecret" validate:"required"`
-	RefreshTokenExpirationTime time.Duration `mapstructure:"RefreshTokenExpirationTime" validate:"gt=0"`
+	AccessTokenSecret          string        `validate:"required"`
+	AccessTokenExpirationTime  time.Duration `validate:"gt=0"`
+	RefreshTokenSecret         string        `validate:"required"`
+	RefreshTokenExpirationTime time.Duration `validate:"gt=0"`
 }
 
 // ensureDefaultValue applies default expiration times when not provided.

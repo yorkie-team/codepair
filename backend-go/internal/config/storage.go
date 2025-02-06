@@ -11,23 +11,23 @@ const (
 )
 
 type Storage struct {
-	Provider string `mapstructure:"provider" validate:"required,oneof=minio s3"`
-	S3       *S3    `mapstructure:"s3" validate:"omitempty"`
-	Minio    *Minio `mapstructure:"minio" validate:"omitempty"`
+	Provider string `validate:"required,oneof=minio s3"`
+	S3       *S3    `validate:"omitempty"`
+	Minio    *Minio `validate:"omitempty"`
 }
 
 type S3 struct {
-	Bucket    string `mapstructure:"bucket" validate:"required"`
-	Region    string `mapstructure:"region" validate:"required"`
-	AccessKey string `mapstructure:"accessKey" validate:"required"`
-	SecretKey string `mapstructure:"secretKey" validate:"required"`
+	Bucket    string `validate:"required"`
+	Region    string `validate:"required"`
+	AccessKey string `validate:"required"`
+	SecretKey string `validate:"required"`
 }
 
 type Minio struct {
-	Bucket    string `mapstructure:"bucket" validate:"required"`
-	Endpoint  string `mapstructure:"endpoint" validate:"required,url"`
-	AccessKey string `mapstructure:"accessKey" validate:"required"`
-	SecretKey string `mapstructure:"secretKey" validate:"required"`
+	Bucket    string `validate:"required"`
+	Endpoint  string `validate:"required,url"`
+	AccessKey string `validate:"required"`
+	SecretKey string `validate:"required"`
 }
 
 // ensureDefaultValue applies default values for provider and Minio.

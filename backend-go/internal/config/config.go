@@ -10,14 +10,13 @@ import (
 
 var validate = validator.New()
 
-// Config holds the application configuration.
 type Config struct {
-	Server  Server  `mapstructure:"Server"`
-	Auth    Auth    `mapstructure:"Auth"`
-	JWT     JWT     `mapstructure:"JWT"`
-	Yorkie  Yorkie  `mapstructure:"Yorkie"`
-	Mongo   Mongo   `mapstructure:"Mongo"`
-	Storage Storage `mapstructure:"Storage"`
+	Server  Server
+	Auth    Auth
+	JWT     JWT
+	Yorkie  Yorkie
+	Mongo   Mongo
+	Storage Storage
 }
 
 // LoadConfig loads configuration settings from a file (if provided) and from environment variables.
