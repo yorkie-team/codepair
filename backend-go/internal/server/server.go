@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/yorkie-team/codepair/backend/internal/core"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -15,8 +16,10 @@ type CodePair struct {
 	echo   *echo.Echo
 }
 
+// New creates a new CodePair server.
 func New(e *echo.Echo, conf *config.Config) *CodePair {
-	RegisterRoutes(e)
+	handlers := core.NewHandlers()
+	RegisterRoutes(e, handlers)
 
 	cp := &CodePair{
 		config: conf,
@@ -25,6 +28,7 @@ func New(e *echo.Echo, conf *config.Config) *CodePair {
 	return cp
 }
 
+// Start starts the server.
 func (c *CodePair) Start() error {
 	addr := fmt.Sprintf(":%d", c.config.Server.Port)
 	if err := c.echo.Start(addr); !errors.Is(err, http.ErrServerClosed) {

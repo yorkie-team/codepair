@@ -3,36 +3,36 @@ package hello
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
-	"github.com/yorkie-team/codepair/backend/internal/transport/rest"
+	"github.com/yorkie-team/codepair/backend/internal/transport/http"
 )
 
 type Handler struct {
-	helloService Service
+	helloService *Service
 }
 
 // NewHandler creates a new handler for hello.
-func NewHandler(service Service) Handler {
-	return Handler{
+func NewHandler(service *Service) *Handler {
+	return &Handler{
 		helloService: service,
 	}
 }
 
 // HelloCodePair returns a hello message for a given CodePairVisitor.
-func (h Handler) HelloCodePair(e echo.Context) error {
-	data := new(models.HelloRequest)
+func (h *Handler) HelloCodePair(e echo.Context) error {
+	req := new(models.HelloRequest)
 
-	if err := rest.BindAndValidateRequest(e, data); err != nil {
+	if err := http.BindAndValidateRequest(e, req); err != nil {
 		return err
 	}
 
 	helloMessage, err := h.helloService.HelloCodePair(e, CodePairVisitor{
-		Nickname: data.Nickname,
+		Nickname: req.Nickname,
 	})
 	if err != nil {
-		return rest.NewErrorResponse(e, err)
+		return http.NewErrorResponse(e, err)
 	}
 
-	return rest.NewOkResponse(e, models.HelloResponse{
+	return http.NewOkResponse(e, models.HelloResponse{
 		Message: helloMessage,
 	})
 }

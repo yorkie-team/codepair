@@ -1,8 +1,8 @@
-package rest
+package http
 
 import (
 	"github.com/labstack/echo/v4"
-	"net/http"
+	nethttp "net/http"
 )
 
 type request interface {
@@ -13,10 +13,10 @@ type request interface {
 // If the request is invalid, it returns an error response.
 func BindAndValidateRequest(e echo.Context, req request) error {
 	if err := e.Bind(req); err != nil {
-		return e.JSON(http.StatusBadRequest, NewInvalidJsonErrorResponse())
+		return e.JSON(nethttp.StatusBadRequest, NewInvalidJsonErrorResponse())
 	}
 	if err := req.Validate(); err != nil {
-		return e.JSON(http.StatusBadRequest, NewValidationErrorResponse(err.Error()))
+		return e.JSON(nethttp.StatusBadRequest, NewValidationErrorResponse(err.Error()))
 	}
 	return nil
 }
@@ -31,5 +31,5 @@ func NewErrorResponse(e echo.Context, err error) error {
 
 // NewOkResponse sends a JSON response with a status code of 200.
 func NewOkResponse(e echo.Context, resp interface{}) error {
-	return e.JSON(http.StatusOK, resp)
+	return e.JSON(nethttp.StatusOK, resp)
 }
