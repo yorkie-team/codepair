@@ -1,8 +1,10 @@
 package http
 
 import (
-	"github.com/labstack/echo/v4"
+	"fmt"
 	nethttp "net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 type request interface {
@@ -13,10 +15,10 @@ type request interface {
 // If the request is invalid, it returns an error response.
 func BindAndValidateRequest(e echo.Context, req request) error {
 	if err := e.Bind(req); err != nil {
-		return e.JSON(nethttp.StatusBadRequest, NewInvalidJsonErrorResponse())
+		return fmt.Errorf("failed to bind request: %w", e.JSON(nethttp.StatusBadRequest, NewInvalidJSONErrorResponse()))
 	}
 	if err := req.Validate(); err != nil {
-		return e.JSON(nethttp.StatusBadRequest, NewValidationErrorResponse(err.Error()))
+		return fmt.Errorf("validation failed: %w", e.JSON(nethttp.StatusBadRequest, NewValidationErrorResponse(err.Error())))
 	}
 	return nil
 }
@@ -26,10 +28,10 @@ func BindAndValidateRequest(e echo.Context, req request) error {
 // The response status code is determined by the error's associated status.
 func NewErrorResponse(e echo.Context, err error) error {
 	resp := ConvertErrorToResponse(err)
-	return e.JSON(int(resp.StatusCode), ConvertErrorToResponse(err))
+	return fmt.Errorf("returning error response as JSON: %w", e.JSON(resp.StatusCode, ConvertErrorToResponse(err)))
 }
 
 // NewOkResponse sends a JSON response with a status code of 200.
 func NewOkResponse(e echo.Context, resp interface{}) error {
-	return e.JSON(nethttp.StatusOK, resp)
+	return fmt.Errorf("returning success response as JSON: %w", e.JSON(nethttp.StatusOK, resp))
 }

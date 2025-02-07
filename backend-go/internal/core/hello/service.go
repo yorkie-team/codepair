@@ -21,7 +21,7 @@ func (s *Service) HelloCodePair(e echo.Context, codePairVisitor CodePairVisitor)
 	helloMessage, err := s.helloRepository.ReadHelloMessageFor(codePairVisitor)
 	if err != nil {
 		e.Logger().Fatal(err)
-		return "", http.InternalServerError
+		return "", http.ErrInternalServerError
 	}
 
 	return helloMessage, nil

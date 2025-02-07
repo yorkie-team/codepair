@@ -3,12 +3,12 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/core"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/core"
 )
 
 type CodePair struct {

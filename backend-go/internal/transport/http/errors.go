@@ -3,6 +3,6 @@ package http
 import "errors"
 
 var (
-	// InternalServerError is an internal server error
-	InternalServerError = errors.New("internal server error")
+	// ErrInternalServerError is an internal server error
+	ErrInternalServerError = errors.New("internal server error")
 )
