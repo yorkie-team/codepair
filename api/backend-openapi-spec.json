@@ -1,6 +1,39 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/hello": {
+      "post": {
+        "operationId": "helloCodePair",
+        "summary": "Example API",
+        "description": "Sample API endpoint for CodePair",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HelloRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelloResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Hello"
+        ]
+      }
+    },
     "/users": {
       "get": {
         "operationId": "findOneUser",
@@ -12,13 +45,21 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/FindUserResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserResponse"
+                }
               }
             }
           }
         },
-        "tags": ["Users"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "put": {
         "operationId": "updateUserNickname",
@@ -29,16 +70,28 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ChangeNicknameRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ChangeNicknameRequest"
+              }
             }
           }
         },
         "responses": {
-          "200": { "description": "" },
-          "409": { "description": "The nickname conflicts with existing one." }
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": "The nickname conflicts with existing one."
+          }
         },
-        "tags": ["Users"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/auth/login/github": {
@@ -52,12 +105,16 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
               }
             }
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/auth/refresh": {
@@ -88,7 +145,9 @@
             }
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/workspaces": {
@@ -119,8 +178,14 @@
             }
           }
         },
-        "tags": ["Workspaces"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspaces"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "get": {
         "operationId": "findManyWorkspaces",
@@ -132,14 +197,18 @@
             "required": false,
             "in": "query",
             "description": "Page size to fetch (defaults to 10)",
-            "schema": { "type": "number" }
+            "schema": {
+              "type": "number"
+            }
           },
           {
             "name": "cursor",
             "required": false,
             "in": "query",
             "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -154,8 +223,14 @@
             }
           }
         },
-        "tags": ["Workspaces"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspaces"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_slug}": {
@@ -168,7 +243,9 @@
             "name": "workspace_slug",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -193,8 +270,14 @@
             }
           }
         },
-        "tags": ["Workspaces"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspaces"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_id}/invite-token": {
@@ -208,7 +291,9 @@
             "required": true,
             "in": "path",
             "description": "ID of the workspace to which the token grants access",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -243,8 +328,14 @@
             }
           }
         },
-        "tags": ["Workspaces"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspaces"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/join": {
@@ -257,7 +348,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/JoinWorkspaceRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/JoinWorkspaceRequest"
+              }
             }
           }
         },
@@ -293,8 +386,14 @@
             }
           }
         },
-        "tags": ["Workspaces"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspaces"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_id}/users": {
@@ -307,21 +406,27 @@
             "name": "workspace_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "page_size",
             "required": false,
             "in": "query",
             "description": "Page size to fetch (defaults to 10)",
-            "schema": { "type": "number" }
+            "schema": {
+              "type": "number"
+            }
           },
           {
             "name": "cursor",
             "required": false,
             "in": "query",
             "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -346,8 +451,14 @@
             }
           }
         },
-        "tags": ["Workspace.Users"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_id}/documents/{document_id}": {
@@ -361,14 +472,18 @@
             "required": true,
             "in": "path",
             "description": "ID of the workspace",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "document_id",
             "required": true,
             "in": "path",
             "description": "ID of the document to rename",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -383,7 +498,9 @@
           }
         },
         "responses": {
-          "200": { "description": "Document title updated successfully." },
+          "200": {
+            "description": "Document title updated successfully."
+          },
           "404": {
             "description": "The workspace or document does not exist, or the user lacks permission.",
             "content": {
@@ -395,8 +512,14 @@
             }
           }
         },
-        "tags": ["Workspace.Documents"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "get": {
         "operationId": "findOneWorkspaceDocument",
@@ -407,13 +530,17 @@
             "name": "workspace_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "document_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -438,8 +565,14 @@
             }
           }
         },
-        "tags": ["Workspace.Documents"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_id}/documents": {
@@ -452,21 +585,27 @@
             "name": "workspace_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "page_size",
             "required": false,
             "in": "query",
             "description": "Page size to fetch (defaults to 10)",
-            "schema": { "type": "number" }
+            "schema": {
+              "type": "number"
+            }
           },
           {
             "name": "cursor",
             "required": false,
             "in": "query",
             "description": "Returns next set of results after this cursor. If none provided, returns the first page.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -491,8 +630,14 @@
             }
           }
         },
-        "tags": ["Workspace.Documents"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "post": {
         "operationId": "createWorkspaceDocument",
@@ -503,7 +648,9 @@
             "name": "workspace_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -538,8 +685,14 @@
             }
           }
         },
-        "tags": ["Workspace.Documents"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/workspaces/{workspace_id}/documents/{document_id}/share-token": {
@@ -552,13 +705,17 @@
             "name": "workspace_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "document_id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -593,8 +750,14 @@
             }
           }
         },
-        "tags": ["Workspace.Documents"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Workspace.Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/documents/share": {
@@ -608,7 +771,9 @@
             "required": true,
             "in": "query",
             "description": "Valid sharing token to retrieve the document.",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -643,7 +808,9 @@
             }
           }
         },
-        "tags": ["Documents"]
+        "tags": [
+          "Documents"
+        ]
       }
     },
     "/check/name-conflict": {
@@ -674,7 +841,9 @@
             }
           }
         },
-        "tags": ["Check"]
+        "tags": [
+          "Check"
+        ]
       }
     },
     "/check/yorkie": {
@@ -687,7 +856,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CheckYorkieRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CheckYorkieRequest"
+              }
             }
           }
         },
@@ -696,12 +867,16 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/CheckYorkieResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/CheckYorkieResponse"
+                }
               }
             }
           }
         },
-        "tags": ["Check"]
+        "tags": [
+          "Check"
+        ]
       }
     },
     "/intelligence": {
@@ -714,7 +889,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RunFollowUpRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RunFollowUpRequest"
+              }
             }
           }
         },
@@ -722,12 +899,22 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
-        "tags": ["Intelligences"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Intelligences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/intelligence/{feature}": {
@@ -742,7 +929,11 @@
             "in": "path",
             "description": "The intelligence feature to run.",
             "schema": {
-              "enum": ["github-issue", "github-pr", "document-writing"],
+              "enum": [
+                "github-issue",
+                "github-pr",
+                "document-writing"
+              ],
               "type": "string"
             }
           }
@@ -751,7 +942,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RunFeatureRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/RunFeatureRequest"
+              }
             }
           }
         },
@@ -759,12 +952,22 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
-        "tags": ["Intelligences"],
-        "security": [{ "bearer": [] }]
+        "tags": [
+          "Intelligences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/files": {
@@ -795,7 +998,9 @@
             }
           }
         },
-        "tags": ["Files"]
+        "tags": [
+          "Files"
+        ]
       }
     },
     "/files/{file_name}": {
@@ -808,11 +1013,19 @@
             "name": "file_name",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "responses": { "200": { "description": "" } },
-        "tags": ["Files"]
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
       }
     },
     "/files/export-markdown": {
@@ -825,7 +1038,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ExportFileRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ExportFileRequest"
+              }
             }
           }
         },
@@ -834,12 +1049,16 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ExportFileResponse" }
+                "schema": {
+                  "$ref": "#/components/schemas/ExportFileResponse"
+                }
               }
             }
           }
         },
-        "tags": ["Files"]
+        "tags": [
+          "Files"
+        ]
       }
     },
     "/settings": {
@@ -860,7 +1079,9 @@
             }
           }
         },
-        "tags": ["Settings"]
+        "tags": [
+          "Settings"
+        ]
       }
     }
   },
@@ -881,11 +1102,42 @@
       }
     },
     "schemas": {
+      "HelloRequest": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "New nickname to say hello",
+            "minLength": 2
+          }
+        },
+        "required": [
+          "nickname"
+        ]
+      },
+      "HelloResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Welcome message"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
       "FindUserResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "User ID" },
-          "nickname": { "type": "string", "description": "User nickname" },
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "User nickname"
+          },
           "lastWorkspaceSlug": {
             "type": "string",
             "description": "Last accessed workspace slug"
@@ -901,7 +1153,11 @@
             "description": "Timestamp of last user update"
           }
         },
-        "required": ["id", "createdAt", "updatedAt"]
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "ChangeNicknameRequest": {
         "type": "object",
@@ -912,7 +1168,9 @@
             "minLength": 2
           }
         },
-        "required": ["nickname"]
+        "required": [
+          "nickname"
+        ]
       },
       "LoginResponse": {
         "type": "object",
@@ -926,7 +1184,10 @@
             "description": "Refresh token to obtain new access tokens"
           }
         },
-        "required": ["accessToken", "refreshToken"]
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
       },
       "RefreshTokenRequest": {
         "type": "object",
@@ -936,7 +1197,9 @@
             "description": "Refresh token for requesting a new access token"
           }
         },
-        "required": ["refreshToken"]
+        "required": [
+          "refreshToken"
+        ]
       },
       "RefreshTokenResponse": {
         "type": "object",
@@ -946,7 +1209,9 @@
             "description": "The newly issued access token"
           }
         },
-        "required": ["newAccessToken"]
+        "required": [
+          "newAccessToken"
+        ]
       },
       "CreateWorkspaceRequest": {
         "type": "object",
@@ -957,7 +1222,9 @@
             "minLength": 2
           }
         },
-        "required": ["title"]
+        "required": [
+          "title"
+        ]
       },
       "CreateWorkspaceResponse": {
         "$ref": "#/components/schemas/WorkspaceDomain"
@@ -969,12 +1236,56 @@
         "type": "object",
         "properties": {
           "statusCode": {
-            "type": "number",
+            "type": "integer",
             "enum": [
-              100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 300, 301,
-              302, 303, 304, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407,
-              408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422,
-              424, 428, 429, 500, 501, 502, 503, 504, 505
+              100,
+              101,
+              102,
+              103,
+              200,
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              300,
+              301,
+              302,
+              303,
+              304,
+              307,
+              308,
+              400,
+              401,
+              402,
+              403,
+              404,
+              405,
+              406,
+              407,
+              408,
+              409,
+              410,
+              411,
+              412,
+              413,
+              414,
+              415,
+              416,
+              417,
+              418,
+              421,
+              422,
+              424,
+              428,
+              429,
+              500,
+              501,
+              502,
+              503,
+              504,
+              505
             ],
             "description": "HTTP status code"
           },
@@ -983,17 +1294,26 @@
             "description": "Description of the error"
           }
         },
-        "required": ["statusCode", "message"]
+        "required": [
+          "statusCode",
+          "message"
+        ]
       },
       "WorkspaceDomain": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Workspace ID" },
+          "id": {
+            "type": "string",
+            "description": "Workspace ID"
+          },
           "title": {
             "type": "string",
             "description": "Title of the workspace"
           },
-          "slug": { "type": "string", "description": "Slug of the workspace" },
+          "slug": {
+            "type": "string",
+            "description": "Slug of the workspace"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -1005,7 +1325,13 @@
             "description": "Timestamp of last workspace update"
           }
         },
-        "required": ["id", "title", "slug", "createdAt", "updatedAt"]
+        "required": [
+          "id",
+          "title",
+          "slug",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "FindWorkspacesResponse": {
         "type": "object",
@@ -1013,14 +1339,19 @@
           "workspaces": {
             "description": "List of retrieved workspaces",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/WorkspaceDomain" }
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceDomain"
+            }
           },
           "cursor": {
             "type": "string",
             "description": "The ID of the last workspace (for pagination)"
           }
         },
-        "required": ["workspaces", "cursor"]
+        "required": [
+          "workspaces",
+          "cursor"
+        ]
       },
       "CreateInvitationTokenRequest": {
         "type": "object",
@@ -1031,7 +1362,9 @@
             "description": "Expiration timestamp for the invitation token"
           }
         },
-        "required": ["expiredAt"]
+        "required": [
+          "expiredAt"
+        ]
       },
       "CreateInvitationTokenResponse": {
         "type": "object",
@@ -1041,7 +1374,9 @@
             "description": "Generated token for invitation"
           }
         },
-        "required": ["invitationToken"]
+        "required": [
+          "invitationToken"
+        ]
       },
       "JoinWorkspaceRequest": {
         "type": "object",
@@ -1051,7 +1386,9 @@
             "description": "Valid invitation token to join the workspace"
           }
         },
-        "required": ["invitationToken"]
+        "required": [
+          "invitationToken"
+        ]
       },
       "JoinWorkspaceResponse": {
         "$ref": "#/components/schemas/WorkspaceDomain"
@@ -1059,8 +1396,14 @@
       "WorkspaceUserDomain": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "User ID" },
-          "nickname": { "type": "string", "description": "User nickname" },
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "User nickname"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -1072,7 +1415,12 @@
             "description": "Timestamp of last user update"
           }
         },
-        "required": ["id", "nickname", "createdAt", "updatedAt"]
+        "required": [
+          "id",
+          "nickname",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "FindWorkspaceUsersResponse": {
         "type": "object",
@@ -1080,7 +1428,9 @@
           "workspaceUsers": {
             "description": "List of workspace users",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/WorkspaceUserDomain" }
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceUserDomain"
+            }
           },
           "cursor": {
             "type": "string",
@@ -1091,7 +1441,11 @@
             "description": "Total count of workspace users"
           }
         },
-        "required": ["workspaceUsers", "cursor", "totalLength"]
+        "required": [
+          "workspaceUsers",
+          "cursor",
+          "totalLength"
+        ]
       },
       "UpdateDocumentTitleRequest": {
         "type": "object",
@@ -1102,18 +1456,29 @@
             "example": "Updated Document Title"
           }
         },
-        "required": ["title"]
+        "required": [
+          "title"
+        ]
       },
       "WorkspaceDocumentDomain": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Document ID" },
+          "id": {
+            "type": "string",
+            "description": "Document ID"
+          },
           "yorkieDocumentId": {
             "type": "string",
             "description": "Yorkie Document ID associated with the document"
           },
-          "title": { "type": "string", "description": "Document title" },
-          "content": { "type": "string", "description": "Document content" },
+          "title": {
+            "type": "string",
+            "description": "Document title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Document content"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -1144,7 +1509,9 @@
           "documents": {
             "description": "List of retrieved workspace documents",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/WorkspaceDocumentDomain" }
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceDocumentDomain"
+            }
           },
           "cursor": {
             "type": "string",
@@ -1155,7 +1522,11 @@
             "description": "Total count of documents in the workspace"
           }
         },
-        "required": ["documents", "cursor", "totalLength"]
+        "required": [
+          "documents",
+          "cursor",
+          "totalLength"
+        ]
       },
       "FindWorkspaceDocumentResponse": {
         "$ref": "#/components/schemas/WorkspaceDocumentDomain"
@@ -1168,7 +1539,9 @@
             "description": "Title for the new document"
           }
         },
-        "required": ["title"]
+        "required": [
+          "title"
+        ]
       },
       "CreateWorkspaceDocumentResponse": {
         "$ref": "#/components/schemas/WorkspaceDocumentDomain"
@@ -1178,7 +1551,10 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["READ", "EDIT"],
+            "enum": [
+              "READ",
+              "EDIT"
+            ],
             "description": "Share role for the document"
           },
           "expiredAt": {
@@ -1187,7 +1563,10 @@
             "description": "Expiration timestamp for the share link"
           }
         },
-        "required": ["role", "expiredAt"]
+        "required": [
+          "role",
+          "expiredAt"
+        ]
       },
       "CreateWorkspaceDocumentShareTokenResponse": {
         "type": "object",
@@ -1197,18 +1576,29 @@
             "description": "Token used to share the document"
           }
         },
-        "required": ["sharingToken"]
+        "required": [
+          "sharingToken"
+        ]
       },
       "FindDocumentFromSharingTokenResponse": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Document ID" },
+          "id": {
+            "type": "string",
+            "description": "Document ID"
+          },
           "yorkieDocumentId": {
             "type": "string",
             "description": "Yorkie Document ID associated with the document"
           },
-          "title": { "type": "string", "description": "Document title" },
-          "content": { "type": "string", "description": "Document content" },
+          "title": {
+            "type": "string",
+            "description": "Document title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Document content"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -1225,7 +1615,10 @@
           },
           "role": {
             "type": "string",
-            "enum": ["READ", "EDIT"],
+            "enum": [
+              "READ",
+              "EDIT"
+            ],
             "description": "Share role from the token"
           }
         },
@@ -1247,7 +1640,9 @@
             "description": "Name to check for conflict"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "CheckNameConflictResponse": {
         "type": "object",
@@ -1257,7 +1652,9 @@
             "description": "Indicates if the name is already in use"
           }
         },
-        "required": ["conflict"]
+        "required": [
+          "conflict"
+        ]
       },
       "CheckYorkieRequest": {
         "type": "object",
@@ -1281,10 +1678,16 @@
           "attributes": {
             "description": "Additional attributes for authorization",
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         },
-        "required": ["token", "method", "attributes"]
+        "required": [
+          "token",
+          "method",
+          "attributes"
+        ]
       },
       "CheckYorkieResponse": {
         "type": "object",
@@ -1298,7 +1701,10 @@
             "description": "Reason or message explaining the authorization outcome"
           }
         },
-        "required": ["allowed", "reason"]
+        "required": [
+          "allowed",
+          "reason"
+        ]
       },
       "RunFollowUpRequest": {
         "type": "object",
@@ -1316,7 +1722,11 @@
             "description": "Content or query to run the follow-up feature on"
           }
         },
-        "required": ["documentId", "memoryKey", "content"]
+        "required": [
+          "documentId",
+          "memoryKey",
+          "content"
+        ]
       },
       "RunFeatureRequest": {
         "type": "object",
@@ -1330,7 +1740,10 @@
             "description": "Content or query for the intelligence feature"
           }
         },
-        "required": ["documentId", "content"]
+        "required": [
+          "documentId",
+          "content"
+        ]
       },
       "CreateUploadPresignedUrlRequest": {
         "type": "object",
@@ -1348,7 +1761,11 @@
             "description": "MIME type of the file to be uploaded"
           }
         },
-        "required": ["workspaceId", "contentLength", "contentType"]
+        "required": [
+          "workspaceId",
+          "contentLength",
+          "contentType"
+        ]
       },
       "CreateUploadPresignedUrlResponse": {
         "type": "object",
@@ -1362,7 +1779,10 @@
             "description": "Storage key of the uploaded file"
           }
         },
-        "required": ["url", "fileKey"]
+        "required": [
+          "url",
+          "fileKey"
+        ]
       },
       "ExportFileRequest": {
         "type": "object",
@@ -1380,7 +1800,11 @@
             "description": "Desired filename (without extension)"
           }
         },
-        "required": ["exportType", "content", "fileName"]
+        "required": [
+          "exportType",
+          "content",
+          "fileName"
+        ]
       },
       "Buffer": {
         "type": "object",
@@ -1391,7 +1815,11 @@
         "properties": {
           "fileContent": {
             "description": "Binary content of the exported file",
-            "allOf": [{ "$ref": "#/components/schemas/Buffer" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Buffer"
+              }
+            ]
           },
           "mimeType": {
             "type": "string",
@@ -1402,7 +1830,11 @@
             "description": "Name of the exported file (with extension)"
           }
         },
-        "required": ["fileContent", "mimeType", "fileName"]
+        "required": [
+          "fileContent",
+          "mimeType",
+          "fileName"
+        ]
       },
       "YorkieIntelligenceConfig": {
         "type": "object",
@@ -1416,7 +1848,10 @@
             "description": "Additional Yorkie Intelligence configuration"
           }
         },
-        "required": ["enable", "config"]
+        "required": [
+          "enable",
+          "config"
+        ]
       },
       "FileUploadConfig": {
         "type": "object",
@@ -1426,7 +1861,9 @@
             "description": "Whether file upload is enabled"
           }
         },
-        "required": ["enable"]
+        "required": [
+          "enable"
+        ]
       },
       "FindSettingsResponse": {
         "type": "object",
@@ -1434,15 +1871,24 @@
           "yorkieIntelligence": {
             "description": "Settings related to Yorkie Intelligence",
             "allOf": [
-              { "$ref": "#/components/schemas/YorkieIntelligenceConfig" }
+              {
+                "$ref": "#/components/schemas/YorkieIntelligenceConfig"
+              }
             ]
           },
           "fileUpload": {
             "description": "Settings related to file uploads",
-            "allOf": [{ "$ref": "#/components/schemas/FileUploadConfig" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FileUploadConfig"
+              }
+            ]
           }
         },
-        "required": ["yorkieIntelligence", "fileUpload"]
+        "required": [
+          "yorkieIntelligence",
+          "fileUpload"
+        ]
       }
     }
   }
