@@ -29,7 +29,7 @@ async def test_stream_issue():
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
         async with client.stream(
-            "POST", "/intelligence/pr/create", json={"query": "hi"}
+            "POST", "/intelligence/issue/create", json={"query": "hi"}
         ) as response:
             assert response.status_code == 200  # 응답 상태 확인
 
