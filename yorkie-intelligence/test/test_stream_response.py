@@ -37,3 +37,19 @@ async def test_stream_issue():
 #             data = []
 #             async for line in response.aiter_lines():
 #                 data.append(line)
+
+
+@pytest.mark.asyncio
+async def test_stream_write_doc():
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
+    ) as client:
+        async with client.stream(
+            "POST", "/intelligence/doc/create", json={"query": "hi"}
+        ) as response:
+            assert response.status_code == 200  # 응답 상태 확인
+
+
+#             data = []
+#             async for line in response.aiter_lines():
+#                 data.append(line)
