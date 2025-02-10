@@ -5,7 +5,6 @@ import "fmt"
 const (
 	DefaultGitHubAuthorizationURL = "https://github.com/login/oauth/authorize"
 	DefaultGitHubUserProfileURL   = "https://api.github.com/user"
-	DefaultGitHubCallbackURL      = "https://localhost:3000/auth/login/github"
 )
 
 type OAuth struct {
@@ -39,9 +38,6 @@ func (o *OAuth) validate() error {
 }
 
 func (g *Github) ensureDefaultValue() {
-	if g.CallbackURL == "" {
-		g.CallbackURL = DefaultGitHubCallbackURL
-	}
 	if g.AuthorizationURL == "" {
 		g.AuthorizationURL = DefaultGitHubAuthorizationURL
 	}

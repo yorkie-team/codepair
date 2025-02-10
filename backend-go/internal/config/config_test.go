@@ -84,7 +84,7 @@ func TestLoadConfigFromFile(t *testing.T) {
 		require.NoError(t, err, "LoadConfig should not fail with a valid config.yaml file")
 
 		// --- Server ---
-		assert.Equal(t, 3001, cfg.Server.Port, "Server.Port should be 3001")
+		assert.Equal(t, 3003, cfg.Server.Port, "Server.Port should be 3003")
 
 		// --- OAuth (GitHub) ---
 		require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
@@ -141,36 +141,34 @@ func TestConfigWithDefaultValues(t *testing.T) {
 
 	// --- OAuth (GitHub) defaults and provided values ---
 	require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
-	// Provided values.
-	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientID)
-	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientSecret)
-	assert.Equal(t, "http://is-not-default/token", cfg.OAuth.Github.TokenURL)
-	// Default values.
-	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
+	assert.Equal(t, "config-minimal-yaml", cfg.OAuth.Github.ClientID)
+	assert.Equal(t, "config-minimal-yaml", cfg.OAuth.Github.ClientSecret)
+	assert.Equal(t, "http://config-minimal-yaml/auth/login/github", cfg.OAuth.Github.CallbackURL)
+	assert.Equal(t, "http://config-minimal-yaml/token", cfg.OAuth.Github.TokenURL)
 	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
 	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
-	assert.Equal(t, "http://is-not-default", cfg.OAuth.FrontendBaseURL)
+	assert.Equal(t, "http://config-minimal-yaml", cfg.OAuth.FrontendBaseURL)
 
 	// --- JWT defaults ---
-	assert.Equal(t, "is not default", cfg.JWT.AccessTokenSecret)
+	assert.Equal(t, "config-minimal-yaml", cfg.JWT.AccessTokenSecret)
 	assert.Equal(t, config.DefaultAccessTokenExpirationTime, cfg.JWT.AccessTokenExpirationTime)
-	assert.Equal(t, "is not default", cfg.JWT.RefreshTokenSecret)
+	assert.Equal(t, "config-minimal-yaml", cfg.JWT.RefreshTokenSecret)
 	assert.Equal(t, config.DefaultRefreshTokenExpirationTime, cfg.JWT.RefreshTokenExpirationTime)
 
 	// --- Mongo defaults ---
 	assert.Equal(t, config.DefaultConnectionTimeout, cfg.Mongo.ConnectionTimeout)
-	assert.Equal(t, config.DefaultMongoConnectionURI, cfg.Mongo.ConnectionURI)
+	assert.Equal(t, "mongodb://config-minimal-yaml-mongo:27017/codepair", cfg.Mongo.ConnectionURI)
 	assert.Equal(t, config.DefaultPingTimeout, cfg.Mongo.PingTimeout)
-	assert.Equal(t, config.DefaultMongoDatabaseName, cfg.Mongo.DatabaseName)
+	assert.Equal(t, "config-minimal-yaml-codepair", cfg.Mongo.DatabaseName)
 
 	// --- Storage defaults ---
-	assert.Equal(t, config.DefaultStorageProvider, cfg.Storage.Provider, "Default storage provider is minio")
+	assert.Equal(t, "minio", cfg.Storage.Provider, "Default storage provider is minio")
 	// When provider is minio, ensure the Minio block is set with defaults.
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
-	assert.Equal(t, config.DefaultMinioBucket, cfg.Storage.Minio.Bucket)
-	assert.Equal(t, config.DefaultMinioEndpoint, cfg.Storage.Minio.Endpoint)
-	assert.Equal(t, "is not default", cfg.Storage.Minio.AccessKey)
-	assert.Equal(t, "is not default", cfg.Storage.Minio.SecretKey)
+	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.Bucket)
+	assert.Equal(t, "http://config-minimal-yaml:9000", cfg.Storage.Minio.Endpoint)
+	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.AccessKey)
+	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.SecretKey)
 
 	// S3 should be nil if not provided.
 	assert.Nil(t, cfg.Storage.S3, "Storage.S3 should be nil by default")

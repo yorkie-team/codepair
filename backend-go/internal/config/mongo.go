@@ -6,10 +6,8 @@ import (
 )
 
 const (
-	DefaultMongoConnectionURI = "mongodb://localhost:27017/codepair"
-	DefaultMongoDatabaseName  = "codepair"
-	DefaultConnectionTimeout  = 10 * time.Second
-	DefaultPingTimeout        = 5 * time.Second
+	DefaultConnectionTimeout = 10 * time.Second
+	DefaultPingTimeout       = 5 * time.Second
 )
 
 type Mongo struct {
@@ -24,14 +22,8 @@ func (m *Mongo) ensureDefaultValue() {
 	if m.ConnectionTimeout == 0 {
 		m.ConnectionTimeout = DefaultConnectionTimeout
 	}
-	if m.ConnectionURI == "" {
-		m.ConnectionURI = DefaultMongoConnectionURI
-	}
 	if m.PingTimeout == 0 {
 		m.PingTimeout = DefaultPingTimeout
-	}
-	if m.DatabaseName == "" {
-		m.DatabaseName = DefaultMongoDatabaseName
 	}
 }
 

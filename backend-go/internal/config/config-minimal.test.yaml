@@ -3,17 +3,26 @@
 
 OAuth:
   Github:
-    ClientID: "is not default"
-    ClientSecret: "is not default"
-    TokenURL: "http://is-not-default/token"  # provided but not default; note valid URL format
-  FrontendBaseURL: "http://is-not-default"
+    ClientID: "config-minimal-yaml"
+    ClientSecret: "config-minimal-yaml"
+    CallbackURL: "http://config-minimal-yaml/auth/login/github"
+    TokenURL: "http://config-minimal-yaml/token"  # provided but not default; note valid URL format
+  FrontendBaseURL: "http://config-minimal-yaml"
 
 
 JWT:
-  AccessTokenSecret: "is not default"
-  RefreshTokenSecret: "is not default"
+  AccessTokenSecret: "config-minimal-yaml"
+  RefreshTokenSecret: "config-minimal-yaml"
+
+
+Mongo:
+  ConnectionURI: "mongodb://config-minimal-yaml-mongo:27017/codepair"
+  DatabaseName: "config-minimal-yaml-codepair"
 
 Storage:
+  Provider: "minio"
   Minio:
-    AccessKey: "is not default"
-    SecretKey: "is not default"
+    Bucket: "config-minimal-yaml"
+    Endpoint: "http://config-minimal-yaml:9000"
+    AccessKey: "config-minimal-yaml"
+    SecretKey: "config-minimal-yaml"

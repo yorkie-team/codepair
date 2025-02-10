@@ -1,5 +1,5 @@
 Server:
-  Port: 3001
+  Port: 3003
 
 OAuth:
   Github:

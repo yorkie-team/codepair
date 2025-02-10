@@ -4,12 +4,6 @@ import (
 	"fmt"
 )
 
-const (
-	DefaultStorageProvider = "minio"
-	DefaultMinioBucket     = "default-storage"
-	DefaultMinioEndpoint   = "http://localhost:9000"
-)
-
 type Storage struct {
 	Provider string `validate:"required,oneof=minio s3"`
 	S3       *S3    `validate:"omitempty"`
@@ -30,17 +24,6 @@ type Minio struct {
 	SecretKey string `validate:"required"`
 }
 
-// ensureDefaultValue applies default values for provider and Minio.
-func (s *Storage) ensureDefaultValue() {
-	if s.Provider == "" {
-		s.Provider = DefaultStorageProvider
-	}
-	if s.Minio == nil {
-		s.Minio = &Minio{}
-	}
-	s.Minio.EnsureDefaultValue()
-}
-
 // validate uses the validator library to validate the struct fields.
 // We also check that the nested config for the chosen provider is not nil.
 func (s *Storage) validate() error {
@@ -57,13 +40,4 @@ func (s *Storage) validate() error {
 		return fmt.Errorf("invalid storage provider: %s", s.Provider)
 	}
 	return nil
-}
-
-func (m *Minio) EnsureDefaultValue() {
-	if m.Bucket == "" {
-		m.Bucket = DefaultMinioBucket
-	}
-	if m.Endpoint == "" {
-		m.Endpoint = DefaultMinioEndpoint
-	}
 }

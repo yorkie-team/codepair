@@ -84,7 +84,6 @@ func (c *Config) ensureDefaultValue() {
 	c.JWT.ensureDefaultValue()
 	c.Yorkie.ensureDefaultValue()
 	c.Mongo.ensureDefaultValue()
-	c.Storage.ensureDefaultValue()
 }
 
 func (c *Config) validate() error {
