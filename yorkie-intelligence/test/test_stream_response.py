@@ -13,7 +13,7 @@ async def test_stream_pr():
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
         async with client.stream(
-            "POST", "/intelligence/pr/create", json={"query": "hi"}
+            "POST", "/intelligence/pr/", json={"query": "hi"}
         ) as response:
             assert response.status_code == 200
 
@@ -24,7 +24,7 @@ async def test_stream_issue():
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
         async with client.stream(
-            "POST", "/intelligence/issue/create", json={"query": "hi"}
+            "POST", "/intelligence/issue/", json={"query": "hi"}
         ) as response:
             assert response.status_code == 200
 
@@ -35,6 +35,6 @@ async def test_stream_write_doc():
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
         async with client.stream(
-            "POST", "/intelligence/doc/create", json={"query": "hi"}
+            "POST", "/intelligence/doc/", json={"query": "hi"}
         ) as response:
             assert response.status_code == 200
