@@ -1,0 +1,19 @@
+# In this minmal YAML below, only the required fields that do not have defaults
+# are provided. For fields with URL validation and defaults, we supply valid values when needed.
+
+Auth:
+  Github:
+    ClientID: "is not default"
+    ClientSecret: "is not default"
+    TokenURL: "http://is-not-default/token"  # provided but not default; note valid URL format
+  FrontendBaseURL: "http://is-not-default"
+
+
+JWT:
+  AccessTokenSecret: "is not default"
+  RefreshTokenSecret: "is not default"
+
+Storage:
+  Minio:
+    AccessKey: "is not default"
+    SecretKey: "is not default"

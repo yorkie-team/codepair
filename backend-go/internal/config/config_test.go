@@ -1,8 +1,6 @@
 package config_test
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -17,15 +15,6 @@ func setEnvVars(t *testing.T, envs map[string]string) {
 	for key, value := range envs {
 		t.Setenv(key, value)
 	}
-}
-
-// writeTempConfigFile writes the given content to a temporary file and returns its path.
-func writeTempConfigFile(t *testing.T, filename, content string) string {
-	tmpDir := t.TempDir()
-	filePath := filepath.Join(tmpDir, filename)
-	err := os.WriteFile(filePath, []byte(content), 0600)
-	require.NoError(t, err, "Should be able to create a temporary config file")
-	return filePath
 }
 
 func TestConfigWithEnvVars(t *testing.T) {
@@ -144,28 +133,7 @@ func TestLoadConfigFromFile(t *testing.T) {
 }
 
 func TestConfigWithDefaultValues(t *testing.T) {
-	// In the minimal YAML below, only the required fields that do not have defaults
-	// are provided. For fields with URL validation and defaults, we supply valid values when needed.
-	const minimalYAML = `
-Auth:
-  Github:
-    ClientID: "is not default"
-    ClientSecret: "is not default"
-    TokenURL: "http://is-not-default/token"  # provided but not default; note valid URL format
-  FrontendBaseURL: "http://is-not-default"
-
-
-JWT:
-  AccessTokenSecret: "is not default"
-  RefreshTokenSecret: "is not default"
-
-Storage:
-  Minio:
-    AccessKey: "is not default"
-    SecretKey: "is not default"
-`
-	filePath := writeTempConfigFile(t, "minimal_config.yaml", minimalYAML)
-	cfg, err := config.LoadConfig(filePath)
+	cfg, err := config.LoadConfig("config-minimal.test.yaml")
 	require.NoError(t, err, "LoadConfig should succeed with a minimal config file")
 
 	// --- Server defaults ---
