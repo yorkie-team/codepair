@@ -15,11 +15,7 @@ async def test_stream_pr():
         async with client.stream(
             "POST", "/intelligence/pr/create", json={"query": "hi"}
         ) as response:
-            assert response.status_code == 200  # 응답 상태 확인
-
-            # data = []
-            # async for line in response.aiter_lines():
-            #     data.append(line)
+            assert response.status_code == 200
 
 
 @pytest.mark.asyncio
@@ -30,12 +26,7 @@ async def test_stream_issue():
         async with client.stream(
             "POST", "/intelligence/issue/create", json={"query": "hi"}
         ) as response:
-            assert response.status_code == 200  # 응답 상태 확인
-
-
-#             data = []
-#             async for line in response.aiter_lines():
-#                 data.append(line)
+            assert response.status_code == 200
 
 
 @pytest.mark.asyncio
@@ -46,9 +37,4 @@ async def test_stream_write_doc():
         async with client.stream(
             "POST", "/intelligence/doc/create", json={"query": "hi"}
         ) as response:
-            assert response.status_code == 200  # 응답 상태 확인
-
-
-#             data = []
-#             async for line in response.aiter_lines():
-#                 data.append(line)
+            assert response.status_code == 200
