@@ -11,12 +11,12 @@ import (
 var validate = validator.New()
 
 type Config struct {
-	Server  Server
-	OAuth   OAuth
-	JWT     JWT
-	Yorkie  Yorkie
-	Mongo   Mongo
-	Storage Storage
+	Server  *Server
+	OAuth   *OAuth
+	JWT     *JWT
+	Yorkie  *Yorkie
+	Mongo   *Mongo
+	Storage *Storage
 }
 
 // LoadConfig loads configuration settings from a file (if provided) and from environment variables.
@@ -30,7 +30,14 @@ func LoadConfig(filePath string) (*Config, error) {
 		return nil, err
 	}
 
-	cfg := &Config{}
+	cfg := &Config{
+		Server:  &Server{},
+		OAuth:   &OAuth{},
+		JWT:     &JWT{},
+		Yorkie:  &Yorkie{},
+		Mongo:   &Mongo{},
+		Storage: &Storage{},
+	}
 	if err := viper.Unmarshal(cfg); err != nil {
 		return nil, fmt.Errorf("unable to decode configuration into struct: %w", err)
 	}
