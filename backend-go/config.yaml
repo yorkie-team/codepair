@@ -31,7 +31,7 @@ Mongo:
   DatabaseName: "codepair"
 
 Storage:
-  Provider: "minio"       # or "s3"
+  Provider: "minio"       # "minio" | "s3"
 
   Minio:
     Bucket: "default-storage"
