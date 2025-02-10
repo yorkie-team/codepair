@@ -138,7 +138,7 @@ func TestConfigWithDefaultValues(t *testing.T) {
 	assert.Equal(t, "config-minimal-yaml", cfg.OAuth.Github.ClientID)
 	assert.Equal(t, "config-minimal-yaml", cfg.OAuth.Github.ClientSecret)
 	assert.Equal(t, "http://config-minimal-yaml/auth/login/github", cfg.OAuth.Github.CallbackURL)
-	assert.Equal(t, "http://config-minimal-yaml/token", cfg.OAuth.Github.TokenURL)
+	assert.Equal(t, config.DefaultGitHubTokenURL, cfg.OAuth.Github.TokenURL)
 	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
 	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
 	assert.Equal(t, "http://config-minimal-yaml", cfg.OAuth.FrontendBaseURL)

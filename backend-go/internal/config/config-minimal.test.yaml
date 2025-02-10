@@ -7,7 +7,6 @@ OAuth:
     ClientID: "config-minimal-yaml"
     ClientSecret: "config-minimal-yaml"
     CallbackURL: "http://config-minimal-yaml/auth/login/github"
-    TokenURL: "http://config-minimal-yaml/token"
   FrontendBaseURL: "http://config-minimal-yaml"
 
 JWT:

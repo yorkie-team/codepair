@@ -2,8 +2,10 @@ package config
 
 import "fmt"
 
+//nolint:gosec // These are public OAuth endpoint URLs, not credentials
 const (
 	DefaultGitHubAuthorizationURL = "https://github.com/login/oauth/authorize"
+	DefaultGitHubTokenURL         = "https://github.com/login/oauth/access_token"
 	DefaultGitHubUserProfileURL   = "https://api.github.com/user"
 )
 
@@ -40,6 +42,9 @@ func (o *OAuth) validate() error {
 func (g *Github) ensureDefaultValue() {
 	if g.AuthorizationURL == "" {
 		g.AuthorizationURL = DefaultGitHubAuthorizationURL
+	}
+	if g.TokenURL == "" {
+		g.TokenURL = DefaultGitHubTokenURL
 	}
 	if g.UserProfileURL == "" {
 		g.UserProfileURL = DefaultGitHubUserProfileURL
