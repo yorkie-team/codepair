@@ -139,54 +139,7 @@ func TestLoadConfigFromFile(t *testing.T) {
 	})
 
 	t.Run("load config from file", func(t *testing.T) {
-		const sampleYAML = `
-Server:
-  Port: 3001
-
-Auth:
-  Github:
-    ClientID: "config_client_id"
-    ClientSecret: "config_client_secret"
-    CallbackURL: "https://config.example.com/auth/login/github"
-    AuthorizationURL: "https://config.example.com/login/oauth/authorize"
-    TokenURL: "https://config.example.com/login/oauth/access_token"
-    UserProfileURL: "https://config.example.com/api/user"
-  FrontendBaseURL: "http://config-frontend:5173"
-
-JWT:
-  AccessTokenSecret: "config_access_token_secret"
-  AccessTokenExpirationTime: "24h"
-  RefreshTokenSecret: "config_refresh_token_secret"
-  RefreshTokenExpirationTime: "168h"
-
-Yorkie:
-  APIAddr: "https://config-yorkie:8080"
-  ProjectName: "config_project"
-  ProjectSecretKey: "config_project_secret"
-
-Mongo:
-  ConnectionTimeout: "10s"
-  ConnectionURI: "mongodb://config-mongo:27017/codepair"
-  PingTimeout: "5s"
-  DatabaseName: "config_codepair"
-
-Storage:
-  Provider: "s3"
-
-  Minio:
-    Bucket: "config-storage"
-    Endpoint: "https://config-minio:9000"
-    AccessKey: "config_minioadmin"
-    SecretKey: "config_minioadmin"
-
-  S3:
-    Bucket: "default-storage"
-    Region: "us-east-1"
-    AccessKey: "aws_access_key"
-    SecretKey: "aws_secret_key"
-`
-		filePath := writeTempConfigFile(t, "config.yaml", sampleYAML)
-		cfg, err := config.LoadConfig(filePath)
+		cfg, err := config.LoadConfig("config.test.yaml")
 		require.NoError(t, err, "LoadConfig should not fail with a valid config.yaml file")
 
 		// --- Server ---
