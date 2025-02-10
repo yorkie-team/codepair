@@ -6,11 +6,11 @@ from src.common.utils import SETTINGS
 
 
 def get_model() -> BaseChatModel:
-    if SETTINGS.model_type == "ollama":
-        llm = ChatOllama(model=SETTINGS.model_name, temperature=0)
-    elif SETTINGS.model_type == "openai":
+    if SETTINGS.MODEL_TYPE == "ollama":
+        llm = ChatOllama(model=SETTINGS.MODEL_NAME, temperature=0)
+    elif SETTINGS.MODEL_TYPE == "openai":
         llm = ChatOpenAI(
-            model=SETTINGS.model_name, api_key=SETTINGS.api_key, temperature=0
+            model=SETTINGS.MODEL_NAME, api_key=SETTINGS.API_KEY, temperature=0
         )
     else:
         raise ValueError("Invalid model type")

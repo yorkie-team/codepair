@@ -4,8 +4,7 @@ from httpx import AsyncClient, ASGITransport
 from src.main import app
 
 
-# TODO
-# test시 smollm2:135m 모델 사용하도록 변경
+# @TODO(@sihyeong671): Change to use the smollm2:135m model when testing these api.(or fakellm)
 
 
 @pytest.mark.asyncio

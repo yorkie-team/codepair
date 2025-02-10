@@ -9,7 +9,7 @@ from .config import issue_template_prompt
 router = APIRouter()
 
 
-@router.post("/create")
+@router.post("/")
 async def make_pr(query: str = Body(embed=True), llm=Depends(get_model)):
     chain = issue_template_prompt | llm | StrOutputParser()
 

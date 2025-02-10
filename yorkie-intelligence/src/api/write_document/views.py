@@ -9,8 +9,8 @@ from .config import document_writing_template_prompt
 router = APIRouter()
 
 
-@router.post("/create")
-async def write_documenet(query: str = Body(embed=True), llm=Depends(get_model)):
+@router.post("/")
+async def write_document(query: str = Body(embed=True), llm=Depends(get_model)):
     chain = document_writing_template_prompt | llm | StrOutputParser()
 
     async def event_stream():
