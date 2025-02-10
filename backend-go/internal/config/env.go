@@ -5,49 +5,74 @@ package config
 // In the key, '.' is used to indicate structure depth.
 // If you want to add an environment variable to the configuration, you should add the key and value here.
 var EnvVarMap = map[string]string{
-	// --- Server ---
+	// =================== Server ===================
+	// The following config values are NOT defined with default values at the code level.
+
+	// The following config values are defined with default values at the code level.
 	"server.port": "SERVER_PORT",
 
-	// --- OAuth ---
-	"oauth.github.ClientId":         "OAUTH_GITHUB_CLIENT_ID",
-	"oauth.github.ClientSecret":     "OAUTH_GITHUB_CLIENT_SECRET",
-	"oauth.github.CallbackUrl":      "OAUTH_GITHUB_CALLBACK_URL",
+	// =================== OAuth ===================
+	// The following config values are NOT defined with default values at the code level.
+	"oauth.FrontendBaseUrl":     "OAUTH_FRONTEND_BASE_URL",
+	"oauth.github.ClientId":     "OAUTH_GITHUB_CLIENT_ID",
+	"oauth.github.ClientSecret": "OAUTH_GITHUB_CLIENT_SECRET",
+	"oauth.github.CallbackUrl":  "OAUTH_GITHUB_CALLBACK_URL",
+
+	// The following config values are defined with default values at the code level.
 	"oauth.github.AuthorizationUrl": "OAUTH_GITHUB_AUTHORIZATION_URL",
 	"oauth.github.TokenUrl":         "OAUTH_GITHUB_TOKEN_URL",
 	"oauth.github.UserProfileUrl":   "OAUTH_GITHUB_USER_PROFILE_URL",
-	"oauth.FrontendBaseUrl":         "OAUTH_FRONTEND_BASE_URL",
 
-	// --- JWT ---
-	"jwt.AccessTokenSecret":          "JWT_ACCESS_TOKEN_SECRET",
+	// =================== JWT ===================
+	// The following config values are NOT defined with default values at the code level.
+	"jwt.AccessTokenSecret":  "JWT_ACCESS_TOKEN_SECRET",
+	"jwt.RefreshTokenSecret": "JWT_REFRESH_TOKEN_SECRET",
+
+	// The following config values are defined with default values at the code level.
 	"jwt.AccessTokenExpirationTime":  "JWT_ACCESS_TOKEN_EXPIRATION_TIME",
-	"jwt.RefreshTokenSecret":         "JWT_REFRESH_TOKEN_SECRET",
 	"jwt.RefreshTokenExpirationTime": "JWT_REFRESH_TOKEN_EXPIRATION_TIME",
 
-	// --- Yorkie ---
+	// =================== Yorkie ===================
+	// The following config values are NOT defined with default values at the code level.
+
+	// The following config values are defined with default values at the code level.
 	"yorkie.ApiAddr":          "YORKIE_API_ADDR",
 	"yorkie.ProjectName":      "YORKIE_PROJECT_NAME",
 	"yorkie.ProjectSecretKey": "YORKIE_PROJECT_SECRET_KEY",
 
-	// --- Mongo ---
-	"mongo.ConnectionTimeout": "MONGO_CONNECTION_TIMEOUT",
-	"mongo.ConnectionURI":     "MONGO_CONNECTION_URI",
-	"mongo.PingTimeout":       "MONGO_PING_TIMEOUT",
-	"mongo.DatabaseName":      "MONGO_DATABASE_NAME",
+	// =================== Mongo ===================
+	// The following config values are NOT defined with default values at the code level.
+	"mongo.ConnectionURI": "MONGO_CONNECTION_URI",
+	"mongo.DatabaseName":  "MONGO_DATABASE_NAME",
 
-	// --- Storage ---
+	// The following config values are defined with default values at the code level.
+	"mongo.ConnectionTimeout": "MONGO_CONNECTION_TIMEOUT",
+	"mongo.PingTimeout":       "MONGO_PING_TIMEOUT",
+
+	// =================== Storage ===================
+	// The following config values are NOT defined with default values at the code level.
 	"storage.Provider": "STORAGE_PROVIDER",
 
-	// --- Minio ---
+	// The following config values are defined with default values at the code level.
+
+	// =================== Minio ===================
+	// The following config values are NOT defined with default values at the code level.
 	"storage.minio.Bucket":    "STORAGE_MINIO_BUCKET",
 	"storage.minio.Endpoint":  "STORAGE_MINIO_ENDPOINT",
 	"storage.minio.AccessKey": "STORAGE_MINIO_ACCESS_KEY",
 	"storage.minio.SecretKey": "STORAGE_MINIO_SECRET_KEY",
 
-	// --- S3 ---
+	// The following config values are defined with default values at the code level.
+
+	// =================== S3 ===================
+	// The following config values are NOT defined with default values at the code level.
 	"storage.s3.Bucket":    "STORAGE_S3_BUCKET",
 	"storage.s3.Region":    "STORAGE_S3_REGION",
 	"storage.s3.AccessKey": "STORAGE_S3_ACCESS_KEY",
 	"storage.s3.SecretKey": "STORAGE_S3_SECRET_KEY",
+
+	// The following config values are defined with default values at the code level.
+
 }
 
 // TestEnvs contains environment variables for testing.
