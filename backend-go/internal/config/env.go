@@ -9,67 +9,67 @@ var EnvVarMap = map[string]string{
 	// The following config values are NOT defined with default values at the code level.
 
 	// The following config values are defined with default values at the code level.
-	"server.port": "SERVER_PORT",
+	"Server.Port": "SERVER_PORT",
 
 	// =================== OAuth ===================
 	// The following config values are NOT defined with default values at the code level.
-	"oauth.FrontendBaseUrl":     "OAUTH_FRONTEND_BASE_URL",
-	"oauth.github.ClientId":     "OAUTH_GITHUB_CLIENT_ID",
-	"oauth.github.ClientSecret": "OAUTH_GITHUB_CLIENT_SECRET",
-	"oauth.github.CallbackUrl":  "OAUTH_GITHUB_CALLBACK_URL",
+	"Oauth.FrontendBaseUrl":     "OAUTH_FRONTEND_BASE_URL",
+	"Oauth.Github.ClientId":     "OAUTH_GITHUB_CLIENT_ID",
+	"Oauth.Github.ClientSecret": "OAUTH_GITHUB_CLIENT_SECRET",
+	"Oauth.Github.CallbackUrl":  "OAUTH_GITHUB_CALLBACK_URL",
 
 	// The following config values are defined with default values at the code level.
-	"oauth.github.AuthorizationUrl": "OAUTH_GITHUB_AUTHORIZATION_URL",
-	"oauth.github.TokenUrl":         "OAUTH_GITHUB_TOKEN_URL",
-	"oauth.github.UserProfileUrl":   "OAUTH_GITHUB_USER_PROFILE_URL",
+	"Oauth.Github.AuthorizationUrl": "OAUTH_GITHUB_AUTHORIZATION_URL",
+	"Oauth.Github.TokenUrl":         "OAUTH_GITHUB_TOKEN_URL",
+	"Oauth.Github.UserProfileUrl":   "OAUTH_GITHUB_USER_PROFILE_URL",
 
 	// =================== JWT ===================
 	// The following config values are NOT defined with default values at the code level.
-	"jwt.AccessTokenSecret":  "JWT_ACCESS_TOKEN_SECRET",
-	"jwt.RefreshTokenSecret": "JWT_REFRESH_TOKEN_SECRET",
+	"JWT.AccessTokenSecret":  "JWT_ACCESS_TOKEN_SECRET",
+	"Jwt.RefreshTokenSecret": "JWT_REFRESH_TOKEN_SECRET",
 
 	// The following config values are defined with default values at the code level.
-	"jwt.AccessTokenExpirationTime":  "JWT_ACCESS_TOKEN_EXPIRATION_TIME",
-	"jwt.RefreshTokenExpirationTime": "JWT_REFRESH_TOKEN_EXPIRATION_TIME",
+	"JWT.AccessTokenExpirationTime":  "JWT_ACCESS_TOKEN_EXPIRATION_TIME",
+	"JWT.RefreshTokenExpirationTime": "JWT_REFRESH_TOKEN_EXPIRATION_TIME",
 
 	// =================== Yorkie ===================
 	// The following config values are NOT defined with default values at the code level.
 
 	// The following config values are defined with default values at the code level.
-	"yorkie.ApiAddr":          "YORKIE_API_ADDR",
-	"yorkie.ProjectName":      "YORKIE_PROJECT_NAME",
-	"yorkie.ProjectSecretKey": "YORKIE_PROJECT_SECRET_KEY",
+	"Yorkie.ApiAddr":          "YORKIE_API_ADDR",
+	"Yorkie.ProjectName":      "YORKIE_PROJECT_NAME",
+	"Yorkie.ProjectSecretKey": "YORKIE_PROJECT_SECRET_KEY",
 
 	// =================== Mongo ===================
 	// The following config values are NOT defined with default values at the code level.
-	"mongo.ConnectionURI": "MONGO_CONNECTION_URI",
-	"mongo.DatabaseName":  "MONGO_DATABASE_NAME",
+	"Mongo.ConnectionURI": "MONGO_CONNECTION_URI",
+	"Mongo.DatabaseName":  "MONGO_DATABASE_NAME",
 
 	// The following config values are defined with default values at the code level.
-	"mongo.ConnectionTimeout": "MONGO_CONNECTION_TIMEOUT",
-	"mongo.PingTimeout":       "MONGO_PING_TIMEOUT",
+	"Mongo.ConnectionTimeout": "MONGO_CONNECTION_TIMEOUT",
+	"Mongo.PingTimeout":       "MONGO_PING_TIMEOUT",
 
 	// =================== Storage ===================
 	// The following config values are NOT defined with default values at the code level.
-	"storage.Provider": "STORAGE_PROVIDER",
+	"Storage.Provider": "STORAGE_PROVIDER",
 
 	// The following config values are defined with default values at the code level.
 
 	// =================== Minio ===================
 	// The following config values are NOT defined with default values at the code level.
-	"storage.minio.Bucket":    "STORAGE_MINIO_BUCKET",
-	"storage.minio.Endpoint":  "STORAGE_MINIO_ENDPOINT",
-	"storage.minio.AccessKey": "STORAGE_MINIO_ACCESS_KEY",
-	"storage.minio.SecretKey": "STORAGE_MINIO_SECRET_KEY",
+	"Storage.Minio.Bucket":    "STORAGE_MINIO_BUCKET",
+	"Storage.Minio.Endpoint":  "STORAGE_MINIO_ENDPOINT",
+	"Storage.Minio.AccessKey": "STORAGE_MINIO_ACCESS_KEY",
+	"Storage.Minio.SecretKey": "STORAGE_MINIO_SECRET_KEY",
 
 	// The following config values are defined with default values at the code level.
 
 	// =================== S3 ===================
 	// The following config values are NOT defined with default values at the code level.
-	"storage.s3.Bucket":    "STORAGE_S3_BUCKET",
-	"storage.s3.Region":    "STORAGE_S3_REGION",
-	"storage.s3.AccessKey": "STORAGE_S3_ACCESS_KEY",
-	"storage.s3.SecretKey": "STORAGE_S3_SECRET_KEY",
+	"Storage.S3.Bucket":    "STORAGE_S3_BUCKET",
+	"Storage.S3.Region":    "STORAGE_S3_REGION",
+	"Storage.S3.AccessKey": "STORAGE_S3_ACCESS_KEY",
+	"Storage.S3.SecretKey": "STORAGE_S3_SECRET_KEY",
 
 	// The following config values are defined with default values at the code level.
 
