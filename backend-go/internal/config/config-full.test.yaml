@@ -1,3 +1,7 @@
+# This is a configuration file for test.
+# In this file, only the required fields that do not have defaults are provided.
+# For fields with URL validation and defaults, we should supply valid values when needed.
+
 Server:
   Port: 3003
 

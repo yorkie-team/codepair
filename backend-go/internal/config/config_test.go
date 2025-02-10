@@ -10,15 +10,10 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/config"
 )
 
-// setEnvVars is a helper to set multiple environment variables.
-func setEnvVars(t *testing.T, envs map[string]string) {
-	for key, value := range envs {
+func TestConfigWithEnvVars(t *testing.T) {
+	for key, value := range config.TestEnvs {
 		t.Setenv(key, value)
 	}
-}
-
-func TestConfigWithEnvVars(t *testing.T) {
-	setEnvVars(t, config.TestEnvs)
 
 	cfg, err := config.LoadConfig("")
 	require.NoError(t, err, "LoadConfig should not fail with valid environment variables")
@@ -30,7 +25,6 @@ func TestConfigWithEnvVars(t *testing.T) {
 	require.NotNil(t, cfg.OAuth.Github, "GitHub OAuth config should not be nil")
 	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientID)
 	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientSecret)
-	// Expect the valid URL strings.
 	assert.Equal(t, "http://test_value/callback", cfg.OAuth.Github.CallbackURL)
 	assert.Equal(t, "http://test_value/auth", cfg.OAuth.Github.AuthorizationURL)
 	assert.Equal(t, "http://test_value/token", cfg.OAuth.Github.TokenURL)
@@ -163,7 +157,6 @@ func TestConfigWithDefaultValues(t *testing.T) {
 
 	// --- Storage defaults ---
 	assert.Equal(t, "minio", cfg.Storage.Provider, "Default storage provider is minio")
-	// When provider is minio, ensure the Minio block is set with defaults.
 	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
 	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.Bucket)
 	assert.Equal(t, "http://config-minimal-yaml:9000", cfg.Storage.Minio.Endpoint)

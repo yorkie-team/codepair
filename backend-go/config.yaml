@@ -1,3 +1,7 @@
+# WARNING: This is a sample configuration file for development environment.
+# Never commit actual secrets, keys, or credentials to version control
+# Consider using environment variables for sensitive data
+
 # Server is the configuration for the backend server.
 Server:
   # Port is the port on which the server runs (default: 3001).
