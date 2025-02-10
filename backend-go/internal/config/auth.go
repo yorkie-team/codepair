@@ -8,7 +8,7 @@ const (
 	DefaultGitHubCallbackURL      = "https://localhost:3000/auth/login/github"
 )
 
-type Auth struct {
+type OAuth struct {
 	Github          *Github `validate:"required"`
 	FrontendBaseURL string  `validate:"required,url"`
 }
@@ -23,16 +23,16 @@ type Github struct {
 }
 
 // ensureDefaultValue applies defaults for GitHub URLs if they are not provided.
-func (a *Auth) ensureDefaultValue() {
-	if a.Github == nil {
-		a.Github = &Github{}
+func (o *OAuth) ensureDefaultValue() {
+	if o.Github == nil {
+		o.Github = &Github{}
 	}
-	a.Github.ensureDefaultValue()
+	o.Github.ensureDefaultValue()
 }
 
 // validate uses the validator library to validate the struct fields.
-func (a *Auth) validate() error {
-	if err := validate.Struct(a); err != nil {
+func (o *OAuth) validate() error {
+	if err := validate.Struct(o); err != nil {
 		return fmt.Errorf("auth config validation failed: %w", err)
 	}
 	return nil

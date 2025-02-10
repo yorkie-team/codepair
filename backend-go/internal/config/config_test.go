@@ -26,16 +26,16 @@ func TestConfigWithEnvVars(t *testing.T) {
 	// --- Server ---
 	assert.Equal(t, 3002, cfg.Server.Port, "Server.Port should reflect 'SERVER_PORT' env var")
 
-	// --- Auth (GitHub) ---
-	require.NotNil(t, cfg.Auth.Github, "GitHub Auth config should not be nil")
-	assert.Equal(t, "test_value", cfg.Auth.Github.ClientID)
-	assert.Equal(t, "test_value", cfg.Auth.Github.ClientSecret)
+	// --- OAuth (GitHub) ---
+	require.NotNil(t, cfg.OAuth.Github, "GitHub OAuth config should not be nil")
+	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientID)
+	assert.Equal(t, "test_value", cfg.OAuth.Github.ClientSecret)
 	// Expect the valid URL strings.
-	assert.Equal(t, "http://test_value/callback", cfg.Auth.Github.CallbackURL)
-	assert.Equal(t, "http://test_value/auth", cfg.Auth.Github.AuthorizationURL)
-	assert.Equal(t, "http://test_value/token", cfg.Auth.Github.TokenURL)
-	assert.Equal(t, "http://test_value/profile", cfg.Auth.Github.UserProfileURL)
-	assert.Equal(t, "http://test_value", cfg.Auth.FrontendBaseURL)
+	assert.Equal(t, "http://test_value/callback", cfg.OAuth.Github.CallbackURL)
+	assert.Equal(t, "http://test_value/auth", cfg.OAuth.Github.AuthorizationURL)
+	assert.Equal(t, "http://test_value/token", cfg.OAuth.Github.TokenURL)
+	assert.Equal(t, "http://test_value/profile", cfg.OAuth.Github.UserProfileURL)
+	assert.Equal(t, "http://test_value", cfg.OAuth.FrontendBaseURL)
 
 	// --- JWT ---
 	assert.Equal(t, "test_value", cfg.JWT.AccessTokenSecret)
@@ -80,21 +80,21 @@ func TestLoadConfigFromFile(t *testing.T) {
 	})
 
 	t.Run("load config from file", func(t *testing.T) {
-		cfg, err := config.LoadConfig("config.test.yaml")
+		cfg, err := config.LoadConfig("config-full.test.yaml")
 		require.NoError(t, err, "LoadConfig should not fail with a valid config.yaml file")
 
 		// --- Server ---
 		assert.Equal(t, 3001, cfg.Server.Port, "Server.Port should be 3001")
 
-		// --- Auth (GitHub) ---
-		require.NotNil(t, cfg.Auth.Github, "Auth.Github should not be nil")
-		assert.Equal(t, "config_client_id", cfg.Auth.Github.ClientID)
-		assert.Equal(t, "config_client_secret", cfg.Auth.Github.ClientSecret)
-		assert.Equal(t, "https://config.example.com/auth/login/github", cfg.Auth.Github.CallbackURL)
-		assert.Equal(t, "https://config.example.com/login/oauth/authorize", cfg.Auth.Github.AuthorizationURL)
-		assert.Equal(t, "https://config.example.com/login/oauth/access_token", cfg.Auth.Github.TokenURL)
-		assert.Equal(t, "https://config.example.com/api/user", cfg.Auth.Github.UserProfileURL)
-		assert.Equal(t, "http://config-frontend:5173", cfg.Auth.FrontendBaseURL)
+		// --- OAuth (GitHub) ---
+		require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
+		assert.Equal(t, "config_client_id", cfg.OAuth.Github.ClientID)
+		assert.Equal(t, "config_client_secret", cfg.OAuth.Github.ClientSecret)
+		assert.Equal(t, "https://config.example.com/auth/login/github", cfg.OAuth.Github.CallbackURL)
+		assert.Equal(t, "https://config.example.com/login/oauth/authorize", cfg.OAuth.Github.AuthorizationURL)
+		assert.Equal(t, "https://config.example.com/login/oauth/access_token", cfg.OAuth.Github.TokenURL)
+		assert.Equal(t, "https://config.example.com/api/user", cfg.OAuth.Github.UserProfileURL)
+		assert.Equal(t, "http://config-frontend:5173", cfg.OAuth.FrontendBaseURL)
 
 		// --- JWT ---
 		assert.Equal(t, "config_access_token_secret", cfg.JWT.AccessTokenSecret)
@@ -139,17 +139,17 @@ func TestConfigWithDefaultValues(t *testing.T) {
 	// --- Server defaults ---
 	assert.Equal(t, config.DefaultServerPort, cfg.Server.Port, "Server.Port should default to DefaultServerPort")
 
-	// --- Auth (GitHub) defaults and provided values ---
-	require.NotNil(t, cfg.Auth.Github, "Auth.Github should not be nil")
+	// --- OAuth (GitHub) defaults and provided values ---
+	require.NotNil(t, cfg.OAuth.Github, "OAuth.Github should not be nil")
 	// Provided values.
-	assert.Equal(t, "is not default", cfg.Auth.Github.ClientID)
-	assert.Equal(t, "is not default", cfg.Auth.Github.ClientSecret)
-	assert.Equal(t, "http://is-not-default/token", cfg.Auth.Github.TokenURL)
+	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientID)
+	assert.Equal(t, "is not default", cfg.OAuth.Github.ClientSecret)
+	assert.Equal(t, "http://is-not-default/token", cfg.OAuth.Github.TokenURL)
 	// Default values.
-	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.Auth.Github.CallbackURL)
-	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.Auth.Github.AuthorizationURL)
-	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.Auth.Github.UserProfileURL)
-	assert.Equal(t, "http://is-not-default", cfg.Auth.FrontendBaseURL)
+	assert.Equal(t, config.DefaultGitHubCallbackURL, cfg.OAuth.Github.CallbackURL)
+	assert.Equal(t, config.DefaultGitHubAuthorizationURL, cfg.OAuth.Github.AuthorizationURL)
+	assert.Equal(t, config.DefaultGitHubUserProfileURL, cfg.OAuth.Github.UserProfileURL)
+	assert.Equal(t, "http://is-not-default", cfg.OAuth.FrontendBaseURL)
 
 	// --- JWT defaults ---
 	assert.Equal(t, "is not default", cfg.JWT.AccessTokenSecret)

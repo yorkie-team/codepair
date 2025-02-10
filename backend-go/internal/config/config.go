@@ -12,7 +12,7 @@ var validate = validator.New()
 
 type Config struct {
 	Server  Server
-	Auth    Auth
+	OAuth   OAuth
 	JWT     JWT
 	Yorkie  Yorkie
 	Mongo   Mongo
@@ -80,7 +80,7 @@ func readConfigFile(filePath string) error {
 
 func (c *Config) ensureDefaultValue() {
 	c.Server.ensureDefaultValue()
-	c.Auth.ensureDefaultValue()
+	c.OAuth.ensureDefaultValue()
 	c.JWT.ensureDefaultValue()
 	c.Yorkie.ensureDefaultValue()
 	c.Mongo.ensureDefaultValue()
@@ -91,7 +91,7 @@ func (c *Config) validate() error {
 	if err := c.Server.validate(); err != nil {
 		return fmt.Errorf("server config invalid: %w", err)
 	}
-	if err := c.Auth.validate(); err != nil {
+	if err := c.OAuth.validate(); err != nil {
 		return fmt.Errorf("oauth config invalid: %w", err)
 	}
 	if err := c.JWT.validate(); err != nil {

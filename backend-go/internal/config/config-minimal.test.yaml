@@ -1,7 +1,7 @@
 # In this minmal YAML below, only the required fields that do not have defaults
 # are provided. For fields with URL validation and defaults, we supply valid values when needed.
 
-Auth:
+OAuth:
   Github:
     ClientID: "is not default"
     ClientSecret: "is not default"

@@ -3,13 +3,13 @@ package config
 var EnvVarMap = map[string]string{
 	"server.port": "SERVER_PORT",
 
-	"auth.github.ClientId":         "AUTH_GITHUB_CLIENT_ID",
-	"auth.github.ClientSecret":     "AUTH_GITHUB_CLIENT_SECRET",
-	"auth.github.CallbackUrl":      "AUTH_GITHUB_CALLBACK_URL",
-	"auth.github.AuthorizationUrl": "AUTH_GITHUB_AUTHORIZATION_URL",
-	"auth.github.TokenUrl":         "AUTH_GITHUB_TOKEN_URL",
-	"auth.github.UserProfileUrl":   "AUTH_GITHUB_USER_PROFILE_URL",
-	"auth.FrontendBaseUrl":         "AUTH_FRONTEND_BASE_URL",
+	"oauth.github.ClientId":         "OAUTH_GITHUB_CLIENT_ID",
+	"oauth.github.ClientSecret":     "OAUTH_GITHUB_CLIENT_SECRET",
+	"oauth.github.CallbackUrl":      "OAUTH_GITHUB_CALLBACK_URL",
+	"oauth.github.AuthorizationUrl": "OAUTH_GITHUB_AUTHORIZATION_URL",
+	"oauth.github.TokenUrl":         "OAUTH_GITHUB_TOKEN_URL",
+	"oauth.github.UserProfileUrl":   "OAUTH_GITHUB_USER_PROFILE_URL",
+	"oauth.FrontendBaseUrl":         "OAUTH_FRONTEND_BASE_URL",
 
 	"jwt.AccessTokenSecret":          "JWT_ACCESS_TOKEN_SECRET",
 	"jwt.AccessTokenExpirationTime":  "JWT_ACCESS_TOKEN_EXPIRATION_TIME",
@@ -40,14 +40,14 @@ var TestEnvs = map[string]string{
 	// --- Server ---
 	"SERVER_PORT": "3002",
 
-	// --- Auth ---
-	"AUTH_GITHUB_CLIENT_ID":         "test_value",
-	"AUTH_GITHUB_CLIENT_SECRET":     "test_value",
-	"AUTH_GITHUB_CALLBACK_URL":      "http://test_value/callback",
-	"AUTH_GITHUB_AUTHORIZATION_URL": "http://test_value/auth",
-	"AUTH_GITHUB_TOKEN_URL":         "http://test_value/token",
-	"AUTH_GITHUB_USER_PROFILE_URL":  "http://test_value/profile",
-	"AUTH_FRONTEND_BASE_URL":        "http://test_value",
+	// --- OAuth ---
+	"OAUTH_GITHUB_CLIENT_ID":         "test_value",
+	"OAUTH_GITHUB_CLIENT_SECRET":     "test_value",
+	"OAUTH_GITHUB_CALLBACK_URL":      "http://test_value/callback",
+	"OAUTH_GITHUB_AUTHORIZATION_URL": "http://test_value/auth",
+	"OAUTH_GITHUB_TOKEN_URL":         "http://test_value/token",
+	"OAUTH_GITHUB_USER_PROFILE_URL":  "http://test_value/profile",
+	"OAUTH_FRONTEND_BASE_URL":        "http://test_value",
 
 	// --- JWT ---
 	"JWT_ACCESS_TOKEN_SECRET":           "test_value",

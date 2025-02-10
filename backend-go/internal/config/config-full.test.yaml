@@ -1,7 +1,7 @@
 Server:
   Port: 3001
 
-Auth:
+OAuth:
   Github:
     ClientID: "config_client_id"
     ClientSecret: "config_client_secret"
