@@ -1,8 +1,6 @@
 package hello
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
@@ -25,17 +23,17 @@ func (h *Handler) HelloCodePair(e echo.Context) error {
 	req := new(models.HelloRequest)
 
 	if err := http.BindAndValidateRequest(e, req); err != nil {
-		return fmt.Errorf("%w", err)
+		return err
 	}
 
 	helloMessage, err := h.helloService.HelloCodePair(e, CodePairVisitor{
 		Nickname: req.Nickname,
 	})
 	if err != nil {
-		return fmt.Errorf("%w", http.NewErrorResponse(e, err))
+		return http.NewErrorResponse(e, err)
 	}
 
-	return fmt.Errorf("%w", http.NewOkResponse(e, models.HelloResponse{
+	return http.NewOkResponse(e, models.HelloResponse{
 		Message: helloMessage,
-	}))
+	})
 }
