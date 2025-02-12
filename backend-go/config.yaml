@@ -1,0 +1,105 @@
+# WARNING: This is a sample configuration file for development environment.
+# Never commit actual secrets, keys, or credentials to version control
+# Consider using environment variables for sensitive data
+
+# Server is the configuration for the backend server.
+Server:
+  # Port is the port on which the server runs (default: 3001).
+  Port: 3001
+
+# OAuth is the configuration for authentication and OAuth settings.
+OAuth:
+  Github:
+    # ClientID is the GitHub OAuth client ID.
+    # This value is necessary for authentication. You have to insert this value.
+    ClientID: ""
+
+    # ClientSecret is the GitHub OAuth client secret.
+    # This value is necessary for authentication. You have to insert this value.
+    ClientSecret: ""
+
+    # CallbackURL is the redirect URL after GitHub authentication.
+    # Format: http://<backend_url>/auth/login/github
+    CallbackURL: "http://localhost:3000/auth/login/github"
+
+    # AuthorizationURL is the GitHub OAuth authorization endpoint.
+    AuthorizationURL: "https://github.com/login/oauth/authorize"
+
+    # TokenURL is the GitHub OAuth token exchange endpoint.
+    TokenURL: "https://github.com/login/oauth/access_token"
+
+    # UserProfileURL is the GitHub API endpoint for fetching user profile details.
+    UserProfileURL: "https://api.github.com/user"
+
+  # FrontendBaseURL is the base URL of the frontend application.
+  FrontendBaseURL: "http://localhost:5173"
+
+# JWT is the configuration for JSON Web Tokens (JWT) used for authentication.
+JWT:
+  # AccessTokenSecret is the secret key used to sign access tokens.
+  AccessTokenSecret: "<STRONG_RANDOM_SECRET>"
+
+  # AccessTokenExpirationTime is the validity duration of access tokens (default: 24h).
+  AccessTokenExpirationTime: "24h"
+
+  # RefreshTokenSecret is the secret key used to sign refresh tokens.
+  RefreshTokenSecret: "<STRONG_RANDOM_SECRET>"
+
+  # RefreshTokenExpirationTime is the validity duration of refresh tokens (default: 168h).
+  RefreshTokenExpirationTime: "168h"
+
+# Yorkie is the configuration for Yorkie, a collaborative editing framework.
+Yorkie:
+  # APIAddr is the address of the Yorkie API server.
+  APIAddr: "http://localhost:8080"
+
+  # ProjectName is the name of the Yorkie project.
+  ProjectName: "default"
+
+  # ProjectSecretKey is the secret key for authenticating with Yorkie.
+  ProjectSecretKey: ""
+
+# Mongo is the configuration for MongoDB.
+Mongo:
+  # ConnectionTimeout is the timeout for establishing a connection to MongoDB.
+  ConnectionTimeout: "10s"
+
+  # ConnectionURI is the connection string used to connect to MongoDB.
+  ConnectionURI: "mongodb://localhost:27017/codepair"
+
+  # PingTimeout is the timeout duration for MongoDB health checks.
+  PingTimeout: "5s"
+
+  # DatabaseName is the name of the database used for the application.
+  DatabaseName: "codepair"
+
+# Storage is the configuration for file storage.
+Storage:
+  # Provider specifies the storage provider ("minio" for local, "s3" for AWS S3).
+  Provider: "minio"
+
+  Minio:
+    # Bucket is the name of the MinIO storage bucket.
+    Bucket: "default-storage"
+
+    # Endpoint is the URL of the MinIO server.
+    Endpoint: "http://localhost:9000"
+
+    # AccessKey is the MinIO authentication access key.
+    AccessKey: "minioadmin"
+
+    # SecretKey is the MinIO authentication secret key.
+    SecretKey: "minioadmin"
+
+  S3:
+    # Bucket is the name of the AWS S3 storage bucket.
+    Bucket: "default-storage"
+
+    # Region is the AWS region where the S3 bucket is located.
+    Region: "us-east-1"
+
+    # AccessKey is the AWS S3 authentication access key.
+    AccessKey: "aws_access_key"
+
+    # SecretKey is the AWS S3 authentication secret key.
+    SecretKey: "aws_secret_key"
