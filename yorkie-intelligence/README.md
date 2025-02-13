@@ -27,3 +27,11 @@ poetry run uvicorn src.main:app --reload
 
 you can see openapi in http://localhost:8000/docs
 
+## How To Run TestCode
+
+```sh
+poetry run python -m pytest
+```
+
+## Ollama SetUp
+If you want to more detail, visit [here!](https://hub.docker.com/r/ollama/ollama)

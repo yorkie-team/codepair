@@ -1,21 +1,29 @@
 import pytest
+import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
+from langchain_core.language_models.fake import FakeStreamingListLLM
 
 from src.main import app
+from src.common.llms import get_model
 
 
-# @TODO(@sihyeong671): Change to use the smollm2:135m model when testing these api.(or fakellm)
-
-
-@pytest.mark.asyncio
-async def test_stream_pr():
+@pytest_asyncio.fixture()
+async def client():
+    fake_responses = ["hello, I'm a Yorkie Intelligence ChatBot, How Can I help you?"]
+    fake_llm = FakeStreamingListLLM(responses=fake_responses)
+    app.dependency_overrides[get_model] = lambda: fake_llm
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
-        async with client.stream(
-            "POST", "/intelligence/pr/", json={"query": "hi"}
-        ) as response:
-            assert response.status_code == 200
+        yield client
+
+
+@pytest.mark.asyncio()
+async def test_stream_pr(client):
+    async with client.stream(
+        "POST", "/intelligence/pr/", json={"query": "hi"}
+    ) as response:
+        assert response.status_code == 200
 
 
 @pytest.mark.asyncio
