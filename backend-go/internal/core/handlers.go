@@ -2,7 +2,7 @@ package core
 
 import (
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongo"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 )
 
 type Handlers struct {
@@ -10,14 +10,9 @@ type Handlers struct {
 }
 
 // NewHandlers creates a new handlers.
-func NewHandlers() *Handlers {
-	// Repositories
-	helloRepository := mongo.NewHelloRepository()
-
-	// Services
-	helloService := hello.NewService(helloRepository)
-
-	// Handlers
+func NewHandlers(repos *database.Repositories) *Handlers {
+	// hello
+	helloService := hello.NewService(repos.Hello)
 	helloHandler := hello.NewHandler(helloService)
 
 	return &Handlers{
