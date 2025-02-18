@@ -96,7 +96,7 @@ Checks if the code is formatted correctly according to Prettier configurations. 
 
 ```
 frontend/
-├── public/                 # Static files (images, etc.)
+├── public/                 # Static files (index.html, images, etc.)
 ├── src/                    # Source code
 │   ├── components/         # React components
 │   ├── constants/          # Constants for project
