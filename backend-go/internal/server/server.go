@@ -3,14 +3,14 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 )
 
 type CodePair struct {

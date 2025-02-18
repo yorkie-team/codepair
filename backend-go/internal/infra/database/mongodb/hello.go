@@ -39,7 +39,10 @@ func NewHelloRepository(conf *config.Mongo, client *mongo.Client) *HelloReposito
 }
 
 // CreateHelloMessage inserts a new CodePairVisitor message in the database.
-func (h *HelloRepository) CreateHelloMessage(ctx context.Context, visitor model.CodePairVisitor) (model.CodePairVisitor, error) {
+func (h *HelloRepository) CreateHelloMessage(
+	ctx context.Context,
+	visitor model.CodePairVisitor,
+) (model.CodePairVisitor, error) {
 	visitorRecord := CodePairVisitor{
 		ID:        bson.NewObjectID(),
 		Nickname:  visitor.Nickname,

@@ -1,9 +1,10 @@
 package database
 
 import (
+	"go.mongodb.org/mongo-driver/v2/mongo"
+
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
-	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Repositories struct {
