@@ -7,6 +7,22 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.30] - 2025-02-18
+
+### Added
+
+- Implement API Model Auto Generation using `openapi-generation` by @devleejb in https://github.com/yorkie-team/codepair/pull/442
+- Initialize directory structure by @window9u in https://github.com/yorkie-team/codepair/pull/437
+- Implement CI for `backend-go` by @devleejb in https://github.com/yorkie-team/codepair/pull/444
+- Implement Dummy API for Project Understanding by @devleejb in https://github.com/yorkie-team/codepair/pull/445
+- Adjust import grouping and wrapcheck rules in golangci-lint by @kokodak in https://github.com/yorkie-team/codepair/pull/448
+- Initialize Configuration Management Using Viper by @window9u in https://github.com/yorkie-team/codepair/pull/447
+- Add user metadata to Yorkie Client initialization by @hackerwins in https://github.com/yorkie-team/codepair/pull/452
+
+### Changed
+
+- Remove SPA GitHub Pages script from index.html by @choidabom in https://github.com/yorkie-team/codepair/pull/449
+
 ## [0.1.29] - 2025-01-31
 
 ### Added
