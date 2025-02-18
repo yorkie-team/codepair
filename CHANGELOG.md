@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.31] - 2024-02-18
+
+### Fixed
+
+- Revert "Remove SPA GitHub Pages script from index.html (#449)" by @devleejb
+
 ## [0.1.30] - 2025-02-18
 
 ### Added
