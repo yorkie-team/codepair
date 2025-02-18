@@ -4,11 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/config"
-	domain "github.com/yorkie-team/codepair/backend/internal/core/user"
+	"time"
+
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
-	"time"
+
+	"github.com/yorkie-team/codepair/backend/internal/config"
+	domain "github.com/yorkie-team/codepair/backend/internal/core/user"
 )
 
 type UserRepository struct {
