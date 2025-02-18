@@ -8,6 +8,7 @@ import { selectAuth } from "../store/authSlice";
 import { CodePairDocType } from "../store/editorSlice";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 import { useRefreshTokenMutation } from "./api/user";
+import { selectUser } from "../store/userSlice";
 
 const YORKIE_API_ADDR = import.meta.env.VITE_YORKIE_API_ADDR;
 const YORKIE_API_KEY = import.meta.env.VITE_YORKIE_API_KEY;
@@ -20,9 +21,11 @@ export const useYorkieDocument = (
 ) => {
 	const [searchParams] = useSearchParams();
 	const authStore = useSelector(selectAuth);
+	const userStore = useSelector(selectUser);
 	const [client, setClient] = useState<yorkie.Client | null>(null);
 	const [doc, setDoc] = useState<CodePairDocType | null>(null);
 	const { mutateAsync: mutateRefreshToken } = useRefreshTokenMutation();
+	const userID = userStore.data?.id || "";
 
 	const getYorkieToken = useCallback(
 		async (reason?: string) => {
@@ -49,14 +52,19 @@ export const useYorkieDocument = (
 
 	const createYorkieClient = useCallback(async () => {
 		const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
-		const newClient = new yorkie.Client(YORKIE_API_ADDR, {
+		const opts = {
 			apiKey: YORKIE_API_KEY,
 			authTokenInjector: getYorkieToken,
 			syncLoopDuration,
-		});
+		} as yorkie.ClientOptions;
+		if (userID) {
+			opts.metadata = { userID };
+		}
+
+		const newClient = new yorkie.Client(YORKIE_API_ADDR, opts);
 		await newClient.activate();
 		return newClient;
-	}, [getYorkieToken, searchParams]);
+	}, [getYorkieToken, searchParams, userID]);
 
 	const createYorkieDocument = useCallback(
 		(client: yorkie.Client, yorkieDocumentId: string, presenceName: string) => {
