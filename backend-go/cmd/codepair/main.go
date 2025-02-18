@@ -24,7 +24,10 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	cp := server.New(e, conf)
+	cp, err := server.New(e, conf)
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
 
 	if err := cp.Start(); err != nil {
 		e.Logger.Fatal(err)
