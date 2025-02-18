@@ -26,7 +26,7 @@ func (h *Handler) HelloCodePair(e echo.Context) error {
 		return err
 	}
 
-	helloMessage, err := h.helloService.HelloCodePair(e, CodePairVisitor{
+	helloMessage, err := h.helloService.HelloCodePair(CodePairVisitor{
 		Nickname: req.Nickname,
 	})
 	if err != nil {

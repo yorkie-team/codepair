@@ -1,6 +1,8 @@
 package hello
 
+import "context"
+
 type Repository interface {
-	// ReadHelloMessageFor reads a hello message for a given CodePairVisitor
-	ReadHelloMessageFor(codePairVisitor CodePairVisitor) (string, error)
+	// CreateHelloMessage ReadHelloMessageFor creates a hello message with id
+	CreateHelloMessage(ctx context.Context, codePairVisitor CodePairVisitor) (CodePairVisitor, error)
 }

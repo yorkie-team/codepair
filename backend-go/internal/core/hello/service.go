@@ -1,9 +1,8 @@
 package hello
 
 import (
-	"github.com/labstack/echo/v4"
-
-	"github.com/yorkie-team/codepair/backend/internal/transport/http"
+	"context"
+	"fmt"
 )
 
 type Service struct {
@@ -18,12 +17,11 @@ func NewService(repository Repository) *Service {
 }
 
 // HelloCodePair returns a hello message for a given CodePairVisitor
-func (s *Service) HelloCodePair(e echo.Context, codePairVisitor CodePairVisitor) (string, error) {
-	helloMessage, err := s.helloRepository.ReadHelloMessageFor(codePairVisitor)
+func (s *Service) HelloCodePair(codePairVisitor CodePairVisitor) (string, error) {
+	helloMessage, err := s.helloRepository.CreateHelloMessage(context.Background(), codePairVisitor)
 	if err != nil {
-		e.Logger().Fatal(err)
-		return "", http.ErrInternalServerError
+		return "", fmt.Errorf("create message: %w", err)
 	}
 
-	return helloMessage, nil
+	return helloMessage.ID, nil
 }
