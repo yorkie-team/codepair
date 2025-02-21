@@ -8,7 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
-	"github.com/yorkie-team/codepair/backend/internal/core"
+	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongo"
 )
 
 type CodePair struct {
@@ -18,8 +19,7 @@ type CodePair struct {
 
 // New creates a new CodePair server.
 func New(e *echo.Echo, conf *config.Config) *CodePair {
-	handlers := core.NewHandlers()
-	RegisterRoutes(e, handlers)
+	hello.New(e, mongo.NewHelloRepository())
 
 	cp := &CodePair{
 		config: conf,

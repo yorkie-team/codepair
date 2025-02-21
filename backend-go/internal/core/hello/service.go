@@ -1,29 +1,28 @@
 package hello
 
 import (
-	"github.com/labstack/echo/v4"
-
-	"github.com/yorkie-team/codepair/backend/internal/transport/http"
+	"fmt"
 )
 
 type Service struct {
-	helloRepository Repository
+	repository Repository
 }
 
-// NewService creates a new service for hello.
-func NewService(repository Repository) *Service {
-	return &Service{
-		helloRepository: repository,
+// createHello returns a hello message for a given CodePairVisitor
+func (s *Service) createHello(codePairVisitor CodePairVisitor) error {
+	if err := s.repository.CreateHelloMessage(codePairVisitor); err != nil {
+		return fmt.Errorf("failed to create hello message for visitor %v: %w", codePairVisitor, err)
 	}
+
+	return nil
 }
 
-// HelloCodePair returns a hello message for a given CodePairVisitor
-func (s *Service) HelloCodePair(e echo.Context, codePairVisitor CodePairVisitor) (string, error) {
-	helloMessage, err := s.helloRepository.ReadHelloMessageFor(codePairVisitor)
+// readNickname returns a hello message for a given CodePairVisitor
+func (s *Service) readNickname(id int) (string, error) {
+	hello, err := s.repository.FindHelloMessage(id)
 	if err != nil {
-		e.Logger().Fatal(err)
-		return "", http.ErrInternalServerError
+		return "", fmt.Errorf("failed to find hello message for ID %d: %w", id, err)
 	}
 
-	return helloMessage, nil
+	return hello.Nickname, nil
 }
