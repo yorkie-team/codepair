@@ -35,7 +35,7 @@ func (h *HelloRepository) FindHelloMessage(id int) (hello.CodePairVisitor, error
 	return he.ToDomain(), nil
 }
 
-func (h *HelloRepository) CreateHelloMessage(codePairVisitor hello.CodePairVisitor) error {
+func (h *HelloRepository) CreateHelloMessage(_ hello.CodePairVisitor) error {
 
 	return nil
 }
