@@ -44,7 +44,6 @@ func (h *HelloRepository) CreateHelloMessage(
 	visitor model.CodePairVisitor,
 ) (model.CodePairVisitor, error) {
 	visitorRecord := CodePairVisitor{
-		ID:        bson.NewObjectID(),
 		Nickname:  visitor.Nickname,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),

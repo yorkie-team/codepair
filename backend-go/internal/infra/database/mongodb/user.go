@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
-	domain "github.com/yorkie-team/codepair/backend/internal/core/user"
+	"github.com/yorkie-team/codepair/backend/internal/core/user"
 )
 
 type UserRepository struct {
@@ -34,8 +34,8 @@ type User struct {
 	UpdatedAt      time.Time     `bson:"updated_at"`
 }
 
-func (u *User) ToDomain() *domain.User {
-	return &domain.User{
+func (u *User) ToDomain() *user.User {
+	return &user.User{
 		ID:             u.ID.String(),
 		SocialProvider: u.SocialProvider,
 		SocialUID:      u.SocialUID,
@@ -46,15 +46,15 @@ func (u *User) ToDomain() *domain.User {
 }
 
 // FindUserByID returns a user by its ID, or nil if not found.
-func (r *UserRepository) FindUserByID(ctx context.Context, userID string) (*domain.User, error) {
+func (r *UserRepository) FindUserByID(ctx context.Context, userID string) (*user.User, error) {
 	result := r.collection(ColUsers).FindOne(ctx, bson.M{"_id": userID})
 
-	user := User{}
-	if err := result.Decode(&user); err != nil {
-		return nil, fmt.Errorf("find user by ID: %w", err)
+	u := User{}
+	if err := result.Decode(&u); err != nil {
+		return nil, fmt.Errorf("find u by ID: %w", err)
 	}
 
-	return user.ToDomain(), nil
+	return u.ToDomain(), nil
 }
 
 // FindUserBySocialUID checks if user exists with given provider & uid.
@@ -62,44 +62,44 @@ func (r *UserRepository) FindUserBySocialUID(
 	ctx context.Context,
 	provider,
 	uid string,
-	createIfNotExist bool,
-) (*domain.User, error) {
+) (*user.User, error) {
 	filter := bson.M{"social_provider": provider, "social_uid": uid}
 
 	result := r.collection(ColUsers).FindOne(ctx, filter)
 	if err := result.Err(); err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) && createIfNotExist {
-			return r.createUser(ctx, provider, uid)
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, user.ErrUserNotFound
 		}
-		return nil, fmt.Errorf("find user by social UID: %w", err)
+		return nil, fmt.Errorf("find u by social UID: %w", err)
 	}
 
-	user := User{}
-	if err := result.Decode(&user); err != nil {
-		return nil, fmt.Errorf("decode user: %w", err)
+	u := User{}
+	if err := result.Decode(&u); err != nil {
+		return nil, fmt.Errorf("decode u: %w", err)
 	}
 
-	return user.ToDomain(), nil
+	return u.ToDomain(), nil
+}
+
+func (r *UserRepository) CreateUserWithSocial(
+	ctx context.Context,
+	provider, socialID string,
+) (*user.User, error) {
+	u := User{
+		SocialProvider: provider,
+		SocialUID:      socialID,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
+	}
+
+	if _, err := r.collection(ColUsers).InsertOne(ctx, u); err != nil {
+		return nil, fmt.Errorf("create u: %w", err)
+	}
+
+	return u.ToDomain(), nil
 }
 
 // collection is a helper method to return a reference to a specific collection.
 func (r *UserRepository) collection(name string) *mongo.Collection {
 	return r.client.Database(r.conf.DatabaseName).Collection(name)
-}
-
-// createUser creates a new user with the given provider and uid.
-func (r *UserRepository) createUser(ctx context.Context, provider, uid string) (*domain.User, error) {
-	user := User{
-		ID:             bson.NewObjectID(),
-		SocialProvider: provider,
-		SocialUID:      uid,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
-	}
-
-	if _, err := r.collection(ColUsers).InsertOne(ctx, user); err != nil {
-		return nil, fmt.Errorf("create user: %w", err)
-	}
-
-	return user.ToDomain(), nil
 }
