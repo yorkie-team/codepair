@@ -7,7 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-## [0.1.31] - 2024-02-18
+## [0.1.32] - 2025-02-22
+
+## Fixed
+
+- Fix dockerfile issue with pnpm and corepack by @krapie in https://github.com/yorkie-team/codepair/pull/456
+
+## [0.1.31] - 2025-02-18
 
 ### Fixed
 
