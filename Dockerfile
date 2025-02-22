@@ -1,6 +1,6 @@
 # Stage 1: build codepair backend
 # Start from the node base image
-FROM node:alpine3.18 AS base
+FROM node:18.20.7-alpine3.21 AS base
 # Set pnpm installation directory and add it to the PATH
 RUN corepack enable
 RUN corepack use pnpm@9
