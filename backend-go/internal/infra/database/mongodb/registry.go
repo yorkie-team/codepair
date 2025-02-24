@@ -1,11 +1,12 @@
 package mongodb
 
 import (
+	"fmt"
 	"reflect"
 
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
-
 	"go.mongodb.org/mongo-driver/v2/bson"
+
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 )
 
 var tID = reflect.TypeOf(database.ID(""))
@@ -17,10 +18,13 @@ func iDEncoder(_ bson.EncodeContext, vw bson.ValueWriter, val reflect.Value) err
 
 	oid, err := bson.ObjectIDFromHex(val.String())
 	if err != nil {
-		return err
+		return fmt.Errorf("convert hex to ObjectID: %w", err)
 	}
 
-	return vw.WriteObjectID(oid)
+	if err = vw.WriteObjectID(oid); err != nil {
+		return fmt.Errorf("write ObjectID: %w", err)
+	}
+	return nil
 }
 
 func iDDecoder(_ bson.DecodeContext, vr bson.ValueReader, val reflect.Value) error {
@@ -30,7 +34,7 @@ func iDDecoder(_ bson.DecodeContext, vr bson.ValueReader, val reflect.Value) err
 
 	oid, err := vr.ReadObjectID()
 	if err != nil {
-		return err
+		return fmt.Errorf("read ObjectID: %w", err)
 	}
 
 	val.SetString(oid.Hex())
