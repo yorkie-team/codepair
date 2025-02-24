@@ -16,7 +16,7 @@ type Visitor struct {
 type Hello interface {
 	// CreateVisitor creates a new visitor record.
 	// It accepts a Visitor object and returns an error if creation fails.
-	CreateVisitor(visitor Visitor) error
+	CreateVisitor(visitor Visitor) (Visitor, error)
 
 	// FindVisitor retrieves a visitor record by its unique identifier.
 	// It returns the Visitor and an error if the record cannot be found.

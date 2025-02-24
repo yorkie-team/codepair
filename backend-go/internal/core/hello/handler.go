@@ -22,11 +22,12 @@ func (h *Handler) createHello(c echo.Context) error {
 	if err := http.BindAndValidateRequest(c, req); err != nil {
 		return http.NewErrorResponse(c, fmt.Errorf("invalid request: %w", err))
 	}
-	if err := h.service.createHello(req); err != nil {
+	id, err := h.service.createHello(req)
+	if err != nil {
 		return http.NewErrorResponse(c, err)
 	}
 	return http.NewOkResponse(c, models.HelloResponse{
-		Message: fmt.Sprintf("Hello, %s!", req.Nickname),
+		Message: fmt.Sprintf("Hello, id:%s, nickname: %s!", id, req.Nickname),
 	})
 }
 

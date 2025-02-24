@@ -29,17 +29,21 @@ func NewHelloRepo(conf *config.Mongo, client *mongo.Client) *HelloRepository {
 
 // CreateVisitor inserts a new visitor record into the database,
 // letting MongoDB auto-generate the _id field.
-func (r *HelloRepository) CreateVisitor(visitor database.Visitor) error {
+func (r *HelloRepository) CreateVisitor(visitor database.Visitor) (database.Visitor, error) {
 	now := time.Now()
 	visitor.CreatedAt = now
 	visitor.UpdatedAt = now
 
-	_, err := r.collection.InsertOne(context.Background(), visitor)
+	res, err := r.collection.InsertOne(context.Background(), visitor)
 	if err != nil {
-		return fmt.Errorf("failed to create visitor: %w", err)
+		return database.Visitor{}, fmt.Errorf("failed to create visitor: %w", err)
 	}
 
-	return nil
+	if oid, ok := res.InsertedID.(bson.ObjectID); ok {
+		visitor.ID = database.ID(oid.String())
+	}
+
+	return visitor, nil
 }
 
 // FindVisitor retrieves a visitor record by its id.

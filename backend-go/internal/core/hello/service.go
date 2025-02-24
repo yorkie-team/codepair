@@ -13,14 +13,15 @@ type Service struct {
 }
 
 // createHello creates a new visitor record based on the provided hello request.
-func (s *Service) createHello(req *models.HelloRequest) error {
+func (s *Service) createHello(req *models.HelloRequest) (string, error) {
 	visitor := database.Visitor{
 		Nickname: req.Nickname,
 	}
-	if err := s.repo.CreateVisitor(visitor); err != nil {
-		return fmt.Errorf("failed to create hello message for visitor %v: %w", req, err)
+	visitor, err := s.repo.CreateVisitor(visitor)
+	if err != nil {
+		return "", fmt.Errorf("failed to create hello message for visitor %v: %w", req, err)
 	}
-	return nil
+	return string(visitor.ID), nil
 }
 
 // readNickname retrieves the nickname of a visitor record by its unique identifier.
