@@ -17,15 +17,13 @@ const ColVisitor = "hello_visitors"
 
 // HelloRepository implements the CRUD operations for the hello service.
 type HelloRepository struct {
-	conf   *config.Mongo
-	client *mongo.Client
+	collection *mongo.Collection
 }
 
 // NewHelloRepo creates a new instance of HelloRepository.
 func NewHelloRepo(conf *config.Mongo, client *mongo.Client) *HelloRepository {
 	return &HelloRepository{
-		conf:   conf,
-		client: client,
+		collection: client.Database(conf.DatabaseName).Collection(ColVisitor),
 	}
 }
 
@@ -38,7 +36,7 @@ func (r *HelloRepository) CreateVisitor(visitor database.Visitor) error {
 	// Ensure ID is empty so that MongoDB will auto-generate it.
 	visitor.ID = ""
 
-	result, err := r.collection().InsertOne(context.Background(), visitor)
+	result, err := r.collection.InsertOne(context.Background(), visitor)
 	if err != nil {
 		return fmt.Errorf("failed to create visitor: %w", err)
 	}
@@ -67,7 +65,7 @@ func (r *HelloRepository) FindVisitor(id string) (database.Visitor, error) {
 	}
 
 	filter := bson.M{"_id": oid}
-	err = r.collection().FindOne(context.Background(), filter).Decode(&resultModel)
+	err = r.collection.FindOne(context.Background(), filter).Decode(&resultModel)
 	if err != nil {
 		return database.Visitor{}, fmt.Errorf("failed to find visitor: %w", err)
 	}
@@ -96,7 +94,7 @@ func (r *HelloRepository) UpdateVisitor(visitor database.Visitor) error {
 		},
 	}
 
-	result, err := r.collection().UpdateOne(context.Background(), filter, update)
+	result, err := r.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return fmt.Errorf("failed to update visitor: %w", err)
 	}
@@ -114,7 +112,7 @@ func (r *HelloRepository) DeleteVisitor(id string) error {
 	}
 
 	filter := bson.M{"_id": oid}
-	result, err := r.collection().DeleteOne(context.Background(), filter)
+	result, err := r.collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return fmt.Errorf("failed to delete visitor: %w", err)
 	}
@@ -122,9 +120,4 @@ func (r *HelloRepository) DeleteVisitor(id string) error {
 		return fmt.Errorf("no visitor found with id %s", id)
 	}
 	return nil
-}
-
-// collection returns a reference to the MongoDB collection for visitor records.
-func (r *HelloRepository) collection() *mongo.Collection {
-	return r.client.Database(r.conf.DatabaseName).Collection(ColVisitor)
 }
