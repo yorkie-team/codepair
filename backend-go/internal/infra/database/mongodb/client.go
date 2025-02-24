@@ -16,7 +16,8 @@ func Dial(conf *config.Mongo) (*mongo.Client, error) {
 	client, err := mongo.Connect(
 		options.Client().
 			ApplyURI(conf.ConnectionURI).
-			SetConnectTimeout(conf.ConnectionTimeout),
+			SetConnectTimeout(conf.ConnectionTimeout).
+			SetRegistry(NewRegistry()),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("connect to mongo: %w", err)

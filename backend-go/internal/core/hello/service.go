@@ -25,7 +25,7 @@ func (s *Service) createHello(req *models.HelloRequest) error {
 
 // readNickname retrieves the nickname of a visitor record by its unique identifier.
 func (s *Service) readNickname(id string) (string, error) {
-	visitor, err := s.repo.FindVisitor(id)
+	visitor, err := s.repo.FindVisitor(database.ID(id))
 	if err != nil {
 		return "", fmt.Errorf("failed to find hello message for ID %s: %w", id, err)
 	}
@@ -35,7 +35,7 @@ func (s *Service) readNickname(id string) (string, error) {
 // updateHello updates an existing visitor record with new data from the hello request.
 func (s *Service) updateHello(id string, req *models.HelloRequest) error {
 	visitor := database.Visitor{
-		ID:       id,
+		ID:       database.ID(id),
 		Nickname: req.Nickname,
 		// Note: CreatedAt is not modified here; the repository is responsible for setting UpdatedAt.
 	}
@@ -47,7 +47,7 @@ func (s *Service) updateHello(id string, req *models.HelloRequest) error {
 
 // deleteHello removes a visitor record by its unique identifier.
 func (s *Service) deleteHello(id string) error {
-	if err := s.repo.DeleteVisitor(id); err != nil {
+	if err := s.repo.DeleteVisitor(database.ID(id)); err != nil {
 		return fmt.Errorf("failed to delete hello message for visitor with ID %s: %w", id, err)
 	}
 	return nil

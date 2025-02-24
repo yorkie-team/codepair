@@ -33,60 +33,30 @@ func (r *HelloRepository) CreateVisitor(visitor database.Visitor) error {
 	now := time.Now()
 	visitor.CreatedAt = now
 	visitor.UpdatedAt = now
-	// Ensure ID is empty so that MongoDB will auto-generate it.
-	visitor.ID = ""
 
-	result, err := r.collection.InsertOne(context.Background(), visitor)
+	_, err := r.collection.InsertOne(context.Background(), visitor)
 	if err != nil {
 		return fmt.Errorf("failed to create visitor: %w", err)
 	}
 
-	// Optionally, update the visitor with the generated id.
-	if oid, ok := result.InsertedID.(bson.ObjectID); ok {
-		visitor.ID = oid.Hex()
-	}
 	return nil
 }
 
 // FindVisitor retrieves a visitor record by its id.
-func (r *HelloRepository) FindVisitor(id string) (database.Visitor, error) {
-	// Convert string id to ObjectID.
-	oid, err := bson.ObjectIDFromHex(id)
-	if err != nil {
-		return database.Visitor{}, fmt.Errorf("invalid id format: %w", err)
-	}
-
-	// Use an intermediate type to correctly decode the auto-generated ObjectID.
-	var resultModel struct {
-		ID        bson.ObjectID `bson:"_id"`
-		Nickname  string        `bson:"nickname"`
-		CreatedAt time.Time     `bson:"created_at"`
-		UpdatedAt time.Time     `bson:"updated_at"`
-	}
-
-	filter := bson.M{"_id": oid}
-	err = r.collection.FindOne(context.Background(), filter).Decode(&resultModel)
-	if err != nil {
+func (r *HelloRepository) FindVisitor(id database.ID) (database.Visitor, error) {
+	var visitor database.Visitor
+	filter := bson.M{"_id": id}
+	if err := r.collection.FindOne(context.Background(), filter).Decode(&visitor); err != nil {
 		return database.Visitor{}, fmt.Errorf("failed to find visitor: %w", err)
 	}
 
-	return database.Visitor{
-		ID:        resultModel.ID.Hex(),
-		Nickname:  resultModel.Nickname,
-		CreatedAt: resultModel.CreatedAt,
-		UpdatedAt: resultModel.UpdatedAt,
-	}, nil
+	return visitor, nil
 }
 
 // UpdateVisitor updates an existing visitor record.
 func (r *HelloRepository) UpdateVisitor(visitor database.Visitor) error {
-	oid, err := bson.ObjectIDFromHex(visitor.ID)
-	if err != nil {
-		return fmt.Errorf("invalid id format: %w", err)
-	}
-
 	visitor.UpdatedAt = time.Now()
-	filter := bson.M{"_id": oid}
+	filter := bson.M{"_id": visitor.ID}
 	update := bson.M{
 		"$set": bson.M{
 			"nickname":   visitor.Nickname,
@@ -105,13 +75,8 @@ func (r *HelloRepository) UpdateVisitor(visitor database.Visitor) error {
 }
 
 // DeleteVisitor removes a visitor record by its id.
-func (r *HelloRepository) DeleteVisitor(id string) error {
-	oid, err := bson.ObjectIDFromHex(id)
-	if err != nil {
-		return fmt.Errorf("invalid id format: %w", err)
-	}
-
-	filter := bson.M{"_id": oid}
+func (r *HelloRepository) DeleteVisitor(id database.ID) error {
+	filter := bson.M{"_id": id}
 	result, err := r.collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return fmt.Errorf("failed to delete visitor: %w", err)
