@@ -21,6 +21,8 @@ type HelloRepository struct {
 	collection *mongo.Collection
 }
 
+var _ database.Hello = (*HelloRepository)(nil)
+
 // NewHelloRepo creates a new instance of HelloRepository.
 func NewHelloRepo(conf *config.Mongo, client *mongo.Client) *HelloRepository {
 	return &HelloRepository{
