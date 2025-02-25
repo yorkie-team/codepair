@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -36,7 +37,10 @@ func (r *HelloRepository) CreateVisitor(visitor database.Visitor) (database.Visi
 
 	res, err := r.collection.InsertOne(context.Background(), visitor)
 	if err != nil {
-		return database.Visitor{}, fmt.Errorf("failed to create visitor: %w", err)
+		if mongo.IsDuplicateKeyError(err) {
+			return database.Visitor{}, database.ErrDuplicatedKey
+		}
+		return database.Visitor{}, fmt.Errorf("create visitor: %w", err)
 	}
 
 	if oid, ok := res.InsertedID.(bson.ObjectID); ok {
@@ -48,10 +52,14 @@ func (r *HelloRepository) CreateVisitor(visitor database.Visitor) (database.Visi
 
 // FindVisitor retrieves a visitor record by its id.
 func (r *HelloRepository) FindVisitor(id database.ID) (database.Visitor, error) {
-	var visitor database.Visitor
+	visitor := database.Visitor{}
 	filter := bson.M{"_id": id}
-	if err := r.collection.FindOne(context.Background(), filter).Decode(&visitor); err != nil {
-		return database.Visitor{}, fmt.Errorf("failed to find visitor: %w", err)
+
+	err := r.collection.FindOne(context.Background(), filter).Decode(&visitor)
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return database.Visitor{}, database.ErrDocumentNotFound
+	} else if err != nil {
+		return database.Visitor{}, fmt.Errorf("find visitor: %w", err)
 	}
 
 	return visitor, nil
@@ -70,10 +78,10 @@ func (r *HelloRepository) UpdateVisitor(visitor database.Visitor) error {
 
 	result, err := r.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		return fmt.Errorf("failed to update visitor: %w", err)
+		return fmt.Errorf("update visitor: %w", err)
 	}
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("no visitor found with id %s", visitor.ID)
+		return database.ErrDocumentNotFound
 	}
 	return nil
 }
@@ -83,10 +91,10 @@ func (r *HelloRepository) DeleteVisitor(id database.ID) error {
 	filter := bson.M{"_id": id}
 	result, err := r.collection.DeleteOne(context.Background(), filter)
 	if err != nil {
-		return fmt.Errorf("failed to delete visitor: %w", err)
+		return fmt.Errorf("delete visitor: %w", err)
 	}
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("no visitor found with id %s", id)
+		return database.ErrDocumentNotFound
 	}
 	return nil
 }
