@@ -6,8 +6,8 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 )
 
-// New creates a new handler for hello endpoints and registers the routes.
-func New(e *echo.Echo, repo database.Hello) {
+// Register creates a new handler for hello endpoints and registers the routes.
+func Register(e *echo.Echo, repo database.Hello) {
 	svc := &Service{
 		repo: repo,
 	}
