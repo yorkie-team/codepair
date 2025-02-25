@@ -13,9 +13,6 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 )
 
-// ColVisitor is the name of the collection storing visitor records.
-const ColVisitor = "hello_visitors"
-
 // HelloRepository implements the CRUD operations for the hello service.
 type HelloRepository struct {
 	collection *mongo.Collection

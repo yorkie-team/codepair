@@ -19,7 +19,7 @@ type CodePair struct {
 
 // New creates a new CodePair server.
 func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
-	db, err := mongodb.Dial(conf.Mongo)
+	db, err := mongodb.Dial(conf.Mongo, e.Logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
