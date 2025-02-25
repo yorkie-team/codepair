@@ -17,7 +17,7 @@ type Handler struct {
 // createHello handles the POST /hello endpoint.
 // It creates a new visitor record and returns a hello message.
 func (h *Handler) createHello(c echo.Context) error {
-	req := new(models.HelloRequest)
+	req := &models.HelloRequest{}
 
 	if err := http.BindAndValidateRequest(c, req); err != nil {
 		return http.NewErrorResponse(c, fmt.Errorf("invalid request: %w", err))
@@ -48,7 +48,7 @@ func (h *Handler) readHello(c echo.Context) error {
 // It updates an existing visitor record and returns a confirmation message.
 func (h *Handler) updateHello(c echo.Context) error {
 	id := c.Param("id")
-	req := new(models.HelloRequest)
+	req := &models.HelloRequest{}
 	if err := http.BindAndValidateRequest(c, req); err != nil {
 		return http.NewErrorResponse(c, fmt.Errorf("invalid request: %w", err))
 	}
