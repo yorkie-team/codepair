@@ -7,7 +7,7 @@ import (
 )
 
 // Register creates a new handler for hello endpoints and registers the routes.
-func Register(e *echo.Echo, repo database.Hello) {
+func Register(e *echo.Echo, repo database.Visitor) {
 	svc := &Service{
 		repo: repo,
 	}

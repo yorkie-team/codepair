@@ -6,10 +6,10 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 )
 
-var tID = reflect.TypeOf(database.ID(""))
+var tID = reflect.TypeOf(entity.ID(""))
 
 func iDEncoder(_ bson.EncodeContext, vw bson.ValueWriter, val reflect.Value) error {
 	if val.Type() != tID {
