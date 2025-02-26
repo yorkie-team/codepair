@@ -24,7 +24,7 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
 
-	hello.Register(e, mongodb.NewHelloRepo(conf.Mongo, db))
+	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
 
 	cp := &CodePair{
 		config: conf,

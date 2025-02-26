@@ -2,14 +2,12 @@ package hello
 
 import (
 	"github.com/labstack/echo/v4"
-
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 )
 
 // Register creates a new handler for hello endpoints and registers the routes.
-func Register(e *echo.Echo, repo database.Visitor) {
+func Register(e *echo.Echo, repo Repository) {
 	svc := &Service{
-		repo: repo,
+		helloRepository: repo,
 	}
 	handler := &Handler{
 		service: svc,

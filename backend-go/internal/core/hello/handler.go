@@ -60,6 +60,6 @@ func (h *Handler) deleteHello(c echo.Context) error {
 		return http.NewErrorResponse(c, err)
 	}
 	return http.NewOkResponse(c, map[string]string{
-		"message": fmt.Sprintf("Visitor with id %s deleted", id),
+		"message": fmt.Sprintf("Repository with id %s deleted", id),
 	})
 }

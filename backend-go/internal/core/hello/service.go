@@ -11,7 +11,7 @@ import (
 
 // Service provides business logic for handling hello messages.
 type Service struct {
-	repo database.Visitor
+	helloRepository Repository
 }
 
 // createHello creates a new visitor record based on the provided hello request.
@@ -19,7 +19,7 @@ func (s *Service) createHello(req *models.HelloRequest) (string, error) {
 	visitor := entity.Visitor{
 		Nickname: req.Nickname,
 	}
-	visitor, err := s.repo.CreateVisitor(visitor)
+	visitor, err := s.helloRepository.CreateVisitor(visitor)
 	if err != nil {
 		if errors.Is(err, database.ErrDuplicatedKey) {
 			return "", fmt.Errorf("nickname '%s' already exists: %w", req.Nickname, err)
@@ -31,7 +31,7 @@ func (s *Service) createHello(req *models.HelloRequest) (string, error) {
 
 // readNickname retrieves the nickname of a visitor record by its unique identifier.
 func (s *Service) readNickname(id string) (string, error) {
-	visitor, err := s.repo.FindVisitor(entity.ID(id))
+	visitor, err := s.helloRepository.FindVisitor(entity.ID(id))
 	if err != nil {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return "", fmt.Errorf("visitor with ID '%s' not found: %w", id, err)
@@ -48,7 +48,7 @@ func (s *Service) updateHello(id string, req *models.HelloRequest) error {
 		Nickname: req.Nickname,
 	}
 
-	if err := s.repo.UpdateVisitor(visitor); err != nil {
+	if err := s.helloRepository.UpdateVisitor(visitor); err != nil {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return fmt.Errorf("cannot update: visitor with ID '%s' not found: %w", id, err)
 		}
@@ -59,7 +59,7 @@ func (s *Service) updateHello(id string, req *models.HelloRequest) error {
 
 // deleteHello removes a visitor record by its unique identifier.
 func (s *Service) deleteHello(id string) error {
-	if err := s.repo.DeleteVisitor(entity.ID(id)); err != nil {
+	if err := s.helloRepository.DeleteVisitor(entity.ID(id)); err != nil {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return fmt.Errorf("cannot delete: visitor with ID '%s' not found: %w", id, err)
 		}
