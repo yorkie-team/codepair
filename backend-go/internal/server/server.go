@@ -8,7 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
-	"github.com/yorkie-team/codepair/backend/internal/core"
+	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 )
 
 type CodePair struct {
@@ -17,15 +18,19 @@ type CodePair struct {
 }
 
 // New creates a new CodePair server.
-func New(e *echo.Echo, conf *config.Config) *CodePair {
-	handlers := core.NewHandlers()
-	RegisterRoutes(e, handlers)
+func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+	db, err := mongodb.Dial(conf.Mongo, e.Logger)
+	if err != nil {
+		return nil, fmt.Errorf("failed to dial mongo: %w", err)
+	}
+
+	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
 
 	cp := &CodePair{
 		config: conf,
 		echo:   e,
 	}
-	return cp
+	return cp, nil
 }
 
 // Start starts the server.
