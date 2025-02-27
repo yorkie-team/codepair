@@ -15,7 +15,7 @@ func main() {
 	configPath, loglevel := parseFlag()
 
 	e := echo.New()
-	if err := setLogLevel(e, loglevel); err != nil {
+	if err := setLogger(e, loglevel); err != nil {
 		e.Logger.Fatal(err)
 	}
 
@@ -44,7 +44,9 @@ func parseFlag() (string, string) {
 	return configPath, loglevel
 }
 
-func setLogLevel(e *echo.Echo, level string) error {
+func setLogger(e *echo.Echo, level string) error {
+	e.Logger.SetHeader("${level} ${time_rfc3339}")
+
 	switch level {
 	case "debug":
 		e.Debug = true
