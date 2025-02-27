@@ -74,7 +74,7 @@ func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
 	// If debug mode is enabled, include internal error details
 	if e.debug && he.Internal != nil {
 		errorResponse.Message = fmt.Sprintf(
-			"message:%s, internal:%s",
+			"%s: internal:%s",
 			errorResponse.Message,
 			he.Internal.Error(),
 		)
