@@ -30,9 +30,13 @@ func (h *Handler) createHello(c echo.Context) error {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	return c.JSON(http.StatusOK, models.HelloResponse{
+	if err := c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello, id:%s, nickname: %s!", id, req.Nickname),
-	})
+	}); err != nil {
+		return fmt.Errorf("failed to send JSON response: %w", err)
+	}
+
+	return nil
 }
 
 func (h *Handler) readHello(c echo.Context) error {
@@ -41,9 +45,14 @@ func (h *Handler) readHello(c echo.Context) error {
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
-	return c.JSON(http.StatusOK, models.HelloResponse{
+
+	if err := c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello, %s!", nickname),
-	})
+	}); err != nil {
+		return fmt.Errorf("failed to send JSON response: %w", err)
+	}
+
+	return nil
 }
 
 func (h *Handler) updateHello(c echo.Context) error {
@@ -60,9 +69,13 @@ func (h *Handler) updateHello(c echo.Context) error {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	return c.JSON(http.StatusOK, models.HelloResponse{
+	if err := c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello updated, new nickname: %s", req.Nickname),
-	})
+	}); err != nil {
+		return fmt.Errorf("failed to send JSON response: %w", err)
+	}
+
+	return nil
 }
 
 func (h *Handler) deleteHello(c echo.Context) error {
@@ -71,7 +84,12 @@ func (h *Handler) deleteHello(c echo.Context) error {
 		return middleware.NewError(http.StatusInternalServerError,
 			fmt.Sprintf("failed to delete repository with id %s", id), err)
 	}
-	return c.JSON(http.StatusOK, models.HelloResponse{
+
+	if err := c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Repository with id %s deleted", id),
-	})
+	}); err != nil {
+		return fmt.Errorf("failed to send JSON response: %w", err)
+	}
+
+	return nil
 }

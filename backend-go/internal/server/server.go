@@ -3,7 +3,6 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/middleware"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,6 +10,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
 type CodePair struct {
