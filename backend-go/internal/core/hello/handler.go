@@ -21,13 +21,13 @@ func (h *Handler) createHello(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
 	}
 
-	if err := c.Validate(req); err != nil {
+	if err := req.Validate(); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON", err)
 	}
 
 	id, err := h.service.createHello(req)
 	if err != nil {
-		return middleware.NewError(http.StatusInternalServerError, "Validation failed", err)
+		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
 	return c.JSON(http.StatusOK, models.HelloResponse{
@@ -52,7 +52,7 @@ func (h *Handler) updateHello(c echo.Context) error {
 	if err := c.Bind(req); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
 	}
-	if err := c.Validate(req); err != nil {
+	if err := req.Validate(); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "Validation failed", err)
 	}
 
