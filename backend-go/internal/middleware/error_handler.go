@@ -97,7 +97,7 @@ func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
 
 	// Log the internal error if present.
 	if he.Internal != nil {
-		e.logger.Error(he.Internal)
+		e.logger.Error(fmt.Errorf("%s: %w", he.Message, he.Internal))
 	}
 
 	// Send the appropriate response based on the request method.
