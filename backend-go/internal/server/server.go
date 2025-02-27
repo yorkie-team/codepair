@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,6 +20,9 @@ type CodePair struct {
 
 // New creates a new CodePair server.
 func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+	errorHandler := middleware.NewErrorHandler(e.Debug, e.Logger)
+	e.HTTPErrorHandler = errorHandler.HTTPErrorHandler
+
 	db, err := mongodb.Dial(conf.Mongo, e.Logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
