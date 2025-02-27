@@ -47,6 +47,7 @@ func parseFlag() (string, string) {
 func setLogLevel(e *echo.Echo, level string) error {
 	switch level {
 	case "debug":
+		e.Debug = true
 		e.Logger.SetLevel(log.DEBUG)
 	case "info":
 		e.Logger.SetLevel(log.INFO)
