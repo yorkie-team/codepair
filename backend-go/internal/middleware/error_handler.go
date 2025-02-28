@@ -6,8 +6,10 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/logging"
 )
 
 // HTTPError represents a structured error response for the application.
@@ -42,17 +44,13 @@ func (e *HTTPError) Error() string {
 
 // ErrorHandler manages application errors and generates appropriate HTTP responses.
 // This is used as Echo’s custom error handler.
-//
-// If debug mode is enabled, internal errors are included in the response message.
 type ErrorHandler struct {
-	debug  bool
 	logger echo.Logger
 }
 
 // NewErrorHandler creates a new ErrorHandler instance.
-func NewErrorHandler(debug bool, logger echo.Logger) *ErrorHandler {
+func NewErrorHandler(logger echo.Logger) *ErrorHandler {
 	return &ErrorHandler{
-		debug:  debug,
 		logger: logger,
 	}
 }
@@ -86,8 +84,11 @@ func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
 		Message:    he.Message,
 	}
 
+	if he.Internal != nil {
+		logging.LogByLevel(c, e.logger, he.Internal)
+	}
 	// If debug mode is enabled and an internal error exists, append it to the response message.
-	if e.debug && he.Internal != nil {
+	if e.logger.Level() == log.DEBUG && he.Internal != nil {
 		errorResponse.Message = fmt.Sprintf(
 			"%s: internal: %s",
 			errorResponse.Message,

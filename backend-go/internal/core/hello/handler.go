@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/logging"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
@@ -18,78 +19,65 @@ type Handler struct {
 func (h *Handler) createHello(c echo.Context) error {
 	req := &models.HelloRequest{}
 	if err := c.Bind(req); err != nil {
+		logging.SetWarn(c)
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
 	}
 
 	if err := req.Validate(); err != nil {
+		logging.SetWarn(c)
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON", err)
 	}
 
-	id, err := h.service.createHello(req)
+	id, err := h.service.createHello(c, req)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	if err := c.JSON(http.StatusOK, models.HelloResponse{
+	return c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello, id:%s, nickname: %s!", id, req.Nickname),
-	}); err != nil {
-		return fmt.Errorf("failed to send JSON response: %w", err)
-	}
-
-	return nil
+	})
 }
 
 func (h *Handler) readHello(c echo.Context) error {
 	id := c.Param("id")
-	nickname, err := h.service.readNickname(id)
+	nickname, err := h.service.readNickname(c, id)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	if err := c.JSON(http.StatusOK, models.HelloResponse{
+	return c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello, %s!", nickname),
-	}); err != nil {
-		return fmt.Errorf("failed to send JSON response: %w", err)
-	}
-
-	return nil
+	})
 }
 
 func (h *Handler) updateHello(c echo.Context) error {
 	id := c.Param("id")
 	req := &models.HelloRequest{}
 	if err := c.Bind(req); err != nil {
+		logging.SetWarn(c)
 		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
 	}
 	if err := req.Validate(); err != nil {
+		logging.SetWarn(c)
 		return middleware.NewError(http.StatusBadRequest, "Validation failed", err)
 	}
 
-	if err := h.service.updateHello(id, req); err != nil {
+	if err := h.service.updateHello(c, id, req); err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	if err := c.JSON(http.StatusOK, models.HelloResponse{
+	return c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Hello updated, new nickname: %s", req.Nickname),
-	}); err != nil {
-		return fmt.Errorf("failed to send JSON response: %w", err)
-	}
-
-	return nil
+	})
 }
 
 func (h *Handler) deleteHello(c echo.Context) error {
 	id := c.Param("id")
-	if err := h.service.deleteHello(id); err != nil {
-		return middleware.NewError(http.StatusInternalServerError,
-			fmt.Sprintf("failed to delete repository with id %s", id), err)
+	if err := h.service.deleteHello(c, id); err != nil {
+		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
-	if err := c.JSON(http.StatusOK, models.HelloResponse{
+	return c.JSON(http.StatusOK, models.HelloResponse{
 		Message: fmt.Sprintf("Repository with id %s deleted", id),
-	}); err != nil {
-		return fmt.Errorf("failed to send JSON response: %w", err)
-	}
-
-	return nil
+	})
 }
