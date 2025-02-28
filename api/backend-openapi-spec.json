@@ -3,10 +3,9 @@
   "paths": {
     "/hello": {
       "post": {
-        "operationId": "helloCodePair",
-        "summary": "Example API",
-        "description": "Sample API endpoint for CodePair",
-        "parameters": [],
+        "operationId": "createHello",
+        "summary": "Create Hello Message",
+        "description": "Creates a new hello message for a visitor.",
         "requestBody": {
           "required": true,
           "content": {
@@ -18,8 +17,113 @@
           }
         },
         "responses": {
-          "default": {
-            "description": "",
+          "200": {
+            "description": "Hello message created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelloResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Hello"
+        ]
+      }
+    },
+    "/hello/{id}": {
+      "get": {
+        "operationId": "readHello",
+        "summary": "Get Hello Message",
+        "description": "Retrieves a hello message for the visitor with the given ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier for the visitor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello message retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelloResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Hello"
+        ]
+      },
+      "put": {
+        "operationId": "updateHello",
+        "summary": "Update Hello Message",
+        "description": "Updates the hello message for the visitor with the given ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier for the visitor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HelloRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hello message updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelloResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Hello"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteHello",
+        "summary": "Delete Hello Message",
+        "description": "Deletes the hello message for the visitor with the given ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier for the visitor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hello message deleted successfully.",
             "content": {
               "application/json": {
                 "schema": {
