@@ -30,3 +30,5 @@ linters-settings:
   wrapcheck:
     ignoreSigRegexps:
       - github.com/yorkie-team/codepair/backend # Ignore all methods in internal package
+      - github.com/labstack/echo/v4.Context.JSON   # Ignore echo's JSON method
+      - github.com/labstack/echo/v4.Context.NoContent   # Ignore echo's NoContent method
