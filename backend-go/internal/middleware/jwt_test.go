@@ -39,7 +39,7 @@ func TestJWTMiddleware(t *testing.T) {
 			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 		}
 
-		payload, ok := claims.Claims.(*Payload)
+		payload, ok := claims.Claims.(*jwt.Payload)
 		if !ok {
 			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token claims")
 		}
@@ -79,6 +79,6 @@ func TestJWTMiddleware(t *testing.T) {
 		rec := httptest.NewRecorder()
 		e.ServeHTTP(rec, req)
 
-		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, http.StatusForbidden, rec.Code)
 	})
 }
