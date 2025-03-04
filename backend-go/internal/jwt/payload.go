@@ -11,7 +11,6 @@ import (
 const ClaimsKey = "user"
 
 type Payload struct {
-	Nickname string `json:"nickname,omitempty"`
 	jwt.RegisteredClaims
 }
 

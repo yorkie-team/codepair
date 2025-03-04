@@ -18,40 +18,37 @@ func NewGenerator(cfg *config.JWT) *Generator {
 	return &Generator{cfg: cfg}
 }
 
-// GenerateAccessToken generates an access token with the given user ID and nickname.
-func (g *Generator) GenerateAccessToken(userID, nickname string) (string, error) {
-	claims := Payload{
-		Nickname: nickname,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   userID,
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(g.cfg.AccessTokenExpirationTime)),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	signedToken, err := token.SignedString([]byte(g.cfg.AccessTokenSecret))
-	if err != nil {
-		return "", fmt.Errorf("sign access token: %w", err)
-	}
-
-	return signedToken, nil
+// GenerateAccessToken generates an access token with the given subject.
+func (g *Generator) GenerateAccessToken(subject string) (string, error) {
+	return g.generateToken(
+		subject,
+		g.cfg.AccessTokenSecret,
+		g.cfg.AccessTokenExpirationTime,
+	)
 }
 
-// GenerateRefreshToken generates a refresh token with the given user ID.
-func (g *Generator) GenerateRefreshToken(userID string) (string, error) {
+// GenerateRefreshToken generates a refresh token with the given subject.
+func (g *Generator) GenerateRefreshToken(subject string) (string, error) {
+	return g.generateToken(
+		subject,
+		g.cfg.RefreshTokenSecret,
+		g.cfg.RefreshTokenExpirationTime,
+	)
+}
+
+func (g *Generator) generateToken(subject, secretKey string, tokenTTL time.Duration) (string, error) {
 	claims := Payload{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   userID,
+			Subject:   subject,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(g.cfg.RefreshTokenExpirationTime)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenTTL)),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	signedToken, err := token.SignedString([]byte(g.cfg.RefreshTokenSecret))
+	signedToken, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		return "", fmt.Errorf("sign refresh token: %w", err)
+		return "", fmt.Errorf("sign token: %w", err)
 	}
 
 	return signedToken, nil

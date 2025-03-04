@@ -12,7 +12,6 @@ import (
 
 func TestJWTGenerator(t *testing.T) {
 	dummyUserID := "dummy_user_id"
-	dummyNickname := "dummy_nickname"
 
 	cfg := &config.JWT{
 		AccessTokenSecret:          "access-secret",
@@ -24,7 +23,7 @@ func TestJWTGenerator(t *testing.T) {
 	gen := NewGenerator(cfg)
 
 	t.Run("validate access token test", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(dummyUserID, dummyNickname)
+		token, err := gen.GenerateAccessToken(dummyUserID)
 		assert.NoError(t, err)
 
 		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(token *jwt.Token) (
@@ -39,7 +38,6 @@ func TestJWTGenerator(t *testing.T) {
 		claims, ok := parsedToken.Claims.(*Payload)
 		assert.True(t, ok)
 		assert.Equal(t, dummyUserID, claims.Subject)
-		assert.Equal(t, dummyNickname, claims.Nickname)
 	})
 
 	t.Run("validate refresh token test", func(t *testing.T) {

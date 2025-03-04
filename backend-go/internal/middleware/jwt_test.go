@@ -16,7 +16,6 @@ import (
 
 func TestJWTMiddleware(t *testing.T) {
 	dummyUserID := "dummy_user_id"
-	dummyNickname := "dummy_nickname"
 
 	cfg := &config.JWT{
 		AccessTokenSecret:          "access-secret",
@@ -37,13 +36,12 @@ func TestJWTMiddleware(t *testing.T) {
 
 		return fmt.Errorf("http ok: %w",
 			c.JSON(http.StatusOK, map[string]string{
-				"userID":   payload.Subject,
-				"nickname": payload.Nickname,
+				"userID": payload.Subject,
 			}))
 	})
 
 	t.Run("valid token test", func(t *testing.T) {
-		validToken, err := gen.GenerateAccessToken(dummyUserID, dummyNickname)
+		validToken, err := gen.GenerateAccessToken(dummyUserID)
 		assert.NoError(t, err)
 
 		req := httptest.NewRequest(http.MethodGet, "/protected", nil)
@@ -53,7 +51,6 @@ func TestJWTMiddleware(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Contains(t, rec.Body.String(), dummyUserID)
-		assert.Contains(t, rec.Body.String(), dummyNickname)
 	})
 
 	t.Run("invalid token test", func(t *testing.T) {
