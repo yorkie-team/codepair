@@ -31,5 +31,5 @@ linters-settings:
     ignorePackageGlobs:
       - github.com/yorkie-team/codepair/backend # Ignore all methods in internal package
     extraIgnoreSigs:
-      - c.JSON(   # Ignore echo's JSON method
-      - c.NoContent(   # Ignore echo's NoContent method
+      - (github.com/labstack/echo/v4.Context).JSON( # Ignore echo's JSON method
+      - (github.com/labstack/echo/v4.Context).NoContent( # Ignore echo's NoContent method
