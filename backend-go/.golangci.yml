@@ -30,6 +30,6 @@ linters-settings:
   wrapcheck:
     ignorePackageGlobs:
       - github.com/yorkie-team/codepair/backend # Ignore all methods in internal package
-    extraIgnoreSigs:
-      - (github.com/labstack/echo/v4.Context).JSON( # Ignore echo's JSON method
-      - (github.com/labstack/echo/v4.Context).NoContent( # Ignore echo's NoContent method
+    ignoreSigRegexps:
+      - \.JSON\( # Ignore echo's JSON method
+      - \.NoContent\( # Ignore echo's NoContent method
