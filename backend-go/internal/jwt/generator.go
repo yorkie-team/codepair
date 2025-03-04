@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"fmt"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -20,7 +21,7 @@ func NewGenerator(cfg *config.JWT) *Generator {
 
 // GenerateAccessToken generates an access token with the given user ID and nickname.
 func (g *Generator) GenerateAccessToken(userID, nickname string) (string, error) {
-	claims := Payload{
+	claims := middleware.Payload{
 		Nickname: nickname,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   userID,
@@ -40,7 +41,7 @@ func (g *Generator) GenerateAccessToken(userID, nickname string) (string, error)
 
 // GenerateRefreshToken generates a refresh token with the given user ID.
 func (g *Generator) GenerateRefreshToken(userID string) (string, error) {
-	claims := Payload{
+	claims := middleware.Payload{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   userID,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

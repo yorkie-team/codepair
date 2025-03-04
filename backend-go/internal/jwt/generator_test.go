@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 	"testing"
 	"time"
 
@@ -27,13 +28,16 @@ func TestJWTGenerator(t *testing.T) {
 		token, err := gen.GenerateAccessToken(dummyUserID, dummyNickname)
 		assert.NoError(t, err)
 
-		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(token *jwt.Token) (interface{}, error) {
+		parsedToken, err := jwt.ParseWithClaims(token, &middleware.Payload{}, func(token *jwt.Token) (
+			interface{},
+			error,
+		) {
 			return []byte(cfg.AccessTokenSecret), nil
 		})
 		assert.NoError(t, err)
 		assert.True(t, parsedToken.Valid)
 
-		claims, ok := parsedToken.Claims.(*Payload)
+		claims, ok := parsedToken.Claims.(*middleware.Payload)
 		assert.True(t, ok)
 		assert.Equal(t, dummyUserID, claims.Subject)
 		assert.Equal(t, dummyNickname, claims.Nickname)
@@ -43,14 +47,17 @@ func TestJWTGenerator(t *testing.T) {
 		token, err := gen.GenerateRefreshToken(dummyUserID)
 		assert.NoError(t, err)
 
-		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(token *jwt.Token) (interface{}, error) {
+		parsedToken, err := jwt.ParseWithClaims(token, &middleware.Payload{}, func(token *jwt.Token) (
+			interface{},
+			error,
+		) {
 			return []byte(cfg.RefreshTokenSecret), nil
 		})
 
 		assert.NoError(t, err)
 		assert.True(t, parsedToken.Valid)
 
-		claims, ok := parsedToken.Claims.(*Payload)
+		claims, ok := parsedToken.Claims.(*middleware.Payload)
 		assert.True(t, ok)
 		assert.Equal(t, dummyUserID, claims.Subject)
 	})

@@ -1,4 +1,4 @@
-package jwt
+package middleware
 
 import (
 	"fmt"
@@ -7,11 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
+	gojwt "github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/jwt"
 )
 
 func TestJWTMiddleware(t *testing.T) {
@@ -25,15 +26,15 @@ func TestJWTMiddleware(t *testing.T) {
 		RefreshTokenExpirationTime: 7 * 24 * time.Hour,
 	}
 
-	gen := NewGenerator(cfg)
+	gen := jwt.NewGenerator(cfg)
 
-	mw := Middleware(cfg.AccessTokenSecret)
+	mw := JWT(cfg.AccessTokenSecret)
 
 	e := echo.New()
 	e.Use(mw)
 
 	e.GET("/protected", func(c echo.Context) error {
-		claims, ok := c.Get("user").(*jwt.Token)
+		claims, ok := c.Get("user").(*gojwt.Token)
 		if !ok {
 			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 		}

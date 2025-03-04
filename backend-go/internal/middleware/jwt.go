@@ -1,4 +1,4 @@
-package jwt
+package middleware
 
 import (
 	"github.com/golang-jwt/jwt/v5"
@@ -11,8 +11,8 @@ type Payload struct {
 	jwt.RegisteredClaims
 }
 
-// Middleware returns a middleware that checks the JWT token.
-func Middleware(tokenSecret string) echo.MiddlewareFunc {
+// JWT returns a middleware that checks the JWT token.
+func JWT(tokenSecret string) echo.MiddlewareFunc {
 	return echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte(tokenSecret),
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
