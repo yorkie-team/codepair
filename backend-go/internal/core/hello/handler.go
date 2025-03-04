@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
-	"github.com/yorkie-team/codepair/backend/internal/logging"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
@@ -19,16 +18,14 @@ type Handler struct {
 func (h *Handler) createHello(c echo.Context) error {
 	req := &models.HelloRequest{}
 	if err := c.Bind(req); err != nil {
-		logging.SetWarn(c)
-		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
+		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format")
 	}
 
 	if err := req.Validate(); err != nil {
-		logging.SetWarn(c)
-		return middleware.NewError(http.StatusBadRequest, "Invalid JSON", err)
+		return middleware.NewError(http.StatusBadRequest, "Invalid JSON")
 	}
 
-	id, err := h.service.createHello(c, req)
+	id, err := h.service.createHello(req)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
@@ -40,7 +37,7 @@ func (h *Handler) createHello(c echo.Context) error {
 
 func (h *Handler) readHello(c echo.Context) error {
 	id := c.Param("id")
-	nickname, err := h.service.readNickname(c, id)
+	nickname, err := h.service.readNickname(id)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
@@ -54,15 +51,13 @@ func (h *Handler) updateHello(c echo.Context) error {
 	id := c.Param("id")
 	req := &models.HelloRequest{}
 	if err := c.Bind(req); err != nil {
-		logging.SetWarn(c)
-		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format", err)
+		return middleware.NewError(http.StatusBadRequest, "Invalid JSON format")
 	}
 	if err := req.Validate(); err != nil {
-		logging.SetWarn(c)
-		return middleware.NewError(http.StatusBadRequest, "Validation failed", err)
+		return middleware.NewError(http.StatusBadRequest, "Validation failed")
 	}
 
-	if err := h.service.updateHello(c, id, req); err != nil {
+	if err := h.service.updateHello(id, req); err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
@@ -73,7 +68,7 @@ func (h *Handler) updateHello(c echo.Context) error {
 
 func (h *Handler) deleteHello(c echo.Context) error {
 	id := c.Param("id")
-	if err := h.service.deleteHello(c, id); err != nil {
+	if err := h.service.deleteHello(id); err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 

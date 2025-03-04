@@ -6,10 +6,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
-	"github.com/yorkie-team/codepair/backend/internal/logging"
 )
 
 // HTTPError represents a structured error response for the application.
@@ -19,18 +17,23 @@ type HTTPError struct {
 	// Message is the error message returned in the response body.
 	Message string
 	// Internal contains the underlying error.
-	// - If Internal is not nil, it is logged.
-	// - If Internal is not nil and debug mode is enabled, it is also included in the response message
-	//   to aid debugging on the client side.
+	// If Internal is not nil, it is logged.
 	Internal error
 }
 
 // NewError creates a new HTTPError instance.
-func NewError(code int, message string, err error) *HTTPError {
+func NewError(code int, message string, err ...error) *HTTPError {
+	if len(err) > 0 {
+		return &HTTPError{
+			Code:     code,
+			Message:  message,
+			Internal: err[0],
+		}
+	}
+
 	return &HTTPError{
-		Code:     code,
-		Message:  message,
-		Internal: err,
+		Code:    code,
+		Message: message,
 	}
 }
 
@@ -42,21 +45,8 @@ func (e *HTTPError) Error() string {
 	return fmt.Sprintf("code=%d, message=%v, internal=%v", e.Code, e.Message, e.Internal)
 }
 
-// ErrorHandler manages application errors and generates appropriate HTTP responses.
-// This is used as Echo’s custom error handler.
-type ErrorHandler struct {
-	logger echo.Logger
-}
-
-// NewErrorHandler creates a new ErrorHandler instance.
-func NewErrorHandler(logger echo.Logger) *ErrorHandler {
-	return &ErrorHandler{
-		logger: logger,
-	}
-}
-
 // HTTPErrorHandler processes errors and sends a JSON response to the client.
-func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
+func HTTPErrorHandler(err error, c echo.Context) {
 	// Avoid handling errors if the response has already been committed.
 	if c.Response().Committed {
 		return
@@ -85,15 +75,7 @@ func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
 	}
 
 	if he.Internal != nil {
-		logging.LogByLevel(c, e.logger, he.Internal)
-	}
-	// If debug mode is enabled and an internal error exists, append it to the response message.
-	if e.logger.Level() == log.DEBUG && he.Internal != nil {
-		errorResponse.Message = fmt.Sprintf(
-			"%s: internal: %s",
-			errorResponse.Message,
-			he.Internal.Error(),
-		)
+		c.Logger().Error(he.Internal)
 	}
 
 	// Send the appropriate response based on the request method.
@@ -108,6 +90,6 @@ func (e *ErrorHandler) HTTPErrorHandler(err error, c echo.Context) {
 
 	// Log the response error if sending the response failed.
 	if responseErr != nil {
-		e.logger.Error(responseErr)
+		c.Logger().Error(responseErr)
 	}
 }
