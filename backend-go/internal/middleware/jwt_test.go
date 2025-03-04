@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	gojwt "github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
@@ -34,15 +33,7 @@ func TestJWTMiddleware(t *testing.T) {
 	e.Use(mw)
 
 	e.GET("/protected", func(c echo.Context) error {
-		claims, ok := c.Get("user").(*gojwt.Token)
-		if !ok {
-			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
-		}
-
-		payload, ok := claims.Claims.(*jwt.Payload)
-		if !ok {
-			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token claims")
-		}
+		payload, _ := jwt.GetPayload(c)
 
 		return fmt.Errorf("http ok: %w",
 			c.JSON(http.StatusOK, map[string]string{

@@ -20,6 +20,7 @@ func JWT(tokenSecret string) echo.MiddlewareFunc {
 		},
 		TokenLookup: "header:Authorization:Bearer ",
 		ErrorHandler: func(c echo.Context, err error) error {
+			// TODO(kokodak): When introducing an error handler, the error spec needs to be adjusted accordingly.
 			if errors.Is(err, gojwt.ErrTokenExpired) {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Token has expired.")
 			} else if errors.Is(err, gojwt.ErrTokenMalformed) || errors.Is(err, gojwt.ErrTokenSignatureInvalid) {

@@ -9,11 +9,6 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/config"
 )
 
-type Payload struct {
-	Nickname string `json:"nickname,omitempty"`
-	jwt.RegisteredClaims
-}
-
 type Generator struct {
 	cfg *config.JWT
 }
