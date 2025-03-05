@@ -27,7 +27,7 @@ async def test_stream_pr(client):
 
 
 @pytest.mark.asyncio
-async def test_stream_issue():
+async def test_stream_issue(client):
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
@@ -38,7 +38,7 @@ async def test_stream_issue():
 
 
 @pytest.mark.asyncio
-async def test_stream_write_doc():
+async def test_stream_write_doc(client):
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://127.0.0.1:8000"
     ) as client:
@@ -46,3 +46,7 @@ async def test_stream_write_doc():
             "POST", "/intelligence/doc/", json={"query": "hi"}
         ) as response:
             assert response.status_code == 200
+
+
+# TODO
+# store test
