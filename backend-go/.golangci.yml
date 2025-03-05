@@ -28,6 +28,6 @@ linters-settings:
   goimports:
     local-prefixes: github.com/yorkie-team/codepair
   wrapcheck:
-    ignoreSigRegexps:
+    ignorePackageGlobs:
       - github.com/yorkie-team/codepair/backend # Ignore all methods in internal package
       - github.com/labstack/echo/v4 # Ignore all methods in echo package
