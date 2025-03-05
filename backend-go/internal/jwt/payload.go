@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"net/http"
+	"errors"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -14,16 +14,21 @@ type Payload struct {
 	jwt.RegisteredClaims
 }
 
+var (
+	ErrInvalidToken       = errors.New("invalid token")
+	ErrInvalidTokenClaims = errors.New("invalid token claims")
+)
+
 // GetPayload returns the payload from the echo context.
 func GetPayload(c echo.Context) (*Payload, error) {
 	claims, ok := c.Get(ClaimsKey).(*jwt.Token)
 	if !ok {
-		return nil, echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
+		return nil, ErrInvalidToken
 	}
 
 	payload, ok := claims.Claims.(*Payload)
 	if !ok {
-		return nil, echo.NewHTTPError(http.StatusUnauthorized, "invalid token claims")
+		return nil, ErrInvalidTokenClaims
 	}
 	return payload, nil
 }

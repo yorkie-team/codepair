@@ -10,6 +10,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
 type CodePair struct {
@@ -19,6 +20,8 @@ type CodePair struct {
 
 // New creates a new CodePair server.
 func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+	e.HTTPErrorHandler = middleware.HTTPErrorHandler
+
 	db, err := mongodb.Dial(conf.Mongo, e.Logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
