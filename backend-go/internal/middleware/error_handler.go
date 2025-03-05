@@ -57,7 +57,7 @@ func HTTPErrorHandler(err error, c echo.Context) {
 	// Check if the error is an HTTPError instance.
 	if errors.As(err, &he) {
 		// If the internal error is also an HTTPError, use it instead.
-		if internalErr, ok := he.Internal.(*HTTPError); ok {
+		if internalErr, ok := err.(*HTTPError); ok {
 			he = internalErr
 		}
 	} else {
