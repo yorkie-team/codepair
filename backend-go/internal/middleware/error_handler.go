@@ -55,13 +55,12 @@ func HTTPErrorHandler(err error, c echo.Context) {
 	var he *HTTPError
 
 	// Check if the error is an HTTPError instance.
-	if errors.As(err, &he) {
-		// If the internal error is also an HTTPError, use it instead.
-		if internalErr, ok := err.(*HTTPError); ok {
-			he = internalErr
-		}
+	// If the internal error is also an HTTPError, use it instead.
+	var internalErr *HTTPError
+	if errors.As(err, &internalErr) {
+		he = internalErr
 	} else {
-		// If the error is not an HTTPError, return a generic 500 Internal Server Error.
+		c.Logger().Errorf("unexpected error type: %v", err)
 		he = &HTTPError{
 			Code:    http.StatusInternalServerError,
 			Message: http.StatusText(http.StatusInternalServerError),
