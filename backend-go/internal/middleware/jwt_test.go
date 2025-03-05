@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"encoding/json"
-	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
 )

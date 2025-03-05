@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
