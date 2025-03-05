@@ -1,4 +1,9 @@
-from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
+from langchain_core.prompts import (
+    PromptTemplate,
+    FewShotPromptTemplate,
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+)
 
 example_prompt = PromptTemplate.from_template("[Example]\n## Output\n{output}")
 
@@ -104,4 +109,15 @@ You should only provide one response per conversation turn.
 Always offer concise suggestions for the next steps that are relevant and non-controversial""",
     suffix="User Request: {content}",
     input_variables=["content"],
+)
+
+chat_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "I would like you to function like an AI intelligence for a Markdown editor similar to Notion. I will provide you with a conversation log between the user and the AI intelligence, and you just need to respond to the user's latest question.",
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{content}"),
+    ]
 )

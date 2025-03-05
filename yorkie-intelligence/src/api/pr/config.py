@@ -1,4 +1,9 @@
-from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
+from langchain_core.prompts import (
+    PromptTemplate,
+    FewShotPromptTemplate,
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+)
 
 example_prompt = PromptTemplate.from_template(
     "[Example]\n## Title\n{title}\n## Content\n{content}"
@@ -99,7 +104,7 @@ Fixes #
     },
 ]
 
-issue_template_prompt = FewShotPromptTemplate(
+pr_template_prompt = FewShotPromptTemplate(
     example_prompt=example_prompt,
     examples=examples,
     prefix="I want you to act as a GitHub PR Writer for me. I'll provide you with brief notes about GitHub PR, and you just need to write the PR. "
@@ -107,4 +112,15 @@ issue_template_prompt = FewShotPromptTemplate(
     "If there is insufficient information to create the PR, request additional information",
     suffix="Brief information about the GitHub PR: {content}",
     input_variables=["content"],
+)
+
+chat_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "I would like you to function like an AI intelligence for a Markdown editor similar to Notion. I will provide you with a conversation log between the user and the AI intelligence, and you just need to respond to the user's latest question.",
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{content}"),
+    ]
 )

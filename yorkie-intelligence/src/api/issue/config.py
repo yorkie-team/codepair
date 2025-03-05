@@ -1,7 +1,12 @@
-from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
+from langchain_core.prompts import (
+    PromptTemplate,
+    FewShotPromptTemplate,
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+)
 
 example_prompt = PromptTemplate.from_template(
-    "[Example]\n## Title\n{title}\n## Issue Type\n{issueType}\n## Content\n{content}"
+    "<Start of Example>\n## Title\n{title}\n## Issue Type\n{issueType}\n## Content\n{content}\n<End of Example>"
 )
 
 examples = [
@@ -79,4 +84,15 @@ issue_template_prompt = FewShotPromptTemplate(
     "If there is insufficient information to create the issue, request additional information.",
     suffix="Brief information about the GitHub issue: {content}",
     input_variables=["content"],
+)
+
+chat_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "I would like you to function like an AI intelligence for a Markdown editor similar to Notion. I will provide you with a conversation log between the user and the AI intelligence, and you just need to respond to the user's latest question.",
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{content}"),
+    ]
 )
