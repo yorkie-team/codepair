@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Backdrop, Box, CircularProgress, Paper, IconButton, Button } from "@mui/material";
 import { useWindowWidth } from "@react-hook/window-size";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { EditorModeType, selectEditor } from "../../store/editorSlice";
+import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectConfig } from "../../store/configSlice";
 import Editor from "./Editor";
 import Preview from "./Preview";
@@ -15,12 +15,19 @@ import {
 	ChevronRight as ChevronRightIcon,
 	ChevronLeft as ChevronLeftIcon,
 } from "@mui/icons-material";
+import { ShareRole } from "../../utils/share";
 
 function DocumentView() {
+	const dispatch = useDispatch();
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
 	const configStore = useSelector(selectConfig);
 	const [open, setOpen] = useState(false);
+
+	const handleChangeMode = (newMode: EditorModeType) => {
+		if (!newMode) return;
+		dispatch(setMode(newMode));
+	};
 
 	if (!editorStore.doc || !editorStore.client)
 		return (
@@ -96,18 +103,16 @@ function DocumentView() {
 				</Box>
 			)}
 
-			{/* Floating Menu */}
 			<Box
 				sx={{
 					position: "fixed",
 					top: "50%",
-					right: open ? 16 : 0, // 펼쳐지면 16px 이동
+					right: open ? 16 : 0,
 					transform: "translateY(-50%)",
 					display: "flex",
 					alignItems: "center",
 				}}
 			>
-				{/* 토글 버튼 */}
 				<IconButton
 					onClick={() => setOpen(!open)}
 					sx={{
@@ -123,8 +128,7 @@ function DocumentView() {
 					{open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 				</IconButton>
 
-				{/* 버튼 메뉴 (open 상태일 때만) */}
-				{open && (
+				{open && editorStore.shareRole !== ShareRole.READ && (
 					<Paper
 						elevation={4}
 						sx={{
@@ -136,6 +140,7 @@ function DocumentView() {
 						}}
 					>
 						<Button
+							onClick={() => handleChangeMode(EditorModeType.READ)}
 							sx={{
 								display: "flex",
 								flexDirection: "column",
@@ -146,6 +151,7 @@ function DocumentView() {
 							<span style={{ color: "#000" }}>view</span>
 						</Button>
 						<Button
+							onClick={() => handleChangeMode(EditorModeType.BOTH)}
 							sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
 						>
 							<VerticalSplitIcon
@@ -154,6 +160,7 @@ function DocumentView() {
 							<span style={{ color: "#000" }}>edit / view</span>
 						</Button>
 						<Button
+							onClick={() => handleChangeMode(EditorModeType.EDIT)}
 							sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
 						>
 							<SubjectIcon sx={{ color: "#000 ", width: "28px", height: "28px" }} />
