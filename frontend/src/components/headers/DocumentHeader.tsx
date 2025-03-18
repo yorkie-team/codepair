@@ -1,16 +1,10 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
 	AppBar,
 	Grid2 as Grid,
 	IconButton,
-	Paper,
 	Stack,
-	ToggleButton,
-	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
 	Typography,
@@ -50,11 +44,6 @@ function DocumentHeader() {
 			dispatch(setMode(EditorModeType.READ));
 		}
 	}, [dispatch, editorState.shareRole]);
-
-	const handleChangeMode = (newMode: EditorModeType) => {
-		if (!newMode) return;
-		dispatch(setMode(newMode));
-	};
 
 	const handleToPrevious = () => {
 		navigate(`/${workspaceState.data?.slug}`);
@@ -98,7 +87,7 @@ function DocumentHeader() {
 			<Toolbar>
 				<Grid container spacing={2} width="100%">
 					<Grid size={4}>
-						<Stack direction="row" spacing={1} alignItems="center">
+						<Stack direction="row" spacing={1} alignItems="center" gap={1}>
 							{!editorState.shareRole && (
 								<Tooltip title="Back to Previous Page">
 									<IconButton color="inherit" onClick={handleToPrevious}>
@@ -106,32 +95,17 @@ function DocumentHeader() {
 									</IconButton>
 								</Tooltip>
 							)}
-							<Paper>
-								{editorState.shareRole !== ShareRole.READ && (
-									<ToggleButtonGroup
-										value={editorState.mode}
-										exclusive
-										onChange={(_, newMode) => handleChangeMode(newMode)}
-										size="small"
-									>
-										<ToggleButton value="edit" aria-label="edit">
-											<Tooltip title="Edit Mode">
-												<EditIcon />
-											</Tooltip>
-										</ToggleButton>
-										<ToggleButton value="both" aria-label="both">
-											<Tooltip title="Both Mode">
-												<VerticalSplitIcon />
-											</Tooltip>
-										</ToggleButton>
-										<ToggleButton value="read" aria-label="read">
-											<Tooltip title="Read Mode">
-												<VisibilityIcon />
-											</Tooltip>
-										</ToggleButton>
-									</ToggleButtonGroup>
-								)}
-							</Paper>
+							<span
+								style={{
+									fontFamily: "Roboto",
+									fontWeight: "500",
+									fontSize: "20px",
+									letterSpacing: "0.15px",
+									lineHeight: "160%",
+								}}
+							>
+								{workspaceState.data?.title}
+							</span>
 							<DownloadMenu />
 						</Stack>
 					</Grid>

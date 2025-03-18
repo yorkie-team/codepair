@@ -1,17 +1,33 @@
-import { Backdrop, Box, CircularProgress, Paper } from "@mui/material";
+import {
+	ArrowLeft as ArrowLeftIcon,
+	ArrowRight as ArrowRightIcon,
+	Subject as SubjectIcon,
+	VerticalSplit as VerticalSplitIcon,
+	Visibility as VisibilityIcon,
+} from "@mui/icons-material";
+import { Backdrop, Box, Button, CircularProgress, IconButton, Paper } from "@mui/material";
 import { useWindowWidth } from "@react-hook/window-size";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { EditorModeType, selectEditor } from "../../store/editorSlice";
+import { selectConfig } from "../../store/configSlice";
+import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
+import { ShareRole } from "../../utils/share";
 import Editor from "./Editor";
 import Preview from "./Preview";
-import { selectConfig } from "../../store/configSlice";
 
 function DocumentView() {
+	const dispatch = useDispatch();
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
 	const configStore = useSelector(selectConfig);
+	const [open, setOpen] = useState(false);
+
+	const handleChangeMode = (newMode: EditorModeType) => {
+		if (!newMode) return;
+		dispatch(setMode(newMode));
+	};
 
 	if (!editorStore.doc || !editorStore.client)
 		return (
@@ -86,6 +102,139 @@ function DocumentView() {
 					<Preview />
 				</Box>
 			)}
+
+			<Box
+				sx={{
+					position: "fixed",
+					top: "50%",
+					right: open ? 16 : 0,
+					transform: "translateY(-50%)",
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
+				<IconButton
+					onClick={() => setOpen(!open)}
+					sx={{
+						width: 40,
+						height: 40,
+						borderRadius: "8px 0 0 8px",
+						backgroundColor: "#fff",
+						color: "#000",
+						boxShadow: 3,
+						"&:hover": { backgroundColor: "#f5f5f5" },
+					}}
+				>
+					{open ? <ArrowRightIcon /> : <ArrowLeftIcon />}
+				</IconButton>
+
+				{open && editorStore.shareRole !== ShareRole.READ && (
+					<Paper
+						elevation={4}
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							gap: 2,
+							padding: 1.5,
+							backgroundColor: "#fff",
+						}}
+					>
+						<Button
+							onClick={() => handleChangeMode(EditorModeType.READ)}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+							}}
+						>
+							<VisibilityIcon
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.READ
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.READ
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								view
+							</span>
+						</Button>
+						<Button
+							onClick={() => handleChangeMode(EditorModeType.BOTH)}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+							}}
+						>
+							<VerticalSplitIcon
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.BOTH
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.BOTH
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								edit / view
+							</span>
+						</Button>
+						<Button
+							onClick={() => handleChangeMode(EditorModeType.EDIT)}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+							}}
+						>
+							<SubjectIcon
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.EDIT
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.EDIT
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								edit
+							</span>
+						</Button>
+					</Paper>
+				)}
+			</Box>
 		</>
 	);
 }
