@@ -147,24 +147,90 @@ function DocumentView() {
 								justifyContent: "center",
 							}}
 						>
-							<VisibilityIcon sx={{ color: "#000", width: "28px", height: "28px" }} />
-							<span style={{ color: "#000" }}>view</span>
+							<VisibilityIcon
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.READ
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.READ
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								view
+							</span>
 						</Button>
 						<Button
 							onClick={() => handleChangeMode(EditorModeType.BOTH)}
-							sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+							}}
 						>
 							<VerticalSplitIcon
-								sx={{ color: "#000 ", width: "28px", height: "28px" }}
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.BOTH
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
 							/>
-							<span style={{ color: "#000" }}>edit / view</span>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.BOTH
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								edit / view
+							</span>
 						</Button>
 						<Button
 							onClick={() => handleChangeMode(EditorModeType.EDIT)}
-							sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+							}}
 						>
-							<SubjectIcon sx={{ color: "#000 ", width: "28px", height: "28px" }} />
-							<span style={{ color: "#000" }}>edit</span>
+							<SubjectIcon
+								sx={{
+									color:
+										editorStore.mode === EditorModeType.EDIT
+											? "#1976d2"
+											: "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color:
+										editorStore.mode === EditorModeType.EDIT
+											? "#1976d2"
+											: "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								edit
+							</span>
 						</Button>
 					</Paper>
 				)}
