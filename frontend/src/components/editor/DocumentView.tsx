@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { Backdrop, Box, CircularProgress, Paper, IconButton, Button } from "@mui/material";
+import {
+	ArrowLeft as ArrowLeftIcon,
+	ArrowRight as ArrowRightIcon,
+	Subject as SubjectIcon,
+	VerticalSplit as VerticalSplitIcon,
+	Visibility as VisibilityIcon,
+} from "@mui/icons-material";
+import { Backdrop, Box, Button, CircularProgress, IconButton, Paper } from "@mui/material";
 import { useWindowWidth } from "@react-hook/window-size";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectConfig } from "../../store/configSlice";
+import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
+import { ShareRole } from "../../utils/share";
 import Editor from "./Editor";
 import Preview from "./Preview";
-import {
-	Visibility as VisibilityIcon,
-	VerticalSplit as VerticalSplitIcon,
-	Subject as SubjectIcon,
-	ChevronRight as ChevronRightIcon,
-	ChevronLeft as ChevronLeftIcon,
-} from "@mui/icons-material";
-import { ShareRole } from "../../utils/share";
 
 function DocumentView() {
 	const dispatch = useDispatch();
@@ -125,7 +125,7 @@ function DocumentView() {
 						"&:hover": { backgroundColor: "#f5f5f5" },
 					}}
 				>
-					{open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+					{open ? <ArrowRightIcon /> : <ArrowLeftIcon />}
 				</IconButton>
 
 				{open && editorStore.shareRole !== ShareRole.READ && (
