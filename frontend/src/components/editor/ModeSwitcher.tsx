@@ -33,6 +33,8 @@ const ModeSwitcher = () => {
 		>
 			<IconButton
 				onClick={() => setOpen(!open)}
+				aria-label={open ? "Close mode switcher" : "Open mode switcher"}
+				aria-expanded={open}
 				sx={{
 					width: 32.3,
 					height: 87.35,
@@ -57,87 +59,42 @@ const ModeSwitcher = () => {
 						backgroundColor: "#fff",
 					}}
 				>
-					<Button
-						onClick={() => handleChangeMode(EditorModeType.READ)}
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							justifyContent: "center",
-						}}
-					>
-						<VisibilityIcon
+					{[
+						{ mode: EditorModeType.READ, icon: VisibilityIcon, label: "view" },
+						{
+							mode: EditorModeType.BOTH,
+							icon: VerticalSplitIcon,
+							label: "edit / view",
+						},
+						{ mode: EditorModeType.EDIT, icon: SubjectIcon, label: "edit" },
+					].map(({ mode, icon: Icon, label }) => (
+						<Button
+							key={mode}
+							onClick={() => handleChangeMode(mode)}
 							sx={{
-								color:
-									editorStore.mode === EditorModeType.READ ? "#1976d2" : "#000",
-								width: "28px",
-								height: "28px",
-							}}
-						/>
-						<span
-							style={{
-								color:
-									editorStore.mode === EditorModeType.READ ? "#1976d2" : "#000",
-								fontSize: "10px",
-								fontWeight: "600",
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
 							}}
 						>
-							view
-						</span>
-					</Button>
-					<Button
-						onClick={() => handleChangeMode(EditorModeType.BOTH)}
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-						}}
-					>
-						<VerticalSplitIcon
-							sx={{
-								color:
-									editorStore.mode === EditorModeType.BOTH ? "#1976d2" : "#000",
-								width: "28px",
-								height: "28px",
-							}}
-						/>
-						<span
-							style={{
-								color:
-									editorStore.mode === EditorModeType.BOTH ? "#1976d2" : "#000",
-								fontSize: "10px",
-								fontWeight: "600",
-							}}
-						>
-							edit / view
-						</span>
-					</Button>
-					<Button
-						onClick={() => handleChangeMode(EditorModeType.EDIT)}
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-						}}
-					>
-						<SubjectIcon
-							sx={{
-								color:
-									editorStore.mode === EditorModeType.EDIT ? "#1976d2" : "#000",
-								width: "28px",
-								height: "28px",
-							}}
-						/>
-						<span
-							style={{
-								color:
-									editorStore.mode === EditorModeType.EDIT ? "#1976d2" : "#000",
-								fontSize: "10px",
-								fontWeight: "600",
-							}}
-						>
-							edit
-						</span>
-					</Button>
+							<Icon
+								sx={{
+									color: editorStore.mode === mode ? "#1976d2" : "#000",
+									width: "28px",
+									height: "28px",
+								}}
+							/>
+							<span
+								style={{
+									color: editorStore.mode === mode ? "#1976d2" : "#000",
+									fontSize: "10px",
+									fontWeight: "600",
+								}}
+							>
+								{label}
+							</span>
+						</Button>
+					))}
 				</Paper>
 			)}
 		</Box>
