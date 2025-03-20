@@ -25,7 +25,7 @@ const ModeSwitcher = () => {
 			sx={{
 				position: "fixed",
 				top: "50%",
-				right: open ? 16 : 0,
+				right: open ? 1 : 0,
 				transform: "translateY(-50%)",
 				display: "flex",
 				alignItems: "center",
