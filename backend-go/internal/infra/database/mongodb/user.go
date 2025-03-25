@@ -26,6 +26,7 @@ func NewUserRepository(conf *config.Mongo, client *mongo.Client) *UserRepository
 	}
 }
 
+// FindUser retrieves a user by their ID.
 func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 	user := entity.User{}
 	filter := bson.M{"_id": id}
@@ -40,7 +41,10 @@ func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 	return user, nil
 }
 
+// UpdateNickname updates the nickname of a user.
 func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
+	ctx := context.Background()
+
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
@@ -49,7 +53,7 @@ func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
 		},
 	}
 
-	result, err := r.collection.UpdateOne(context.Background(), filter, update)
+	result, err := r.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return fmt.Errorf("update user nickname: %w", err)
 	}

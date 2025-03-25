@@ -2,7 +2,7 @@ package users
 
 import "github.com/labstack/echo/v4"
 
-// Register creates a new handler for hello endpoints and registers the routes.
+// Register creates a new handler for users endpoints and registers the routes.
 func Register(e *echo.Echo, repo Repository) {
 	svc := &Service{
 		userRepository: repo,
@@ -11,6 +11,6 @@ func Register(e *echo.Echo, repo Repository) {
 		service: svc,
 	}
 
-	e.GET("/hello/:id", handler.FindUser)
-	e.PUT("/hello/:id", handler.ChangeNickname)
+	e.GET("/hello", handler.findUser)
+	e.PUT("/hello", handler.changeNickname)
 }

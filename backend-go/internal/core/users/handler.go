@@ -15,13 +15,13 @@ type Handler struct {
 	service *Service
 }
 
-func (h *Handler) FindUser(c echo.Context) error {
+func (h *Handler) findUser(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
 	if err != nil {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	user, err := h.service.FindUser(payload.ID)
+	user, err := h.service.findUser(payload.ID)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (h *Handler) FindUser(c echo.Context) error {
 	})
 }
 
-func (h *Handler) ChangeNickname(c echo.Context) error {
+func (h *Handler) changeNickname(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
 	if err != nil {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
@@ -47,7 +47,7 @@ func (h *Handler) ChangeNickname(c echo.Context) error {
 		return middleware.NewError(http.StatusInternalServerError, err.Error())
 	}
 
-	if err = h.service.ChangeNickname(payload.ID, req.Nickname); err != nil {
+	if err = h.service.changeNickname(payload.ID, req.Nickname); err != nil {
 		return err
 	}
 

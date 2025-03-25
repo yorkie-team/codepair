@@ -9,10 +9,12 @@ type Service struct {
 	userRepository Repository
 }
 
-func (s *Service) FindUser(id string) (entity.User, error) {
+// findUser retrieves a user by their ID.
+func (s *Service) findUser(id string) (entity.User, error) {
 	return s.userRepository.FindUser(entity.ID(id))
 }
 
-func (s *Service) ChangeNickname(id, nickname string) error {
+// changeNickname updates the nickname of a user.
+func (s *Service) changeNickname(id, nickname string) error {
 	return s.userRepository.UpdateNickname(entity.ID(id), nickname)
 }
