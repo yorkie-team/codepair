@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -55,5 +56,6 @@ func (c *CodePair) Shutdown(ctx context.Context) error {
 }
 
 func (c *CodePair) RPCAddr() string {
-	return fmt.Sprintf(":%d", c.config.Server.Port)
+	port := c.echo.ListenerAddr().(*net.TCPAddr).Port
+	return fmt.Sprintf("http://localhost:%d", port)
 }

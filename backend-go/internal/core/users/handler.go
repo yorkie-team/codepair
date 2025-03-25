@@ -21,7 +21,7 @@ func (h *Handler) findUser(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	user, err := h.service.findUser(payload.ID)
+	user, err := h.service.findUser(payload.Subject)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (h *Handler) changeNickname(c echo.Context) error {
 		return middleware.NewError(http.StatusInternalServerError, err.Error())
 	}
 
-	if err = h.service.changeNickname(payload.ID, req.Nickname); err != nil {
+	if err = h.service.changeNickname(payload.Subject, req.Nickname); err != nil {
 		return err
 	}
 

@@ -43,7 +43,7 @@ func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, er
 			return "", database.ErrDuplicatedKey
 		}
 
-		return "", fmt.Errorf("find visitor: %w", err)
+		return "", fmt.Errorf("create user: %w", err)
 	}
 	oid := result.InsertedID.(bson.ObjectID).Hex()
 
@@ -61,7 +61,7 @@ func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 	if errors.Is(err, mongo.ErrNoDocuments) {
 		return entity.User{}, database.ErrDocumentNotFound
 	} else if err != nil {
-		return entity.User{}, fmt.Errorf("find visitor: %w", err)
+		return entity.User{}, fmt.Errorf("find user: %w", err)
 	}
 
 	return user, nil

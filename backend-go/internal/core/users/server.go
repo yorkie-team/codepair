@@ -11,6 +11,6 @@ func Register(e *echo.Echo, repo Repository) {
 		service: svc,
 	}
 
-	e.GET("/hello", handler.findUser)
-	e.PUT("/hello", handler.changeNickname)
+	e.GET("/users", handler.findUser)
+	e.PUT("/users", handler.changeNickname)
 }
