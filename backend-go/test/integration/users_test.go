@@ -2,7 +2,6 @@ package integration
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -12,32 +11,15 @@ import (
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
-	"github.com/yorkie-team/codepair/backend/internal/server"
 	"github.com/yorkie-team/codepair/backend/test/helper"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-func TestUserService(t *testing.T) {
-	conf := helper.NewTestConfig()
-	conf.Mongo.DatabaseName = t.Name()
-	conf.Mongo.ConnectionURI = "mongo://localhost:27017"
-
-	e, err := helper.NewTestEcho()
-	assert.NoError(t, err)
-
-	svr, err := server.New(e, conf)
-	assert.NoError(t, err)
-
-	defer func() {
-		assert.NoError(t, svr.Shutdown(context.Background()))
-	}()
-
-	user, err := helper.EnsureDefaultUser(conf.Mongo, e.Logger)
-	assert.NoError(t, err)
-
-	go func() {
-		assert.NoError(t, svr.Start())
-	}()
-
+func TestFindUser(t *testing.T) {
+	conf := helper.NewTestConfig(t.Name())
+	e := helper.NewTestEcho(t)
+	svr := helper.SetupTestServer(t, conf, e)
+	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
 	client := &http.Client{}
 
@@ -52,13 +34,17 @@ func TestUserService(t *testing.T) {
 		res, err := client.Do(req)
 		assert.NoError(t, err)
 		defer func() { assert.NoError(t, res.Body.Close()) }()
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 
 		body, err := io.ReadAll(res.Body)
 		assert.NoError(t, err)
-		resData := &models.FindUserResponse{}
-		assert.NoError(t, json.Unmarshal(body, resData))
+
+		var resData models.FindUserResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
 		assert.Equal(t, string(user.ID), resData.Id)
 		assert.Equal(t, user.Nickname, resData.Nickname)
+		assert.Equal(t, user.CreatedAt, resData.CreatedAt)
+		assert.Equal(t, user.UpdatedAt, resData.UpdatedAt)
 	})
 
 	t.Run("find user by invalid id", func(t *testing.T) {
@@ -75,33 +61,36 @@ func TestUserService(t *testing.T) {
 
 		body, err := io.ReadAll(res.Body)
 		assert.NoError(t, err)
-		resData := &models.HttpExceptionResponse{}
-		assert.NoError(t, json.Unmarshal(body, resData))
+		var resData models.HttpExceptionResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
+		assert.Equal(t, http.StatusInternalServerError, resData.StatusCode)
+	})
+
+	t.Run("find user by non-exists id", func(t *testing.T) {
+		token, err := gen.GenerateAccessToken(bson.NewObjectID().String())
+		assert.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodGet, svr.RPCAddr()+"/users", nil)
+		assert.NoError(t, err)
+		req.Header.Set("Authorization", "Bearer "+token)
+
+		res, err := client.Do(req)
+		assert.NoError(t, err)
+		defer func() { assert.NoError(t, res.Body.Close()) }()
+
+		body, err := io.ReadAll(res.Body)
+		assert.NoError(t, err)
+		var resData models.HttpExceptionResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
 		assert.Equal(t, http.StatusInternalServerError, resData.StatusCode)
 	})
 }
 
 func TestChangeUserNickName(t *testing.T) {
-	conf := helper.NewTestConfig()
-	conf.Mongo.DatabaseName = t.Name()
-
-	e, err := helper.NewTestEcho()
-	assert.NoError(t, err)
-
-	svr, err := server.New(e, conf)
-	assert.NoError(t, err)
-
-	defer func() {
-		assert.NoError(t, svr.Shutdown(context.Background()))
-	}()
-
-	user, err := helper.EnsureDefaultUser(conf.Mongo, e.Logger)
-	assert.NoError(t, err)
-
-	go func() {
-		assert.NoError(t, svr.Start())
-	}()
-
+	conf := helper.NewTestConfig(t.Name())
+	e := helper.NewTestEcho(t)
+	svr := helper.SetupTestServer(t, conf, e)
+	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
 	client := &http.Client{}
 
@@ -114,28 +103,15 @@ func TestChangeUserNickName(t *testing.T) {
 		req, err := http.NewRequest(http.MethodPut, svr.RPCAddr()+"/users", bytes.NewReader(reqBody))
 		assert.NoError(t, err)
 		req.Header.Set("Authorization", "Bearer "+token)
+		req.Header.Set("Content-Type", "application/json")
 
 		res, err := client.Do(req)
 		assert.NoError(t, err)
 		defer func() { assert.NoError(t, res.Body.Close()) }()
-
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 
 	t.Run("change duplicated nickname", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
-
-		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "valid_nick"})
-		assert.NoError(t, err)
-		req, err := http.NewRequest(http.MethodPut, svr.RPCAddr()+"/users", bytes.NewReader(reqBody))
-		assert.NoError(t, err)
-		req.Header.Set("Authorization", "Bearer "+token)
-
-		res, err := client.Do(req)
-		assert.NoError(t, err)
-		defer func() { assert.NoError(t, res.Body.Close()) }()
-
-		assert.Equal(t, 409, res.StatusCode)
+		t.Skip("add this after implement create user api")
 	})
 }
