@@ -22,6 +22,7 @@ const ModeSwitcher = () => {
 		if (!newMode) return;
 		dispatch(setMode(newMode));
 	};
+	if (editorStore.shareRole === ShareRole.READ) return null;
 	return (
 		<Stack
 			direction="row"
@@ -49,7 +50,7 @@ const ModeSwitcher = () => {
 				</IconButton>
 			</Paper>
 
-			{open && editorStore.shareRole !== ShareRole.READ && (
+			{open && (
 				<Paper
 					elevation={4}
 					sx={{
