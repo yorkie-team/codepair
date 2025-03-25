@@ -3,7 +3,6 @@ package integration
 import (
 	"bytes"
 	"encoding/json"
-	"io"
 	"net/http"
 	"testing"
 
@@ -21,23 +20,14 @@ func TestFindUser(t *testing.T) {
 	svr := helper.SetupTestServer(t, conf, e)
 	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
-	client := &http.Client{}
+	url := svr.RPCAddr() + "/users"
 
 	t.Run("find user by valid id", func(t *testing.T) {
 		token, err := gen.GenerateAccessToken(string(user.ID))
 		assert.NoError(t, err)
 
-		req, err := http.NewRequest(http.MethodGet, svr.RPCAddr()+"/users", nil)
-		assert.NoError(t, err)
-		req.Header.Set("Authorization", "Bearer "+token)
-
-		res, err := client.Do(req)
-		assert.NoError(t, err)
-		defer func() { assert.NoError(t, res.Body.Close()) }()
-		assert.Equal(t, http.StatusOK, res.StatusCode)
-
-		body, err := io.ReadAll(res.Body)
-		assert.NoError(t, err)
+		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
 		assert.NoError(t, json.Unmarshal(body, &resData))
@@ -51,35 +41,17 @@ func TestFindUser(t *testing.T) {
 		token, err := gen.GenerateAccessToken(string(user.ID) + "invalid")
 		assert.NoError(t, err)
 
-		req, err := http.NewRequest(http.MethodGet, svr.RPCAddr()+"/users", nil)
-		assert.NoError(t, err)
-		req.Header.Set("Authorization", "Bearer "+token)
-
-		res, err := client.Do(req)
-		assert.NoError(t, err)
-		defer func() { assert.NoError(t, res.Body.Close()) }()
-
-		body, err := io.ReadAll(res.Body)
-		assert.NoError(t, err)
+		_, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
 		var resData models.HttpExceptionResponse
 		assert.NoError(t, json.Unmarshal(body, &resData))
 		assert.Equal(t, http.StatusInternalServerError, resData.StatusCode)
 	})
 
 	t.Run("find user by non-exists id", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(bson.NewObjectID().String())
+		token, err := gen.GenerateAccessToken(bson.NewObjectID().Hex())
 		assert.NoError(t, err)
 
-		req, err := http.NewRequest(http.MethodGet, svr.RPCAddr()+"/users", nil)
-		assert.NoError(t, err)
-		req.Header.Set("Authorization", "Bearer "+token)
-
-		res, err := client.Do(req)
-		assert.NoError(t, err)
-		defer func() { assert.NoError(t, res.Body.Close()) }()
-
-		body, err := io.ReadAll(res.Body)
-		assert.NoError(t, err)
+		_, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
 		var resData models.HttpExceptionResponse
 		assert.NoError(t, json.Unmarshal(body, &resData))
 		assert.Equal(t, http.StatusInternalServerError, resData.StatusCode)
@@ -92,7 +64,7 @@ func TestChangeUserNickName(t *testing.T) {
 	svr := helper.SetupTestServer(t, conf, e)
 	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
-	client := &http.Client{}
+	url := svr.RPCAddr() + "/users"
 
 	t.Run("change valid nickname", func(t *testing.T) {
 		token, err := gen.GenerateAccessToken(string(user.ID))
@@ -100,15 +72,9 @@ func TestChangeUserNickName(t *testing.T) {
 
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "valid_nick"})
 		assert.NoError(t, err)
-		req, err := http.NewRequest(http.MethodPut, svr.RPCAddr()+"/users", bytes.NewReader(reqBody))
-		assert.NoError(t, err)
-		req.Header.Set("Authorization", "Bearer "+token)
-		req.Header.Set("Content-Type", "application/json")
 
-		res, err := client.Do(req)
-		assert.NoError(t, err)
-		defer func() { assert.NoError(t, res.Body.Close()) }()
-		assert.Equal(t, http.StatusOK, res.StatusCode)
+		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		assert.Equal(t, http.StatusOK, status)
 	})
 
 	t.Run("change duplicated nickname", func(t *testing.T) {

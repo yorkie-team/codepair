@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net"
+	"net/http"
 	"testing"
 	"time"
 
@@ -76,4 +78,26 @@ func SetupDefaultUser(t *testing.T, conf *config.Config, logger echo.Logger) ent
 	user, err := EnsureDefaultUser(conf.Mongo, logger)
 	assert.NoError(t, err)
 	return user
+}
+
+// DoRequest creates and sends an HTTP request, then returns the response status code and body.
+// It also handles setting common headers and closing the response body.
+func DoRequest(t *testing.T, method, url, token string, body io.Reader) (int, []byte) {
+	t.Helper()
+	req, err := http.NewRequest(method, url, body)
+	assert.NoError(t, err)
+	req.Header.Set("Authorization", "Bearer "+token)
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	assert.NoError(t, err)
+	defer func() {
+		assert.NoError(t, res.Body.Close())
+	}()
+	respBody, err := io.ReadAll(res.Body)
+	assert.NoError(t, err)
+	return res.StatusCode, respBody
 }
