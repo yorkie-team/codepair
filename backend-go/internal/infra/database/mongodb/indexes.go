@@ -32,7 +32,7 @@ var collectionInfos = []collectionInfo{
 		name: ColUsers,
 		indexes: []mongo.IndexModel{
 			{
-				Keys:    bson.D{{Key: "social_uid", Value: 1}},
+				Keys:    bson.D{{Key: "social_uid", Value: 1}, {Key: "social_provider", Value: 1}},
 				Options: options.Index().SetUnique(true),
 			},
 			{
