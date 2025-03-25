@@ -1,11 +1,13 @@
 package users
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
-	"net/http"
 )
 
 // Handler handles HTTP requests for hello messages.
