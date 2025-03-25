@@ -7,4 +7,6 @@ type Repository interface {
 	FindUser(id entity.ID) (entity.User, error)
 
 	UpdateNickname(id entity.ID, nickname string) error
+
+	CreateUserBySocial(provider, uid string) (entity.ID, error)
 }

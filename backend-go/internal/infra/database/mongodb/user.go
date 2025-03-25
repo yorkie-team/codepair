@@ -26,12 +26,38 @@ func NewUserRepository(conf *config.Mongo, client *mongo.Client) *UserRepository
 	}
 }
 
+// CreateUserBySocial creates user by Social id and provider.
+func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, error) {
+	ctx := context.Background()
+
+	now := time.Now()
+	result, err := r.collection.InsertOne(ctx, bson.M{
+		"social_provider": provider,
+		"social_uid":      uid,
+		"nickname":        "",
+		"created_at":      now,
+		"updated_at":      now,
+	})
+	if err != nil {
+		if mongo.IsDuplicateKeyError(err) {
+			return "", database.ErrDuplicatedKey
+		}
+
+		return "", fmt.Errorf("find visitor: %w", err)
+	}
+	oid := result.InsertedID.(bson.ObjectID).Hex()
+
+	return entity.ID(oid), nil
+}
+
 // FindUser retrieves a user by their ID.
 func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
+	ctx := context.Background()
+
 	user := entity.User{}
 	filter := bson.M{"_id": id}
 
-	err := r.collection.FindOne(context.Background(), filter).Decode(&user)
+	err := r.collection.FindOne(ctx, filter).Decode(&user)
 	if errors.Is(err, mongo.ErrNoDocuments) {
 		return entity.User{}, database.ErrDocumentNotFound
 	} else if err != nil {
