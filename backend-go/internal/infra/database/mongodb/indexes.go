@@ -10,7 +10,10 @@ import (
 )
 
 // ColVisitor is the name of the collection storing visitor records.
-const ColVisitor = "hello_visitors"
+const (
+	ColVisitor = "hello_visitors"
+	ColUsers   = "users"
+)
 
 type collectionInfo struct {
 	name    string
@@ -22,6 +25,13 @@ var collectionInfos = []collectionInfo{
 		name: ColVisitor,
 		indexes: []mongo.IndexModel{{
 			Keys:    bson.D{{Key: "nickname", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		}},
+	},
+	{
+		name: ColUsers,
+		indexes: []mongo.IndexModel{{
+			Keys:    bson.D{{Key: "social_uid", Value: 1}},
 			Options: options.Index().SetUnique(true),
 		}},
 	},
