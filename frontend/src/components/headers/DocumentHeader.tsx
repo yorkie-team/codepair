@@ -95,14 +95,7 @@ function DocumentHeader() {
 									</IconButton>
 								</Tooltip>
 							)}
-							<Typography
-								sx={{
-									fontWeight: 500,
-									fontSize: "20px",
-									letterSpacing: "0.15px",
-									lineHeight: "160%",
-								}}
-							>
+							<Typography variant="h6" sx={{ fontWeight: 500 }}>
 								{workspaceState.data?.title}
 							</Typography>
 							<DownloadMenu />
