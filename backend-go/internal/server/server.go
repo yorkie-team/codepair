@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -47,4 +48,12 @@ func (c *CodePair) Start() error {
 		return fmt.Errorf("failed to start server: %w", err)
 	}
 	return nil
+}
+
+func (c *CodePair) Shutdown(ctx context.Context) error {
+	return c.echo.Shutdown(ctx)
+}
+
+func (c *CodePair) RPCAddr() string {
+	return fmt.Sprintf(":%d", c.config.Server.Port)
 }
