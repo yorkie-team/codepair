@@ -55,6 +55,9 @@ func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
 
 	result, err := r.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
+		if mongo.IsDuplicateKeyError(err) {
+			return database.ErrDuplicatedKey
+		}
 		return fmt.Errorf("update user nickname: %w", err)
 	}
 	if result.MatchedCount == 0 {
