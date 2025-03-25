@@ -9,6 +9,7 @@ import (
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
@@ -28,6 +29,7 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 	}
 
 	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
+	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
 
 	cp := &CodePair{
 		config: conf,
