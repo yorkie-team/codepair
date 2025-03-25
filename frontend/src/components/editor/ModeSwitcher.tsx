@@ -10,11 +10,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { ShareRole } from "../../utils/share";
+import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 
 const ModeSwitcher = () => {
 	const dispatch = useDispatch();
 	const editorStore = useSelector(selectEditor);
 	const [open, setOpen] = useState(false);
+	const themeMode = useCurrentTheme();
 
 	const handleChangeMode = (newMode: EditorModeType) => {
 		if (!newMode) return;
@@ -70,14 +72,24 @@ const ModeSwitcher = () => {
 							<Stack direction="column" alignItems="center" spacing={0.5}>
 								<Icon
 									sx={{
-										color: editorStore.mode === mode ? "#1976d2" : "#000",
+										color:
+											editorStore.mode === mode
+												? "#1976d2"
+												: themeMode === "dark"
+													? "#fff"
+													: "#000",
 										width: "28px",
 										height: "28px",
 									}}
 								/>
 								<Typography
 									style={{
-										color: editorStore.mode === mode ? "#1976d2" : "#000",
+										color:
+											editorStore.mode === mode
+												? "#1976d2"
+												: themeMode === "dark"
+													? "#fff"
+													: "#000",
 										fontSize: "10px",
 										fontWeight: "600",
 									}}
