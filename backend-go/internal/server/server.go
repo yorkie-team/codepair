@@ -31,6 +31,8 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
 	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
 
+	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
+
 	cp := &CodePair{
 		config: conf,
 		echo:   e,
