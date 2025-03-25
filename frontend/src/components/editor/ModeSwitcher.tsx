@@ -68,38 +68,41 @@ const ModeSwitcher = () => {
 							label: "edit / view",
 						},
 						{ mode: EditorModeType.EDIT, icon: SubjectIcon, label: "edit" },
-					].map(({ mode, icon: Icon, label }) => (
-						<Button key={mode} onClick={() => handleChangeMode(mode)}>
-							<Stack direction="column" alignItems="center" spacing={0.5}>
-								<Icon
-									sx={{
-										color:
-											editorStore.mode === mode
-												? "#1976d2"
-												: themeMode === "dark"
-													? "#fff"
-													: "#000",
-										width: "28px",
-										height: "28px",
-									}}
-								/>
-								<Typography
-									style={{
-										color:
-											editorStore.mode === mode
-												? "#1976d2"
-												: themeMode === "dark"
-													? "#fff"
-													: "#000",
-										fontSize: "10px",
-										fontWeight: "600",
-									}}
-								>
-									{label}
-								</Typography>
-							</Stack>
-						</Button>
-					))}
+					].map(({ mode, icon: Icon, label }) => {
+						const isSelected = editorStore.mode === mode;
+						const highlightColor = isSelected
+							? "#1976d2"
+							: themeMode === "dark"
+								? "#fff"
+								: "#000";
+						return (
+							<Button
+								key={mode}
+								onClick={() => handleChangeMode(mode)}
+								aria-pressed={editorStore.mode === mode}
+								aria-label={`Switch to ${label} mode`}
+							>
+								<Stack direction="column" alignItems="center" spacing={0.5}>
+									<Icon
+										sx={{
+											color: highlightColor,
+											width: "28px",
+											height: "28px",
+										}}
+									/>
+									<Typography
+										style={{
+											color: highlightColor,
+											fontSize: "10px",
+											fontWeight: "600",
+										}}
+									>
+										{label}
+									</Typography>
+								</Stack>
+							</Button>
+						);
+					})}
 				</Paper>
 			)}
 		</Stack>
