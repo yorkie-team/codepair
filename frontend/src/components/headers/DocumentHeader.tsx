@@ -95,17 +95,16 @@ function DocumentHeader() {
 									</IconButton>
 								</Tooltip>
 							)}
-							<span
-								style={{
-									fontFamily: "Roboto",
-									fontWeight: "500",
+							<Typography
+								sx={{
+									fontWeight: 500,
 									fontSize: "20px",
 									letterSpacing: "0.15px",
 									lineHeight: "160%",
 								}}
 							>
 								{workspaceState.data?.title}
-							</span>
+							</Typography>
 							<DownloadMenu />
 						</Stack>
 					</Grid>

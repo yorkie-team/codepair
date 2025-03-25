@@ -5,7 +5,7 @@ import {
 	VerticalSplit as VerticalSplitIcon,
 	Visibility as VisibilityIcon,
 } from "@mui/icons-material";
-import { Box, Button, IconButton, Paper } from "@mui/material";
+import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
@@ -84,7 +84,7 @@ const ModeSwitcher = () => {
 									height: "28px",
 								}}
 							/>
-							<span
+							<Typography
 								style={{
 									color: editorStore.mode === mode ? "#1976d2" : "#000",
 									fontSize: "10px",
@@ -92,7 +92,7 @@ const ModeSwitcher = () => {
 								}}
 							>
 								{label}
-							</span>
+							</Typography>
 						</Button>
 					))}
 				</Paper>
