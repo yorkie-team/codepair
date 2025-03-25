@@ -30,10 +30,16 @@ var collectionInfos = []collectionInfo{
 	},
 	{
 		name: ColUsers,
-		indexes: []mongo.IndexModel{{
-			Keys:    bson.D{{Key: "social_uid", Value: 1}},
-			Options: options.Index().SetUnique(true),
-		}},
+		indexes: []mongo.IndexModel{
+			{
+				Keys:    bson.D{{Key: "social_uid", Value: 1}},
+				Options: options.Index().SetUnique(true),
+			},
+			{
+				Keys:    bson.D{{Key: "nickname", Value: 1}},
+				Options: options.Index().SetUnique(true),
+			},
+		},
 	},
 }
 
