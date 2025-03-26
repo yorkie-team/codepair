@@ -21,7 +21,6 @@ linters:
   disable:
     - gosimple
     - staticcheck
-    - structcheck
     - unused
 
 linters-settings:
