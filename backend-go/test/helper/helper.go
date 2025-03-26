@@ -27,6 +27,7 @@ func NewTestEcho(t *testing.T) *echo.Echo {
 
 	e := echo.New()
 	e.Logger.SetHeader("${level} ${time_rfc3339}")
+	e.HideBanner = true
 	e.Listener = listener
 	return e
 }
