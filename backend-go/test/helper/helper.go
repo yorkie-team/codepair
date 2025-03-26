@@ -22,7 +22,7 @@ import (
 
 // NewTestEcho returns a new Echo instance with a temporary listener.
 func NewTestEcho(t *testing.T) *echo.Echo {
-	listener, err := net.Listen("tcp", ":0")
+	listener, err := net.Listen("tcp", ":0") // #nosec G102
 	assert.NoError(t, err)
 
 	e := echo.New()
@@ -39,21 +39,6 @@ func NewTestConfig(testName string) *config.Config {
 	cfg.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%d", testName, time.Now().Unix())
 
 	return cfg
-}
-
-// EnsureDefaultUser ensures that a default user exists in the database.
-// It creates the user via the social provider "github" and returns the created user.
-func EnsureDefaultUser(mongoCfg *config.Mongo, logger echo.Logger) (entity.User, error) {
-	cli, err := mongodb.Dial(mongoCfg, logger)
-	if err != nil {
-		return entity.User{}, err
-	}
-	userRepo := mongodb.NewUserRepository(mongoCfg, cli)
-	id, err := userRepo.CreateUserBySocial("github", "testUser")
-	if err != nil && errors.Is(err, database.ErrDuplicatedKey) {
-		return entity.User{}, err
-	}
-	return userRepo.FindUser(id)
 }
 
 // SetupTestServer creates a new Echo instance and server for integration tests.
@@ -75,7 +60,16 @@ func SetupTestServer(t *testing.T, conf *config.Config, e *echo.Echo) *server.Co
 
 // SetupDefaultUser ensures that a default user exists and returns the user.
 func SetupDefaultUser(t *testing.T, conf *config.Config, logger echo.Logger) entity.User {
-	user, err := EnsureDefaultUser(conf.Mongo, logger)
+	cli, err := mongodb.Dial(conf.Mongo, logger)
+	assert.NoError(t, err)
+	userRepo := mongodb.NewUserRepository(conf.Mongo, cli)
+
+	id, err := userRepo.CreateUserBySocial("github", "testUser")
+	if err != nil && errors.Is(err, database.ErrDuplicatedKey) {
+		assert.NoError(t, err)
+	}
+
+	user, err := userRepo.FindUser(id)
 	assert.NoError(t, err)
 	return user
 }
