@@ -16,7 +16,12 @@ type Service struct {
 
 // findUser retrieves a user by their ID.
 func (s *Service) findUser(id string) (entity.User, error) {
-	return s.userRepository.FindUser(entity.ID(id))
+	user, err := s.userRepository.FindUser(entity.ID(id))
+	if err != nil {
+		return entity.User{}, middleware.NewError(http.StatusInternalServerError, err.Error())
+	}
+
+	return user, nil
 }
 
 // changeNickname updates the nickname of a user.
