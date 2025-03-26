@@ -7,11 +7,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
 	"github.com/yorkie-team/codepair/backend/test/helper"
-	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func TestFindUser(t *testing.T) {
