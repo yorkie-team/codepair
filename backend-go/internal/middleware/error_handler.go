@@ -36,6 +36,15 @@ func NewError(code int, message string, err ...error) *HTTPError {
 	}
 }
 
+// NewInternalError creates a new HTTPError instance.
+func NewInternalError(err error) *HTTPError {
+	return &HTTPError{
+		Code:     http.StatusInternalServerError,
+		Message:  http.StatusText(http.StatusInternalServerError),
+		Internal: err,
+	}
+}
+
 // Error implements the `error` interface for HTTPError.
 func (e *HTTPError) Error() string {
 	if e.Internal == nil {

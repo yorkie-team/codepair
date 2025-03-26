@@ -40,7 +40,7 @@ func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, er
 	})
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
-			return "", database.ErrDuplicatedKey
+			return "", database.ErrUserAlreadyExists
 		}
 
 		return "", fmt.Errorf("create user: %w", err)
@@ -59,7 +59,7 @@ func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 
 	err := r.collection.FindOne(ctx, filter).Decode(&user)
 	if errors.Is(err, mongo.ErrNoDocuments) {
-		return entity.User{}, database.ErrDocumentNotFound
+		return entity.User{}, database.ErrUserNotFound
 	} else if err != nil {
 		return entity.User{}, fmt.Errorf("find user: %w", err)
 	}
@@ -82,12 +82,13 @@ func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
 	result, err := r.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
-			return database.ErrDuplicatedKey
+			return database.ErrNicknameConflict
 		}
 		return fmt.Errorf("update user nickname: %w", err)
 	}
+
 	if result.MatchedCount == 0 {
-		return database.ErrDocumentNotFound
+		return database.ErrUserNotFound
 	}
 	return nil
 }
