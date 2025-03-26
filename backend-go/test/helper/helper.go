@@ -60,6 +60,7 @@ func SetupTestServer(t *testing.T, conf *config.Config, e *echo.Echo) *server.Co
 
 // SetupDefaultUser ensures that a default user exists and returns the user.
 func SetupDefaultUser(t *testing.T, conf *config.Config, logger echo.Logger) entity.User {
+	// TODO(window9u): Replace Mongo Dial to create user api
 	cli, err := mongodb.Dial(conf.Mongo, logger)
 	assert.NoError(t, err)
 	userRepo := mongodb.NewUserRepository(conf.Mongo, cli)
