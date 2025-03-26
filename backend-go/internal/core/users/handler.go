@@ -44,7 +44,7 @@ func (h *Handler) changeNickname(c echo.Context) error {
 
 	req := &models.ChangeNicknameRequest{}
 	if err = c.Bind(req); err != nil {
-		return middleware.NewError(http.StatusInternalServerError, err.Error())
+		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	if err = h.service.changeNickname(payload.Subject, req.Nickname); err != nil {

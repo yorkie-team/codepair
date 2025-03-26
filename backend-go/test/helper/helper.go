@@ -67,7 +67,7 @@ func SetupDefaultUser(t *testing.T, conf *config.Config, logger echo.Logger) ent
 	userRepo := mongodb.NewUserRepository(conf.Mongo, cli)
 
 	id, err := userRepo.CreateUserBySocial("github", "testUser")
-	if err != nil && errors.Is(err, database.ErrDuplicatedKey) {
+	if err != nil && !errors.Is(err, database.ErrUserAlreadyExists) {
 		assert.NoError(t, err)
 	}
 

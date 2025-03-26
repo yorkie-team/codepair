@@ -45,9 +45,13 @@ func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, er
 
 		return "", fmt.Errorf("create user: %w", err)
 	}
-	oid := result.InsertedID.(bson.ObjectID).Hex()
 
-	return entity.ID(oid), nil
+	oid, ok := result.InsertedID.(bson.ObjectID)
+	if !ok {
+		return "", fmt.Errorf("unexpected ID type: %T", result.InsertedID)
+	}
+
+	return entity.ID(oid.Hex()), nil
 }
 
 // FindUser retrieves a user by their ID.
