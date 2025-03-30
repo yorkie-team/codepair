@@ -54,7 +54,7 @@ func TestFindUser(t *testing.T) {
 		_, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
 		var resData models.HttpExceptionResponse
 		assert.NoError(t, json.Unmarshal(body, &resData))
-		assert.Equal(t, http.StatusInternalServerError, resData.StatusCode)
+		assert.Equal(t, http.StatusNotFound, resData.StatusCode)
 	})
 }
 
