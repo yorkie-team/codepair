@@ -18,7 +18,7 @@ type Handler struct {
 func (h *Handler) findUser(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
 	if err != nil {
-		return middleware.NewError(http.StatusBadRequest, err.Error())
+		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
 	user, err := h.service.findUser(payload.Subject)
@@ -39,7 +39,7 @@ func (h *Handler) findUser(c echo.Context) error {
 func (h *Handler) changeNickname(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
 	if err != nil {
-		return middleware.NewError(http.StatusBadRequest, err.Error())
+		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
 	req := &models.ChangeNicknameRequest{}
