@@ -20,7 +20,7 @@ func TestFindUser(t *testing.T) {
 	svr := helper.SetupTestServer(t, conf, e)
 	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.RPCAddr() + "/users"
+	url := svr.ServerAddr() + "/users"
 
 	t.Run("find user by valid id", func(t *testing.T) {
 		token, err := gen.GenerateAccessToken(string(user.ID))
@@ -64,7 +64,7 @@ func TestChangeUserNickName(t *testing.T) {
 	svr := helper.SetupTestServer(t, conf, e)
 	user := helper.SetupDefaultUser(t, conf, e.Logger)
 	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.RPCAddr() + "/users"
+	url := svr.ServerAddr() + "/users"
 
 	t.Run("change valid nickname", func(t *testing.T) {
 		token, err := gen.GenerateAccessToken(string(user.ID))

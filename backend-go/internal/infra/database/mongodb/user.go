@@ -58,13 +58,14 @@ func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, er
 func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 	ctx := context.Background()
 
-	user := entity.User{}
 	filter := bson.M{"_id": id}
+	result := r.collection.FindOne(ctx, filter)
 
-	err := r.collection.FindOne(ctx, filter).Decode(&user)
-	if errors.Is(err, mongo.ErrNoDocuments) {
-		return entity.User{}, database.ErrUserNotFound
-	} else if err != nil {
+	user := entity.User{}
+	if err := result.Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.User{}, database.ErrUserNotFound
+		}
 		return entity.User{}, fmt.Errorf("find user: %w", err)
 	}
 

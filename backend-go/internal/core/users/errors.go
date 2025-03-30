@@ -1,5 +1,13 @@
 package users
 
-import "github.com/yorkie-team/codepair/backend/internal/middleware"
+import (
+	"net/http"
 
-var NicknameConflictError = middleware.NewError(http.StatusConflict, "The nickname conflicts")
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
+)
+
+var (
+	NicknameConflictError = middleware.NewError(http.StatusConflict, "The nickname conflicts")
+
+	UserNotFoundError = middleware.NewError(http.StatusNotFound, "User not found")
+)

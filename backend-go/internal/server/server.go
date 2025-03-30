@@ -55,7 +55,7 @@ func (c *CodePair) Shutdown(ctx context.Context) error {
 	return c.echo.Shutdown(ctx)
 }
 
-func (c *CodePair) RPCAddr() string {
+func (c *CodePair) ServerAddr() string {
 	port := c.echo.ListenerAddr().(*net.TCPAddr).Port
 	return fmt.Sprintf("http://localhost:%d", port)
 }

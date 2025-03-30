@@ -2,6 +2,7 @@ package users
 
 import (
 	"errors"
+	"net/http"
 
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
@@ -17,7 +18,11 @@ type Service struct {
 func (s *Service) findUser(id string) (entity.User, error) {
 	user, err := s.userRepository.FindUser(entity.ID(id))
 	if err != nil {
-		return entity.User{}, middleware.NewInternalError(err)
+		if errors.Is(err, database.ErrUserNotFound) {
+			return entity.User{}, UserNotFoundError
+		}
+
+		return entity.User{}, middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
 	return user, nil
@@ -30,7 +35,7 @@ func (s *Service) changeNickname(id, nickname string) error {
 			return NicknameConflictError
 		}
 
-		return middleware.NewInternalError(err)
+		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
 	return nil

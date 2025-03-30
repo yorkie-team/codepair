@@ -10,7 +10,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
-// Handler handles HTTP requests for hello messages.
+// Handler handles HTTP requests for users services.
 type Handler struct {
 	service *Service
 }
