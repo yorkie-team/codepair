@@ -5,7 +5,7 @@ import {
 	VerticalSplit as VerticalSplitIcon,
 	Visibility as VisibilityIcon,
 } from "@mui/icons-material";
-import { Button, IconButton, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
@@ -34,7 +34,7 @@ const ModeSwitcher = () => {
 				transform: "translateY(-50%)",
 			}}
 		>
-			<Paper elevation={4}>
+			<Box>
 				<IconButton
 					onClick={() => setOpen(!open)}
 					aria-label={open ? "Close mode switcher" : "Open mode switcher"}
@@ -43,21 +43,23 @@ const ModeSwitcher = () => {
 						width: 32.3,
 						height: 87.35,
 						borderRadius: "8px 0 0 8px",
-						boxShadow: open ? "-3px 0px 5px -2px rgba(0, 0, 0, 0.2)" : 3,
+						boxShadow: "-3px 0px 5px -2px rgba(0, 0, 0, 0.2)",
+						backgroundColor: `${themeMode === "dark" ? "#121212" : "#fff"}`,
 					}}
 				>
 					{open ? <ArrowRightIcon /> : <ArrowLeftIcon />}
 				</IconButton>
-			</Paper>
+			</Box>
 
 			{open && (
-				<Paper
-					elevation={4}
+				<Box
 					sx={{
 						display: "flex",
 						flexDirection: "column",
 						gap: 2,
 						padding: 1.5,
+						backgroundColor: themeMode === "dark" ? "#121212" : "#fff",
+						boxShadow: "-3px 0px 5px -2px rgba(0, 0, 0, 0.2)",
 					}}
 				>
 					{[
@@ -103,7 +105,7 @@ const ModeSwitcher = () => {
 							</Button>
 						);
 					})}
-				</Paper>
+				</Box>
 			)}
 		</Stack>
 	);
