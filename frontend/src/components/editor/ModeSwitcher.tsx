@@ -18,11 +18,13 @@ const ModeSwitcher = () => {
 	const [open, setOpen] = useState(false);
 	const themeMode = useCurrentTheme();
 
+	if (editorStore.shareRole === ShareRole.READ) return null;
+
 	const handleChangeMode = (newMode: EditorModeType) => {
 		if (!newMode) return;
 		dispatch(setMode(newMode));
 	};
-	if (editorStore.shareRole === ShareRole.READ) return null;
+
 	return (
 		<Stack
 			direction="row"
