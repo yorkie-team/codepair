@@ -44,7 +44,7 @@ const ModeSwitcher = () => {
 						height: 87.35,
 						borderRadius: "8px 0 0 8px",
 						boxShadow: "-3px 0px 5px -2px rgba(0, 0, 0, 0.2)",
-						backgroundColor: `${themeMode === "dark" ? "#121212" : "#fff"}`,
+						backgroundColor: `${themeMode === "dark" ? "#292A30" : "#fff"}`,
 					}}
 				>
 					{open ? <ArrowRightIcon /> : <ArrowLeftIcon />}
@@ -58,7 +58,7 @@ const ModeSwitcher = () => {
 						flexDirection: "column",
 						gap: 2,
 						padding: 1.5,
-						backgroundColor: themeMode === "dark" ? "#121212" : "#fff",
+						backgroundColor: themeMode === "dark" ? "#292A30" : "#fff",
 						boxShadow: "-3px 0px 5px -2px rgba(0, 0, 0, 0.2)",
 					}}
 				>
