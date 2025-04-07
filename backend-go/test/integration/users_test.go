@@ -75,6 +75,49 @@ func TestChangeUserNickName(t *testing.T) {
 
 		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
 		assert.Equal(t, http.StatusOK, status)
+
+		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		assert.Equal(t, http.StatusOK, status)
+
+		var resData models.FindUserResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
+		assert.Equal(t, "valid_nick", resData.Nickname)
+	})
+
+	t.Run("change to empty nickname format", func(t *testing.T) {
+		t.Skip("add this after implement nickname validation")
+		token, err := gen.GenerateAccessToken(string(user.ID))
+		assert.NoError(t, err)
+
+		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: ""})
+		assert.NoError(t, err)
+
+		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		assert.Equal(t, http.StatusOK, status)
+
+		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		assert.Equal(t, http.StatusOK, status)
+
+		var resData models.FindUserResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
+		assert.Equal(t, "", resData.Nickname)
+	})
+
+	t.Run("change to invalid nickname format", func(t *testing.T) {
+		t.Skip("add this after implement nickname validation")
+		token, err := gen.GenerateAccessToken(string(user.ID))
+		assert.NoError(t, err)
+
+		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "!!@21!!!@#/.,.,"})
+		assert.NoError(t, err)
+
+		status, body := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+
+		assert.Equal(t, http.StatusBadRequest, status)
+
+		var resData models.HttpExceptionResponse
+		assert.NoError(t, json.Unmarshal(body, &resData))
+		assert.Contains(t, resData.Message, "invalid nickname")
 	})
 
 	t.Run("change duplicated nickname", func(t *testing.T) {
