@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -56,10 +55,8 @@ func HTTPErrorHandler(err error, c echo.Context) {
 
 	// Check if the error is an HTTPError instance.
 	// If the internal error is also an HTTPError, use it instead.
-	var internalErr *HTTPError
-	if errors.As(err, &internalErr) {
-		he = internalErr
-	} else {
+	he, ok := err.(*HTTPError)
+	if !ok {
 		c.Logger().Errorf("unexpected error type: %v", err)
 		he = &HTTPError{
 			Code:    http.StatusInternalServerError,

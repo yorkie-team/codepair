@@ -48,6 +48,10 @@ jobs:
         run: make build
         working-directory: ${{ env.working-directory }}
 
+      - name: Start services with Docker Compose
+        run: docker compose -f ./docker/docker-compose.yml up -d
+        working-directory: ${{ env.working-directory }}
+
       - name: Test
         run: make test
         working-directory: ${{ env.working-directory }}

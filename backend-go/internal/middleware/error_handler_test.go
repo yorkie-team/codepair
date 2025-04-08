@@ -18,7 +18,7 @@ func TestHTTPErrorHandlerIntegration(t *testing.T) {
 	e.HTTPErrorHandler = HTTPErrorHandler
 
 	// Normal HTTPError: A handler returns an HTTPError with 400 status.
-	e.GET("/normal", func(c echo.Context) error {
+	e.GET("/normal", func(_ echo.Context) error {
 		return NewError(http.StatusBadRequest, "Bad Request")
 	})
 	t.Run("normal HTTPError", func(t *testing.T) {
@@ -36,7 +36,7 @@ func TestHTTPErrorHandlerIntegration(t *testing.T) {
 
 	// Generic Error: The handler returns a non-HTTPError (plain error).
 	// The middleware should default to a 500 Internal Server Error.
-	e.GET("/generic", func(c echo.Context) error {
+	e.GET("/generic", func(_ echo.Context) error {
 		return errors.New("generic error")
 	})
 	t.Run("generic error", func(t *testing.T) {
@@ -53,7 +53,7 @@ func TestHTTPErrorHandlerIntegration(t *testing.T) {
 	})
 
 	// HEAD Request: For HEAD requests the middleware should return no body.
-	e.HEAD("/head", func(c echo.Context) error {
+	e.HEAD("/head", func(_ echo.Context) error {
 		return NewError(http.StatusBadRequest, "Bad Request")
 	})
 	t.Run("HEAD request", func(t *testing.T) {
