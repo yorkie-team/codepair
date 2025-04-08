@@ -3,10 +3,11 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import { selectConfig } from "../../store/configSlice";
 import { EditorModeType, selectEditor } from "../../store/editorSlice";
 import Editor from "./Editor";
 import Preview from "./Preview";
-import { selectConfig } from "../../store/configSlice";
+import ModeSwitcher from "./ModeSwitcher";
 
 function DocumentView() {
 	const editorStore = useSelector(selectEditor);
@@ -86,6 +87,7 @@ function DocumentView() {
 					<Preview />
 				</Box>
 			)}
+			<ModeSwitcher />
 		</>
 	);
 }
