@@ -42,7 +42,7 @@ func LoadConfig(filePath string) (*Config, error) {
 		return nil, fmt.Errorf("unable to decode configuration into struct: %w", err)
 	}
 
-	cfg.ensureDefaultValue()
+	cfg.EnsureDefaultValue()
 
 	if err := cfg.validate(); err != nil {
 		return nil, fmt.Errorf("failed to validate config: %w", err)
@@ -85,12 +85,35 @@ func readConfigFile(filePath string) error {
 	return nil
 }
 
-func (c *Config) ensureDefaultValue() {
+func (c *Config) EnsureDefaultValue() {
+	if c.Server == nil {
+		c.Server = &Server{}
+	}
 	c.Server.ensureDefaultValue()
+
+	if c.OAuth == nil {
+		c.OAuth = &OAuth{}
+	}
 	c.OAuth.ensureDefaultValue()
+
+	if c.JWT == nil {
+		c.JWT = &JWT{}
+	}
 	c.JWT.ensureDefaultValue()
+
+	if c.Yorkie == nil {
+		c.Yorkie = &Yorkie{}
+	}
 	c.Yorkie.ensureDefaultValue()
+
+	if c.Mongo == nil {
+		c.Mongo = &Mongo{}
+	}
 	c.Mongo.ensureDefaultValue()
+
+	if c.Storage == nil {
+		c.Storage = &Storage{}
+	}
 }
 
 func (c *Config) validate() error {

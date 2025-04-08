@@ -26,7 +26,7 @@ func TestJWTGenerator(t *testing.T) {
 		token, err := gen.GenerateAccessToken(dummyUserID)
 		assert.NoError(t, err)
 
-		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(token *jwt.Token) (
+		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(_ *jwt.Token) (
 			interface{},
 			error,
 		) {
@@ -44,7 +44,7 @@ func TestJWTGenerator(t *testing.T) {
 		token, err := gen.GenerateRefreshToken(dummyUserID)
 		assert.NoError(t, err)
 
-		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(token *jwt.Token) (
+		parsedToken, err := jwt.ParseWithClaims(token, &Payload{}, func(_ *jwt.Token) (
 			interface{},
 			error,
 		) {
