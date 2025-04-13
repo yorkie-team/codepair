@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.mongodb.org/mongo-driver/v2/bson"
 	"io"
 	"net"
 	"net/http"
@@ -14,6 +13,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/config"

@@ -30,14 +30,16 @@ func TestRefreshToken(t *testing.T) {
 	const (
 		accessTokenExpirationTime  = 1 * time.Second
 		refreshTokenExpirationTime = 2 * time.Second
+		getUserPath                = "/users"
+		refreshPath                = "/auth/refresh"
 	)
 
 	conf := helper.NewTestConfig(t.Name())
 	conf.JWT.AccessTokenExpirationTime = accessTokenExpirationTime
 	conf.JWT.RefreshTokenExpirationTime = refreshTokenExpirationTime
 	codePair := helper.SetupTestServer(t, conf)
-	getUserURL := codePair.ServerAddr() + "/users"
-	refreshURL := codePair.ServerAddr() + "/auth/refresh"
+	getUserURL := codePair.ServerAddr() + getUserPath
+	refreshURL := codePair.ServerAddr() + refreshPath
 
 	t.Run("login with github and access token expired", func(t *testing.T) {
 		_, access, refresh := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
