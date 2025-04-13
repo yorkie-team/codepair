@@ -15,7 +15,7 @@ func Register(conf *config.Config, e *echo.Echo, repo users.Repository) {
 		ClientID:     conf.OAuth.Github.ClientID,
 		ClientSecret: conf.OAuth.Github.ClientSecret,
 		RedirectURL:  conf.OAuth.Github.CallbackURL,
-		Scopes:       []string{"user:public_profile"},
+		Scopes:       []string{"read:user"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  conf.OAuth.Github.AuthorizationURL,
 			TokenURL: conf.OAuth.Github.TokenURL,

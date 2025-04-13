@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -69,8 +70,16 @@ func NewTestGithubServer(t *testing.T, backendURL string) (*httptest.Server, *co
 		t.Helper()
 		w.Header().Set("Content-Type", "application/json")
 		accessToken := r.Header.Get("Authorization")
+
 		// Remove "Bearer " prefix from the token.
-		id := accessToken[len("Bearer "):]
+		id := ""
+		const bearerPrefix = "Bearer "
+		if strings.HasPrefix(accessToken, bearerPrefix) {
+			id = accessToken[len(bearerPrefix):]
+		} else {
+			t.Fatalf("Authorization header does not contain Bearer prefix: %s", accessToken)
+		}
+
 		user := struct {
 			ID string `json:"id"`
 		}{ID: id}

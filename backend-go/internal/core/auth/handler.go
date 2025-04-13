@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/labstack/echo/v4"
 
@@ -22,13 +22,21 @@ func (h *Handler) githubLogin(c echo.Context) error {
 func (h *Handler) githubCallback(c echo.Context) error {
 	code := c.QueryParam("code")
 
-	access, refresh, err := h.service.githubCallback(c, code)
+	accessToken, refreshToken, err := h.service.githubCallback(c, code)
 	if err != nil {
 		return err
 	}
 
-	url := fmt.Sprintf("%s?access_token=%s&refresh_token=%s", h.frontendURL, access, refresh)
-	return c.Redirect(http.StatusPermanentRedirect, url)
+	redirectURL, err := url.Parse(h.frontendURL)
+	if err != nil {
+		return middleware.NewError(http.StatusInternalServerError, "parse frontend URL", err)
+	}
+	query := redirectURL.Query()
+	query.Set("accessToken", accessToken)
+	query.Set("refreshToken", refreshToken)
+	redirectURL.RawQuery = query.Encode()
+
+	return c.Redirect(http.StatusPermanentRedirect, redirectURL.String())
 }
 
 func (h *Handler) refreshToken(c echo.Context) error {
