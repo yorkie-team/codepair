@@ -78,6 +78,7 @@ func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User
 			switch len(via) {
 			case 1:
 				// First request, It redirects to the GitHub authorization URL.
+				// Setting the socialID in the header is to simulate the login process.
 				req.Header.Set("socialID", socialID)
 				return nil
 			case 2:
