@@ -35,5 +35,5 @@ func Register(conf *config.Config, e *echo.Echo, repo users.Repository) {
 
 	e.GET("/auth/login/github", handler.githubLogin)
 	e.GET("/auth/callback/github", handler.githubCallback)
-	e.POST("/auth/refreshToken", handler.refreshToken)
+	e.POST("/auth/refresh", handler.refreshToken)
 }

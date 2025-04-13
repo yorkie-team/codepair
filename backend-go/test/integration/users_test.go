@@ -1,7 +1,6 @@
 package integration
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
 	"testing"
@@ -17,12 +16,12 @@ import (
 func TestFindUser(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t, conf)
-	user, token := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+	user, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	gen := jwt.NewGenerator(conf.JWT)
 	url := codePair.ServerAddr() + "/users"
 
 	t.Run("find user by valid id", func(t *testing.T) {
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -57,17 +56,17 @@ func TestFindUser(t *testing.T) {
 func TestChangeUserNickName(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t, conf)
-	_, token := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+	_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	url := codePair.ServerAddr() + "/users"
 
 	t.Run("change valid nickname", func(t *testing.T) {
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "valid_nick"})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, _ := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 		assert.Equal(t, http.StatusOK, status)
 
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -80,10 +79,10 @@ func TestChangeUserNickName(t *testing.T) {
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: ""})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, _ := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 		assert.Equal(t, http.StatusOK, status)
 
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -96,7 +95,7 @@ func TestChangeUserNickName(t *testing.T) {
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "!!@21!!!@#/.,.,"})
 		assert.NoError(t, err)
 
-		status, body := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, body := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 
 		assert.Equal(t, http.StatusBadRequest, status)
 

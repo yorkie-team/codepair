@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -69,7 +70,7 @@ func SetupTestServer(t *testing.T, conf *config.Config) *server.CodePair {
 }
 
 // LoginUserTestGithub ensures that a default user exists via GitHub login and returns the user along with the access token.
-func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User, string) {
+func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User, string, string) {
 	t.Helper()
 
 	// Use a custom redirect checker to stop at the frontend URL.
@@ -102,6 +103,7 @@ func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User
 
 	// Extract the access token from the redirected URL's query parameter.
 	accessToken := redirectedURL.Query().Get("accessToken")
+	refreshToken := redirectedURL.Query().Get("refreshToken")
 	status, body := DoRequest(t, http.MethodGet, backendURL+"/users", accessToken, nil)
 	assert.Equal(t, http.StatusOK, status)
 
@@ -113,18 +115,18 @@ func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User
 		Nickname:  resData.Nickname,
 		CreatedAt: resData.CreatedAt,
 		UpdatedAt: resData.UpdatedAt,
-	}, accessToken
+	}, accessToken, refreshToken
 }
 
 // DoRequest creates and sends an HTTP request, returning the response status code and body.
 // It automatically sets the authorization and content-type headers (if a body is provided).
-func DoRequest(t *testing.T, method, url, token string, body io.Reader) (int, []byte) {
+func DoRequest(t *testing.T, method, url, token string, body []byte) (int, []byte) {
 	t.Helper()
-	req, err := http.NewRequest(method, url, body)
+	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	assert.NoError(t, err)
 
 	req.Header.Set("Authorization", "Bearer "+token)
-	if body != nil {
+	if len(body) > 0 {
 		req.Header.Set("Content-Type", "application/json")
 	}
 
