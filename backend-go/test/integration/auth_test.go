@@ -12,20 +12,6 @@ import (
 	"github.com/yorkie-team/codepair/backend/test/helper"
 )
 
-func TestGithubAuth(t *testing.T) {
-	conf := helper.NewTestConfig(t.Name())
-	codePair := helper.SetupTestServer(t, conf)
-
-	t.Run("login with github", func(t *testing.T) {
-		helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
-	})
-
-	t.Run("login with github with multiple time", func(t *testing.T) {
-		helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
-		helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
-	})
-}
-
 func TestRefreshToken(t *testing.T) {
 	const (
 		accessTokenExpirationTime  = 1 * time.Second
@@ -75,5 +61,10 @@ func TestRefreshToken(t *testing.T) {
 		assert.NoError(t, err)
 		status, _ := helper.DoRequest(t, http.MethodPost, refreshURL, "", body)
 		assert.Equal(t, http.StatusUnauthorized, status)
+
+		// Login again to get a new refresh token
+		_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+		status, _ = helper.DoRequest(t, http.MethodGet, getUserURL, access, nil)
+		assert.Equal(t, http.StatusOK, status)
 	})
 }
