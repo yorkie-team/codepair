@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/lithammer/shortuuid"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 
@@ -34,9 +35,10 @@ func (r *UserRepository) FindOrCreateUserBySocialID(provider, uid string) (entit
 	doc := bson.M{
 		"social_provider": provider,
 		"social_uid":      uid,
-		"nickname":        uid,
-		"created_at":      now,
-		"updated_at":      now,
+		// Note(window9u): nickname is not unique, so we should use a random string
+		"nickname":   fmt.Sprintf("user-%s", shortuuid.New()),
+		"created_at": now,
+		"updated_at": now,
 	}
 	result, err := r.collection.InsertOne(ctx, doc)
 	if err == nil {
