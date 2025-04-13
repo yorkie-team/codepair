@@ -202,15 +202,49 @@
       "get": {
         "operationId": "loginWithGithub",
         "summary": "Log In or Sign Up via GitHub",
-        "description": "Authenticates the user using GitHub social login. Returns an access token and refresh token.",
+        "description": "Redirects the user to GitHub OAuth login. On successful login, redirects the user back to the frontend with accessToken and refreshToken in the URL query parameters.",
         "parameters": [],
         "responses": {
-          "default": {
-            "description": "",
+          "302": {
+            "description": "Redirects to the frontend URL",
+            "headers": {
+              "Location": {
+                "description": "Callback URL including accessToken and refreshToken as query parameters.",
+                "schema": {
+                  "type": "string",
+                  "example": "https://your-frontend.com/auth/callback?accessToken=abc123&refreshToken=def456"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid login request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unexpected server error"
+                    }
+                  }
                 }
               }
             }
