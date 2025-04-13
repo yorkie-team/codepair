@@ -1,6 +1,8 @@
 module github.com/yorkie-team/codepair/backend
 
-go 1.23
+go 1.23.0
+
+toolchain go1.23.3
 
 require (
 	github.com/go-playground/validator/v10 v10.24.0
@@ -11,6 +13,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
 	go.mongodb.org/mongo-driver/v2 v2.0.1
+	golang.org/x/oauth2 v0.28.0
 )
 
 require (
