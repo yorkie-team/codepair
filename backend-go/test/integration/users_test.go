@@ -16,16 +16,12 @@ import (
 
 func TestFindUser(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
-	e := helper.NewTestEcho(t)
-	svr := helper.SetupTestServer(t, conf, e)
-	user := helper.SetupDefaultUser(t, conf, e.Logger)
+	codePair := helper.SetupTestServer(t, conf)
+	user, token := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.ServerAddr() + "/users"
+	url := codePair.ServerAddr() + "/users"
 
 	t.Run("find user by valid id", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
-
 		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
 		assert.Equal(t, http.StatusOK, status)
 
@@ -60,16 +56,11 @@ func TestFindUser(t *testing.T) {
 
 func TestChangeUserNickName(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
-	e := helper.NewTestEcho(t)
-	svr := helper.SetupTestServer(t, conf, e)
-	user := helper.SetupDefaultUser(t, conf, e.Logger)
-	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.ServerAddr() + "/users"
+	codePair := helper.SetupTestServer(t, conf)
+	_, token := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+	url := codePair.ServerAddr() + "/users"
 
 	t.Run("change valid nickname", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
-
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "valid_nick"})
 		assert.NoError(t, err)
 
@@ -86,9 +77,6 @@ func TestChangeUserNickName(t *testing.T) {
 
 	t.Run("change to empty nickname format", func(t *testing.T) {
 		t.Skip("add this after implement nickname validation")
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
-
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: ""})
 		assert.NoError(t, err)
 
@@ -105,9 +93,6 @@ func TestChangeUserNickName(t *testing.T) {
 
 	t.Run("change to invalid nickname format", func(t *testing.T) {
 		t.Skip("add this after implement nickname validation")
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
-
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "!!@21!!!@#/.,.,"})
 		assert.NoError(t, err)
 
