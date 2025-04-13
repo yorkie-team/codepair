@@ -10,14 +10,14 @@ import (
 // ClaimsKey is the key to retrieve the claims in the echo context.
 const ClaimsKey = "user"
 
-type Payload struct {
-	jwt.RegisteredClaims
-}
-
 var (
 	ErrInvalidToken       = errors.New("invalid token")
 	ErrInvalidTokenClaims = errors.New("invalid token claims")
 )
+
+type Payload struct {
+	jwt.RegisteredClaims
+}
 
 // GetPayload returns the payload from the echo context.
 func GetPayload(c echo.Context) (*Payload, error) {

@@ -26,32 +26,45 @@ func NewUserRepository(conf *config.Mongo, client *mongo.Client) *UserRepository
 	}
 }
 
-// CreateUserBySocial creates user by Social id and provider.
-func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, error) {
+// FindOrCreateUserBySocialID creates user by Social id and provider.
+func (r *UserRepository) FindOrCreateUserBySocialID(provider, uid string) (entity.ID, error) {
 	ctx := context.Background()
-
 	now := time.Now()
-	result, err := r.collection.InsertOne(ctx, bson.M{
+
+	doc := bson.M{
 		"social_provider": provider,
 		"social_uid":      uid,
-		"nickname":        "",
+		"nickname":        uid,
 		"created_at":      now,
 		"updated_at":      now,
-	})
-	if err != nil {
-		if mongo.IsDuplicateKeyError(err) {
-			return "", database.ErrUserAlreadyExists
+	}
+	result, err := r.collection.InsertOne(ctx, doc)
+	if err == nil {
+		oid, ok := result.InsertedID.(bson.ObjectID)
+		if !ok {
+			return "", fmt.Errorf("inserted ID is not of type bson.ObjectID but %T", result.InsertedID)
 		}
-
-		return "", fmt.Errorf("create user: %w", err)
+		return entity.ID(oid.Hex()), nil
 	}
 
-	oid, ok := result.InsertedID.(bson.ObjectID)
-	if !ok {
-		return "", fmt.Errorf("unexpected ID type: %T", result.InsertedID)
+	if !mongo.IsDuplicateKeyError(err) {
+		return "", fmt.Errorf("insert user: %w", err)
 	}
 
-	return entity.ID(oid.Hex()), nil
+	filter := bson.M{
+		"social_provider": provider,
+		"social_uid":      uid,
+	}
+
+	user := entity.User{}
+	if err := r.collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return "", database.ErrUserNotFound
+		}
+		return "", fmt.Errorf("find user: %w", err)
+	}
+
+	return user.ID, nil
 }
 
 // FindUser retrieves a user by their ID.

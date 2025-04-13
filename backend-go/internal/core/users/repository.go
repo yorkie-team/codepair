@@ -8,5 +8,5 @@ type Repository interface {
 
 	UpdateNickname(id entity.ID, nickname string) error
 
-	CreateUserBySocial(provider, uid string) (entity.ID, error)
+	FindOrCreateUserBySocialID(provider, uid string) (entity.ID, error)
 }
