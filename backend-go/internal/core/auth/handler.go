@@ -27,7 +27,7 @@ func (h *Handler) githubCallback(c echo.Context) error {
 		return err
 	}
 
-	return c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s?accessToken=%s&refreshToken=%s", h.frontendURL, access, refresh))
+	return c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("%s?accessToken=%s&refreshToken=%s", h.frontendURL, access, refresh))
 }
 
 func (h *Handler) refreshToken(c echo.Context) error {
