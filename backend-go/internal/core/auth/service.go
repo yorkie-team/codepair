@@ -79,6 +79,9 @@ func (s *Service) generateAccessToken(refreshToken string) (string, error) {
 	if err != nil {
 		return "", middleware.NewError(http.StatusUnauthorized, "parse refresh token", err)
 	}
-
-	return s.jwtGenerator.GenerateAccessToken(id)
+	accessToken, err := s.jwtGenerator.GenerateAccessToken(id)
+	if err != nil {
+		return "", middleware.NewError(http.StatusInternalServerError, "generate access token", err)
+	}
+	return accessToken, nil
 }

@@ -18,7 +18,7 @@ const (
 	githubClientSecret     = "test-client-secret"
 	githubRedirectURL      = "/auth/github/callback"
 	githubAuthorizationURL = "/auth/github/authorize"
-	githubTokenURL         = "/auth/github/token"
+	githubTokenURL         = "/auth/github/token" // #nosec G101
 	githubUserURL          = "/user"
 )
 

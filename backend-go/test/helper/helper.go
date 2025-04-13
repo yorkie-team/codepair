@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"io"
-	"math/rand"
 	"net"
 	"net/http"
 	"net/url"
@@ -39,7 +39,7 @@ func NewTestConfig(testName string) *config.Config {
 	conf := &config.Config{}
 	conf.EnsureDefaultValue()
 	conf.Mongo.ConnectionURI = "mongodb://localhost:27017"
-	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%d", testName, rand.Int())
+	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())
 	conf.OAuth.FrontendBaseURL = "http://frontend-url"
 	return conf
 }
@@ -69,7 +69,8 @@ func SetupTestServer(t *testing.T, conf *config.Config) *server.CodePair {
 	return codePairServer
 }
 
-// LoginUserTestGithub ensures that a default user exists via GitHub login and returns the user along with the access token.
+// LoginUserTestGithub ensures that a default user exists via GitHub login
+// And returns the user along with the access token.
 func LoginUserTestGithub(t *testing.T, socialID, backendURL string) (entity.User, string, string) {
 	t.Helper()
 
