@@ -1278,23 +1278,6 @@
           "nickname"
         ]
       },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "Access token for CodePair"
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "Refresh token to obtain new access tokens"
-          }
-        },
-        "required": [
-          "accessToken",
-          "refreshToken"
-        ]
-      },
       "RefreshTokenRequest": {
         "type": "object",
         "properties": {
