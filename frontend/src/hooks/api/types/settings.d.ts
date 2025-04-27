@@ -13,8 +13,14 @@ class FileUploadSetting {
 	enable: boolean;
 }
 
+class SpeechToTextSetting {
+	enable: boolean;
+}
+
 export class GetSettingsResponse {
 	yorkieIntelligence: YorkieIntelligenceSetting;
 
 	fileUpload: FileUploadSetting;
+
+	speechToText: SpeechToTextSetting;
 }
