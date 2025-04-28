@@ -14,9 +14,11 @@ const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
 	return (
 		<div
 			style={{
-				position: "absolute",
+				position: "sticky",
 				bottom: "20px",
 				right: "20px",
+				float: "right",
+				marginRight: "20px",
 				zIndex: 100,
 				display: "flex",
 				flexDirection: "column",

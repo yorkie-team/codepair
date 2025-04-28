@@ -24,7 +24,6 @@ import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
 import SpeechToTextButton from "../common/SpeechToTextButton";
 
-// Speech recognition type definitions
 interface SpeechRecognition extends EventTarget {
 	continuous: boolean;
 	interimResults: boolean;
@@ -71,8 +70,6 @@ function Editor(props: EditorProps) {
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 	const { applyFormat, setKeymapConfig } = useFormatUtils();
 	const { toolBarState, setToolBarState, updateFormatBar } = useToolBar();
-
-	// Speech recognition state
 	const [isListening, setIsListening] = useState(false);
 	const recognitionRef = useRef<SpeechRecognition | null>(null);
 	const [interimTranscript, setInterimTranscript] = useState("");
@@ -83,14 +80,13 @@ function Editor(props: EditorProps) {
 		setElement(node);
 	}, []);
 
-	// Initialize speech recognition
 	useEffect(() => {
 		const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 		if (SpeechRecognition) {
 			recognitionRef.current = new SpeechRecognition();
 			recognitionRef.current.continuous = true;
 			recognitionRef.current.interimResults = true;
-			recognitionRef.current.lang = "en-US";
+			recognitionRef.current.lang = "ko-KR";
 		}
 
 		return () => {
@@ -100,7 +96,6 @@ function Editor(props: EditorProps) {
 		};
 	}, []);
 
-	// Handle speech recognition events
 	useEffect(() => {
 		if (!recognitionRef.current || !editorStore.cmView || !editorStore.doc) return;
 
@@ -120,17 +115,21 @@ function Editor(props: EditorProps) {
 			if (finalTranscript) {
 				finalTranscriptRef.current = finalTranscript;
 
-				// Get current cursor position
 				const cursor = editorStore.cmView!.state.selection.main;
+				const from = cursor.from;
+				const to = cursor.to;
+				const newCursorPos = from + finalTranscript.length;
 
-				// Update the document through Yorkie
-				editorStore.doc!.update((root) => {
-					root.content.edit(cursor.from, cursor.to, finalTranscript);
+				editorStore.doc?.update((root, presence) => {
+					root.content.edit(from, to, finalTranscript);
+					presence.set({
+						selection: root.content.indexRangeToPosRange([newCursorPos, newCursorPos]),
+					});
 				});
 
-				// Insert text at cursor position
 				editorStore.cmView!.dispatch({
-					changes: { from: cursor.from, to: cursor.to, insert: finalTranscript },
+					changes: { from, to, insert: finalTranscript },
+					selection: { anchor: newCursorPos, head: newCursorPos },
 				});
 			}
 
