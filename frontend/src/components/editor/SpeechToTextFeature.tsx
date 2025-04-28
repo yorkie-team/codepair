@@ -57,7 +57,6 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 			recognitionRef.current = new SpeechRecognition();
 			recognitionRef.current.continuous = true;
 			recognitionRef.current.interimResults = true;
-			// TODO(krapie): change to "ko-KR" dynamically based on user preference
 			recognitionRef.current.lang = "ko-KR";
 		}
 
@@ -72,6 +71,8 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 		if (!recognitionRef.current || !editorStore.cmView || !editorStore.doc) return;
 
 		recognitionRef.current.onresult = (event) => {
+			if (!editorStore.cmView) return;
+
 			let interimTranscript = "";
 			let finalTranscript = "";
 
@@ -87,7 +88,7 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 			if (finalTranscript) {
 				finalTranscriptRef.current = finalTranscript;
 
-				const cursor = editorStore.cmView!.state.selection.main;
+				const cursor = editorStore.cmView.state.selection.main;
 				const from = cursor.from;
 				const to = cursor.to;
 				const newCursorPos = from + finalTranscript.length;
@@ -99,7 +100,7 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 					});
 				});
 
-				editorStore.cmView!.dispatch({
+				editorStore.cmView?.dispatch({
 					changes: { from, to, insert: finalTranscript },
 					selection: { anchor: newCursorPos, head: newCursorPos },
 				});

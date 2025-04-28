@@ -6,7 +6,6 @@ import {
 	selectFeatureSetting,
 	setFileUpload,
 	setYorkieIntelligence,
-	setSpeechToText,
 } from "../../store/featureSettingSlice";
 import { GetSettingsResponse } from "./types/settings";
 
@@ -35,7 +34,6 @@ export const useGetSettingsQuery = () => {
 		const data = query.data;
 		dispatch(setYorkieIntelligence(data.yorkieIntelligence));
 		dispatch(setFileUpload(data.fileUpload));
-		dispatch(setSpeechToText(data.speechToText));
 	}, [dispatch, query.data, query.isSuccess]);
 
 	return query;

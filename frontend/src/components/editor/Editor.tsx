@@ -95,7 +95,7 @@ function Editor(props: EditorProps) {
 				}),
 				yorkieCodeMirror(editorStore.doc, editorStore.client),
 				intelligencePivot,
-				...(featureSettingStore.fileUpload?.enable
+				...(featureSettingStore.fileUpload.enable
 					? [imageUploader(handleUploadImage, editorStore.doc)]
 					: []),
 				urlHyperlinkInserter(editorStore.doc),

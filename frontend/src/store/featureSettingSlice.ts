@@ -17,20 +17,14 @@ interface FileUploadSetting {
 	enable: boolean;
 }
 
-interface SpeechToTextSetting {
-	enable: boolean;
-}
-
 export interface FeatureSettingState {
 	yorkieIntelligence: YorkieIntelligenceSetting | null;
 	fileUpload: FileUploadSetting | null;
-	speechToText: SpeechToTextSetting | null;
 }
 
 const initialState: FeatureSettingState = {
 	yorkieIntelligence: null,
 	fileUpload: null,
-	speechToText: null,
 };
 
 export const featureSettingSlice = createSlice({
@@ -43,14 +37,10 @@ export const featureSettingSlice = createSlice({
 		setFileUpload: (state, action: PayloadAction<FileUploadSetting>) => {
 			state.fileUpload = action.payload;
 		},
-		setSpeechToText: (state, action: PayloadAction<SpeechToTextSetting>) => {
-			state.speechToText = action.payload;
-		},
 	},
 });
 
-export const { setYorkieIntelligence, setFileUpload, setSpeechToText } =
-	featureSettingSlice.actions;
+export const { setYorkieIntelligence, setFileUpload } = featureSettingSlice.actions;
 
 export const selectFeatureSetting = (state: RootState) => state.featureSetting;
 
@@ -60,7 +50,6 @@ export const selectFeatureSetting = (state: RootState) => state.featureSetting;
  *  * This slice handles:
  * - `yorkieIntelligence`: Settings for the Yorkie Intelligence feature
  * - `fileUpload`: Settings for file upload functionality
- * - `speechToText`: Settings for speech-to-text functionality
  */
 const reducer = featureSettingSlice.reducer;
 
