@@ -7,6 +7,22 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.33] - 2025-05-03
+
+### Added
+
+- Add wrapcheck ignore rules for Echo internal packages by @kokodak in https://github.com/yorkie-team/codepair/pull/461
+- Migrate JWT Logic from Nest.js by @kokodak in https://github.com/yorkie-team/codepair/pull/459
+- Implement `users` service API for `backend-go` by @window9u in https://github.com/yorkie-team/codepair/pull/466
+- Implement new DocumentHeader design based on Figma specifications by @Indigochi1d in https://github.com/yorkie-team/codepair/pull/464
+- Add Speech-to-Text Feature by @krapie in https://github.com/yorkie-team/codepair/pull/468
+
+### Changed
+
+- Refactor Dummy `hello` Package as a Guideline for Future PRs by @window9u in https://github.com/yorkie-team/codepair/pull/455
+- Improve Error Handling and Logging with Middleware by @window9u in https://github.com/yorkie-team/codepair/pull/458
+- Bump Go version to 1.23 in `go.mod` by @kokodak in https://github.com/yorkie-team/codepair/pull/463
+
 ## [0.1.32] - 2025-02-22
 
 ## Fixed
