@@ -22,6 +22,8 @@ import { urlHyperlinkInserter } from "../../utils/urlHyperlinkInserter";
 import { yorkieCodeMirror } from "../../utils/yorkie";
 import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
+import SpeechToTextButton from "../common/SpeechToTextButton";
+import { useSpeechToText } from "../../hooks/useSpeechToText";
 
 interface EditorProps {
 	width: number | string;
@@ -40,6 +42,12 @@ function Editor(props: EditorProps) {
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
 	const { applyFormat, setKeymapConfig } = useFormatUtils();
 	const { toolBarState, setToolBarState, updateFormatBar } = useToolBar();
+
+	const {
+		state: speechToTextState,
+		toggleListening,
+		isSpeechRecognitionSupported,
+	} = useSpeechToText();
 
 	const ref = useCallback((node: HTMLElement | null) => {
 		if (!node) return;
@@ -124,6 +132,7 @@ function Editor(props: EditorProps) {
 						style={{
 							height: "100%",
 							overflow: "auto",
+							position: "relative",
 						}}
 					>
 						<div
@@ -138,6 +147,13 @@ function Editor(props: EditorProps) {
 							<ToolBar
 								toolBarState={toolBarState}
 								onChangeToolBarState={setToolBarState}
+							/>
+						)}
+						{isSpeechRecognitionSupported && (
+							<SpeechToTextButton
+								isListening={speechToTextState.isListening}
+								onClick={toggleListening}
+								interimTranscript={speechToTextState.interimTranscript}
 							/>
 						)}
 					</div>
