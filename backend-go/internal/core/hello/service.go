@@ -24,7 +24,7 @@ func (s *Service) createHello(req *models.HelloRequest) (string, error) {
 		if errors.Is(err, database.ErrDuplicatedKey) {
 			return "", fmt.Errorf("nickname '%s' already exists: %w", req.Nickname, err)
 		}
-		return "", fmt.Errorf("failed to create hello message for visitor %v: %w", req, err)
+		return "", fmt.Errorf("create hello message for visitor %v: %w", req, err)
 	}
 	return string(visitor.ID), nil
 }
@@ -36,7 +36,7 @@ func (s *Service) readNickname(id string) (string, error) {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return "", fmt.Errorf("visitor with ID '%s' not found: %w", id, err)
 		}
-		return "", fmt.Errorf("failed to find hello message for ID %s: %w", id, err)
+		return "", fmt.Errorf("find hello message for ID %s: %w", id, err)
 	}
 	return visitor.Nickname, nil
 }
@@ -52,7 +52,7 @@ func (s *Service) updateHello(id string, req *models.HelloRequest) error {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return fmt.Errorf("cannot update: visitor with ID '%s' not found: %w", id, err)
 		}
-		return fmt.Errorf("failed to update hello message for visitor with ID %s: %w", id, err)
+		return fmt.Errorf("update hello message for visitor with ID %s: %w", id, err)
 	}
 	return nil
 }
@@ -63,7 +63,7 @@ func (s *Service) deleteHello(id string) error {
 		if errors.Is(err, database.ErrDocumentNotFound) {
 			return fmt.Errorf("cannot delete: visitor with ID '%s' not found: %w", id, err)
 		}
-		return fmt.Errorf("failed to delete hello message for visitor with ID %s: %w", id, err)
+		return fmt.Errorf("delete hello message for visitor with ID %s: %w", id, err)
 	}
 	return nil
 }
