@@ -1,0 +1,20 @@
+--- Install Complete ---
+{{ .Release.Name }} successfully installed!
+
+CodePair application has been deployed to the {{ .Values.codepair.namespace }} namespace.
+
+{{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.hosts.enabled }}
+Your application is available at: https://{{ .Values.ingress.hosts.apiHost }}
+{{- end }}
+{{- else }}
+To expose your service, you need to set up an Ingress or use port-forwarding:
+
+  kubectl port-forward service/{{ .Values.codepair.name }} -n {{ .Values.codepair.namespace }} {{ .Values.codepair.ports.serverPort }}:{{ .Values.codepair.ports.serverPort }}
+
+Then access the application at: http://localhost:{{ .Values.codepair.ports.serverPort }}
+{{- end }}
+
+To learn more about the release, try:
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}

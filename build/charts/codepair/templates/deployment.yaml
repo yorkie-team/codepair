@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.codepair.name }}
+  namespace: {{ .Values.codepair.namespace }}
+  labels:
+    app: {{ .Values.codepair.name }}
+    app.kubernetes.io/name: {{ .Values.codepair.name }}
+    app.kubernetes.io/instance: {{ .Values.codepair.name }}
+    app.kubernetes.io/version: {{ .Values.codepair.image.tag | default .Chart.AppVersion }}
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: {{ .Values.codepair.name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    version: {{ .Values.codepair.image.tag | default .Chart.AppVersion }}
+spec:
+  {{ if not .Values.codepair.autoscaling.enabled }}
+  replicas: {{ .Values.codepair.autoscaling.replicaCount }}
+  {{ end }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Values.codepair.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.codepair.name }}
+        app.kubernetes.io/instance: {{ .Values.codepair.name }}
+        app.kubernetes.io/version: {{ .Values.codepair.image.tag | default .Chart.AppVersion }}
+        version: {{ .Values.codepair.image.tag | default .Chart.AppVersion }}
+    spec:
+      containers:
+      - name: {{ .Values.codepair.name }}
+        image: "{{ .Values.codepair.image.repository }}:{{ .Values.codepair.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.codepair.image.pullPolicy }}
+        env:
+          - name: DATABASE_URL
+            value: "{{ .Values.codepair.env.databaseUrl }}"
+          - name: GITHUB_CLIENT_ID
+            value: "{{ .Values.codepair.env.githubClientId }}"
+          - name: GITHUB_CLIENT_SECRET
+            value: "{{ .Values.codepair.env.githubClientSecret }}"
+          - name: GITHUB_CALLBACK_URL
+            value: "{{ .Values.codepair.env.githubCallbackUrl }}"
+          - name: GITHUB_AUTHORIZATION_URL
+            value: "{{ .Values.codepair.env.githubAuthorizationUrl }}"
+          - name: GITHUB_TOKEN_URL
+            value: "{{ .Values.codepair.env.githubTokenUrl }}"
+          - name: GITHUB_USER_PROFILE_URL
+            value: "{{ .Values.codepair.env.githubUserProfileUrl }}"
+          - name: JWT_ACCESS_TOKEN_SECRET
+            value: "{{ .Values.codepair.env.jwtAccessTokenSecret }}"
+          - name: JWT_ACCESS_TOKEN_EXPIRATION_TIME
+            value: "{{ .Values.codepair.env.jwtAccessTokenExpirationTime }}"
+          - name: JWT_REFRESH_TOKEN_SECRET
+            value: "{{ .Values.codepair.env.jwtRefreshTokenSecret }}"
+          - name: JWT_REFRESH_TOKEN_EXPIRATION_TIME
+            value: "{{ .Values.codepair.env.jwtRefreshTokenExpirationTime }}"
+          - name: FRONTEND_BASE_URL
+            value: "{{ .Values.codepair.env.frontendBaseUrl }}"
+          - name: YORKIE_API_ADDR
+            value: "{{ .Values.codepair.env.yorkieApiAddr }}"
+          - name: YORKIE_PROJECT_NAME
+            value: "{{ .Values.codepair.env.yorkieProjectName }}"
+          - name: YORKIE_PROJECT_SECRET_KEY
+            value: "{{ .Values.codepair.env.yorkieProjectSecretKey }}"
+          - name: YORKIE_INTELLIGENCE
+            value: "{{ .Values.codepair.env.yorkieIntelligence }}"
+          - name: OPENAI_API_KEY
+            value: "{{ .Values.codepair.env.openaiApiKey }}"
+          - name: LANGCHAIN_TRACING_V2
+            value: "{{ .Values.codepair.env.langchainTracingV2 }}"
+          - name: LANGCHAIN_API_KEY
+            value: "{{ .Values.codepair.env.langchainApiKey }}"
+          - name: LANGCHAIN_PROJECT
+            value: "{{ .Values.codepair.env.langchainProject }}"
+          - name: FILE_UPLOAD
+            value: "{{ .Values.codepair.env.fileUpload }}"
+          - name: AWS_ACCESS_KEY_ID
+            value: "{{ .Values.codepair.env.awsAccessKeyId }}"
+          - name: AWS_SECRET_ACCESS_KEY
+            value: "{{ .Values.codepair.env.awsSecretAccessKey }}"
+          - name: AWS_REGION
+            value: "{{ .Values.codepair.env.awsRegion }}"
+          - name: BUCKET_NAME
+            value: "{{ .Values.codepair.env.bucketName }}"
+        ports:
+          - containerPort: {{ .Values.codepair.ports.serverPort }}
+        resources:
+          {{ toYaml .Values.codepair.resources | nindent 12 }}

@@ -1,0 +1,32 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.codepair.name }}-ingress
+  namespace: {{ .Values.codepair.namespace }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+    {{- if .Values.ingress.awsAlb.enabled }}
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.awsAlb.certArn }}
+    {{- end }}
+    {{- if .Values.ingress.ncpAlb.enabled }}
+    ingress.kubernetes.io/ssl-cert-no: {{ .Values.ingress.ncpAlb.certNo | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    {{- if .Values.ingress.hosts.enabled }}
+    - host: {{ .Values.ingress.hosts.apiHost | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.codepair.name }}
+                port:
+                  number: {{ .Values.codepair.ports.serverPort }}
+    {{- end }}
+{{- end }}

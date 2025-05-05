@@ -1,0 +1,24 @@
+apiVersion: v2
+name: codepair
+description: A Helm chart for CodePair, a collaborative coding platform built with Yorkie
+type: application
+icon: https://raw.githubusercontent.com/yorkie-team/yorkie-team.github.io/main/public/favicon-512x512.png
+maintainers:
+  - name: krapie
+    email: krapi0314@gmail.com
+
+version: 0.1.0
+appVersion: "0.1.32"
+kubeVersion: ">=1.23.0-0"
+
+dependencies:
+  - name: yorkie-mongodb
+    version: 0.4.13
+    repository: https://yorkie-team.github.io/yorkie/helm-charts
+    condition: yorkie-mongodb.enabled
+
+keywords:
+  - codepair
+  - yorkie
+  - collaboration
+  - kubernetes
