@@ -3,10 +3,8 @@
 
 CodePair application has been deployed to the {{ .Values.codepair.namespace }} namespace.
 
-{{- if .Values.ingress.enabled }}
 {{- if .Values.ingress.hosts.enabled }}
 Your application is available at: https://{{ .Values.ingress.hosts.apiHost }}
-{{- end }}
 {{- else }}
 To expose your service, you need to set up an Ingress or use port-forwarding:
 

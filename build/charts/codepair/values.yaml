@@ -60,31 +60,39 @@ codepair:
   
 # Configuration for ingress
 ingress:
-  enabled: true
-  className: nginx
-  
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/backend-protocol: HTTP
-    alb.ingress.kubernetes.io/backend-protocol-version: HTTP1
-    alb.ingress.kubernetes.io/group.name: "api.yorkie.dev"
-    alb.ingress.kubernetes.io/group.order: "3"
+  ingressClassName: nginx
+  ## Set to alb if you are using AWS, NCP ALB
+  # ingressClassName: alb
   
   hosts:
-    enabled: true
+    enabled: false
     apiHost: "codepair-api.yorkie.dev"
   
+  # AWS ALB configuration
   awsAlb:
-    enabled: true
+    enabled: false
+    scheme: internet-facing
     certArn: "arn:aws:acm:ap-northeast-2:123412341234:certificate/1234-1234-1234-1234-1234"
-
+    listenPorts: '[{"HTTPS": 443}]'
+    backendProtocol: HTTP
+    backendProtocolVersion: HTTP1
+    groupName: "api.yorkie.dev"
+    groupOrder: "3"
+  
+  # NCP ALB configuration
   ncpAlb:
     enabled: false
-    certNo: 1234
-
+    certNo: "1234"
+    healthcheckPath: "/healthz"
+    listenPorts: '[{"HTTP": 80},{"HTTPS":443}]'
+    sslRedirect: "443"
+    backendProtocol: HTTP
+    enableHttp2: "true"
+  
+  # Nginx configuration
   nginx:
     enabled: true
+    rewriteTarget: "/"
 
 # Configuration for yorkie-mongodb
 yorkie-mongodb:
