@@ -6,7 +6,7 @@ import {
 	YorkieCodeMirrorDocType,
 } from "./yorkieSync";
 import { yorkieRemoteSelections, yorkieRemoteSelectionsTheme } from "./remoteSelection";
-import * as yorkie from "yorkie-js-sdk";
+import * as yorkie from "@yorkie-js/sdk";
 
 export { yorkieSync, yorkieSyncFacet, YorkieSyncConfig };
 

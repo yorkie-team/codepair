@@ -2,8 +2,8 @@ import Color from "color";
 import randomColor from "randomcolor";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useBeforeUnload, useSearchParams } from "react-router-dom";
-import * as yorkie from "yorkie-js-sdk";
+import { useSearchParams } from "react-router-dom";
+import * as yorkie from "@yorkie-js/sdk";
 import { selectAuth } from "../store/authSlice";
 import { CodePairDocType } from "../store/editorSlice";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
@@ -53,6 +53,7 @@ export const useYorkieDocument = (
 	const createYorkieClient = useCallback(async () => {
 		const syncLoopDuration = Number(searchParams.get("syncLoopDuration")) || 200;
 		const opts = {
+			rpcAddr: YORKIE_API_ADDR,
 			apiKey: YORKIE_API_KEY,
 			authTokenInjector: getYorkieToken,
 			syncLoopDuration,
@@ -61,7 +62,7 @@ export const useYorkieDocument = (
 			opts.metadata = { userID };
 		}
 
-		const newClient = new yorkie.Client(YORKIE_API_ADDR, opts);
+		const newClient = new yorkie.Client(opts);
 		await newClient.activate();
 		return newClient;
 	}, [getYorkieToken, searchParams, userID]);
@@ -144,10 +145,6 @@ export const useYorkieDocument = (
 			cleanUpYorkieDocument();
 		};
 	}, [cleanUpYorkieDocument]);
-
-	// Clean up yorkie document on beforeunload
-	// For example, when the user closes the tab or refreshes the page
-	useBeforeUnload(cleanUpYorkieDocument);
 
 	return { client, doc };
 };

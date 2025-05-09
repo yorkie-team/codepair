@@ -1,7 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import { EditorView } from "codemirror";
-import * as yorkie from "yorkie-js-sdk";
+import * as yorkie from "@yorkie-js/sdk";
 import { ShareRole } from "../utils/share";
 import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 import { RootState } from "./store";
