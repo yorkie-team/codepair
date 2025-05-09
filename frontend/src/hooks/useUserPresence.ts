@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActorID } from "yorkie-js-sdk";
+import { ActorID } from "@yorkie-js/sdk";
 import { CodePairDocType } from "../store/editorSlice";
 import { YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
 
