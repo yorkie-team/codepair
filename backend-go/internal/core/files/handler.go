@@ -4,60 +4,51 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/yorkie-team/codepair/backend-go/api/codepair/v1/models"
+
+	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
-// Handler handles HTTP requests for files.
+// Handler handles HTTP requests for files services.
 type Handler struct {
     service *Service
 }
 
-// NewHandler creates a new files handler.
-func NewHandler(service *Service) *Handler {
-    return &Handler{
-        service: service,
-    }
-}
-
-// CreateUploadPresignedURL handles POST /files requests.
-func (h *Handler) CreateUploadPresignedURL(c echo.Context) error {
-    ctx := c.Request().Context()
-    
-    var req models.CreateUploadPresignedURLRequest
+// createUploadPresignedURL handles POST /files requests.
+func (h *Handler) createUploadPresignedURL(c echo.Context) error {
+    var req models.CreateUploadPresignedUrlRequest
     if err := c.Bind(&req); err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, "invalid request body")
+        return middleware.NewError(http.StatusBadRequest, "invalid request body")
     }
     
-    if req.WorkspaceID == "" {
-        return echo.NewHTTPError(http.StatusBadRequest, "workspace_id is required")
+    if req.WorkspaceId == "" {
+        return middleware.NewError(http.StatusBadRequest, "workspace_id is required")
     }
     if req.ContentLength <= 0 {
-        return echo.NewHTTPError(http.StatusBadRequest, "content_length must be positive")
+        return middleware.NewError(http.StatusBadRequest, "content_length must be positive")
     }
     if req.ContentType == "" {
-        return echo.NewHTTPError(http.StatusBadRequest, "content_type is required")
+        return middleware.NewError(http.StatusBadRequest, "content_type is required")
     }
     
-    resp, err := h.service.createUploadPresignedURL(ctx, req.WorkspaceID, req.ContentLength, req.ContentType)
+    resp, err := h.service.createUploadPresignedURL(req.WorkspaceId, req.ContentLength, req.ContentType)
     if err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+        return err // Service 자체에서 적절한 error를 반환함
     }
     
     return c.JSON(http.StatusOK, resp)
 }
 
-// CreateDownloadPresignedURL handles GET /files/:file_name requests.
-func (h *Handler) CreateDownloadPresignedURL(c echo.Context) error {
-    ctx := c.Request().Context()
-    
+// createDownloadPresignedURL handles GET /files/:file_name requests.
+func (h *Handler) createDownloadPresignedURL(c echo.Context) error {
     fileKey := c.Param("file_name")
     if fileKey == "" {
-        return echo.NewHTTPError(http.StatusBadRequest, "file_name is required")
+        return middleware.NewError(http.StatusBadRequest, "file_name is required")
     }
     
-    url, err := h.service.createDownloadPresignedURL(ctx, fileKey)
+    url, err := h.service.createDownloadPresignedURL(fileKey)
     if err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+        return err // Service 자체에서 적절한 error를 반환함
     }
     
     return c.Redirect(http.StatusFound, url)
