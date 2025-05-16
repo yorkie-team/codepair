@@ -23,4 +23,7 @@ var (
 
 	// ErrDisconnected Database connection lost
 	ErrDisconnected = errors.New("database disconnected")
+
+	// ErrWorkspaceNotFound No matching workspace found
+	ErrWorkspaceNotFound = errors.New("workspace not found")
 )
