@@ -7,11 +7,11 @@ import (
 )
 
 var (
-    WorkspaceNotFoundError = middleware.NewError(http.StatusUnauthorized, "client unauthorized")
-    ContentLengthTooLongError = middleware.NewError(http.StatusUnprocessableEntity, "content length too long")
-    FileNotFoundError = middleware.NewError(http.StatusNotFound, "file not found")
+	WorkspaceNotFoundError    = middleware.NewError(http.StatusUnauthorized, "client unauthorized")
+	ContentLengthTooLongError = middleware.NewError(http.StatusUnprocessableEntity, "content length too long")
+	FileNotFoundError         = middleware.NewError(http.StatusNotFound, "file not found")
 )
 
 const (
-    MaxContentLength = 10_000_000 
+	MaxContentLength = 10_000_000
 )
