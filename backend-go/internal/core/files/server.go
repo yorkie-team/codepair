@@ -2,25 +2,20 @@ package files
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 )
 
-// Server represents the files server
-type Server struct {
-    handler *Handler
-}
-
-// NewServer creates a new files server
-func NewServer(handler *Handler) *Server {
-    return &Server{
-        handler: handler,
+//
+func Register(e *echo.Echo, s3Client s3.S3ClientInterface, workspaceRepo Repository) {
+    svc := &Service{
+        s3Client:      s3Client,
+        workspaceRepo: workspaceRepo,
     }
-}
-
-// RegisterRoutes registers routes for files
-func (s *Server) RegisterRoutes(e *echo.Group) {
-    filesGroup := e.Group("/files")
+    handler := &Handler{
+        service: svc,
+    }
     
-    filesGroup.POST("", s.handler.createUploadPresignedURL)
-    
-    filesGroup.GET("/:file_name", s.handler.createDownloadPresignedURL)
+    e.POST("/files", handler.createUploadPresignedURL)
+    e.GET("/files/:file_name", handler.createDownloadPresignedURL)
+    // TODO: e.POST("/files/export-markdown", handler.exportMarkdown)
 }
