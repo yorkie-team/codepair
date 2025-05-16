@@ -11,15 +11,14 @@ import (
 
 // ColVisitor is the name of the collection storing visitor records.
 const (
-	ColVisitor = "hello_visitors"
-	ColUsers   = "users"
+	ColVisitor   = "hello_visitors"
+	ColUsers     = "users"
 	ColWorkspace = "workspaces"
 )
 
 type collectionInfo struct {
 	name    string
 	indexes []mongo.IndexModel
-
 }
 
 var collectionInfos = []collectionInfo{
@@ -44,14 +43,14 @@ var collectionInfos = []collectionInfo{
 		},
 	},
 	{
-        name: ColWorkspace,
-        indexes: []mongo.IndexModel{
-            {
-                Keys:    bson.D{{Key: "slug", Value: 1}},
-                Options: options.Index().SetUnique(true),
-            },
-        },
-    },
+		name: ColWorkspace,
+		indexes: []mongo.IndexModel{
+			{
+				Keys:    bson.D{{Key: "slug", Value: 1}},
+				Options: options.Index().SetUnique(true),
+			},
+		},
+	},
 }
 
 func ensureIndexes(ctx context.Context, db *mongo.Database) error {

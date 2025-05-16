@@ -15,30 +15,30 @@ import (
 
 // WorkspaceRepository implements the operations for workspace management.
 type WorkspaceRepository struct {
-    collection *mongo.Collection
+	collection *mongo.Collection
 }
 
 // NewWorkspaceRepository creates a new instance of WorkspaceRepository.
 func NewWorkspaceRepository(conf *config.Mongo, client *mongo.Client) *WorkspaceRepository {
-    return &WorkspaceRepository{
-        collection: client.Database(conf.DatabaseName).Collection("workspaces"),
-    }
+	return &WorkspaceRepository{
+		collection: client.Database(conf.DatabaseName).Collection("workspaces"),
+	}
 }
 
 // FindWorkspaceByID retrieves a workspace by its ID.
 func (r *WorkspaceRepository) FindWorkspaceByID(id entity.ID) (entity.Workspace, error) {
-    ctx := context.Background()
+	ctx := context.Background()
 
-    filter := bson.M{"_id": id}
-    result := r.collection.FindOne(ctx, filter)
+	filter := bson.M{"_id": id}
+	result := r.collection.FindOne(ctx, filter)
 
-    workspace := entity.Workspace{}
-    if err := result.Decode(&workspace); err != nil {
-        if errors.Is(err, mongo.ErrNoDocuments) {
-            return entity.Workspace{}, database.ErrWorkspaceNotFound
-        }
-        return entity.Workspace{}, fmt.Errorf("find workspace: %w", err)
-    }
+	workspace := entity.Workspace{}
+	if err := result.Decode(&workspace); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.Workspace{}, database.ErrWorkspaceNotFound
+		}
+		return entity.Workspace{}, fmt.Errorf("find workspace: %w", err)
+	}
 
-    return workspace, nil
+	return workspace, nil
 }
