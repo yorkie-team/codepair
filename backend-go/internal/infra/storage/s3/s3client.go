@@ -1,4 +1,4 @@
-package storage
+package s3
 
 import (
 	"context"
@@ -16,15 +16,19 @@ type S3Client struct {
     bucket string
 }
 
+// S3ClientInterface defines methods we need from S3 client.
+type S3ClientInterface interface {
+    CreateUploadPresignedURL(ctx context.Context, key string, contentLength int64, contentType string) (string, error)
+    CreateDownloadPresignedURL(ctx context.Context, key string) (string, error)
+}
+
 // NewS3Client creates a new S3 client
 func NewS3Client(bucket string) (*S3Client, error) {
-    // AWS 설정 로드
     cfg, err := config.LoadDefaultConfig(context.Background())
     if err != nil {
         return nil, fmt.Errorf("failed to load AWS config: %w", err)
     }
     
-    // S3 클라이언트 생성
     client := s3.NewFromConfig(cfg)
     
     return &S3Client{
@@ -33,11 +37,10 @@ func NewS3Client(bucket string) (*S3Client, error) {
     }, nil
 }
 
-// CreateUploadPresignedURL creates a presigned URL for uploading a file
+// CreateUploadPresignedURL creates a presigned URL for uploading a file.
 func (s *S3Client) CreateUploadPresignedURL(ctx context.Context, key string, contentLength int64, contentType string) (string, error) {
     presignClient := s3.NewPresignClient(s.client)
     
-    // Presigned URL 생성 설정
     presignedReq, err := presignClient.PresignPutObject(ctx, &s3.PutObjectInput{
         Bucket:        aws.String(s.bucket),
         Key:           aws.String(key),
@@ -54,11 +57,10 @@ func (s *S3Client) CreateUploadPresignedURL(ctx context.Context, key string, con
     return presignedReq.URL, nil
 }
 
-// CreateDownloadPresignedURL creates a presigned URL for downloading a file
+// CreateDownloadPresignedURL creates a presigned URL for downloading a file.
 func (s *S3Client) CreateDownloadPresignedURL(ctx context.Context, key string) (string, error) {
     presignClient := s3.NewPresignClient(s.client)
     
-    // Presigned URL 생성 설정
     presignedReq, err := presignClient.PresignGetObject(ctx, &s3.GetObjectInput{
         Bucket: aws.String(s.bucket),
         Key:    aws.String(key),
