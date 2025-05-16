@@ -5,7 +5,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 )
 
-//
+// Register creates a new handler for files endpoints and registers the routes.
 func Register(e *echo.Echo, s3Client s3.S3ClientInterface, workspaceRepo Repository) {
     svc := &Service{
         s3Client:      s3Client,
