@@ -11,9 +11,11 @@ import (
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/auth"
+	"github.com/yorkie-team/codepair/backend/internal/core/files"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
@@ -31,9 +33,15 @@ func New(e *echo.Echo) (*CodePair, error) {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
 
+	s3Client, err := s3.NewS3Client(conf.Storage.S3.Bucket)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create s3 client: %w", err)
+	}
+
 	hello.Register(e, mongodb.NewHelloRepository(db))
 	auth.Register(e, mongodb.NewUserRepository(db))
 	users.Register(e, mongodb.NewUserRepository(db))
+	files.Register(e, s3Client, mongodb.NewWorkspaceRepository(conf.Mongo, db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 
