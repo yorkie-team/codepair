@@ -31,9 +31,9 @@ func (h *Handler) createUploadPresignedURL(c echo.Context) error {
         return middleware.NewError(http.StatusBadRequest, "content_type is required")
     }
     
-    resp, err := h.service.createUploadPresignedURL(req.WorkspaceId, req.ContentLength, req.ContentType)
+    resp, err := h.service.createUploadPresignedURL(c.Request().Context(), req.WorkspaceId, req.ContentLength, req.ContentType)
     if err != nil {
-        return err // Service 자체에서 적절한 error를 반환함
+        return err
     }
     
     return c.JSON(http.StatusOK, resp)
@@ -46,9 +46,9 @@ func (h *Handler) createDownloadPresignedURL(c echo.Context) error {
         return middleware.NewError(http.StatusBadRequest, "file_name is required")
     }
     
-    url, err := h.service.createDownloadPresignedURL(fileKey)
+    url, err := h.service.createDownloadPresignedURL(c.Request().Context(), fileKey)
     if err != nil {
-        return err // Service 자체에서 적절한 error를 반환함
+        return err 
     }
     
     return c.Redirect(http.StatusFound, url)
