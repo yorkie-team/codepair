@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/core/auth"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
@@ -31,6 +32,7 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 	}
 
 	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
+	auth.Register(conf, e, mongodb.NewUserRepository(conf.Mongo, db))
 	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))

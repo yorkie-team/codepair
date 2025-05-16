@@ -1,12 +1,17 @@
 package jwt
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
+)
+
+var (
+	ErrTokenExpired = errors.New("token expired")
 )
 
 type Generator struct {
@@ -34,6 +39,30 @@ func (g *Generator) GenerateRefreshToken(subject string) (string, error) {
 		g.cfg.RefreshTokenSecret,
 		g.cfg.RefreshTokenExpirationTime,
 	)
+}
+
+// ParseRefreshToken generates a new access token from a valid refresh token.
+func (g *Generator) ParseRefreshToken(refreshToken string) (string, error) {
+	token, err := jwt.ParseWithClaims(refreshToken, &Payload{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(g.cfg.RefreshTokenSecret), nil
+	})
+	if err != nil {
+		return "", fmt.Errorf("parse refresh token: %w", err)
+	}
+
+	claims, ok := token.Claims.(*Payload)
+	if !ok || !token.Valid {
+		return "", fmt.Errorf("invalid refresh token")
+	}
+
+	if claims.ExpiresAt != nil && claims.ExpiresAt.Time.Before(time.Now()) {
+		return "", ErrTokenExpired
+	}
+
+	return claims.Subject, nil
 }
 
 func (g *Generator) generateToken(subject, secretKey string, tokenTTL time.Duration) (string, error) {
