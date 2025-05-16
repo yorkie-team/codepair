@@ -241,8 +241,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@yorkie-js/sdk':
-        specifier: 0.6.10
-        version: 0.6.10
+        specifier: 0.6.12
+        version: 0.6.12
       axios:
         specifier: ^1.6.5
         version: 1.7.7
@@ -3074,8 +3074,8 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@yorkie-js/sdk@0.6.10':
-    resolution: {integrity: sha512-indjESTkEhhPDqfDKvDvpFHBwpAUHr7GedkX40dEkrKnmDGu0ShnXuXr4sTFzXzHie7x+qJJq5852B0+t5n+IA==}
+  '@yorkie-js/sdk@0.6.12':
+    resolution: {integrity: sha512-cwlfjNLIutzlh7gtbiskjttvTEqVBiug4s/Hwki3k5JYLq2bAuOkC+t49tmaN4GkOWbW8V9TlbPTklK/8beakg==}
     engines: {node: '>=18.0.0', npm: '>=7.1.0'}
 
   abbrev@1.1.1:
@@ -11149,7 +11149,7 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@yorkie-js/sdk@0.6.10':
+  '@yorkie-js/sdk@0.6.12':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect': 1.6.1(@bufbuild/protobuf@1.10.0)
