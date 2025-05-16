@@ -2,43 +2,55 @@ package files
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/http"
+	"strings"
 	"time"
 
-	"github.com/yorkie-team/codepair/backend-go/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
+	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
-
-// S3ClientInterface defines the methods we need from S3.
-type S3ClientInterface interface {
-    CreateUploadPresignedURL(ctx context.Context, key string, contentLength int64, contentType string) (string, error)
-    CreateDownloadPresignedURL(ctx context.Context, key string) (string, error)
-}
 
 // Service handles file operations.
 type Service struct {
-    s3Client S3ClientInterface
-}
-
-// NewService creates a new files service.
-func NewService(s3Client S3ClientInterface) *Service {
-    return &Service{
-        s3Client: s3Client,
-    }
+    s3Client      s3.S3ClientInterface
+    workspaceRepo Repository
 }
 
 // createUploadPresignedURL creates presigned URL for upload.
-// file key generation (e.g. workspaces/{workspaceID}/{timestamp}_{random})
-func (s *Service) createUploadPresignedURL(ctx context.Context, workspaceID string, contentLength int64, contentType string) (*models.CreateUploadPresignedURLResponse, error) {
-    key := fmt.Sprintf("workspaces/%s/%d_%s", workspaceID, time.Now().Unix(), generateRandomString(8))
-    
-    url, err := s.s3Client.CreateUploadPresignedURL(ctx, key, contentLength, contentType)
+func (s *Service) createUploadPresignedURL(ctx context.Context, workspaceID string, contentLength int64, contentType string) (*models.CreateUploadPresignedUrlResponse, error) {
+    workspace, err := s.workspaceRepo.FindWorkspaceByID(entity.ID(workspaceID))
     if err != nil {
-        return nil, fmt.Errorf("failed to create upload presigned URL: %w", err)
+        if errors.Is(err, database.ErrWorkspaceNotFound) {
+            return nil, WorkspaceNotFoundError
+        }
+
+        return nil, middleware.NewError(http.StatusInternalServerError, "server internal error", err)
     }
     
-    return &models.CreateUploadPresignedURLResponse{
-        Key: key,
-        URL: url,
+    if contentLength > MaxContentLength {
+        return nil, ContentLengthTooLongError
+    }
+    
+    extension := ""
+    if parts := strings.Split(contentType, "/"); len(parts) > 1 {
+        extension = parts[1]
+    }
+    
+    fileKey := generateFileKey(workspace.Slug, extension)
+    
+    url, err := s.s3Client.CreateUploadPresignedURL(ctx, fileKey, contentLength, contentType)
+    if err != nil {
+        return nil, middleware.NewError(http.StatusInternalServerError, "server internal error", err)
+    }
+    
+    return &models.CreateUploadPresignedUrlResponse{
+        FileKey: fileKey,
+        Url:     url,
     }, nil
 }
 
@@ -46,13 +58,18 @@ func (s *Service) createUploadPresignedURL(ctx context.Context, workspaceID stri
 func (s *Service) createDownloadPresignedURL(ctx context.Context, fileKey string) (string, error) {
     url, err := s.s3Client.CreateDownloadPresignedURL(ctx, fileKey)
     if err != nil {
-        return "", fmt.Errorf("failed to create download presigned URL: %w", err)
+        return "", FileNotFoundError
     }
     
     return url, nil
 }
 
-// generateRandomString generates a random string of given length. 
+// generateFileKey generates a file key with slug and extension.
+func generateFileKey(slug, extension string) string {
+    return fmt.Sprintf("%s-%s.%s", slug, generateRandomString(8), extension)
+}
+
+// generateRandomString generates a random string of given length.
 func generateRandomString(length int) string {
     const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
     result := make([]byte, length)
