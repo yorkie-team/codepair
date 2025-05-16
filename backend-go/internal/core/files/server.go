@@ -20,9 +20,7 @@ func NewServer(handler *Handler) *Server {
 func (s *Server) RegisterRoutes(e *echo.Group) {
     filesGroup := e.Group("/files")
     
-    // 업로드용 Presigned URL 생성
-    filesGroup.POST("", s.handler.CreateUploadPresignedURL)
+    filesGroup.POST("", s.handler.createUploadPresignedURL)
     
-    // 다운로드용 Presigned URL 생성
-    filesGroup.GET("/:file_name", s.handler.CreateDownloadPresignedURL)
+    filesGroup.GET("/:file_name", s.handler.createDownloadPresignedURL)
 }
