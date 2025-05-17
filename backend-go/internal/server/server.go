@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
 	"net"
 	"net/http"
+
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
 
 	"github.com/labstack/echo/v4"
 
@@ -42,7 +43,12 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 			return nil, fmt.Errorf("failed to create s3 client: %w", err)
 		}
 	} else if conf.Storage.Provider == "minio" {
-		storageClient, err = minio.NewClient(conf.Storage.Minio.Bucket, conf.Storage.Minio.Endpoint, conf.Storage.Minio.AccessKey, conf.Storage.Minio.SecretKey)
+		storageClient, err = minio.NewClient(
+			conf.Storage.Minio.Bucket, 
+			conf.Storage.Minio.Endpoint, 
+			conf.Storage.Minio.AccessKey, 
+			conf.Storage.Minio.SecretKey,
+		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create s3 client: %w", err)
 		}

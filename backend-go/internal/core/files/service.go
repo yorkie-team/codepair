@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
