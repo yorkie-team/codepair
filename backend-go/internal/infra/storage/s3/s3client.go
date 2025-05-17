@@ -16,12 +16,6 @@ type Client struct {
 	bucket string
 }
 
-// ClientInterface defines methods we need from S3 client.
-type ClientInterface interface {
-	CreateUploadPresignedURL(ctx context.Context, key string, contentLength int64, contentType string) (string, error)
-	CreateDownloadPresignedURL(ctx context.Context, key string) (string, error)
-}
-
 // NewClient creates a new S3 client
 func NewClient(bucket string) (*Client, error) {
 	cfg, err := config.LoadDefaultConfig(context.Background())
