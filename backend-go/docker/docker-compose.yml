@@ -16,7 +16,22 @@ services:
     restart: unless-stopped
     healthcheck:
       test:
-        ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+        [
+          "CMD",
+          "mongo",
+          "admin",
+          "--port",
+          "27017",
+          "--eval",
+          "db.adminCommand('ping').ok",
+        ]
       interval: 5s
       timeout: 2s
       retries: 20
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"

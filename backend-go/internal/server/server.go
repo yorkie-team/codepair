@@ -7,13 +7,18 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
+
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/auth"
+	"github.com/yorkie-team/codepair/backend/internal/core/files"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
@@ -31,9 +36,28 @@ func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
 
+	var storageClient storage.Client
+	if conf.Storage.Provider == "s3" {
+		storageClient, err = s3.NewClient(conf.Storage.S3.Bucket)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+		}
+	} else if conf.Storage.Provider == "minio" {
+		storageClient, err = minio.NewClient(
+			conf.Storage.Minio.Bucket, 
+			conf.Storage.Minio.Endpoint, 
+			conf.Storage.Minio.AccessKey, 
+			conf.Storage.Minio.SecretKey,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+		}
+	}
+
 	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
 	auth.Register(conf, e, mongodb.NewUserRepository(conf.Mongo, db))
 	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
+	files.Register(e, storageClient, mongodb.NewWorkspaceRepository(conf.Mongo, db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 
