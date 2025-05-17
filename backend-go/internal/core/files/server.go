@@ -18,5 +18,4 @@ func Register(e *echo.Echo, s3Client s3.ClientInterface, workspaceRepo Repositor
 
 	e.POST("/files", handler.createUploadPresignedURL)
 	e.GET("/files/:file_name", handler.createDownloadPresignedURL)
-	// TODO: e.POST("/files/export-markdown", handler.exportMarkdown)
 }
