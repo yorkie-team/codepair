@@ -33,10 +33,19 @@ func New(e *echo.Echo) (*CodePair, error) {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
 
-	s3Client, err := s3.NewClient(conf.Storage.S3.Bucket)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create s3 client: %w", err)
+	var objectStorageClient
+	if conf.Storage.Provider == "s3"  {
+		s3Client, err := s3.NewClient(conf.Storage.S3.Bucket)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+		}
+	} else if conf.Storage.Provider == "minio" {
+		s3Client, err := s3.NewClient(conf.Storage.S3.Bucket)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+		}
 	}
+	
 
 	hello.Register(e, mongodb.NewHelloRepository(db))
 	auth.Register(e, mongodb.NewUserRepository(db))
