@@ -43,7 +43,12 @@ func New(e *echo.Echo) (*CodePair, error) {
 			return nil, fmt.Errorf("failed to create s3 client: %w", err)
 		}
 	} else if conf.Storage.Provider == "minio" {
-		storageClient, err = minio.NewClient(conf.Storage.Minio.Bucket, conf.Storage.Minio.Endpoint, conf.Storage.Minio.AccessKey, conf.Storage.Minio.SecretKey)
+		storageClient, err = minio.NewClient(
+			conf.Storage.Minio.Bucket, 
+			conf.Storage.Minio.Endpoint, 
+			conf.Storage.Minio.AccessKey, 
+			conf.Storage.Minio.SecretKey,
+		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create s3 client: %w", err)
 		}
