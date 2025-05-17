@@ -19,7 +19,8 @@ type WorkspaceRepository struct {
 }
 
 // NewWorkspaceRepository creates a new instance of WorkspaceRepository.
-func NewWorkspaceRepository(conf *config.Mongo, client *mongo.Client) *WorkspaceRepository {
+func NewWorkspaceRepository(client *mongo.Client) *WorkspaceRepository {
+	conf := config.GetConfig().Mongo
 	return &WorkspaceRepository{
 		collection: client.Database(conf.DatabaseName).Collection("workspaces"),
 	}

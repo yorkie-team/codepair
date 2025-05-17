@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"net/http"
 	"strings"
 	"time"
@@ -11,13 +12,12 @@ import (
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
 // Service handles file operations.
 type Service struct {
-	s3Client      s3.ClientInterface
+	s3Client      storage.Client
 	workspaceRepo Repository
 }
 
