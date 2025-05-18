@@ -11,6 +11,7 @@ import { RunFeatureDto } from "./dto/run-feature.dto";
 import { RunFollowUpDto } from "./dto/run-followup.dto";
 import { followUpPromptTemplate } from "./prompt/followup";
 import { documentWritingPromptTemplate } from "./prompt/document";
+import { summarizePromptTemplate } from "./prompt/summarize";
 
 @Injectable()
 export class IntelligenceService {
@@ -24,6 +25,7 @@ export class IntelligenceService {
 			[Feature.GITHUB_ISSUE]: githubIssuePromptTemplate,
 			[Feature.GITHUB_PR]: githubPrPromptTemplate,
 			[Feature.DOCUMENT_WRITING]: documentWritingPromptTemplate,
+			[Feature.SUMMARIZE]: summarizePromptTemplate,
 		};
 		const selectedPrompt = promptTemplates[feature];
 

@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 export enum IntelligenceFeature {
 	GITHUB_ISSUE = "github-issue",
 	GITHUB_PR = "github-pr",
+	SUMMARIZE = "summarize",
 }
 
 export const generateFeatureList = (configService: ConfigService) => {
