@@ -48,9 +48,10 @@ Maintain the original tone and perspective when appropriate
 Retain technical terms, jargon, and specialized vocabulary if present
 Adapt summary length based on input length - provide minimal summarization for very short inputs
 Ensure the summary can stand alone and convey the main points of the original text
-For content with multiple distinct topics, include all major themes in the summary`,
-	suffix: "Please summarize the following text:\n\n{input}",
+For content with multiple distinct topics, include all major themes in the summary
+Summarize the following text - only output the summary itself—do not include any preamble, explanation, or introductory sentence`,
+	suffix: "Please summarize the following text:\n\n{content}.",
 	examplePrompt,
 	examples,
-	inputVariables: ["input"],
+	inputVariables: ["content"],
 });

@@ -31,6 +31,6 @@ export const generateFeatureList = (configService: ConfigService) => {
 			title: "Summarize",
 			icon: generateIconUrl("document.svg"),
 			feature: "summarize",
-		}
+		},
 	];
 };
