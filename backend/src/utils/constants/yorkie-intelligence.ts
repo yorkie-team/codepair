@@ -27,5 +27,10 @@ export const generateFeatureList = (configService: ConfigService) => {
 			icon: generateIconUrl("document.svg"),
 			feature: "document-writing",
 		},
+		{
+			title: "Summarize",
+			icon: generateIconUrl("document.svg"),
+			feature: "summarize",
+		}
 	];
 };

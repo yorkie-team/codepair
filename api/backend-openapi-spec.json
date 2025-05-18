@@ -1038,7 +1038,8 @@
               "enum": [
                 "github-issue",
                 "github-pr",
-                "document-writing"
+                "document-writing",
+                "summarize"
               ],
               "type": "string"
             }
