@@ -9,6 +9,7 @@ import (
 
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 
 	"github.com/labstack/echo/v4"
 
@@ -18,7 +19,6 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
@@ -33,25 +33,29 @@ func New(e *echo.Echo) (*CodePair, error) {
 
 	db, err := mongodb.Dial(e.Logger)
 	if err != nil {
-		return nil, fmt.Errorf("failed to dial mongo: %w", err)
+		return nil, fmt.Errorf("dial mongo: %w", err)
 	}
 
 	var storageClient storage.Client
-	if conf.Storage.Provider == "s3" {
+
+	switch conf.Storage.Provider {
+	case "s3":
 		storageClient, err = s3.NewClient(conf.Storage.S3.Bucket)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+			return nil, fmt.Errorf("s3 client: %w", err)
 		}
-	} else if conf.Storage.Provider == "minio" {
+	case "minio":
 		storageClient, err = minio.NewClient(
-			conf.Storage.Minio.Bucket, 
-			conf.Storage.Minio.Endpoint, 
-			conf.Storage.Minio.AccessKey, 
+			conf.Storage.Minio.Bucket,
+			conf.Storage.Minio.Endpoint,
+			conf.Storage.Minio.AccessKey,
 			conf.Storage.Minio.SecretKey,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create s3 client: %w", err)
+			return nil, fmt.Errorf("minio client: %w", err)
 		}
+	default:
+		return nil, fmt.Errorf("unsupported storage provider: %s", conf.Storage.Provider)
 	}
 
 	hello.Register(e, mongodb.NewHelloRepository(db))
@@ -72,7 +76,7 @@ func (c *CodePair) Start() error {
 	port := config.GetConfig().Server.Port
 	addr := fmt.Sprintf(":%d", port)
 	if err := c.echo.Start(addr); !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("failed to start server: %w", err)
+		return fmt.Errorf("start server: %w", err)
 	}
 	return nil
 }
