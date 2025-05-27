@@ -8,8 +8,6 @@ import (
 	"net/http"
 
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 
 	"github.com/labstack/echo/v4"
 
@@ -37,26 +35,7 @@ func New(e *echo.Echo) (*CodePair, error) {
 	}
 
 	var storageClient storage.Client
-
-	switch conf.Storage.Provider {
-	case "s3":
-		storageClient, err = s3.NewClient(conf.Storage.S3.Bucket)
-		if err != nil {
-			return nil, fmt.Errorf("s3 client: %w", err)
-		}
-	case "minio":
-		storageClient, err = minio.NewClient(
-			conf.Storage.Minio.Bucket,
-			conf.Storage.Minio.Endpoint,
-			conf.Storage.Minio.AccessKey,
-			conf.Storage.Minio.SecretKey,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("minio client: %w", err)
-		}
-	default:
-		return nil, fmt.Errorf("unsupported storage provider: %s", conf.Storage.Provider)
-	}
+	storageClient, err = storage.NewClient(conf.Storage)
 
 	hello.Register(e, mongodb.NewHelloRepository(db))
 	auth.Register(e, mongodb.NewUserRepository(db))
