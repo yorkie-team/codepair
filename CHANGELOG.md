@@ -7,6 +7,19 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.34] - 2025-05-28
+
+### Added
+
+- Implement Auth Service with GitHub OAuth by @window9u in https://github.com/yorkie-team/codepair/pull/467
+- Add Summarization Feature in Yorkie Intelligence by @krapie in https://github.com/yorkie-team/codepair/pull/479
+
+### Changed
+
+- Bump up Yorkie to v0.6.10 by @hackerwins in https://github.com/yorkie-team/codepair/pull/474
+- Bump up Yorkie to v0.6.12 by @hackerwins in https://github.com/yorkie-team/codepair/pull/477
+- Bump JamesIves/github-pages-deploy-action from 4.7.2 to 4.7.3 by @dependabot in https://github.com/yorkie-team/codepair/pull/460
+
 ## [0.1.33] - 2025-05-03
 
 ### Added
