@@ -34,11 +34,17 @@ func NewClient(cfg *config.Minio) (*Client, error) {
 
 	location := "us-east-1"
 
-	err = client.MakeBucket(context.Background(), cfg.Bucket, minio.MakeBucketOptions{Region: location})
+	exists, err := client.BucketExists(context.Background(), cfg.Bucket)
 	if err != nil {
-		return nil, fmt.Errorf("make bucket: %w", err)
-	} else {
-		log.Printf("Successfully created %s\n", cfg.Bucket)
+		return nil, fmt.Errorf("check bucket existence: %w", err)
+	}
+
+	if !exists {
+		err = client.MakeBucket(context.Background(), cfg.Bucket, minio.MakeBucketOptions{Region: location})
+		if err != nil {
+			return nil, fmt.Errorf("make bucket: %w", err)
+		}
+		log.Printf("Successfully created bucket '%s'\n", cfg.Bucket)
 	}
 
 	return &Client{
