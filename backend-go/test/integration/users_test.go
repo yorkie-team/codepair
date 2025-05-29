@@ -15,7 +15,7 @@ import (
 
 func TestFindUser(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
-	codePair := helper.SetupTestServer(t, conf)
+	codePair := helper.SetupTestServer(t)
 	user, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	gen := jwt.NewGenerator(conf.JWT)
 	url := codePair.ServerAddr() + "/users"
@@ -54,8 +54,8 @@ func TestFindUser(t *testing.T) {
 }
 
 func TestChangeUserNickName(t *testing.T) {
-	conf := helper.NewTestConfig(t.Name())
-	codePair := helper.SetupTestServer(t, conf)
+	helper.NewTestConfig(t.Name())
+	codePair := helper.SetupTestServer(t)
 	_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	url := codePair.ServerAddr() + "/users"
 

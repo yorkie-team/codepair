@@ -23,7 +23,8 @@ type CodePair struct {
 }
 
 // New creates a new CodePair server.
-func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+func New(e *echo.Echo) (*CodePair, error) {
+	conf := config.GetConfig()
 	e.HTTPErrorHandler = middleware.HTTPErrorHandler
 
 	db, err := mongodb.Dial(conf.Mongo, e.Logger)
