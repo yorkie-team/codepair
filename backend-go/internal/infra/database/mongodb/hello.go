@@ -20,7 +20,8 @@ type HelloRepository struct {
 }
 
 // NewHelloRepository creates a new instance of HelloRepository.
-func NewHelloRepository(conf *config.Mongo, client *mongo.Client) *HelloRepository {
+func NewHelloRepository(client *mongo.Client) *HelloRepository {
+	conf := config.GetConfig().Mongo
 	return &HelloRepository{
 		collection: client.Database(conf.DatabaseName).Collection(ColVisitor),
 	}

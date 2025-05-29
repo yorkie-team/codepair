@@ -15,8 +15,9 @@ func TestConfigWithEnvVars(t *testing.T) {
 		t.Setenv(key, value)
 	}
 
-	cfg, err := config.LoadConfig("")
+	err := config.LoadConfig("")
 	require.NoError(t, err, "LoadConfig should not fail with valid environment variables")
+	cfg := config.GetConfig()
 
 	// --- Server ---
 	assert.Equal(t, 3002, cfg.Server.Port, "Server.Port should reflect 'SERVER_PORT' env var")
@@ -69,12 +70,13 @@ func TestConfigWithEnvVars(t *testing.T) {
 
 func TestLoadConfigFromFile(t *testing.T) {
 	t.Run("invalid file path", func(t *testing.T) {
-		_, err := config.LoadConfig("invalidPath")
+		err := config.LoadConfig("invalidPath")
 		assert.Error(t, err)
 	})
 
 	t.Run("load config from file", func(t *testing.T) {
-		cfg, err := config.LoadConfig("config-full.test.yaml")
+		err := config.LoadConfig("config-full.test.yaml")
+		cfg := config.GetConfig()
 		require.NoError(t, err, "LoadConfig should not fail with a valid config.yaml file")
 
 		// --- Server ---
@@ -127,7 +129,8 @@ func TestLoadConfigFromFile(t *testing.T) {
 }
 
 func TestConfigWithDefaultValues(t *testing.T) {
-	cfg, err := config.LoadConfig("config-minimal.test.yaml")
+	err := config.LoadConfig("config-minimal.test.yaml")
+	cfg := config.GetConfig()
 	require.NoError(t, err, "LoadConfig should succeed with a minimal config file")
 
 	// --- Server defaults ---

@@ -13,7 +13,8 @@ import (
 )
 
 // Dial creates an instance of Mongo and dials the given MongoDB.
-func Dial(conf *config.Mongo, logger echo.Logger) (*mongo.Client, error) {
+func Dial(logger echo.Logger) (*mongo.Client, error) {
+	conf := config.GetConfig().Mongo
 	client, err := mongo.Connect(
 		options.Client().
 			ApplyURI(conf.ConnectionURI).

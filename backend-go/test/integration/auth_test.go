@@ -23,7 +23,7 @@ func TestRefreshToken(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	conf.JWT.AccessTokenExpirationTime = accessTokenExpirationTime
 	conf.JWT.RefreshTokenExpirationTime = refreshTokenExpirationTime
-	codePair := helper.SetupTestServer(t, conf)
+	codePair := helper.SetupTestServer(t)
 	getUserURL := codePair.ServerAddr() + getUserPath
 	refreshURL := codePair.ServerAddr() + refreshPath
 

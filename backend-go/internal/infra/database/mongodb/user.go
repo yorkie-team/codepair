@@ -21,7 +21,8 @@ type UserRepository struct {
 }
 
 // NewUserRepository creates a new instance of NewUserRepository.
-func NewUserRepository(conf *config.Mongo, client *mongo.Client) *UserRepository {
+func NewUserRepository(client *mongo.Client) *UserRepository {
+	conf := config.GetConfig().Mongo
 	return &UserRepository{
 		collection: client.Database(conf.DatabaseName).Collection(ColUsers),
 	}
