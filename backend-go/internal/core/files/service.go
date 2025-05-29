@@ -22,6 +22,10 @@ type Service struct {
 	workspaceRepo Repository
 }
 
+const (
+	MaxContentLength = 10_000_000
+)
+
 // createUploadPresignedURL creates presigned URL for upload.
 func (s *Service) createUploadPresignedURL(
 	ctx context.Context,

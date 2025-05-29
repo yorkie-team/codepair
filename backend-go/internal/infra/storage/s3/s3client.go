@@ -11,6 +11,10 @@ import (
 	codepairConfig "github.com/yorkie-team/codepair/backend/internal/config"
 )
 
+const (
+	urlExpirationTime = 15 * time.Minute
+)
+
 // Client handles interactions with AWS S3
 type Client struct {
 	client *s3.Client
@@ -47,7 +51,7 @@ func (s *Client) CreateUploadPresignedURL(
 		ContentLength: aws.Int64(contentLength),
 		ContentType:   aws.String(contentType),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = 15 * time.Minute
+		opts.Expires = urlExpirationTime
 	})
 
 	if err != nil {

@@ -12,6 +12,10 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/config"
 )
 
+const (
+	urlExpirationTime = 15 * time.Minute
+)
+
 // Client represents a wrapper around the minio.
 type Client struct {
 	client *minio.Client
@@ -32,11 +36,7 @@ func NewClient(cfg *config.Minio) (*Client, error) {
 
 	err = client.MakeBucket(context.Background(), cfg.Bucket, minio.MakeBucketOptions{Region: location})
 	if err != nil {
-		if errExists := minio.ToErrorResponse(err); errExists.Code == "BucketAlreadyOwnedByYou" {
-			log.Println("We already own this bucket")
-		} else {
-			return nil, fmt.Errorf("make bucket: %w", err)
-		}
+		return nil, fmt.Errorf("make bucket: %w", err)
 	} else {
 		log.Printf("Successfully created %s\n", cfg.Bucket)
 	}
@@ -54,7 +54,7 @@ func (c *Client) CreateUploadPresignedURL(
 	_ int64,
 	_ string,
 ) (string, error) {
-	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, time.Duration(15)*time.Minute)
+	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, urlExpirationTime)
 	if err != nil {
 		return "", fmt.Errorf("upload presigned URL: %w", err)
 	}
@@ -64,9 +64,8 @@ func (c *Client) CreateUploadPresignedURL(
 
 // CreateDownloadPresignedURL creates a presigned URL for downloading a file.
 func (c *Client) CreateDownloadPresignedURL(ctx context.Context, key string) (string, error) {
-	params := make(url.Values)
 	preSignedReq, err := c.client.PresignedGetObject(
-		ctx, c.bucket, key, time.Duration(15)*time.Minute, params)
+		ctx, c.bucket, key, time.Duration(15)*time.Minute, url.Values{})
 	if err != nil {
 		return "", fmt.Errorf("download presigned URL: %w", err)
 	}
