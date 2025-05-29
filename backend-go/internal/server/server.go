@@ -18,35 +18,35 @@ import (
 )
 
 type CodePair struct {
-	config *config.Config
-	echo   *echo.Echo
+	echo *echo.Echo
 }
 
 // New creates a new CodePair server.
-func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+func New(e *echo.Echo) (*CodePair, error) {
+	conf := config.GetConfig()
 	e.HTTPErrorHandler = middleware.HTTPErrorHandler
 
-	db, err := mongodb.Dial(conf.Mongo, e.Logger)
+	db, err := mongodb.Dial(e.Logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial mongo: %w", err)
 	}
 
-	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
-	auth.Register(conf, e, mongodb.NewUserRepository(conf.Mongo, db))
-	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
+	hello.Register(e, mongodb.NewHelloRepository(db))
+	auth.Register(e, mongodb.NewUserRepository(db))
+	users.Register(e, mongodb.NewUserRepository(db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 
 	cp := &CodePair{
-		config: conf,
-		echo:   e,
+		echo: e,
 	}
 	return cp, nil
 }
 
 // Start starts the server.
 func (c *CodePair) Start() error {
-	addr := fmt.Sprintf(":%d", c.config.Server.Port)
+	port := config.GetConfig().Server.Port
+	addr := fmt.Sprintf(":%d", port)
 	if err := c.echo.Start(addr); !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("failed to start server: %w", err)
 	}

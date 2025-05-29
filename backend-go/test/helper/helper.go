@@ -41,18 +41,21 @@ func NewTestConfig(testName string) *config.Config {
 	conf.Mongo.ConnectionURI = "mongodb://localhost:27017"
 	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())
 	conf.OAuth.FrontendBaseURL = "http://frontend-url"
+	config.SetConfig(conf)
 	return conf
 }
 
 // SetupTestServer creates a new Echo instance and server for integration tests.
 // It starts the server in a background goroutine and returns both the server and the GitHub test server.
-func SetupTestServer(t *testing.T, conf *config.Config) *server.CodePair {
+func SetupTestServer(t *testing.T) *server.CodePair {
 	t.Helper()
 	e := NewTestEcho(t)
 	backendURL := fmt.Sprintf("http://localhost:%d", e.Listener.Addr().(*net.TCPAddr).Port)
 	githubServer, githubConf := NewTestGithubServer(t, backendURL)
+	conf := config.GetConfig()
+
 	conf.OAuth.Github = githubConf
-	codePairServer, err := server.New(e, conf)
+	codePairServer, err := server.New(e)
 	assert.NoError(t, err)
 
 	// Start the server in a background goroutine.
