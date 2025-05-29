@@ -143,6 +143,10 @@ func (c *Config) validate() error {
 }
 
 func GetConfig() *Config {
+	if config == nil {
+		panic("config not initialized")
+	}
+
 	return config
 }
 
