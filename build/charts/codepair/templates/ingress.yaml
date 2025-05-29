@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  {{ if .Values.ingress.nginx.enabled }}
+  name: ingress-nginx
+  {{ else }}
+  name: {{ .Values.codepair.name }}
+  {{ end }}
+  namespace: {{ .Values.codepair.namespace }}
+  annotations:
+    {{ if .Values.ingress.awsAlb.enabled }}
+    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.awsAlb.scheme }}
+    # Set alb.ingress.kubernetes.io/certificate-arn annotation to TLS certificate's ARN issued by AWS ACM
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.awsAlb.certArn }}
+    alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.awsAlb.listenPorts }}
+    alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.awsAlb.backendProtocol }}
+    alb.ingress.kubernetes.io/backend-protocol-version: {{ .Values.ingress.awsAlb.backendProtocolVersion }}
+    alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.awsAlb.groupName }}
+    alb.ingress.kubernetes.io/group.order: {{ .Values.ingress.awsAlb.groupOrder | quote }}
+    {{ end }}
+    {{ if .Values.ingress.ncpAlb.enabled }}
+    # Set alb.ingress.kubernetes.io/ssl-certificate-no annotation to TLS certificate's number issued by NCP
+    alb.ingress.kubernetes.io/ssl-certificate-no: "{{ .Values.ingress.ncpAlb.certNo }}"
+    alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.ncpAlb.listenPorts }}
+    alb.ingress.kubernetes.io/ssl-redirect: {{ .Values.ingress.ncpAlb.sslRedirect }}
+    alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.ncpAlb.backendProtocol }}
+    alb.ingress.kubernetes.io/enable-http2: {{ .Values.ingress.ncpAlb.enableHttp2 }}
+    # Set alb.ingress.kubernetes.io/healthcheck-path annotation to health check path
+    alb.ingress.kubernetes.io/healthcheck-path: {{ .Values.ingress.ncpAlb.healthcheckPath }}
+    {{ end }}
+    {{ if .Values.ingress.nginx.enabled }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.nginx.rewriteTarget }}
+    kubernetes.io/ingress.class: "nginx"
+    {{ end }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  rules:
+    {{ if .Values.ingress.hosts.enabled }}
+    - host: {{ .Values.ingress.hosts.apiHost }}
+      http:
+    {{ else }}
+    - http:
+    {{ end }}
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.codepair.name }}
+                port:
+                  number: {{ .Values.codepair.ports.serverPort }}
