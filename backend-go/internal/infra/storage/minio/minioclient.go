@@ -8,6 +8,7 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/yorkie-team/codepair/backend/internal/config"
 )
 
 // Client represents a wrapper around the minio.
@@ -17,9 +18,9 @@ type Client struct {
 }
 
 // NewClient initializes a new Client instance to interact with a specified bucket on the given endpoint.
-func NewClient(bucket string, endpoint string, accessKey string, secretKey string) (*Client, error) {
-	client, err := minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
+func NewClient(cfg *config.Minio) (*Client, error) {
+	client, err := minio.New(cfg.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(cfg.AccessKey, cfg.SecretKey, ""),
 		Secure: false,
 	})
 	if err != nil {
@@ -28,7 +29,7 @@ func NewClient(bucket string, endpoint string, accessKey string, secretKey strin
 
 	location := "us-east-1"
 
-	err = client.MakeBucket(context.Background(), bucket, minio.MakeBucketOptions{Region: location})
+	err = client.MakeBucket(context.Background(), cfg.Bucket, minio.MakeBucketOptions{Region: location})
 	if err != nil {
 		if errExists := minio.ToErrorResponse(err); errExists.Code == "BucketAlreadyOwnedByYou" {
 			log.Println("We already own this bucket")
@@ -36,12 +37,12 @@ func NewClient(bucket string, endpoint string, accessKey string, secretKey strin
 			log.Fatalln(err)
 		}
 	} else {
-		log.Printf("Successfully created %s\n", bucket)
+		log.Printf("Successfully created %s\n", cfg.Bucket)
 	}
 
 	return &Client{
 		client: client,
-		bucket: bucket,
+		bucket: cfg.Bucket,
 	}, nil
 }
 

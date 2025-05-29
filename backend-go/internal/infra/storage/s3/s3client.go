@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	codepairConfig "github.com/yorkie-team/codepair/backend/internal/config"
 )
 
 // Client handles interactions with AWS S3
@@ -17,17 +18,17 @@ type Client struct {
 }
 
 // NewClient creates a new S3 client
-func NewClient(bucket string) (*Client, error) {
-	cfg, err := config.LoadDefaultConfig(context.Background())
+func NewClient(cfg *codepairConfig.S3) (*Client, error) {
+	s3Config, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("AWS config: %w", err)
 	}
 
-	client := s3.NewFromConfig(cfg)
+	client := s3.NewFromConfig(s3Config)
 
 	return &Client{
 		client: client,
-		bucket: bucket,
+		bucket: cfg.Bucket,
 	}, nil
 }
 
