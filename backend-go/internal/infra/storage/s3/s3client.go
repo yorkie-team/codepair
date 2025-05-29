@@ -20,7 +20,7 @@ type Client struct {
 func NewClient(bucket string) (*Client, error) {
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
-		return nil, fmt.Errorf("failed to load AWS config: %w", err)
+		return nil, fmt.Errorf("AWS config: %w", err)
 	}
 
 	client := s3.NewFromConfig(cfg)
@@ -50,7 +50,7 @@ func (s *Client) CreateUploadPresignedURL(
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("failed to create presigned URL: %w", err)
+		return "", fmt.Errorf("presigned URL: %w", err)
 	}
 
 	return presignedReq.URL, nil
@@ -68,7 +68,7 @@ func (s *Client) CreateDownloadPresignedURL(ctx context.Context, key string) (st
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("failed to create presigned URL: %w", err)
+		return "", fmt.Errorf("presigned URL: %w", err)
 	}
 
 	return presignedReq.URL, nil

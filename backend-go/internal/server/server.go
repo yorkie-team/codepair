@@ -36,6 +36,9 @@ func New(e *echo.Echo) (*CodePair, error) {
 
 	var storageClient storage.Client
 	storageClient, err = storage.NewClient(conf.Storage)
+	if err != nil {
+		return nil, fmt.Errorf("storage client: %w", err)
+	}
 
 	hello.Register(e, mongodb.NewHelloRepository(db))
 	auth.Register(e, mongodb.NewUserRepository(db))
