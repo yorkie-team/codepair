@@ -16,19 +16,13 @@ type Handler struct {
 
 // createUploadPresignedURL handles POST /files requests.
 func (h *Handler) createUploadPresignedURL(c echo.Context) error {
-	var req models.CreateUploadPresignedUrlRequest
-	if err := c.Bind(&req); err != nil {
+	req := &models.CreateUploadPresignedUrlRequest{}
+	if err := c.Bind(req); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid request body")
 	}
 
-	if req.WorkspaceId == "" {
-		return middleware.NewError(http.StatusBadRequest, "workspace_id is required")
-	}
-	if req.ContentLength <= 0 {
-		return middleware.NewError(http.StatusBadRequest, "content_length must be positive")
-	}
-	if req.ContentType == "" {
-		return middleware.NewError(http.StatusBadRequest, "content_type is required")
+	if err := req.Validate(); err != nil {
+		return middleware.NewError(http.StatusBadRequest, "validation failed", err)
 	}
 
 	resp, err := h.service.createUploadPresignedURL(

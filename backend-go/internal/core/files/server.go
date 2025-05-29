@@ -7,9 +7,9 @@ import (
 )
 
 // Register creates a new handler for files endpoints and registers the routes.
-func Register(e *echo.Echo, s3Client storage.Client, workspaceRepo Repository) {
+func Register(e *echo.Echo, storageClient storage.Client, workspaceRepo Repository) {
 	svc := &Service{
-		s3Client:      s3Client,
+		storageClient: storageClient,
 		workspaceRepo: workspaceRepo,
 	}
 	handler := &Handler{

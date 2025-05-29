@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
+	"github.com/lithammer/shortuuid/v4"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
@@ -18,7 +18,7 @@ import (
 
 // Service handles file operations.
 type Service struct {
-	s3Client      storage.Client
+	storageClient storage.Client
 	workspaceRepo Repository
 }
 
@@ -49,7 +49,7 @@ func (s *Service) createUploadPresignedURL(
 
 	fileKey := generateFileKey(workspace.Slug, extension)
 
-	url, err := s.s3Client.CreateUploadPresignedURL(ctx, fileKey, contentLength, contentType)
+	url, err := s.storageClient.CreateUploadPresignedURL(ctx, fileKey, contentLength, contentType)
 	if err != nil {
 		return nil, middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
@@ -62,7 +62,7 @@ func (s *Service) createUploadPresignedURL(
 
 // createDownloadPresignedURL creates presigned URL for download.
 func (s *Service) createDownloadPresignedURL(ctx context.Context, fileKey string) (string, error) {
-	url, err := s.s3Client.CreateDownloadPresignedURL(ctx, fileKey)
+	url, err := s.storageClient.CreateDownloadPresignedURL(ctx, fileKey)
 	if err != nil {
 		return "", FileNotFoundError
 	}
@@ -72,18 +72,5 @@ func (s *Service) createDownloadPresignedURL(ctx context.Context, fileKey string
 
 // generateFileKey generates a file key with slug and extension.
 func generateFileKey(slug, extension string) string {
-	return fmt.Sprintf("%s-%s.%s", slug, generateRandomString(8), extension)
-}
-
-// generateRandomString generates a random string of given length.
-func generateRandomString(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-	result := make([]byte, length)
-
-	for i := 0; i < length; i++ {
-		result[i] = charset[time.Now().UnixNano()%int64(len(charset))]
-		time.Sleep(1 * time.Nanosecond)
-	}
-
-	return string(result)
+	return fmt.Sprintf("%s-%s.%s", slug, shortuuid.New(), extension)
 }
