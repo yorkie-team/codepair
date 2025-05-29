@@ -51,7 +51,7 @@ func (s *Client) CreateUploadPresignedURL(
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("presigned URL: %w", err)
+		return "", fmt.Errorf("upload presigned URL: %w", err)
 	}
 
 	return presignedReq.URL, nil
@@ -69,7 +69,7 @@ func (s *Client) CreateDownloadPresignedURL(ctx context.Context, key string) (st
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("presigned URL: %w", err)
+		return "", fmt.Errorf("download presigned URL: %w", err)
 	}
 
 	return presignedReq.URL, nil

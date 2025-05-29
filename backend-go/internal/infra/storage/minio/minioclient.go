@@ -2,6 +2,7 @@ package minio
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/url"
 	"time"
@@ -24,7 +25,7 @@ func NewClient(cfg *config.Minio) (*Client, error) {
 		Secure: false,
 	})
 	if err != nil {
-		log.Fatalln(err)
+		return nil, fmt.Errorf("minio client: %w", err)
 	}
 
 	location := "us-east-1"
@@ -34,7 +35,7 @@ func NewClient(cfg *config.Minio) (*Client, error) {
 		if errExists := minio.ToErrorResponse(err); errExists.Code == "BucketAlreadyOwnedByYou" {
 			log.Println("We already own this bucket")
 		} else {
-			log.Fatalln(err)
+			return nil, fmt.Errorf("make bucket: %w", err)
 		}
 	} else {
 		log.Printf("Successfully created %s\n", cfg.Bucket)
@@ -55,7 +56,7 @@ func (c *Client) CreateUploadPresignedURL(
 ) (string, error) {
 	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, time.Duration(15)*time.Minute)
 	if err != nil {
-		log.Fatalln(err)
+		return "", fmt.Errorf("upload presigned URL: %w", err)
 	}
 
 	return presignedReq.String(), nil
@@ -67,7 +68,7 @@ func (c *Client) CreateDownloadPresignedURL(ctx context.Context, key string) (st
 	preSignedReq, err := c.client.PresignedGetObject(
 		ctx, c.bucket, key, time.Duration(15)*time.Minute, params)
 	if err != nil {
-		log.Fatalln(err)
+		return "", fmt.Errorf("download presigned URL: %w", err)
 	}
 
 	return preSignedReq.String(), nil
