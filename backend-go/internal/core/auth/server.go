@@ -10,7 +10,8 @@ import (
 )
 
 // Register creates a new handler for users endpoints and registers the routes.
-func Register(conf *config.Config, e *echo.Echo, repo users.Repository) {
+func Register(e *echo.Echo, repo users.Repository) {
+	conf := config.GetConfig()
 	gConfig := &oauth2.Config{
 		ClientID:     conf.OAuth.Github.ClientID,
 		ClientSecret: conf.OAuth.Github.ClientSecret,
