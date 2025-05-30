@@ -1843,8 +1843,10 @@
             "description": "Workspace ID where the file will be stored"
           },
           "contentLength": {
-            "type": "number",
-            "description": "Size of the content to upload"
+            "type": "integer",
+            "format": "int64",
+            "description": "Size of the content to upload",
+            "minLength": 1
           },
           "contentType": {
             "type": "string",
