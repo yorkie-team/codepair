@@ -17,11 +17,17 @@ type Client interface {
 func NewClient(conf *config.Storage) (Client, error) {
 	switch conf.Provider {
 	case "s3":
-		return s3.NewClient(conf.S3)
+		client, err := s3.NewClient(conf.S3)
+		if err != nil {
+			return nil, fmt.Errorf("S3 client: %w", err)
+		}
+		return client, nil
 	case "minio":
-		return minio.NewClient(
-			conf.Minio,
-		)
+		client, err := minio.NewClient(conf.Minio)
+		if err != nil {
+			return nil, fmt.Errorf("minio client: %w", err)
+		}
+		return client, nil
 	default:
 		return nil, fmt.Errorf("unsupported storage provider: %s", conf.Provider)
 	}
