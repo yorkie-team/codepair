@@ -10,10 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	codepairConfig "github.com/yorkie-team/codepair/backend/internal/config"
-)
-
-const (
-	urlExpirationTime = 15 * time.Minute
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 )
 
 // Client handles interactions with AWS S3
@@ -52,7 +49,7 @@ func (s *Client) CreateUploadPresignedURL(
 		ContentLength: aws.Int64(contentLength),
 		ContentType:   aws.String(contentType),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = urlExpirationTime
+		opts.Expires = storage.UrlExpirationTime
 	})
 
 	if err != nil {

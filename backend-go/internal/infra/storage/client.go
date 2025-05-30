@@ -2,6 +2,11 @@ package storage
 
 import (
 	"context"
+	"time"
+)
+
+const (
+	UrlExpirationTime = 15 * time.Minute
 )
 
 type Client interface {

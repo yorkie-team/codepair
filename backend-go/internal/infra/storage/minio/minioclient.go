@@ -11,10 +11,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
-)
-
-const (
-	urlExpirationTime = 15 * time.Minute
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 )
 
 // Client represents a wrapper around the minio.
@@ -61,7 +58,7 @@ func (c *Client) CreateUploadPresignedURL(
 	_ int64,
 	_ string,
 ) (string, error) {
-	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, urlExpirationTime)
+	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, storage.UrlExpirationTime)
 	if err != nil {
 		return "", fmt.Errorf("upload presigned URL: %w", err)
 	}

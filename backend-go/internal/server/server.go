@@ -7,10 +7,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
-
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
@@ -19,6 +15,9 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 

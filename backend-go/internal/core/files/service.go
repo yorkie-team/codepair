@@ -9,11 +9,10 @@ import (
 
 	"github.com/lithammer/shortuuid/v4"
 
-	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
-
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
