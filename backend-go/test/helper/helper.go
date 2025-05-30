@@ -41,7 +41,17 @@ func NewTestConfig(testName string) *config.Config {
 	conf.Mongo.ConnectionURI = "mongodb://localhost:27017"
 	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())
 	conf.OAuth.FrontendBaseURL = "http://frontend-url"
+
+	conf.Storage.Minio = &config.Minio{
+		Endpoint:  "localhost:9000",
+		Bucket:    "test-codepair",
+		AccessKey: "minioadmin",
+		SecretKey: "minioadmin",
+	}
+	conf.Storage.Provider = "minio"
+
 	config.SetConfig(conf)
+
 	return conf
 }
 

@@ -6,7 +6,7 @@ type CreateUploadPresignedUrlRequest struct {
 	WorkspaceId string `json:"workspaceId"`
 
 	// Size of the content to upload
-	ContentLength float32 `json:"contentLength"`
+	ContentLength int64 `json:"contentLength"`
 
 	// MIME type of the file to be uploaded
 	ContentType string `json:"contentType"`

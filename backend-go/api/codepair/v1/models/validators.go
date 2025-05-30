@@ -11,3 +11,19 @@ func (r *HelloRequest) Validate() error {
 
 	return nil
 }
+
+func (r *CreateUploadPresignedUrlRequest) Validate() error {
+	if r.WorkspaceId == "" {
+		return RequiredFieldError("workspaceId")
+	}
+
+	if r.ContentLength < 1 {
+		return MinLengthError("contentLength", 1)
+	}
+
+	if r.ContentType == "" {
+		return RequiredFieldError("contentType")
+	}
+
+	return nil
+}
