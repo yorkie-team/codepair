@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/lithammer/shortuuid/v4"
+
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
