@@ -49,7 +49,7 @@ func (s *Client) CreateUploadPresignedURL(
 		ContentLength: aws.Int64(contentLength),
 		ContentType:   aws.String(contentType),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = storage.UrlExpirationTime
+		opts.Expires = storage.URLExpirationTime
 	})
 
 	if err != nil {

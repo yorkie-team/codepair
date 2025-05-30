@@ -58,7 +58,7 @@ func (c *Client) CreateUploadPresignedURL(
 	_ int64,
 	_ string,
 ) (string, error) {
-	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, storage.UrlExpirationTime)
+	presignedReq, err := c.client.PresignedPutObject(ctx, c.bucket, key, storage.URLExpirationTime)
 	if err != nil {
 		return "", fmt.Errorf("upload presigned URL: %w", err)
 	}

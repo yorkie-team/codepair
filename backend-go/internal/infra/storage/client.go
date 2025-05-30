@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	UrlExpirationTime = 15 * time.Minute
+	URLExpirationTime = 15 * time.Minute
 )
 
 type Client interface {
