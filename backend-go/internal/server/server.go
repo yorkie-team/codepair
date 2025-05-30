@@ -8,6 +8,8 @@ import (
 	"net/http"
 
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 
 	"github.com/labstack/echo/v4"
 
@@ -35,7 +37,7 @@ func New(e *echo.Echo) (*CodePair, error) {
 	}
 
 	var storageClient storage.Client
-	storageClient, err = storage.NewClient(conf.Storage)
+	storageClient, err = newStorageClient(conf.Storage)
 	if err != nil {
 		return nil, fmt.Errorf("storage client: %w", err)
 	}
@@ -70,4 +72,23 @@ func (c *CodePair) Shutdown(ctx context.Context) error {
 func (c *CodePair) ServerAddr() string {
 	port := c.echo.ListenerAddr().(*net.TCPAddr).Port
 	return fmt.Sprintf("http://localhost:%d", port)
+}
+
+func newStorageClient(conf *config.Storage) (storage.Client, error) {
+	switch conf.Provider {
+	case "s3":
+		client, err := s3.NewClient(conf.S3)
+		if err != nil {
+			return nil, fmt.Errorf("S3 client: %w", err)
+		}
+		return client, nil
+	case "minio":
+		client, err := minio.NewClient(conf.Minio)
+		if err != nil {
+			return nil, fmt.Errorf("minio client: %w", err)
+		}
+		return client, nil
+	default:
+		return nil, fmt.Errorf("unsupported storage provider: %s", conf.Provider)
+	}
 }
