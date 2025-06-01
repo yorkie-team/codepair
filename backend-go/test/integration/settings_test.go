@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/test/helper"
 )
 
@@ -19,7 +20,7 @@ func TestGetSettings(t *testing.T) {
 
 	t.Run("get settings without file upload and yorkie intelligence", func(t *testing.T) {
 		conf.Storage.Provider = "false"
-		conf.Yorkie.Intelligence = "false"
+		conf.Yorkie.Intelligence = config.DefaultYorkieIntelligence
 
 		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 
@@ -32,7 +33,7 @@ func TestGetSettings(t *testing.T) {
 
 	t.Run("get settings with file upload and yorkie intelligence", func(t *testing.T) {
 		conf.Storage.Provider = "s3"
-		conf.Yorkie.Intelligence = "true"
+		conf.Yorkie.Intelligence = "ollama:gemma2:2b"
 
 		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 
@@ -45,7 +46,7 @@ func TestGetSettings(t *testing.T) {
 
 	t.Run("get settings with file upload", func(t *testing.T) {
 		conf.Storage.Provider = "minio"
-		conf.Yorkie.Intelligence = "false"
+		conf.Yorkie.Intelligence = config.DefaultYorkieIntelligence
 
 		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 
