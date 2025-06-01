@@ -1937,7 +1937,32 @@
           },
           "config": {
             "type": "object",
-            "description": "Additional Yorkie Intelligence configuration"
+            "description": "Yorkie Intelligence Config",
+            "properties": {
+              "features": {
+                "type": "array",
+                "description": "List of features",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "icon": {
+                      "type": "string"
+                    },
+                    "feature": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "icon",
+                    "feature"
+                  ]
+                }
+              }
+            }
           }
         },
         "required": [

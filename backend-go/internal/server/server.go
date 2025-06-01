@@ -13,6 +13,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/core/auth"
 	"github.com/yorkie-team/codepair/backend/internal/core/files"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/core/settings"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
@@ -45,6 +46,7 @@ func New(e *echo.Echo) (*CodePair, error) {
 	auth.Register(e, mongodb.NewUserRepository(db))
 	users.Register(e, mongodb.NewUserRepository(db))
 	files.Register(e, storageClient, mongodb.NewWorkspaceRepository(db))
+	settings.Register(e)
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 
