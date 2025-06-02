@@ -2,13 +2,13 @@ package users
 
 import (
 	"errors"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )

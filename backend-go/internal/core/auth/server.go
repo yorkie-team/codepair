@@ -2,11 +2,11 @@ package auth
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/yorkie-team/codepair/backend/internal/jwt"
 	"golang.org/x/oauth2"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
+	"github.com/yorkie-team/codepair/backend/internal/jwt"
 )
 
 // Register creates a new handler for users endpoints and registers the routes.
