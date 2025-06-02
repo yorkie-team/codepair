@@ -122,7 +122,7 @@ func (h *Handler) fetchGithubUserProfileID(c echo.Context, oauthToken *oauth2.To
 		return "", middleware.NewError(
 			http.StatusUnauthorized,
 			"server internal error",
-			fmt.Errorf("github user ID not found in profile: %w", err),
+			fmt.Errorf("github user ID not found in profile"),
 		)
 	}
 	return profile.ID, nil
