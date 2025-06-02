@@ -25,6 +25,7 @@ Yorkie:
   APIAddr: "https://config-yorkie:8080"
   ProjectName: "config_project"
   ProjectSecretKey: "config_project_secret"
+  Intelligence: ""
 
 Mongo:
   ConnectionTimeout: "10s"
