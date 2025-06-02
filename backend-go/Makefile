@@ -14,6 +14,9 @@ fmt: ## applies format and simplify codes
 lint: ## runs the golang-ci lint, checks for lint violations
 	golangci-lint run
 
+fix: ## runs the golang-ci lint and fix the violations if possible
+	golangci-lint run --fix
+
 test: ## run tests
 	go test -v ./...
 
