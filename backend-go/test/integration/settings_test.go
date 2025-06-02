@@ -19,7 +19,7 @@ func TestGetSettings(t *testing.T) {
 	url := codePair.ServerAddr() + "/settings"
 
 	t.Run("get settings without file upload and yorkie intelligence", func(t *testing.T) {
-		conf.Storage.Provider = "false"
+		conf.Storage.Provider = ""
 		conf.Yorkie.Intelligence = config.DefaultYorkieIntelligence
 
 		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
@@ -58,7 +58,7 @@ func TestGetSettings(t *testing.T) {
 	})
 
 	t.Run("get settings with yorkie intelligence", func(t *testing.T) {
-		conf.Storage.Provider = "false"
+		conf.Storage.Provider = ""
 		conf.Yorkie.Intelligence = "ollama:gemma2:2b"
 
 		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)

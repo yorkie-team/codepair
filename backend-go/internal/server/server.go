@@ -36,16 +36,17 @@ func New(e *echo.Echo) (*CodePair, error) {
 		return nil, fmt.Errorf("dial mongo: %w", err)
 	}
 
-	var storageClient storage.Client
-	storageClient, err = newStorageClient(conf.Storage)
-	if err != nil {
-		return nil, fmt.Errorf("storage client: %w", err)
-	}
-
 	hello.Register(e, mongodb.NewHelloRepository(db))
 	auth.Register(e, mongodb.NewUserRepository(db))
 	users.Register(e, mongodb.NewUserRepository(db))
-	files.Register(e, storageClient, mongodb.NewWorkspaceRepository(db))
+	if conf.Storage.Provider != "" {
+		var storageClient storage.Client
+		storageClient, err = newStorageClient(conf.Storage)
+		if err != nil {
+			return nil, fmt.Errorf("storage client: %w", err)
+		}
+		files.Register(e, storageClient, mongodb.NewWorkspaceRepository(db))
+	}
 	settings.Register(e)
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))

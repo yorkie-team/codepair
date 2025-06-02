@@ -16,13 +16,13 @@ func (h *Handler) getSettings(c echo.Context) error {
 	cfg := config.GetConfig()
 	return c.JSON(http.StatusOK, models.FindSettingsResponse{
 		YorkieIntelligence: models.YorkieIntelligenceConfig{
-			Enable: cfg.Yorkie.Intelligence != "false",
+			Enable: cfg.Yorkie.Intelligence != "",
 			Config: models.YorkieIntelligenceConfigConfig{
 				Features: generateFeatureList(cfg),
 			},
 		},
 		FileUpload: models.FileUploadConfig{
-			Enable: cfg.Storage.Provider != "false",
+			Enable: cfg.Storage.Provider != "",
 		},
 	})
 }
