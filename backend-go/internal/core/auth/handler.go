@@ -155,18 +155,18 @@ func (h *Handler) buildFrontendRedirectURL(accessToken, refreshToken string) (st
 
 func (h *Handler) refreshToken(c echo.Context) error {
 	var req models.RefreshTokenRequest
-	if err := c.Bind(req); err != nil {
+	if err := c.Bind(&req); err != nil {
 		return middleware.NewError(http.StatusUnauthorized, "invalid request")
 	}
 
-	if err := c.Validate(req); err != nil {
+	if err := req.Validate(); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid request")
 	}
 
 	userID, err := h.jwtGenerator.ParseRefreshToken(req.RefreshToken)
 	if err != nil {
 		return middleware.NewError(
-			http.StatusInternalServerError,
+			http.StatusUnauthorized,
 			"server internal error",
 			fmt.Errorf("failed to parse refresh token: %w", err),
 		)
