@@ -8,12 +8,9 @@ import (
 
 // Register creates a new handler for files endpoints and registers the routes.
 func Register(e *echo.Echo, storageClient storage.Client, workspaceRepo Repository) {
-	svc := &Service{
+	handler := &Handler{
 		storageClient: storageClient,
 		workspaceRepo: workspaceRepo,
-	}
-	handler := &Handler{
-		service: svc,
 	}
 
 	e.POST("/files", handler.createUploadPresignedURL)

@@ -23,16 +23,12 @@ func Register(e *echo.Echo, repo users.Repository) {
 		},
 	}
 
-	svc := &Service{
-		github:               gConfig,
-		githubUserProfileURL: conf.OAuth.Github.UserProfileURL,
+	handler := &Handler{
 		jwtGenerator:         jwt.NewGenerator(conf.JWT),
 		userRepository:       repo,
-	}
-
-	handler := &Handler{
-		frontendURL: conf.OAuth.FrontendBaseURL,
-		service:     svc,
+		githubOAuthConfig:    gConfig,
+		githubUserProfileURL: conf.OAuth.Github.UserProfileURL,
+		frontendURL:          conf.OAuth.FrontendBaseURL,
 	}
 
 	e.GET("/auth/login/github", handler.githubLogin)
