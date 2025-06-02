@@ -16,11 +16,3 @@ JWT:
 Mongo:
   ConnectionURI: "mongodb://config-minimal-yaml-mongo:27017/codepair"
   DatabaseName: "config-minimal-yaml-codepair"
-
-Storage:
-  Provider: "minio"
-  Minio:
-    Bucket: "config-minimal-yaml"
-    Endpoint: "http://config-minimal-yaml:9000"
-    AccessKey: "config-minimal-yaml"
-    SecretKey: "config-minimal-yaml"
