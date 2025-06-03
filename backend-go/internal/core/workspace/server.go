@@ -4,11 +4,8 @@ import "github.com/labstack/echo/v4"
 
 // Register creates a new handler for users endpoints and registers the routes.
 func Register(e *echo.Echo, repo Repository) {
-	svc := &Service{
-		workspaceRepository: repo,
-	}
 	handler := &Handler{
-		service: svc,
+		workspaceRepository: repo,
 	}
 
 	e.POST("/workspaces", handler.createWorkspace)

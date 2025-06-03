@@ -9,6 +9,9 @@ var (
 	// ErrUserNotFound No matching user found
 	ErrUserNotFound = errors.New("user not found")
 
+	// ErrWorkspaceNameConflict workspace name already exists user nickname or workspace title
+	ErrWorkspaceNameConflict = errors.New("workspace name conflicts")
+
 	// ErrUserAlreadyExists user already exists
 	ErrUserAlreadyExists = errors.New("user already exists")
 
