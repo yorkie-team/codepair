@@ -39,6 +39,7 @@ var EnvVarMap = map[string]string{
 	"Yorkie.ApiAddr":          "YORKIE_API_ADDR",
 	"Yorkie.ProjectName":      "YORKIE_PROJECT_NAME",
 	"Yorkie.ProjectSecretKey": "YORKIE_PROJECT_SECRET_KEY",
+	"Yorkie.Intelligence":     "YORKIE_INTELLIGENCE",
 
 	// =================== Mongo ===================
 	// The following config values are NOT defined with default values at the code level.
@@ -101,6 +102,7 @@ var TestEnvs = map[string]string{
 	"YORKIE_API_ADDR":           "http://test_value",
 	"YORKIE_PROJECT_NAME":       "test_value",
 	"YORKIE_PROJECT_SECRET_KEY": "test_value",
+	"YORKIE_INTELLIGENCE":       "false",
 
 	// --- Mongo ---
 	// ConnectionURI must be a valid URL; we use a mongodb:// URL.
