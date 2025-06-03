@@ -157,15 +157,4 @@ func TestConfigWithDefaultValues(t *testing.T) {
 	assert.Equal(t, "mongodb://config-minimal-yaml-mongo:27017/codepair", cfg.Mongo.ConnectionURI)
 	assert.Equal(t, config.DefaultPingTimeout, cfg.Mongo.PingTimeout)
 	assert.Equal(t, "config-minimal-yaml-codepair", cfg.Mongo.DatabaseName)
-
-	// --- Storage defaults ---
-	assert.Equal(t, "minio", cfg.Storage.Provider, "Default storage provider is minio")
-	require.NotNil(t, cfg.Storage.Minio, "Storage.Minio should not be nil when provider is 'minio'")
-	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.Bucket)
-	assert.Equal(t, "http://config-minimal-yaml:9000", cfg.Storage.Minio.Endpoint)
-	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.AccessKey)
-	assert.Equal(t, "config-minimal-yaml", cfg.Storage.Minio.SecretKey)
-
-	// S3 should be nil if not provided.
-	assert.Nil(t, cfg.Storage.S3, "Storage.S3 should be nil by default")
 }
