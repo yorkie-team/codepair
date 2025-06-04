@@ -11,10 +11,11 @@ import (
 
 // ColVisitor is the name of the workspaceCollection storing visitor records.
 const (
-	ColVisitor       = "hello_visitors"
-	ColUsers         = "users"
-	ColWorkspace     = "workspaces"
-	ColUserWorkspace = "user_workspaces"
+	ColVisitor             = "hello_visitors"
+	ColUsers               = "users"
+	ColWorkspace           = "workspaces"
+	ColUserWorkspace       = "user_workspaces"
+	ColWorkspaceInvitation = "workspace_invitations"
 )
 
 type collectionInfo struct {
@@ -58,6 +59,14 @@ var collectionInfos = []collectionInfo{
 			{
 				Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "workspace_id", Value: 1}},
 				Options: options.Index().SetUnique(true),
+			},
+		},
+	},
+	{
+		name: ColWorkspaceInvitation,
+		indexes: []mongo.IndexModel{
+			{
+				Keys: bson.D{{Key: "token", Value: 1}},
 			},
 		},
 	},
