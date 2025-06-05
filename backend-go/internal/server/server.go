@@ -32,8 +32,10 @@ func New(e *echo.Echo) (*CodePair, error) {
 	conf := config.GetConfig()
 	e.HTTPErrorHandler = middleware.HTTPErrorHandler
 
-	db, err := mongodb.Dial(e.Logger)
-	if err != nil {
+	db, err := mongodb.Dial()
+	if err == nil {
+		e.Logger.Infof("MongoDB connected, URI: %s, DB: %s", conf.Mongo.ConnectionURI, conf.Mongo.DatabaseName)
+	} else {
 		return nil, fmt.Errorf("dial mongo: %w", err)
 	}
 

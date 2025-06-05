@@ -1,10 +1,12 @@
 package workspace
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
@@ -48,6 +50,9 @@ func (h *Handler) findWorkspaceBySlug(c echo.Context) error {
 
 	workspace, err := h.workspaceRepository.FindWorkspaceBySlug(payload.Subject, slug)
 	if err != nil {
+		if errors.Is(err, database.ErrWorkspaceNotFound) || errors.Is(err, database.ErrUserWorkspaceNotFound) {
+			return c.NoContent(http.StatusNotFound)
+		}
 		return err
 	}
 
@@ -75,7 +80,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 	}
 	cursor := c.QueryParam("cursor")
 
-	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize+1)
+	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize)
 	if err != nil {
 		return err
 	}

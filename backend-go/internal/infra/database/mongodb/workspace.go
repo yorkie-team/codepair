@@ -71,7 +71,14 @@ func (r *WorkspaceRepository) CreateWorkspace(userID, title string) (entity.Work
 		UpdatedAt: now,
 	}
 
-	res, err := r.workspace.InsertOne(ctx, workspace)
+	doc := bson.M{
+		"title":      workspace.Title,
+		"slug":       workspace.Slug,
+		"created_at": workspace.CreatedAt,
+		"updated_at": workspace.UpdatedAt,
+	}
+
+	res, err := r.workspace.InsertOne(ctx, doc)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
 			return entity.Workspace{}, database.ErrDuplicatedKey
@@ -83,12 +90,12 @@ func (r *WorkspaceRepository) CreateWorkspace(userID, title string) (entity.Work
 		workspace.ID = entity.ID(oid.Hex())
 	}
 
-	userWorkspace := entity.UserWorkspace{
-		UserID:      entity.ID(userID),
-		Role:        entity.RoleOwner,
-		WorkspaceID: workspace.ID,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+	userWorkspace := bson.M{
+		"user_id":      entity.ID(userID),
+		"role":         entity.RoleOwner,
+		"workspace_id": workspace.ID,
+		"created_at":   now,
+		"updated_at":   now,
 	}
 
 	_, err = r.userWorkspace.InsertOne(ctx, userWorkspace)
@@ -119,7 +126,7 @@ func (r *WorkspaceRepository) FindWorkspaceBySlug(userID, slug string) (entity.W
 		return entity.Workspace{}, fmt.Errorf("decode workspace: %w", err)
 	}
 
-	filter = bson.M{"_id": workspace.ID, "user_id": userID}
+	filter = bson.M{"workspace_id": workspace.ID, "user_id": entity.ID(userID)}
 	if err := r.userWorkspace.FindOne(ctx, filter).Err(); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return entity.Workspace{}, database.ErrUserWorkspaceNotFound
@@ -133,7 +140,7 @@ func (r *WorkspaceRepository) FindWorkspaceBySlug(userID, slug string) (entity.W
 func (r *WorkspaceRepository) FindWorkspacesOfUser(userID, cursor string, pageSize int) ([]entity.Workspace, error) {
 	ctx := context.Background()
 
-	filter := bson.M{"user_id": userID}
+	filter := bson.M{"user_id": entity.ID(userID)}
 	opts := options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(int64(pageSize))
 
 	if cursor != "" {
@@ -247,19 +254,19 @@ func (r *WorkspaceRepository) JoinWorkspace(userID, token string) error {
 }
 
 func (r *WorkspaceRepository) CheckConflict(ctx context.Context, title string) error {
-	if err := r.workspace.FindOne(ctx, bson.M{"title": title}).Err(); err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return database.ErrWorkspaceNameConflict
-		}
-
+	err := r.workspace.FindOne(ctx, bson.M{"title": title}).Err()
+	if err == nil {
+		return database.ErrWorkspaceNameConflict
+	}
+	if !errors.Is(err, mongo.ErrNoDocuments) {
 		return fmt.Errorf("find workspace by title: %w", err)
 	}
 
-	if err := r.user.FindOne(ctx, bson.M{"nickname": title}).Err(); !errors.Is(err, mongo.ErrNoDocuments) {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return database.ErrWorkspaceNameConflict
-		}
-
+	err = r.user.FindOne(ctx, bson.M{"nickname": title}).Err()
+	if err == nil {
+		return database.ErrWorkspaceNameConflict
+	}
+	if !errors.Is(err, mongo.ErrNoDocuments) {
 		return fmt.Errorf("find user by nickname: %w", err)
 	}
 

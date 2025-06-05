@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/test/helper"
@@ -15,69 +17,85 @@ import (
 
 // TestFindAndCreateWorkspace tests the functionality of finding and creating workspaces.
 func TestFindAndCreateWorkspace(t *testing.T) {
-	_ = helper.NewTestConfig(t.Name())
+	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t)
 	user, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	baseURL := codePair.ServerAddr()
+	mongo, _ := mongodb.Dial()
+	db := mongo.Database(conf.Mongo.DatabaseName)
+	defer func() {
+		mongo.Disconnect(t.Context())
+	}()
+
+	teardown := func(t *testing.T) {
+		db.Collection(mongodb.ColWorkspace).DeleteMany(t.Context(), bson.M{})
+		db.Collection(mongodb.ColUserWorkspace).DeleteMany(t.Context(), bson.M{})
+	}
 
 	t.Run("create workspace with valid data", func(t *testing.T) {
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces"
+		defer teardown(t)
+		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPost, u.String(), accessToken, reqBody)
+		status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
 		assert.Equal(t, http.StatusCreated, status)
 	})
 
 	t.Run("create workspace with same title", func(t *testing.T) {
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces"
+		defer teardown(t)
+		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPost, u.String(), accessToken, reqBody)
+		status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
+		assert.Equal(t, http.StatusCreated, status)
+
+		status, _ = helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
 		assert.Equal(t, http.StatusInternalServerError, status)
 	})
 
 	t.Run("create workspace with user nickname conflict", func(t *testing.T) {
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces"
+		defer teardown(t)
+		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: user.Nickname})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPost, u.String(), accessToken, reqBody)
+		status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
 		assert.Equal(t, http.StatusInternalServerError, status)
 	})
 
 	t.Run("find workspace by slug", func(t *testing.T) {
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces/test"
+		defer teardown(t)
 
-		status, body := helper.DoRequest(t, http.MethodGet, u.String(), accessToken, nil)
+		u := baseURL + "/workspaces"
+		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
+		assert.NoError(t, err)
+
+		status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
+		assert.Equal(t, http.StatusCreated, status)
+
+		u = baseURL + "/workspaces/test"
+		status, body := helper.DoRequest(t, http.MethodGet, u, accessToken, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var workspace models.WorkspaceDomain
-		err := json.Unmarshal(body, &workspace)
+		err = json.Unmarshal(body, &workspace)
 		assert.NoError(t, err)
 		assert.Equal(t, "test", workspace.Title)
 	})
 
 	t.Run("find non-exist workspace", func(t *testing.T) {
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces"
-		u.Path = "/workspaces/nonexist"
+		defer teardown(t)
 
-		status, _ := helper.DoRequest(t, http.MethodGet, u.String(), accessToken, nil)
+		u := baseURL + "/workspaces/nonexist"
+		status, _ := helper.DoRequest(t, http.MethodGet, u, accessToken, nil)
 		assert.Equal(t, http.StatusNotFound, status)
 	})
 
 	t.Run("find workspaces", func(t *testing.T) {
+		defer teardown(t)
+
 		const cursorSize = 5
 		const cursorMultiple = 4
 		const margin = 2
@@ -88,65 +106,51 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 		}
 
 		for i := range totalWorkspaces {
-			u := url.URL{}
-			u.Host = baseURL
-			u.Path = "/workspaces"
+			u := baseURL + "/workspaces"
 			reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: testTitle(i)})
 			assert.NoError(t, err)
 
-			status, _ := helper.DoRequest(t, http.MethodPost, u.String(), accessToken, reqBody)
+			status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
 			assert.Equal(t, http.StatusCreated, status)
 		}
 
 		prevCursor := ""
-		for i := range cursorMultiple {
-			u := url.URL{}
-			u.Host = baseURL
-			u.Path = "/workspaces"
-			u.Query().Set("page_size", strconv.Itoa(cursorSize))
-			u.Query().Set("cursor", prevCursor)
+		for range cursorMultiple {
+			v := url.Values{}
+			v.Set("page_size", strconv.Itoa(cursorSize))
+			v.Set("cursor", prevCursor)
+			u := baseURL + "/workspaces?" + v.Encode()
 
-			status, body := helper.DoRequest(t, http.MethodGet, u.String(), accessToken, nil)
+			status, body := helper.DoRequest(t, http.MethodGet, u, accessToken, nil)
 			assert.Equal(t, http.StatusOK, status)
 
 			var res models.FindWorkspacesResponse
 			err := json.Unmarshal(body, &res)
 			assert.NoError(t, err)
 			assert.Len(t, res.Workspaces, cursorSize)
-			assert.Equal(t, res.Cursor, strconv.Itoa((i+1)*cursorSize))
+			if len(res.Workspaces) > 0 {
+				assert.Equal(t, res.Cursor, res.Workspaces[len(res.Workspaces)-1].Id)
+			}
 			prevCursor = res.Cursor
 		}
-
-		u := url.URL{}
-		u.Host = baseURL
-		u.Path = "/workspaces"
-		u.Query().Set("page_size", strconv.Itoa(cursorSize))
-		u.Query().Set("cursor", strconv.Itoa(cursorMultiple*cursorSize))
-
 	})
 }
 
 // TestInviteWorkspace tests the invitation functionality for workspaces.
 func TestInviteWorkspace(t *testing.T) {
-	//conf := helper.NewTestConfig(t.Name())
-	//codePair := helper.SetupTestServer(t)
-	//user, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
-	//gen := jwt.NewGenerator(conf.JWT)
-	//url := codePair.ServerAddr() + "/workspaces"
-	//
-	//t.Run("create invite token with valid workspace", func(t *testing.T) {
-	//	// Implement test logic here
-	//})
-	//
-	//t.Run("create invite token with invalid workspace", func(t *testing.T) {
-	//	// Implement test logic here
-	//})
-	//
-	//t.Run("join workspace with valid invite token", func(t *testing.T) {
-	//	// Implement test logic here
-	//})
-	//
-	//t.Run("join workspace with invalid invite token", func(t *testing.T) {
-	//	// Implement test logic here
-	//})
+	t.Run("create invite token with valid workspace", func(t *testing.T) {
+		// Implement test logic here
+	})
+
+	t.Run("create invite token with invalid workspace", func(t *testing.T) {
+		// Implement test logic here
+	})
+
+	t.Run("join workspace with valid invite token", func(t *testing.T) {
+		// Implement test logic here
+	})
+
+	t.Run("join workspace with invalid invite token", func(t *testing.T) {
+		// Implement test logic here
+	})
 }
