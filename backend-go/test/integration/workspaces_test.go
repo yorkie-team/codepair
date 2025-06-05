@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -24,16 +25,17 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	mongo, _ := mongodb.Dial()
 	db := mongo.Database(conf.Mongo.DatabaseName)
 	defer func() {
-		mongo.Disconnect(t.Context())
+		mongo.Disconnect(context.Background())
 	}()
 
-	teardown := func(t *testing.T) {
-		db.Collection(mongodb.ColWorkspace).DeleteMany(t.Context(), bson.M{})
-		db.Collection(mongodb.ColUserWorkspace).DeleteMany(t.Context(), bson.M{})
+	teardown := func() {
+		ctx := context.Background()
+		db.Collection(mongodb.ColWorkspace).DeleteMany(ctx, bson.M{})
+		db.Collection(mongodb.ColUserWorkspace).DeleteMany(ctx, bson.M{})
 	}
 
 	t.Run("create workspace with valid data", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
@@ -43,7 +45,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("create workspace with same title", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
@@ -56,7 +58,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("create workspace with user nickname conflict", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: user.Nickname})
 		assert.NoError(t, err)
@@ -66,7 +68,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find workspace by slug", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
@@ -86,7 +88,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find non-exist workspace", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 
 		u := baseURL + "/workspaces/nonexist"
 		status, _ := helper.DoRequest(t, http.MethodGet, u, accessToken, nil)
@@ -94,7 +96,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find workspaces", func(t *testing.T) {
-		defer teardown(t)
+		defer teardown()
 
 		const cursorSize = 5
 		const cursorMultiple = 4
