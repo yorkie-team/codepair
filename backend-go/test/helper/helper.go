@@ -39,7 +39,10 @@ func NewTestConfig(testName string) *config.Config {
 	conf := &config.Config{}
 	conf.EnsureDefaultValue()
 	conf.Mongo.ConnectionURI = "mongodb://localhost:27017"
-	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())[:63]
+	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())
+	if len(conf.Mongo.DatabaseName) > 63 {
+		conf.Mongo.DatabaseName = conf.Mongo.DatabaseName[:63]
+	}
 	conf.OAuth.FrontendBaseURL = "http://frontend-url"
 
 	conf.Storage.Minio = &config.Minio{

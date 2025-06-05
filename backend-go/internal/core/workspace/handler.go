@@ -2,10 +2,12 @@ package workspace
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
@@ -53,7 +55,7 @@ func (h *Handler) findWorkspaceBySlug(c echo.Context) error {
 		if errors.Is(err, database.ErrWorkspaceNotFound) || errors.Is(err, database.ErrUserWorkspaceNotFound) {
 			return c.NoContent(http.StatusNotFound)
 		}
-		return err
+		return fmt.Errorf("find workspace by slug: %w", err)
 	}
 
 	return c.JSON(http.StatusOK, models.WorkspaceDomain{
@@ -82,7 +84,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 
 	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize)
 	if err != nil {
-		return err
+		return fmt.Errorf("find workspaces of user: %w", err)
 	}
 
 	domainWorkspaces := make([]models.WorkspaceDomain, len(workspaces))
@@ -124,7 +126,7 @@ func (h *Handler) createInviteToken(c echo.Context) error {
 
 	token, err := h.workspaceRepository.CreateInvitationToken(payload.Subject, workspaceID, req.ExpiredAt)
 	if err != nil {
-		return err
+		return fmt.Errorf("create invitation token: %w", err)
 	}
 
 	return c.JSON(http.StatusOK, models.CreateInvitationTokenResponse{
@@ -144,7 +146,7 @@ func (h *Handler) joinWorkspace(c echo.Context) error {
 	}
 
 	if err = h.workspaceRepository.JoinWorkspace(payload.Subject, req.InvitationToken); err != nil {
-		return err
+		return fmt.Errorf("join workspace: %w", err)
 	}
 
 	return c.NoContent(http.StatusOK)

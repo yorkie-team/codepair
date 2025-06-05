@@ -9,8 +9,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"go.mongodb.org/mongo-driver/v2/bson"
+
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/test/helper"
@@ -25,13 +26,16 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	mongo, _ := mongodb.Dial()
 	db := mongo.Database(conf.Mongo.DatabaseName)
 	defer func() {
-		mongo.Disconnect(context.Background())
+		err := mongo.Disconnect(context.Background())
+		assert.NoError(t, err)
 	}()
 
 	teardown := func() {
 		ctx := context.Background()
-		db.Collection(mongodb.ColWorkspace).DeleteMany(ctx, bson.M{})
-		db.Collection(mongodb.ColUserWorkspace).DeleteMany(ctx, bson.M{})
+		_, err := db.Collection(mongodb.ColWorkspace).DeleteMany(ctx, bson.M{})
+		assert.NoError(t, err)
+		_, err = db.Collection(mongodb.ColUserWorkspace).DeleteMany(ctx, bson.M{})
+		assert.NoError(t, err)
 	}
 
 	t.Run("create workspace with valid data", func(t *testing.T) {

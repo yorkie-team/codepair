@@ -141,7 +141,7 @@ func (r *WorkspaceRepository) FindWorkspacesOfUser(userID, cursor string, pageSi
 	ctx := context.Background()
 
 	filter := bson.M{"user_id": entity.ID(userID)}
-	opts := options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(int64(pageSize))
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetLimit(int64(pageSize))
 
 	if cursor != "" {
 		filter["_id"] = bson.M{"$lt": entity.ID(cursor)}
@@ -182,7 +182,9 @@ func (r *WorkspaceRepository) FindWorkspacesOfUser(userID, cursor string, pageSi
 	return workspaces, nil
 }
 
-func (r *WorkspaceRepository) CreateInvitationToken(userID, workspaceID string, expiredAt time.Time) (entity.WorkspaceInvitation, error) {
+func (r *WorkspaceRepository) CreateInvitationToken(
+	userID, workspaceID string, expiredAt time.Time,
+) (entity.WorkspaceInvitation, error) {
 	ctx := context.Background()
 
 	uw := entity.UserWorkspace{}
