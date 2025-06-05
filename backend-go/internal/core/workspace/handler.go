@@ -11,6 +11,10 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
+const (
+	defaultPageSize = "10"
+)
+
 type Handler struct {
 	workspaceRepository Repository
 }
@@ -62,14 +66,16 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
-	cursor, err := strconv.Atoi(c.QueryParam("cursor"))
-	if err != nil {
-		return middleware.NewError(http.StatusBadRequest, "invalid cursor parameter")
+	if c.QueryParam("page_size") == "" {
+		c.QueryParams().Set("page_size", defaultPageSize)
 	}
+	pageSize, err := strconv.Atoi(c.QueryParam("page_size"))
+	if err != nil {
+		return middleware.NewError(http.StatusBadRequest, "invalid page_size parameter")
+	}
+	cursor := c.QueryParam("cursor")
 
-	page := c.QueryParam("page")
-
-	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, page, cursor)
+	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize+1)
 	if err != nil {
 		return err
 	}
@@ -85,9 +91,16 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 		}
 	}
 
+	var returnCursor string
+	if pageSize > len(domainWorkspaces) {
+		returnCursor = ""
+	} else {
+		returnCursor = workspaces[len(workspaces)-1].ID.String()
+	}
+
 	return c.JSON(http.StatusOK, &models.FindWorkspacesResponse{
 		Workspaces: domainWorkspaces,
-		Cursor:     "",
+		Cursor:     returnCursor,
 	})
 }
 
