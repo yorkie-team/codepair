@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 
@@ -21,7 +20,6 @@ import (
 func TestFindAndCreateWorkspace(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t)
-	user, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 	baseURL := codePair.ServerAddr()
 	mongo, _ := mongodb.Dial()
 	db := mongo.Database(conf.Mongo.DatabaseName)
@@ -30,16 +28,10 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 		assert.NoError(t, err)
 	}()
 
-	teardown := func() {
-		ctx := context.Background()
-		_, err := db.Collection(mongodb.ColWorkspace).DeleteMany(ctx, bson.M{})
-		assert.NoError(t, err)
-		_, err = db.Collection(mongodb.ColUserWorkspace).DeleteMany(ctx, bson.M{})
-		assert.NoError(t, err)
-	}
-
 	t.Run("create workspace with valid data", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		_, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
@@ -49,7 +41,9 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("create workspace with same title", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		_, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
 		assert.NoError(t, err)
@@ -62,7 +56,9 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("create workspace with user nickname conflict", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		user, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: user.Nickname})
 		assert.NoError(t, err)
@@ -72,7 +68,8 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find workspace by slug", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		_, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 
 		u := baseURL + "/workspaces"
 		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: "test"})
@@ -92,7 +89,8 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find non-exist workspace", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		_, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 
 		u := baseURL + "/workspaces/nonexist"
 		status, _ := helper.DoRequest(t, http.MethodGet, u, accessToken, nil)
@@ -100,7 +98,8 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	})
 
 	t.Run("find workspaces", func(t *testing.T) {
-		defer teardown()
+		defer helper.ClearCollections(t, db)
+		_, accessToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 
 		const cursorSize = 5
 		const cursorMultiple = 4
