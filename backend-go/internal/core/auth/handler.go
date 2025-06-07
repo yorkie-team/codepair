@@ -41,6 +41,7 @@ func (h *Handler) githubLogin(c echo.Context) error {
 
 func (h *Handler) githubCallback(c echo.Context) error {
 	code := c.QueryParam("code")
+	ctx := c.Request().Context()
 	// TODO(window9u): We should add a validation logic for state parameter.
 	oauthToken, err := h.exchangeGithubCode(c, code)
 	if err != nil {
@@ -52,7 +53,7 @@ func (h *Handler) githubCallback(c echo.Context) error {
 		return err
 	}
 
-	userID, err := h.userRepository.FindOrCreateUserBySocialID(githubProviderName, githubUserID)
+	userID, err := h.userRepository.FindOrCreateUserBySocialID(ctx, githubProviderName, githubUserID)
 	if err != nil {
 		return middleware.NewError(
 			http.StatusInternalServerError,

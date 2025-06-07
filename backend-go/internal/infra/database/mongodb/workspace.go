@@ -37,9 +37,7 @@ func NewWorkspaceRepository(client *mongo.Client) *WorkspaceRepository {
 }
 
 // FindWorkspaceByID retrieves a workspace by its ID.
-func (r *WorkspaceRepository) FindWorkspaceByID(id string) (entity.Workspace, error) {
-	ctx := context.Background()
-
+func (r *WorkspaceRepository) FindWorkspaceByID(ctx context.Context, id string) (entity.Workspace, error) {
 	filter := bson.M{"_id": id}
 	result := r.workspace.FindOne(ctx, filter)
 
@@ -54,9 +52,7 @@ func (r *WorkspaceRepository) FindWorkspaceByID(id string) (entity.Workspace, er
 	return workspace, nil
 }
 
-func (r *WorkspaceRepository) CreateWorkspace(userID, title string) (entity.Workspace, error) {
-	ctx := context.Background()
-
+func (r *WorkspaceRepository) CreateWorkspace(ctx context.Context, userID, title string) (entity.Workspace, error) {
 	// 01. Check workspace nickname conflict policy
 	if err := r.CheckConflict(ctx, title); err != nil {
 		return entity.Workspace{}, fmt.Errorf("check conflict: %w", err)
@@ -109,9 +105,7 @@ func (r *WorkspaceRepository) CreateWorkspace(userID, title string) (entity.Work
 	return workspace, nil
 }
 
-func (r *WorkspaceRepository) FindWorkspaceBySlug(userID, slug string) (entity.Workspace, error) {
-	ctx := context.Background()
-
+func (r *WorkspaceRepository) FindWorkspaceBySlug(ctx context.Context, userID, slug string) (entity.Workspace, error) {
 	filter := bson.M{"slug": slug}
 	result := r.workspace.FindOne(ctx, filter)
 	if result.Err() != nil {
@@ -137,9 +131,9 @@ func (r *WorkspaceRepository) FindWorkspaceBySlug(userID, slug string) (entity.W
 	return workspace, nil
 }
 
-func (r *WorkspaceRepository) FindWorkspacesOfUser(userID, cursor string, pageSize int) ([]entity.Workspace, error) {
-	ctx := context.Background()
-
+func (r *WorkspaceRepository) FindWorkspacesOfUser(
+	ctx context.Context, userID, cursor string, pageSize int,
+) ([]entity.Workspace, error) {
 	filter := bson.M{"user_id": entity.ID(userID)}
 	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetLimit(int64(pageSize))
 
@@ -183,10 +177,8 @@ func (r *WorkspaceRepository) FindWorkspacesOfUser(userID, cursor string, pageSi
 }
 
 func (r *WorkspaceRepository) CreateInvitationToken(
-	userID, workspaceID string, expiredAt time.Time,
+	ctx context.Context, userID, workspaceID string, expiredAt time.Time,
 ) (entity.WorkspaceInvitation, error) {
-	ctx := context.Background()
-
 	uw := entity.UserWorkspace{}
 	filter := bson.M{"workspace_id": workspaceID, "user_id": userID, "role": entity.RoleOwner}
 	if err := r.userWorkspace.FindOne(ctx, filter).Decode(&uw); err != nil {
@@ -219,9 +211,7 @@ func (r *WorkspaceRepository) CreateInvitationToken(
 	return invitation, nil
 }
 
-func (r *WorkspaceRepository) JoinWorkspace(userID, token string) error {
-	ctx := context.Background()
-
+func (r *WorkspaceRepository) JoinWorkspace(ctx context.Context, userID, token string) error {
 	filter := bson.M{"token": token}
 	var invitation entity.WorkspaceInvitation
 

@@ -24,6 +24,7 @@ type Handler struct {
 
 func (h *Handler) createWorkspace(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
@@ -33,7 +34,7 @@ func (h *Handler) createWorkspace(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	_, err = h.workspaceRepository.CreateWorkspace(payload.Subject, req.Title)
+	_, err = h.workspaceRepository.CreateWorkspace(ctx, payload.Subject, req.Title)
 	if err != nil {
 		if errors.Is(err, database.ErrDuplicatedKey) || errors.Is(err, database.ErrWorkspaceNameConflict) {
 			return middleware.NewError(http.StatusConflict, "workspace already exists")
@@ -46,13 +47,14 @@ func (h *Handler) createWorkspace(c echo.Context) error {
 
 func (h *Handler) findWorkspaceBySlug(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
 	slug := c.Param("workspace_slug")
 
-	workspace, err := h.workspaceRepository.FindWorkspaceBySlug(payload.Subject, slug)
+	workspace, err := h.workspaceRepository.FindWorkspaceBySlug(ctx, payload.Subject, slug)
 	if err != nil {
 		if errors.Is(err, database.ErrWorkspaceNotFound) || errors.Is(err, database.ErrUserWorkspaceNotFound) {
 			return c.NoContent(http.StatusNotFound)
@@ -71,6 +73,7 @@ func (h *Handler) findWorkspaceBySlug(c echo.Context) error {
 
 func (h *Handler) findWorkspaces(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
@@ -84,7 +87,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 	}
 	cursor := c.QueryParam("cursor")
 
-	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize)
+	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(ctx, payload.Subject, cursor, pageSize)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "find workspaces of user", err)
 	}
@@ -115,6 +118,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 
 func (h *Handler) createInviteToken(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
@@ -126,7 +130,7 @@ func (h *Handler) createInviteToken(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	token, err := h.workspaceRepository.CreateInvitationToken(payload.Subject, workspaceID, req.ExpiredAt)
+	token, err := h.workspaceRepository.CreateInvitationToken(ctx, payload.Subject, workspaceID, req.ExpiredAt)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "create invitation token", err)
 	}
@@ -138,6 +142,7 @@ func (h *Handler) createInviteToken(c echo.Context) error {
 
 func (h *Handler) joinWorkspace(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
@@ -147,7 +152,7 @@ func (h *Handler) joinWorkspace(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	if err = h.workspaceRepository.JoinWorkspace(payload.Subject, req.InvitationToken); err != nil {
+	if err = h.workspaceRepository.JoinWorkspace(ctx, payload.Subject, req.InvitationToken); err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "join workspace", err)
 	}
 
