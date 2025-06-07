@@ -52,7 +52,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, status)
 
 		status, _ = helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
-		assert.Equal(t, http.StatusInternalServerError, status)
+		assert.Equal(t, http.StatusConflict, status)
 	})
 
 	t.Run("create workspace with user nickname conflict", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 		assert.NoError(t, err)
 
 		status, _ := helper.DoRequest(t, http.MethodPost, u, accessToken, reqBody)
-		assert.Equal(t, http.StatusInternalServerError, status)
+		assert.Equal(t, http.StatusConflict, status)
 	})
 
 	t.Run("find workspace by slug", func(t *testing.T) {

@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -36,6 +35,9 @@ func (h *Handler) createWorkspace(c echo.Context) error {
 
 	_, err = h.workspaceRepository.CreateWorkspace(payload.Subject, req.Title)
 	if err != nil {
+		if errors.Is(err, database.ErrDuplicatedKey) || errors.Is(err, database.ErrWorkspaceNameConflict) {
+			return middleware.NewError(http.StatusConflict, "workspace already exists")
+		}
 		return middleware.NewError(http.StatusInternalServerError, "server internal error", err)
 	}
 
@@ -55,7 +57,7 @@ func (h *Handler) findWorkspaceBySlug(c echo.Context) error {
 		if errors.Is(err, database.ErrWorkspaceNotFound) || errors.Is(err, database.ErrUserWorkspaceNotFound) {
 			return c.NoContent(http.StatusNotFound)
 		}
-		return fmt.Errorf("find workspace by slug: %w", err)
+		return middleware.NewError(http.StatusInternalServerError, "find workspace by slug", err)
 	}
 
 	return c.JSON(http.StatusOK, models.WorkspaceDomain{
@@ -84,7 +86,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 
 	workspaces, err := h.workspaceRepository.FindWorkspacesOfUser(payload.Subject, cursor, pageSize)
 	if err != nil {
-		return fmt.Errorf("find workspaces of user: %w", err)
+		return middleware.NewError(http.StatusInternalServerError, "find workspaces of user", err)
 	}
 
 	domainWorkspaces := make([]models.WorkspaceDomain, len(workspaces))
@@ -126,7 +128,7 @@ func (h *Handler) createInviteToken(c echo.Context) error {
 
 	token, err := h.workspaceRepository.CreateInvitationToken(payload.Subject, workspaceID, req.ExpiredAt)
 	if err != nil {
-		return fmt.Errorf("create invitation token: %w", err)
+		return middleware.NewError(http.StatusInternalServerError, "create invitation token", err)
 	}
 
 	return c.JSON(http.StatusOK, models.CreateInvitationTokenResponse{
@@ -146,7 +148,7 @@ func (h *Handler) joinWorkspace(c echo.Context) error {
 	}
 
 	if err = h.workspaceRepository.JoinWorkspace(payload.Subject, req.InvitationToken); err != nil {
-		return fmt.Errorf("join workspace: %w", err)
+		return middleware.NewError(http.StatusInternalServerError, "join workspace", err)
 	}
 
 	return c.NoContent(http.StatusOK)
