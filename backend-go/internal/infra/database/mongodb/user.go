@@ -29,8 +29,7 @@ func NewUserRepository(client *mongo.Client) *UserRepository {
 }
 
 // FindOrCreateUserBySocialID creates user by Social id and provider.
-func (r *UserRepository) FindOrCreateUserBySocialID(provider, uid string) (entity.ID, error) {
-	ctx := context.Background()
+func (r *UserRepository) FindOrCreateUserBySocialID(ctx context.Context, provider, uid string) (entity.ID, error) {
 	now := time.Now()
 
 	doc := bson.M{
@@ -71,9 +70,7 @@ func (r *UserRepository) FindOrCreateUserBySocialID(provider, uid string) (entit
 }
 
 // FindUser retrieves a user by their ID.
-func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
-	ctx := context.Background()
-
+func (r *UserRepository) FindUser(ctx context.Context, id entity.ID) (entity.User, error) {
 	filter := bson.M{"_id": id}
 	result := r.collection.FindOne(ctx, filter)
 
@@ -89,9 +86,7 @@ func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 }
 
 // UpdateNickname updates the nickname of a user.
-func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
-	ctx := context.Background()
-
+func (r *UserRepository) UpdateNickname(ctx context.Context, id entity.ID, nickname string) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{

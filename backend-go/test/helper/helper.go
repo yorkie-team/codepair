@@ -14,6 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
 	"github.com/yorkie-team/codepair/backend/internal/config"
@@ -39,7 +40,10 @@ func NewTestConfig(testName string) *config.Config {
 	conf := &config.Config{}
 	conf.EnsureDefaultValue()
 	conf.Mongo.ConnectionURI = "mongodb://localhost:27017"
-	conf.Mongo.DatabaseName = fmt.Sprintf("test-codepair-%s-%s", testName, bson.NewObjectID().Hex())
+	conf.Mongo.DatabaseName = "test-codepair"
+	if len(conf.Mongo.DatabaseName) > 63 {
+		conf.Mongo.DatabaseName = conf.Mongo.DatabaseName[:63]
+	}
 	conf.OAuth.FrontendBaseURL = "http://frontend-url"
 
 	conf.Storage.Minio = &config.Minio{
@@ -154,4 +158,15 @@ func DoRequest(t *testing.T, method, url, token string, body []byte) (int, []byt
 	respBody, err := io.ReadAll(res.Body)
 	assert.NoError(t, err)
 	return res.StatusCode, respBody
+}
+
+func ClearCollections(t *testing.T, db *mongo.Database) {
+	t.Helper()
+
+	collections, err := db.ListCollectionNames(context.Background(), bson.M{})
+	assert.NoError(t, err)
+	for _, collection := range collections {
+		_, err := db.Collection(collection).DeleteMany(context.Background(), bson.M{})
+		assert.NoError(t, err)
+	}
 }
