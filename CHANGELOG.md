@@ -7,6 +7,23 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.35] - 2025-06-08
+
+### Added
+
+- Implement `files` service API for `backend-go` by @sigmaith in https://github.com/yorkie-team/codepair/pull/478
+- Integrate `service` layer into `handler` by @window9u in https://github.com/yorkie-team/codepair/pull/483
+- Implement `settings` API for `backend-go` by @blurfx in https://github.com/yorkie-team/codepair/pull/482
+
+### Changed
+
+- Change config to singleton instance by @blurfx in https://github.com/yorkie-team/codepair/pull/481
+- Update golangci-lint version to 2 by @blurfx in https://github.com/yorkie-team/codepair/pull/485
+
+### Fixed
+
+- Fix version pinning prisma and install pnpm from npm by @blurfx in https://github.com/yorkie-team/codepair/pull/484
+
 ## [0.1.34] - 2025-05-28
 
 ### Added
