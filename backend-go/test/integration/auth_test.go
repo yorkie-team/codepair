@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"testing"
@@ -9,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"github.com/yorkie-team/codepair/backend/test/helper"
 )
 
@@ -27,7 +29,16 @@ func TestRefreshToken(t *testing.T) {
 	getUserURL := codePair.ServerAddr() + getUserPath
 	refreshURL := codePair.ServerAddr() + refreshPath
 
+	mongo, _ := mongodb.Dial()
+	db := mongo.Database(conf.Mongo.DatabaseName)
+	defer func() {
+		err := mongo.Disconnect(context.Background())
+		assert.NoError(t, err)
+	}()
+
 	t.Run("login with github and access token expired", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
+
 		_, access, refresh := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 		status, _ := helper.DoRequest(t, http.MethodGet, getUserURL, access, nil)
 		assert.Equal(t, http.StatusOK, status)
@@ -52,6 +63,8 @@ func TestRefreshToken(t *testing.T) {
 	})
 
 	t.Run("login with github and refresh token expired", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
+
 		_, _, refresh := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 
 		time.Sleep(refreshTokenExpirationTime)
