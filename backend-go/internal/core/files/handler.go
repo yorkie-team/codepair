@@ -10,8 +10,8 @@ import (
 	"github.com/lithammer/shortuuid/v4"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/core/workspace"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
@@ -23,12 +23,13 @@ const (
 // Handler handles HTTP requests for files services.
 type Handler struct {
 	storageClient storage.Client
-	workspaceRepo Repository
+	workspaceRepo workspace.Repository
 }
 
 // createUploadPresignedURL handles POST /files requests.
 func (h *Handler) createUploadPresignedURL(c echo.Context) error {
 	req := &models.CreateUploadPresignedUrlRequest{}
+	ctx := c.Request().Context()
 	if err := c.Bind(req); err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid request body")
 	}
@@ -37,7 +38,7 @@ func (h *Handler) createUploadPresignedURL(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, "validation failed", err)
 	}
 
-	workspace, err := h.workspaceRepo.FindWorkspaceByID(entity.ID(req.WorkspaceId))
+	workspace, err := h.workspaceRepo.FindWorkspaceByID(ctx, req.WorkspaceId)
 	if err != nil {
 		if errors.Is(err, database.ErrWorkspaceNotFound) {
 			return WorkspaceNotFoundError

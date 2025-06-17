@@ -9,11 +9,13 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-// ColVisitor is the name of the collection storing visitor records.
+// ColVisitor is the name of the workspace storing visitor records.
 const (
-	ColVisitor   = "hello_visitors"
-	ColUsers     = "users"
-	ColWorkspace = "workspaces"
+	ColVisitor             = "hello_visitors"
+	ColUsers               = "users"
+	ColWorkspace           = "workspaces"
+	ColUserWorkspace       = "user_workspaces"
+	ColWorkspaceInvitation = "workspace_invitation_tokens"
 )
 
 type collectionInfo struct {
@@ -48,6 +50,23 @@ var collectionInfos = []collectionInfo{
 			{
 				Keys:    bson.D{{Key: "slug", Value: 1}},
 				Options: options.Index().SetUnique(true),
+			},
+		},
+	},
+	{
+		name: ColUserWorkspace,
+		indexes: []mongo.IndexModel{
+			{
+				Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "workspace_id", Value: 1}},
+				Options: options.Index().SetUnique(true),
+			},
+		},
+	},
+	{
+		name: ColWorkspaceInvitation,
+		indexes: []mongo.IndexModel{
+			{
+				Keys: bson.D{{Key: "token", Value: 1}},
 			},
 		},
 	},
