@@ -180,7 +180,7 @@ func (r *WorkspaceRepository) CreateInvitationToken(
 	ctx context.Context, userID, workspaceID string, expiredAt time.Time,
 ) (entity.WorkspaceInvitation, error) {
 	uw := entity.UserWorkspace{}
-	filter := bson.M{"workspace_id": workspaceID, "user_id": userID, "role": entity.RoleOwner}
+	filter := bson.M{"workspace_id": entity.ID(workspaceID), "user_id": entity.ID(userID), "role": entity.RoleOwner}
 	if err := r.userWorkspace.FindOne(ctx, filter).Decode(&uw); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return entity.WorkspaceInvitation{}, database.ErrWorkspaceNotFound
@@ -197,7 +197,13 @@ func (r *WorkspaceRepository) CreateInvitationToken(
 		UpdatedAt:   now,
 	}
 
-	res, err := r.workspaceInvitation.InsertOne(ctx, invitation)
+	res, err := r.workspaceInvitation.InsertOne(ctx, bson.M{
+		"workspace_id": invitation.WorkspaceID,
+		"token":        invitation.Token,
+		"expired_at":   invitation.ExpiredAt,
+		"created_at":   invitation.CreatedAt,
+		"updated_at":   invitation.UpdatedAt,
+	})
 	if err != nil {
 		return entity.WorkspaceInvitation{}, fmt.Errorf("create invitation token: %w", err)
 	}
@@ -234,7 +240,13 @@ func (r *WorkspaceRepository) JoinWorkspace(ctx context.Context, userID, token s
 		UpdatedAt:   time.Now(),
 	}
 
-	_, err := r.userWorkspace.InsertOne(ctx, userWorkspace)
+	_, err := r.userWorkspace.InsertOne(ctx, bson.M{
+		"user_id":      userWorkspace.UserID,
+		"role":         userWorkspace.Role,
+		"workspace_id": userWorkspace.WorkspaceID,
+		"created_at":   userWorkspace.CreatedAt,
+		"updated_at":   userWorkspace.UpdatedAt,
+	})
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
 			return database.ErrDuplicatedKey
