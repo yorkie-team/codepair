@@ -1,12 +1,16 @@
 package users
 
-import "github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
+import (
+	"context"
+
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
+)
 
 // Repository defines the interface for CRUD operations on visitor records.
 type Repository interface {
-	FindUser(id entity.ID) (entity.User, error)
+	FindUser(ctx context.Context, id entity.ID) (entity.User, error)
 
-	UpdateNickname(id entity.ID, nickname string) error
+	UpdateNickname(ctx context.Context, id entity.ID, nickname string) error
 
-	FindOrCreateUserBySocialID(provider, uid string) (entity.ID, error)
+	FindOrCreateUserBySocialID(ctx context.Context, provider, uid string) (entity.ID, error)
 }

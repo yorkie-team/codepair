@@ -20,11 +20,12 @@ type Handler struct {
 
 func (h *Handler) findUser(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
-	user, err := h.userRepository.FindUser(entity.ID(payload.Subject))
+	user, err := h.userRepository.FindUser(ctx, entity.ID(payload.Subject))
 	if err != nil {
 		if errors.Is(err, database.ErrUserNotFound) {
 			return UserNotFoundError
@@ -44,6 +45,7 @@ func (h *Handler) findUser(c echo.Context) error {
 
 func (h *Handler) changeNickname(c echo.Context) error {
 	payload, err := jwt.GetPayload(c)
+	ctx := c.Request().Context()
 	if err != nil {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
@@ -53,7 +55,7 @@ func (h *Handler) changeNickname(c echo.Context) error {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	if err = h.userRepository.UpdateNickname(entity.ID(payload.Subject), req.Nickname); err != nil {
+	if err = h.userRepository.UpdateNickname(ctx, entity.ID(payload.Subject), req.Nickname); err != nil {
 		if errors.Is(err, database.ErrNicknameConflict) {
 			return NicknameConflictError
 		}
