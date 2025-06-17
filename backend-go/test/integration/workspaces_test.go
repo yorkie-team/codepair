@@ -22,7 +22,8 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t)
 	baseURL := codePair.ServerAddr()
-	mongo, _ := mongodb.Dial()
+	mongo, err := mongodb.Dial()
+	assert.NoError(t, err)
 	db := mongo.Database(conf.Mongo.DatabaseName)
 	defer func() {
 		err := mongo.Disconnect(context.Background())
@@ -147,7 +148,8 @@ func TestInviteWorkspace(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
 	codePair := helper.SetupTestServer(t)
 	baseURL := codePair.ServerAddr()
-	mongo, _ := mongodb.Dial()
+	mongo, err := mongodb.Dial()
+	assert.NoError(t, err)
 	db := mongo.Database(conf.Mongo.DatabaseName)
 	defer func() {
 		err := mongo.Disconnect(context.Background())

@@ -79,10 +79,11 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 		return middleware.NewError(http.StatusUnauthorized, err.Error())
 	}
 
-	if c.QueryParam("page_size") == "" {
-		c.QueryParams().Set("page_size", defaultPageSize)
+	pageSizeParam := c.QueryParam("page_size")
+	if pageSizeParam == "" {
+		pageSizeParam = defaultPageSize
 	}
-	pageSize, err := strconv.Atoi(c.QueryParam("page_size"))
+	pageSize, err := strconv.Atoi(pageSizeParam)
 	if err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid page_size parameter")
 	}
@@ -158,6 +159,13 @@ func (h *Handler) joinWorkspace(c echo.Context) error {
 	}
 
 	if err = h.workspaceRepository.JoinWorkspace(ctx, payload.Subject, req.InvitationToken); err != nil {
+		if errors.Is(err, database.ErrWorkspaceInvitationNotFound) {
+			return c.NoContent(http.StatusNotFound)
+		} else if errors.Is(err, database.ErrWorkspaceInvitationExpired) {
+			return middleware.NewError(http.StatusGone, "invitation expired")
+		} else if errors.Is(err, database.ErrDuplicatedKey) {
+			return middleware.NewError(http.StatusConflict, "already a member")
+		}
 		return middleware.NewError(http.StatusInternalServerError, "join workspace", err)
 	}
 
