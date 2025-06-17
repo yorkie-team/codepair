@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -143,19 +144,86 @@ func TestFindAndCreateWorkspace(t *testing.T) {
 
 // TestInviteWorkspace tests the invitation functionality for workspaces.
 func TestInviteWorkspace(t *testing.T) {
-	t.Run("create invite token with valid workspace", func(t *testing.T) {
-		// Implement test logic here
-	})
+	conf := helper.NewTestConfig(t.Name())
+	codePair := helper.SetupTestServer(t)
+	baseURL := codePair.ServerAddr()
+	mongo, _ := mongodb.Dial()
+	db := mongo.Database(conf.Mongo.DatabaseName)
+	defer func() {
+		err := mongo.Disconnect(context.Background())
+		assert.NoError(t, err)
+	}()
 
-	t.Run("create invite token with invalid workspace", func(t *testing.T) {
-		// Implement test logic here
-	})
+	t.Run("create invite token and join with valid workspace", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
 
-	t.Run("join workspace with valid invite token", func(t *testing.T) {
-		// Implement test logic here
-	})
+		// 01. Create two users: owner and joiner
+		_, ownerToken, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+		_, joinerToken, _ := helper.LoginUserTestGithub(t, t.Name()+"-joiner", codePair.ServerAddr())
 
-	t.Run("join workspace with invalid invite token", func(t *testing.T) {
-		// Implement test logic here
+		// 02. Create a workspace with the owner
+		const workspaceTitle = "test"
+		reqBody, err := json.Marshal(models.CreateWorkspaceRequest{Title: workspaceTitle})
+		assert.NoError(t, err)
+
+		u := baseURL + "/workspaces"
+		status, _ := helper.DoRequest(t, http.MethodPost, u, ownerToken, reqBody)
+		assert.Equal(t, http.StatusCreated, status)
+
+		// 03. Owner find workspace
+		u = baseURL + "/workspaces"
+		status, body := helper.DoRequest(t, http.MethodGet, u, ownerToken, nil)
+		assert.Equal(t, http.StatusOK, status)
+		var workspace models.FindWorkspacesResponse
+		assert.NoError(t, json.Unmarshal(body, &workspace))
+		assert.Len(t, workspace.Workspaces, 1)
+		assert.Equal(t, workspaceTitle, workspace.Workspaces[0].Title)
+		slug := workspace.Workspaces[0].Slug
+		wid := workspace.Workspaces[0].Id
+
+		// 04. Joiner find workspace by slug but not joined yet
+		u = baseURL + "/workspaces"
+		status, body = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
+		assert.Equal(t, http.StatusOK, status)
+		assert.NoError(t, json.Unmarshal(body, &workspace))
+		assert.Len(t, workspace.Workspaces, 0)
+
+		u = fmt.Sprintf("%s/workspaces/%s", baseURL, slug)
+		status, body = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
+		assert.Equal(t, http.StatusNotFound, status)
+
+		// 05. Create an invitation token for the workspace
+		u = fmt.Sprintf("%s/workspaces/%s/invite-token", baseURL, wid)
+		reqBody, err = json.Marshal(models.CreateInvitationTokenRequest{})
+		status, body = helper.DoRequest(t, http.MethodPost, u, ownerToken, reqBody)
+		assert.Equal(t, http.StatusOK, status)
+
+		var inviteToken models.CreateInvitationTokenResponse
+		assert.NoError(t, json.Unmarshal(body, &inviteToken))
+		assert.NotEmpty(t, inviteToken.InvitationToken)
+
+		// 06. Joiner joins the workspace with the invitation token
+		u = baseURL + "/workspaces/join"
+		reqBody, err = json.Marshal(models.JoinWorkspaceRequest{InvitationToken: inviteToken.InvitationToken})
+		assert.NoError(t, err)
+		status, _ = helper.DoRequest(t, http.MethodPost, u, joinerToken, reqBody)
+		assert.Equal(t, http.StatusOK, status)
+
+		// 07. Joiner finds the workspace by slug
+		u = fmt.Sprintf("%s/workspaces/%s", baseURL, slug)
+		status, body = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
+		assert.Equal(t, http.StatusOK, status)
+		var joinedWorkspace models.WorkspaceDomain
+		assert.NoError(t, json.Unmarshal(body, &joinedWorkspace))
+		assert.Equal(t, workspaceTitle, joinedWorkspace.Title)
+		assert.Equal(t, slug, joinedWorkspace.Slug)
+
+		u = fmt.Sprintf("%s/workspaces/%s", baseURL, slug)
+		status, body = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
+		assert.Equal(t, http.StatusOK, status)
+		var joinedWorkspaces models.WorkspaceDomain
+		assert.NoError(t, json.Unmarshal(body, &joinedWorkspaces))
+		assert.Equal(t, workspaceTitle, joinedWorkspaces.Title)
+		assert.Equal(t, slug, joinedWorkspaces.Slug)
 	})
 }
