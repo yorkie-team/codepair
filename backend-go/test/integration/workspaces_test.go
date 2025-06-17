@@ -189,13 +189,12 @@ func TestInviteWorkspace(t *testing.T) {
 		assert.Len(t, workspace.Workspaces, 0)
 
 		u = fmt.Sprintf("%s/workspaces/%s", baseURL, slug)
-		status, body = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
+		status, _ = helper.DoRequest(t, http.MethodGet, u, joinerToken, nil)
 		assert.Equal(t, http.StatusNotFound, status)
 
 		// 05. Create an invitation token for the workspace
 		u = fmt.Sprintf("%s/workspaces/%s/invite-token", baseURL, wid)
-		reqBody, err = json.Marshal(models.CreateInvitationTokenRequest{})
-		status, body = helper.DoRequest(t, http.MethodPost, u, ownerToken, reqBody)
+		status, body = helper.DoRequest(t, http.MethodPost, u, ownerToken, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var inviteToken models.CreateInvitationTokenResponse
