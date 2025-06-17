@@ -84,6 +84,9 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 		pageSizeParam = defaultPageSize
 	}
 	pageSize, err := strconv.Atoi(pageSizeParam)
+	if pageSize <= 0 {
+		return middleware.NewError(http.StatusBadRequest, "page_size must be a positive integer")
+	}
 	if err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid page_size parameter")
 	}
@@ -97,7 +100,7 @@ func (h *Handler) findWorkspaces(c echo.Context) error {
 	domainWorkspaces := make([]models.WorkspaceDomain, len(workspaces))
 	for i, workspace := range workspaces {
 		domainWorkspaces[i] = models.WorkspaceDomain{
-			Id:        string(workspace.ID),
+			Id:        workspace.ID.String(),
 			Title:     workspace.Title,
 			Slug:      workspace.Slug,
 			CreatedAt: workspace.CreatedAt,
