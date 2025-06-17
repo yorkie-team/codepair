@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 
@@ -128,6 +129,10 @@ func (h *Handler) createInviteToken(c echo.Context) error {
 	var req models.CreateInvitationTokenRequest
 	if err = c.Bind(&req); err != nil {
 		return middleware.NewError(http.StatusBadRequest, err.Error())
+	}
+
+	if req.ExpiredAt.IsZero() {
+		req.ExpiredAt = time.Now().Add(100 * 365 * 24 * time.Hour)
 	}
 
 	token, err := h.workspaceRepository.CreateInvitationToken(ctx, payload.Subject, workspaceID, req.ExpiredAt)
