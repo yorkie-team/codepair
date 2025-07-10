@@ -30,7 +30,10 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 
 	_, err = h.userWorkspaceRepository.FindUserWorkspaceByUserID(ctx, payload.Subject, workspaceID)
 	if err != nil {
-		return middleware.NewError(http.StatusNotFound, "The workspace does not exist, or the user lacks the appropriate permissions.")
+		return middleware.NewError(
+			http.StatusNotFound,
+			"The workspace does not exist, or the user lacks the appropriate permissions.",
+		)
 	}
 
 	pageSizeParam := c.QueryParam("page_size")
@@ -47,7 +50,7 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 
 	cursor := c.QueryParam("cursor")
 
-	users, err := h.userWorkspaceRepository.FindUserWorkspacesByWorkspaceID(ctx, workspaceID, cursor, pageSize+1)
+	users, err := h.userWorkspaceRepository.FindUserWorkspacesByWorkspaceID(ctx, workspaceID, cursor, pageSize)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "failed to find workspace users")
 	}
@@ -65,7 +68,7 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 	var returnCursor string
 	if pageSize > len(domainWorkspaceUsers) {
 		returnCursor = ""
-	} else {
+	} else if pageSize == len(domainWorkspaceUsers) {
 		returnCursor = users[len(users)-1].ID.String()
 	}
 

@@ -5,12 +5,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/yorkie-team/codepair/backend/internal/config"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database"
-	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+
+	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/entity"
 )
 
 // UserWorkspaceRepository implements the operations for user workspace management.
@@ -31,7 +32,7 @@ func NewUserWorkspaceRepository(client *mongo.Client) *UserWorkspaceRepository {
 func (r *UserWorkspaceRepository) FindUserWorkspaceByUserID(
 	ctx context.Context, userID, workspaceID string,
 ) (entity.UserWorkspace, error) {
-	filter := bson.M{"user_id": userID, "workspace_id": workspaceID}
+	filter := bson.M{"user_id": entity.ID(userID), "workspace_id": entity.ID(workspaceID)}
 	result := r.userWorkspace.FindOne(ctx, filter)
 
 	userWorkspace := entity.UserWorkspace{}
@@ -53,7 +54,7 @@ func (r *UserWorkspaceRepository) FindUserWorkspacesByWorkspaceID(
 	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetLimit(int64(pageSize))
 
 	if cursor != "" {
-		filter["_id"] = bson.M{"$lt": entity.ID(cursor)}
+		filter["user_id"] = bson.M{"$lt": entity.ID(cursor)}
 	}
 
 	cursorResult, err := r.userWorkspace.Find(ctx, filter, opts)
