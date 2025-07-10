@@ -51,7 +51,7 @@ func (r *UserWorkspaceRepository) FindUserWorkspacesByWorkspaceID(
 	ctx context.Context, workspaceID, cursor string, pageSize int,
 ) ([]entity.User, error) {
 	filter := bson.M{"workspace_id": entity.ID(workspaceID)}
-	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetLimit(int64(pageSize))
+	opts := options.Find().SetSort(bson.D{{Key: "user_id", Value: -1}}).SetLimit(int64(pageSize))
 
 	if cursor != "" {
 		filter["user_id"] = bson.M{"$lt": entity.ID(cursor)}

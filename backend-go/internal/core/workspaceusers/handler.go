@@ -46,11 +46,11 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 		pageSizeParam = defaultPageSize
 	}
 	pageSize, err := strconv.Atoi(pageSizeParam)
-	if pageSize <= 0 {
-		return middleware.NewError(http.StatusBadRequest, "page_size must be a positive integer")
-	}
 	if err != nil {
 		return middleware.NewError(http.StatusBadRequest, "invalid page_size parameter")
+	}
+	if pageSize <= 0 {
+		return middleware.NewError(http.StatusBadRequest, "page_size must be a positive integer")
 	}
 
 	cursor := c.QueryParam("cursor")
