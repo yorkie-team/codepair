@@ -90,3 +90,12 @@ func (r *UserWorkspaceRepository) FindUserWorkspacesByWorkspaceID(
 
 	return users, nil
 }
+
+func (r *UserWorkspaceRepository) CountUsersByWorkspaceID(ctx context.Context, workspaceID string) (int64, error) {
+	filter := bson.M{"workspace_id": entity.ID(workspaceID)}
+	count, err := r.userWorkspace.CountDocuments(ctx, filter)
+	if err != nil {
+		return 0, fmt.Errorf("count users in workspace: %w", err)
+	}
+	return count, nil
+}

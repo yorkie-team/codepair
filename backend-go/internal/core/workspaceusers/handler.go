@@ -36,6 +36,11 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 		)
 	}
 
+	totalLength, err := h.userWorkspaceRepository.CountUsersByWorkspaceID(ctx, workspaceID)
+	if err != nil {
+		return middleware.NewError(http.StatusInternalServerError, "count workspace users")
+	}
+
 	pageSizeParam := c.QueryParam("page_size")
 	if pageSizeParam == "" {
 		pageSizeParam = defaultPageSize
@@ -52,7 +57,7 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 
 	users, err := h.userWorkspaceRepository.FindUserWorkspacesByWorkspaceID(ctx, workspaceID, cursor, pageSize)
 	if err != nil {
-		return middleware.NewError(http.StatusInternalServerError, "failed to find workspace users")
+		return middleware.NewError(http.StatusInternalServerError, "paginate workspace users")
 	}
 
 	domainWorkspaceUsers := make([]models.WorkspaceUserDomain, len(users))
@@ -75,6 +80,6 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, &models.FindWorkspaceUsersResponse{
 		WorkspaceUsers: domainWorkspaceUsers,
 		Cursor:         returnCursor,
-		TotalLength:    float32(len(users)),
+		TotalLength:    float32(totalLength),
 	})
 }

@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	FindUserWorkspaceByUserID(ctx context.Context, userID, workspaceID string) (entity.UserWorkspace, error)
 	FindUserWorkspacesByWorkspaceID(ctx context.Context, workspaceID, cursor string, pageSize int) ([]entity.User, error)
+	CountUsersByWorkspaceID(ctx context.Context, workspaceID string) (int64, error)
 }
