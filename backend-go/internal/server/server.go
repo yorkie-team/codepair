@@ -16,6 +16,7 @@ import (
 	"github.com/yorkie-team/codepair/backend/internal/core/settings"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
 	"github.com/yorkie-team/codepair/backend/internal/core/workspace"
+	"github.com/yorkie-team/codepair/backend/internal/core/workspaceusers"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
 	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
@@ -52,6 +53,7 @@ func New(e *echo.Echo) (*CodePair, error) {
 	}
 	settings.Register(e)
 	workspace.Register(e, mongodb.NewWorkspaceRepository(db))
+	workspaceusers.Register(e, mongodb.NewUserWorkspaceRepository(db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 

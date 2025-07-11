@@ -9,5 +9,5 @@ type FindWorkspaceUsersResponse struct {
 	Cursor string `json:"cursor"`
 
 	// Total count of workspace users
-	TotalLength float32 `json:"totalLength"`
+	TotalLength int64 `json:"totalLength"`
 }
