@@ -72,7 +72,7 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 
 	if pageSize > len(domainWorkspaceUsers) {
 		cursor = ""
-	} else if pageSize == len(domainWorkspaceUsers) {
+	} else {
 		cursor = users[len(users)-1].ID.String()
 	}
 
