@@ -79,6 +79,6 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, &models.FindWorkspaceUsersResponse{
 		WorkspaceUsers: domainWorkspaceUsers,
 		Cursor:         cursor,
-		TotalLength:    float32(totalLength),
+		TotalLength:    totalLength,
 	})
 }

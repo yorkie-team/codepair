@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -86,8 +88,13 @@ func TestFindWorkspaceUsers(t *testing.T) {
 		assert.True(t, userNicknames[member1.Nickname])
 		assert.True(t, userNicknames[member2.Nickname])
 
+		const pageSize = 2
+
+		v := url.Values{}
+		v.Set("page_size", strconv.Itoa(pageSize))
+
 		// Find workspace users with pagination
-		paginatedURL := findUsersURL + "?page_size=2"
+		paginatedURL := fmt.Sprintf("%s?%v", findUsersURL, v.Encode())
 		status, body = helper.DoRequest(t, http.MethodGet, paginatedURL, ownerToken, nil)
 		assert.Equal(t, http.StatusOK, status)
 
@@ -97,7 +104,8 @@ func TestFindWorkspaceUsers(t *testing.T) {
 		assert.NotEmpty(t, resp1.Cursor)
 
 		// Second page Request
-		paginatedURLWithCursor := fmt.Sprintf("%s?page_size=2&cursor=%s", findUsersURL, resp1.Cursor)
+		v.Set("cursor", resp1.Cursor)
+		paginatedURLWithCursor := fmt.Sprintf("%s?%v", findUsersURL, v.Encode())
 		status, body = helper.DoRequest(t, http.MethodGet, paginatedURLWithCursor, ownerToken, nil)
 		assert.Equal(t, http.StatusOK, status)
 
