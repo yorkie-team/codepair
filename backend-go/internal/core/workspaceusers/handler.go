@@ -55,7 +55,7 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 
 	cursor := c.QueryParam("cursor")
 
-	users, err := h.userWorkspaceRepository.FindUserWorkspacesByWorkspaceID(ctx, workspaceID, cursor, pageSize)
+	users, err := h.userWorkspaceRepository.FindUsersByWorkspaceID(ctx, workspaceID, cursor, pageSize)
 	if err != nil {
 		return middleware.NewError(http.StatusInternalServerError, "paginate workspace users")
 	}
@@ -70,16 +70,15 @@ func (h *Handler) findWorkspaceUsers(c echo.Context) error {
 		}
 	}
 
-	var returnCursor string
 	if pageSize > len(domainWorkspaceUsers) {
-		returnCursor = ""
+		cursor = ""
 	} else if pageSize == len(domainWorkspaceUsers) {
-		returnCursor = users[len(users)-1].ID.String()
+		cursor = users[len(users)-1].ID.String()
 	}
 
 	return c.JSON(http.StatusOK, &models.FindWorkspaceUsersResponse{
 		WorkspaceUsers: domainWorkspaceUsers,
-		Cursor:         returnCursor,
+		Cursor:         cursor,
 		TotalLength:    float32(totalLength),
 	})
 }

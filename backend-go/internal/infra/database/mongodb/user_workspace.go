@@ -47,11 +47,14 @@ func (r *UserWorkspaceRepository) FindUserWorkspaceByUserID(
 }
 
 // NOTE(sigmaith): We need to solve N+1 query problem here.
-func (r *UserWorkspaceRepository) FindUserWorkspacesByWorkspaceID(
+func (r *UserWorkspaceRepository) FindUsersByWorkspaceID(
 	ctx context.Context, workspaceID, cursor string, pageSize int,
 ) ([]entity.User, error) {
 	filter := bson.M{"workspace_id": entity.ID(workspaceID)}
-	opts := options.Find().SetSort(bson.D{{Key: "user_id", Value: -1}}).SetLimit(int64(pageSize))
+	opts := options.Find().
+		SetSort(bson.D{{Key: "user_id", Value: -1}}).
+		SetLimit(int64(pageSize)).
+		SetProjection(bson.M{"user_id": 1})
 
 	if cursor != "" {
 		filter["user_id"] = bson.M{"$lt": entity.ID(cursor)}
