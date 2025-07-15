@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
     # This config is for MongoDB v4
     # It's a Replica Set (required for Prisma Client)
