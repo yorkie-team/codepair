@@ -209,7 +209,8 @@ export class WorkspaceDocumentsService {
 			const requestBody = JSON.stringify({
 				project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
 				document_keys: documentKeyList,
-				include_snapshot: false,
+				include_root: false,
+				include_presences: true,
 			});
 			const req = client.request({
 				":method": "POST",
