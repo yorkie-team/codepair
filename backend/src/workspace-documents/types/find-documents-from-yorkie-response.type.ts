@@ -1,7 +1,8 @@
 class YorkieDocument {
 	id: string;
 	key: string;
-	snapshot: string;
+	root?: string;
+	presences?: any;
 	createdAt: string;
 	updatedAt: string;
 	accessedAt: string;
