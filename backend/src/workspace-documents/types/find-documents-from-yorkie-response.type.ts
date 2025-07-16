@@ -2,7 +2,7 @@ class YorkieDocument {
 	id: string;
 	key: string;
 	root?: string;
-	presences?: any;
+	presences?: { [clientId: string]: { data: { [key: string]: string } } };
 	createdAt: string;
 	updatedAt: string;
 	accessedAt: string;
