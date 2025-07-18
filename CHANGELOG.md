@@ -7,6 +7,20 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.36] - 2025-07-18
+
+### Added
+
+- Implement `workspaces` API for `backend-go`  by @window9u in https://github.com/yorkie-team/codepair/pull/486
+- Implement `workspace-users` API for `backend-go` by @sigmaith in https://github.com/yorkie-team/codepair/pull/491
+- Add Feature to Show Active Users in Document List by @kokodak in https://github.com/yorkie-team/codepair/pull/498
+
+### Changed
+
+- Align with updated GetDocuments API request/response format by @kokodak in https://github.com/yorkie-team/codepair/pull/497
+- Adjust deprecated fields(pprof flag & top-level version) by @pengooseDev in https://github.com/yorkie-team/codepair/pull/496
+- Bump up Yorkie to v0.6.20 by @kokodak in https://github.com/yorkie-team/codepair/pull/500
+
 ## [0.1.35] - 2025-06-08
 
 ### Added
