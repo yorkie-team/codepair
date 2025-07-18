@@ -19,6 +19,7 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Align with updated GetDocuments API request/response format by @kokodak in https://github.com/yorkie-team/codepair/pull/497
 - Adjust deprecated fields(pprof flag & top-level version) by @pengooseDev in https://github.com/yorkie-team/codepair/pull/496
+- Bump up Yorkie to v0.6.20 by @kokodak in https://github.com/yorkie-team/codepair/pull/500
 
 ## [0.1.35] - 2025-06-08
 
