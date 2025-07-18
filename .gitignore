@@ -46,3 +46,7 @@ coverage/
 .nyc_output/
 
 release/
+
+# Builds
+
+build/charts/codepair/charts/
