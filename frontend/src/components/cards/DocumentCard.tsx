@@ -1,4 +1,12 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import {
+	Avatar,
+	AvatarGroup,
+	Paper,
+	Stack,
+	Typography,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { Document } from "../../hooks/api/types/document.d";
 import moment from "moment";
@@ -11,6 +19,26 @@ interface DocumentCardProps {
 function DocumentCard(props: DocumentCardProps) {
 	const { document } = props;
 	const params = useParams();
+	const theme = useTheme();
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
+
+	const parsePresenceData = (data: {
+		color: string;
+		name: string;
+		cursor: string | null;
+		selection: string | null;
+	}) => {
+		return {
+			color: data.color.replace(/^"|"$/g, ""),
+			name: data.name.replace(/^"|"$/g, ""),
+			cursor: data.cursor,
+			selection: data.selection,
+		};
+	};
+
+	const presenceList = Object.values(document.presences || {}).map((presence) =>
+		parsePresenceData(presence.data)
+	);
 
 	return (
 		<Link
@@ -22,8 +50,11 @@ function DocumentCard(props: DocumentCardProps) {
 			<Paper
 				variant="outlined"
 				sx={{
+					position: "relative",
 					px: 3,
 					py: 2,
+					height: "100%",
+					width: "100%",
 				}}
 			>
 				<Stack direction="row" justifyContent="space-between">
@@ -61,28 +92,25 @@ function DocumentCard(props: DocumentCardProps) {
 							{moment(document.updatedAt).fromNow()}
 						</Typography>
 					</Stack>
-					{/* TODO(devleejb): When the fetching presemces from yorkie is implemented, uncomment the following code */}
-					{/* <AvatarGroup
-						total={6}
-						max={5}
-						sx={{
-							"& .MuiAvatar-root": {
-								width: 32,
-								height: 32,
-							},
-						}}
-					>
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-						<Avatar sx={{ width: 32, height: 32 }} alt="Remy Sharp" />
-					</AvatarGroup> */}
 				</Stack>
+				<AvatarGroup
+					max={isSmallScreen ? 2 : 4}
+					sx={{
+						position: "absolute",
+						bottom: 16,
+						right: 24,
+						"& .MuiAvatar-root": {
+							width: 38,
+							height: 38,
+						},
+					}}
+				>
+					{presenceList.map((presence, index) => (
+						<Avatar key={index} sx={{ bgcolor: presence.color }} alt={presence.name}>
+							{presence.name[0]}
+						</Avatar>
+					))}
+				</AvatarGroup>
 			</Paper>
 		</Link>
 	);

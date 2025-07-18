@@ -122,6 +122,8 @@ export class WorkspaceDocumentsService {
 				updatedAt: yorkieDocumentUpdatedAt
 					? moment(yorkieDocumentUpdatedAt).toDate()
 					: doc.updatedAt,
+				root: yorkieDocumentMap.get(doc.yorkieDocumentId)?.root ?? null,
+				presences: yorkieDocumentMap.get(doc.yorkieDocumentId)?.presences ?? null,
 			};
 		});
 

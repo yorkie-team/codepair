@@ -8,6 +8,17 @@ export class Document {
 	content?: string;
 	createdAt: Date;
 	updatedAt: Date;
+	presences?: Record<
+		string,
+		{
+			data: {
+				color: string;
+				cursor: string | null;
+				name: string;
+				selection: string | null;
+			};
+		}
+	>;
 }
 
 export class GetDocumentBySharingTokenResponse extends Document {
