@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid2, Paper, Stack, Typography } from "@mui/material";
 import CodePairIcon from "../components/icons/CodePairIcon";
 import { GithubLoginButton } from "react-social-login-buttons";
 
@@ -29,19 +29,19 @@ function Index() {
 							</Typography>
 						</Box>
 						<Stack gap={2}>
-							<Grid container spacing={1} alignItems="center">
-								<Grid item xs>
+							<Grid2 container spacing={1} alignItems="center">
+								<Grid2 size="grow">
 									<Divider sx={{ width: 1 }} />
-								</Grid>
-								<Grid item xs="auto">
+								</Grid2>
+								<Grid2 size="auto">
 									<Typography variant="body2" color="text.secondary">
 										Login with
 									</Typography>
-								</Grid>
-								<Grid item xs>
+								</Grid2>
+								<Grid2 size="grow">
 									<Divider sx={{ width: 1 }} />
-								</Grid>
-							</Grid>
+								</Grid2>
+							</Grid2>
 							{socialLoginList.map(({ SocailLoginComponent, provider }) => (
 								<SocailLoginComponent
 									key={provider}
