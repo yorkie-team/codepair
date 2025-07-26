@@ -18,6 +18,9 @@ import {
 } from "@mui/material";
 import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo, useState } from "react";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 import { Document } from "../../hooks/api/types/document.d";
 import InfiniteScroll from "react-infinite-scroller";
 import CreateModal from "../../components/modals/CreateModal";
@@ -33,11 +36,13 @@ function WorkspaceIndex() {
 	const navigate = useNavigate();
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
+	const [search, setSearch] = useState("");
+
 	const {
 		data: documentPageList,
 		fetchNextPage,
 		hasNextPage,
-	} = useGetWorkspaceDocumentListQuery(workspace?.id);
+	} = useGetWorkspaceDocumentListQuery(workspace?.id, search);
 	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [createDocumentModalOpen, setCreateDocumentModalOpen] = useState(false);
 	const documentList = useMemo(() => {
@@ -66,6 +71,10 @@ function WorkspaceIndex() {
 		navigate(document.id);
 	};
 
+	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearch(e.target.value);
+	};
+
 	return (
 		<Stack position="relative" pb={6}>
 			<Paper
@@ -86,13 +95,31 @@ function WorkspaceIndex() {
 							{documentPageList?.pages[0].totalLength}
 						</Typography>
 					</Typography>
-					<Button
-						variant="contained"
-						startIcon={<AddIcon />}
-						onClick={handleCreateDocumentModalOpen}
-					>
-						New Note
-					</Button>
+					<Stack direction="row" alignItems="center" gap={2}>
+						<TextField
+							placeholder="Search notes..."
+							variant="outlined"
+							value={search}
+							onChange={handleSearchChange}
+							size="small"
+							slotProps={{
+								input: {
+									startAdornment: (
+										<InputAdornment position="start">
+											<SearchIcon />
+										</InputAdornment>
+									),
+								},
+							}}
+						/>
+						<Button
+							variant="contained"
+							startIcon={<AddIcon />}
+							onClick={handleCreateDocumentModalOpen}
+						>
+							New Note
+						</Button>
+					</Stack>
 				</Stack>
 			</Paper>
 			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={4}>
