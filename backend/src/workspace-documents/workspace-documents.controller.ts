@@ -100,13 +100,26 @@ export class WorkspaceDocumentsController {
 			"API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
 		required: false,
 	})
+	@ApiQuery({
+		name: "search",
+		type: String,
+		description: "Search for documents by title",
+		required: false,
+	})
 	async findMany(
 		@Req() req: AuthorizedRequest,
 		@Param("workspace_id") workspaceId: string,
 		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
-		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
+		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string,
+		@Query("search", new DefaultValuePipe(undefined)) search?: string
 	): Promise<FindWorkspaceDocumentsResponse> {
-		return this.workspaceDocumentsService.findMany(req.user.id, workspaceId, pageSize, cursor);
+		return this.workspaceDocumentsService.findMany(
+			req.user.id,
+			workspaceId,
+			pageSize,
+			cursor,
+			search
+		);
 	}
 	@Get(":document_id")
 	@ApiOperation({
