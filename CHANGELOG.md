@@ -7,11 +7,26 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.37] - 2025-07-26
+
+### Added
+
+- [BE] Add document title search functionality to CodePair by @devleejb in https://github.com/yorkie-team/codepair/pull/509
+- [FE] Add document title search functionality to CodePair by @devleejb in https://github.com/yorkie-team/codepair/pull/510
+
+### Changed
+
+- Remove tag system description from `CONTRIBUTING.md` by @devleejb in https://github.com/yorkie-team/codepair/pull/504
+
+### Fixed
+
+- Fix editor scroll jumping to top when closing toolbar menu by @saemileee in https://github.com/yorkie-team/codepair/pull/508
+
 ## [0.1.36] - 2025-07-18
 
 ### Added
 
-- Implement `workspaces` API for `backend-go`  by @window9u in https://github.com/yorkie-team/codepair/pull/486
+- Implement `workspaces` API for `backend-go` by @window9u in https://github.com/yorkie-team/codepair/pull/486
 - Implement `workspace-users` API for `backend-go` by @sigmaith in https://github.com/yorkie-team/codepair/pull/491
 - Add Feature to Show Active Users in Document List by @kokodak in https://github.com/yorkie-team/codepair/pull/498
 
