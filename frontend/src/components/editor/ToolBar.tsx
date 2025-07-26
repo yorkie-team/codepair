@@ -45,6 +45,7 @@ function ToolBar({
 				horizontal: "left",
 			}}
 			disableAutoFocus
+			disableRestoreFocus
 			TransitionComponent={Fade}
 			TransitionProps={{ timeout: 300 }}
 		>
