@@ -88,10 +88,12 @@ export class WorkspaceDocumentsService {
 		const additionalOptions: Prisma.DocumentFindManyArgs = {};
 		const whereOptions: Prisma.DocumentWhereInput = {
 			workspaceId,
-			title: {
-				contains: search,
-				mode: "insensitive",
-			},
+			...(search && {
+				title: {
+					contains: search,
+					mode: "insensitive",
+				},
+			}),
 		};
 
 		if (cursor) {
