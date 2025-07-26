@@ -14,17 +14,23 @@ import { setDocumentData } from "../../store/documentSlice";
 import { UpdateDocumentRequest } from "./types/document";
 import { useDispatch } from "react-redux";
 
-export const generateGetWorkspaceDocumentListQueryKey = (workspaceId: string) => {
-	return ["workspaces", workspaceId, "documents"];
-};
+export const generateWorkspaceDocumentListQueryKey = (workspaceId: string, search?: string) => [
+	"workspaces",
+	workspaceId,
+	"documents",
+	{ search: search ?? "" },
+];
 
-export const generateGetDocumentQueryKey = (workspaceId: string, documentId: string) => {
-	return ["workpsaces", workspaceId, "documents", documentId];
-};
+export const generateWorkspaceDocumentQueryKey = (workspaceId: string, documentId: string) => [
+	"workspaces",
+	workspaceId,
+	"documents",
+	documentId,
+];
 
-export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
+export const useGetWorkspaceDocumentListQuery = (workspaceId?: string, search?: string) => {
 	const query = useInfiniteQuery<GetWorkspaceDocumentListResponse>({
-		queryKey: generateGetWorkspaceDocumentListQueryKey(workspaceId || ""),
+		queryKey: generateWorkspaceDocumentListQueryKey(workspaceId || "", search),
 		queryFn: async ({ pageParam }) => {
 			const res = await axios.get<GetWorkspaceDocumentListResponse>(
 				`/workspaces/${workspaceId}/documents`,
@@ -32,6 +38,7 @@ export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
 					params: {
 						cursor: pageParam,
 						page_size: 30,
+						search,
 					},
 				}
 			);
@@ -49,7 +56,7 @@ export const useGetWorkspaceDocumentListQuery = (workspaceId?: string) => {
 export const useGetDocumentQuery = (workspaceId?: string | null, documentId?: string | null) => {
 	const dispatch = useDispatch();
 	const query = useQuery({
-		queryKey: generateGetDocumentQueryKey(workspaceId || "", documentId || ""),
+		queryKey: generateWorkspaceDocumentQueryKey(workspaceId || "", documentId || ""),
 		enabled: Boolean(workspaceId && documentId),
 		queryFn: async () => {
 			const res = await axios.get<GetWorkspaceDocumentResponse>(
@@ -89,7 +96,7 @@ export const useCreateDocumentMutation = (workspaceId: string) => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: generateGetWorkspaceDocumentListQueryKey(workspaceId),
+				queryKey: generateWorkspaceDocumentListQueryKey(workspaceId),
 			});
 		},
 	});
@@ -122,7 +129,7 @@ export const useUpdateDocumentTitleMutation = (workspaceId: string, documentId: 
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: generateGetDocumentQueryKey(workspaceId, documentId),
+				queryKey: generateWorkspaceDocumentQueryKey(workspaceId, documentId),
 			});
 		},
 	});
