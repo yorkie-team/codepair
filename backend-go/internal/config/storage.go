@@ -5,7 +5,7 @@ import (
 )
 
 type Storage struct {
-	Provider string `validate:"required,oneof=minio s3"`
+	Provider string `validate:"omitempty,oneof=minio s3"`
 	S3       *S3    `validate:"omitempty"`
 	Minio    *Minio `validate:"omitempty"`
 }
@@ -28,6 +28,8 @@ type Minio struct {
 // We also check that the nested config for the chosen provider is not nil.
 func (s *Storage) validate() error {
 	switch s.Provider {
+	case "":
+		return nil
 	case "minio":
 		if err := validate.Struct(s.Minio); err != nil {
 			return fmt.Errorf("minio config validation failed: %w", err)

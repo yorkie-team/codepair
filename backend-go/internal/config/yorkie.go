@@ -6,12 +6,14 @@ const (
 	DefaultYorkieAPIAddr       = "http://localhost:8080"
 	DefaultYorkieProjectName   = "default"
 	DefaultYorkieProjectSecret = ""
+	DefaultYorkieIntelligence  = ""
 )
 
 type Yorkie struct {
 	APIAddr          string `validate:"required,url"`
 	ProjectName      string `validate:"required"`
 	ProjectSecretKey string
+	Intelligence     string
 }
 
 // ensureDefaultValue applies defaults for Yorkie.
@@ -24,6 +26,9 @@ func (y *Yorkie) ensureDefaultValue() {
 	}
 	if y.ProjectSecretKey == "" {
 		y.ProjectSecretKey = DefaultYorkieProjectSecret
+	}
+	if y.Intelligence == "" {
+		y.Intelligence = DefaultYorkieIntelligence
 	}
 }
 

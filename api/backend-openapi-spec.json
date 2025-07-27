@@ -202,15 +202,17 @@
       "get": {
         "operationId": "loginWithGithub",
         "summary": "Log In or Sign Up via GitHub",
-        "description": "Authenticates the user using GitHub social login. Returns an access token and refresh token.",
+        "description": "Redirects the user to GitHub OAuth login. On successful login, redirects the user back to the frontend with accessToken and refreshToken in the URL query parameters.",
         "parameters": [],
         "responses": {
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
+          "302": {
+            "description": "Redirects to the frontend URL",
+            "headers": {
+              "Location": {
+                "description": "Callback URL including accessToken and refreshToken as query parameters.",
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "type": "string",
+                  "example": "https://your-frontend.com/auth/callback?accessToken=abc123&refreshToken=def456"
                 }
               }
             }
@@ -1036,7 +1038,8 @@
               "enum": [
                 "github-issue",
                 "github-pr",
-                "document-writing"
+                "document-writing",
+                "summarize"
               ],
               "type": "string"
             }
@@ -1274,23 +1277,6 @@
         },
         "required": [
           "nickname"
-        ]
-      },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "Access token for CodePair"
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "Refresh token to obtain new access tokens"
-          }
-        },
-        "required": [
-          "accessToken",
-          "refreshToken"
         ]
       },
       "RefreshTokenRequest": {
@@ -1857,8 +1843,10 @@
             "description": "Workspace ID where the file will be stored"
           },
           "contentLength": {
-            "type": "number",
-            "description": "Size of the content to upload"
+            "type": "integer",
+            "format": "int64",
+            "description": "Size of the content to upload",
+            "minLength": 1
           },
           "contentType": {
             "type": "string",
@@ -1949,7 +1937,32 @@
           },
           "config": {
             "type": "object",
-            "description": "Additional Yorkie Intelligence configuration"
+            "description": "Yorkie Intelligence Config",
+            "properties": {
+              "features": {
+                "type": "array",
+                "description": "List of features",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "icon": {
+                      "type": "string"
+                    },
+                    "feature": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "icon",
+                    "feature"
+                  ]
+                }
+              }
+            }
           }
         },
         "required": [

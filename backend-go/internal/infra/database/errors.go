@@ -9,6 +9,9 @@ var (
 	// ErrUserNotFound No matching user found
 	ErrUserNotFound = errors.New("user not found")
 
+	// ErrWorkspaceNameConflict workspace name already exists user nickname or workspace title
+	ErrWorkspaceNameConflict = errors.New("workspace name conflicts")
+
 	// ErrUserAlreadyExists user already exists
 	ErrUserAlreadyExists = errors.New("user already exists")
 
@@ -23,4 +26,16 @@ var (
 
 	// ErrDisconnected Database connection lost
 	ErrDisconnected = errors.New("database disconnected")
+
+	// ErrWorkspaceNotFound No matching workspace found
+	ErrWorkspaceNotFound = errors.New("workspace not found")
+
+	// ErrUserWorkspaceNotFound No matching user workspace found
+	ErrUserWorkspaceNotFound = errors.New("user workspace not found")
+
+	// ErrWorkspaceInvitationNotFound No matching workspace invitation found
+	ErrWorkspaceInvitationNotFound = errors.New("workspace invitation not found")
+
+	// ErrWorkspaceInvitationExpired workspace invitation has expired
+	ErrWorkspaceInvitationExpired = errors.New("workspace invitation expired")
 )

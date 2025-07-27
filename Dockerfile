@@ -2,8 +2,8 @@
 # Start from the node base image
 FROM node:18.20.7-alpine3.21 AS base
 # Set pnpm installation directory and add it to the PATH
-RUN corepack enable
-RUN corepack use pnpm@9
+
+RUN npm i -g pnpm@9
 
 # Download dependency for Prisma
 RUN apk upgrade --update-cache --available && \
@@ -37,11 +37,11 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN sed -i 's/"prepare": "husky install"/"prepare": ""/' ./package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpx prisma generate --schema=./backend/prisma/schema.prisma
+RUN pnpx prisma@^5.8.1 generate --schema=./backend/prisma/schema.prisma
 RUN pnpm backend build
 RUN pnpm deploy --filter=backend --prod /prod/backend
 WORKDIR /prod/backend
-RUN pnpx prisma generate
+RUN pnpx prisma@^5.8.1 generate
 
 # Stage 3: deploy stage
 FROM base AS backend

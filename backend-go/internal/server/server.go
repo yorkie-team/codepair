@@ -10,43 +10,65 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/yorkie-team/codepair/backend/internal/config"
+	"github.com/yorkie-team/codepair/backend/internal/core/auth"
+	"github.com/yorkie-team/codepair/backend/internal/core/files"
 	"github.com/yorkie-team/codepair/backend/internal/core/hello"
+	"github.com/yorkie-team/codepair/backend/internal/core/settings"
 	"github.com/yorkie-team/codepair/backend/internal/core/users"
+	"github.com/yorkie-team/codepair/backend/internal/core/workspace"
+	"github.com/yorkie-team/codepair/backend/internal/core/workspaceusers"
 	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/minio"
+	"github.com/yorkie-team/codepair/backend/internal/infra/storage/s3"
 	"github.com/yorkie-team/codepair/backend/internal/middleware"
 )
 
 type CodePair struct {
-	config *config.Config
-	echo   *echo.Echo
+	echo *echo.Echo
 }
 
 // New creates a new CodePair server.
-func New(e *echo.Echo, conf *config.Config) (*CodePair, error) {
+func New(e *echo.Echo) (*CodePair, error) {
+	conf := config.GetConfig()
 	e.HTTPErrorHandler = middleware.HTTPErrorHandler
 
-	db, err := mongodb.Dial(conf.Mongo, e.Logger)
-	if err != nil {
-		return nil, fmt.Errorf("failed to dial mongo: %w", err)
+	db, err := mongodb.Dial()
+	if err == nil {
+		e.Logger.Infof("MongoDB connected, URI: %s, DB: %s", conf.Mongo.ConnectionURI, conf.Mongo.DatabaseName)
+	} else {
+		return nil, fmt.Errorf("dial mongo: %w", err)
 	}
 
-	hello.Register(e, mongodb.NewHelloRepository(conf.Mongo, db))
-	users.Register(e, mongodb.NewUserRepository(conf.Mongo, db))
+	hello.Register(e, mongodb.NewHelloRepository(db))
+	auth.Register(e, mongodb.NewUserRepository(db))
+	users.Register(e, mongodb.NewUserRepository(db))
+	if conf.Storage.Provider != "" {
+		var storageClient storage.Client
+		storageClient, err = newStorageClient(conf.Storage)
+		if err != nil {
+			return nil, fmt.Errorf("storage client: %w", err)
+		}
+		files.Register(e, storageClient, mongodb.NewWorkspaceRepository(db))
+	}
+	settings.Register(e)
+	workspace.Register(e, mongodb.NewWorkspaceRepository(db))
+	workspaceusers.Register(e, mongodb.NewUserWorkspaceRepository(db))
 
 	e.Pre(middleware.JWT(conf.JWT.AccessTokenSecret))
 
 	cp := &CodePair{
-		config: conf,
-		echo:   e,
+		echo: e,
 	}
 	return cp, nil
 }
 
 // Start starts the server.
 func (c *CodePair) Start() error {
-	addr := fmt.Sprintf(":%d", c.config.Server.Port)
+	port := config.GetConfig().Server.Port
+	addr := fmt.Sprintf(":%d", port)
 	if err := c.echo.Start(addr); !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("failed to start server: %w", err)
+		return fmt.Errorf("start server: %w", err)
 	}
 	return nil
 }
@@ -58,4 +80,23 @@ func (c *CodePair) Shutdown(ctx context.Context) error {
 func (c *CodePair) ServerAddr() string {
 	port := c.echo.ListenerAddr().(*net.TCPAddr).Port
 	return fmt.Sprintf("http://localhost:%d", port)
+}
+
+func newStorageClient(conf *config.Storage) (storage.Client, error) {
+	switch conf.Provider {
+	case "s3":
+		client, err := s3.NewClient(conf.S3)
+		if err != nil {
+			return nil, fmt.Errorf("S3 client: %w", err)
+		}
+		return client, nil
+	case "minio":
+		client, err := minio.NewClient(conf.Minio)
+		if err != nil {
+			return nil, fmt.Errorf("minio client: %w", err)
+		}
+		return client, nil
+	default:
+		return nil, fmt.Errorf("unsupported storage provider: %s", conf.Provider)
+	}
 }

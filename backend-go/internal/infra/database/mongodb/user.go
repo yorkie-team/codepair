@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/lithammer/shortuuid"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 
@@ -20,44 +21,56 @@ type UserRepository struct {
 }
 
 // NewUserRepository creates a new instance of NewUserRepository.
-func NewUserRepository(conf *config.Mongo, client *mongo.Client) *UserRepository {
+func NewUserRepository(client *mongo.Client) *UserRepository {
+	conf := config.GetConfig().Mongo
 	return &UserRepository{
 		collection: client.Database(conf.DatabaseName).Collection(ColUsers),
 	}
 }
 
-// CreateUserBySocial creates user by Social id and provider.
-func (r *UserRepository) CreateUserBySocial(provider, uid string) (entity.ID, error) {
-	ctx := context.Background()
-
+// FindOrCreateUserBySocialID creates user by Social id and provider.
+func (r *UserRepository) FindOrCreateUserBySocialID(ctx context.Context, provider, uid string) (entity.ID, error) {
 	now := time.Now()
-	result, err := r.collection.InsertOne(ctx, bson.M{
+
+	doc := bson.M{
 		"social_provider": provider,
 		"social_uid":      uid,
-		"nickname":        "",
-		"created_at":      now,
-		"updated_at":      now,
-	})
-	if err != nil {
-		if mongo.IsDuplicateKeyError(err) {
-			return "", database.ErrUserAlreadyExists
+		// Note(window9u): nickname is not unique, so we should use a random string
+		"nickname":   fmt.Sprintf("user-%s", shortuuid.New()),
+		"created_at": now,
+		"updated_at": now,
+	}
+	result, err := r.collection.InsertOne(ctx, doc)
+	if err == nil {
+		oid, ok := result.InsertedID.(bson.ObjectID)
+		if !ok {
+			return "", fmt.Errorf("inserted ID is not of type bson.ObjectID but %T", result.InsertedID)
 		}
-
-		return "", fmt.Errorf("create user: %w", err)
+		return entity.ID(oid.Hex()), nil
 	}
 
-	oid, ok := result.InsertedID.(bson.ObjectID)
-	if !ok {
-		return "", fmt.Errorf("unexpected ID type: %T", result.InsertedID)
+	if !mongo.IsDuplicateKeyError(err) {
+		return "", fmt.Errorf("insert user: %w", err)
 	}
 
-	return entity.ID(oid.Hex()), nil
+	filter := bson.M{
+		"social_provider": provider,
+		"social_uid":      uid,
+	}
+
+	user := entity.User{}
+	if err := r.collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return "", database.ErrUserNotFound
+		}
+		return "", fmt.Errorf("find user: %w", err)
+	}
+
+	return user.ID, nil
 }
 
 // FindUser retrieves a user by their ID.
-func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
-	ctx := context.Background()
-
+func (r *UserRepository) FindUser(ctx context.Context, id entity.ID) (entity.User, error) {
 	filter := bson.M{"_id": id}
 	result := r.collection.FindOne(ctx, filter)
 
@@ -73,9 +86,7 @@ func (r *UserRepository) FindUser(id entity.ID) (entity.User, error) {
 }
 
 // UpdateNickname updates the nickname of a user.
-func (r *UserRepository) UpdateNickname(id entity.ID, nickname string) error {
-	ctx := context.Background()
-
+func (r *UserRepository) UpdateNickname(ctx context.Context, id entity.ID, nickname string) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{

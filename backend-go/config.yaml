@@ -59,6 +59,10 @@ Yorkie:
   # ProjectSecretKey is the secret key for authenticating with Yorkie.
   ProjectSecretKey: ""
 
+  # Intelligence is the model name for Yorkie Intelligence.
+  # Available options: ollama:llama3.1, ollama:gemma2, ollama:gemma2:2b, ollama:phi3, ollama:mistral, ollama:neural-chat, ollama:starling-lm, ollama:solar, openai:gpt-3.5-turbo, openai:gpt-4o-mini, etc.
+  Intelligence: ""
+
 # Mongo is the configuration for MongoDB.
 Mongo:
   # ConnectionTimeout is the timeout for establishing a connection to MongoDB.
@@ -75,7 +79,7 @@ Mongo:
 
 # Storage is the configuration for file storage.
 Storage:
-  # Provider specifies the storage provider ("minio" for local, "s3" for AWS S3).
+  # Provider specifies the storage provider ("minio" for local, "s3" for AWS S3, empty value for disable).
   Provider: "minio"
 
   Minio:

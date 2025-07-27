@@ -1,7 +1,7 @@
 package integration
 
 import (
-	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"testing"
@@ -10,23 +10,29 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/yorkie-team/codepair/backend/api/codepair/v1/models"
+	"github.com/yorkie-team/codepair/backend/internal/infra/database/mongodb"
 	"github.com/yorkie-team/codepair/backend/internal/jwt"
 	"github.com/yorkie-team/codepair/backend/test/helper"
 )
 
 func TestFindUser(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
-	e := helper.NewTestEcho(t)
-	svr := helper.SetupTestServer(t, conf, e)
-	user := helper.SetupDefaultUser(t, conf, e.Logger)
+	codePair := helper.SetupTestServer(t)
 	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.ServerAddr() + "/users"
+	url := codePair.ServerAddr() + "/users"
+	mongo, _ := mongodb.Dial()
+	db := mongo.Database(conf.Mongo.DatabaseName)
+	defer func() {
+		err := mongo.Disconnect(context.Background())
+		assert.NoError(t, err)
+	}()
 
 	t.Run("find user by valid id", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
+		defer helper.ClearCollections(t, db)
 
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		user, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -38,6 +44,10 @@ func TestFindUser(t *testing.T) {
 	})
 
 	t.Run("find user by invalid id", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
+
+		user, _, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
 		token, err := gen.GenerateAccessToken(string(user.ID) + "invalid")
 		assert.NoError(t, err)
 
@@ -48,6 +58,8 @@ func TestFindUser(t *testing.T) {
 	})
 
 	t.Run("find user by non-exists id", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
+
 		token, err := gen.GenerateAccessToken(bson.NewObjectID().Hex())
 		assert.NoError(t, err)
 
@@ -60,23 +72,27 @@ func TestFindUser(t *testing.T) {
 
 func TestChangeUserNickName(t *testing.T) {
 	conf := helper.NewTestConfig(t.Name())
-	e := helper.NewTestEcho(t)
-	svr := helper.SetupTestServer(t, conf, e)
-	user := helper.SetupDefaultUser(t, conf, e.Logger)
-	gen := jwt.NewGenerator(conf.JWT)
-	url := svr.ServerAddr() + "/users"
+	codePair := helper.SetupTestServer(t)
+	url := codePair.ServerAddr() + "/users"
+	mongo, _ := mongodb.Dial()
+	db := mongo.Database(conf.Mongo.DatabaseName)
+	defer func() {
+		err := mongo.Disconnect(context.Background())
+		assert.NoError(t, err)
+	}()
 
 	t.Run("change valid nickname", func(t *testing.T) {
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
+		defer helper.ClearCollections(t, db)
+
+		_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
 
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "valid_nick"})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, _ := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 		assert.Equal(t, http.StatusOK, status)
 
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -85,17 +101,18 @@ func TestChangeUserNickName(t *testing.T) {
 	})
 
 	t.Run("change to empty nickname format", func(t *testing.T) {
-		t.Skip("add this after implement nickname validation")
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
+		defer helper.ClearCollections(t, db)
 
+		_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
+		t.Skip("add this after implement nickname validation")
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: ""})
 		assert.NoError(t, err)
 
-		status, _ := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, _ := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 		assert.Equal(t, http.StatusOK, status)
 
-		status, body := helper.DoRequest(t, http.MethodGet, url, token, nil)
+		status, body := helper.DoRequest(t, http.MethodGet, url, access, nil)
 		assert.Equal(t, http.StatusOK, status)
 
 		var resData models.FindUserResponse
@@ -104,14 +121,15 @@ func TestChangeUserNickName(t *testing.T) {
 	})
 
 	t.Run("change to invalid nickname format", func(t *testing.T) {
-		t.Skip("add this after implement nickname validation")
-		token, err := gen.GenerateAccessToken(string(user.ID))
-		assert.NoError(t, err)
+		defer helper.ClearCollections(t, db)
 
+		_, access, _ := helper.LoginUserTestGithub(t, t.Name(), codePair.ServerAddr())
+
+		t.Skip("add this after implement nickname validation")
 		reqBody, err := json.Marshal(models.ChangeNicknameRequest{Nickname: "!!@21!!!@#/.,.,"})
 		assert.NoError(t, err)
 
-		status, body := helper.DoRequest(t, http.MethodPut, url, token, bytes.NewReader(reqBody))
+		status, body := helper.DoRequest(t, http.MethodPut, url, access, reqBody)
 
 		assert.Equal(t, http.StatusBadRequest, status)
 
@@ -121,6 +139,8 @@ func TestChangeUserNickName(t *testing.T) {
 	})
 
 	t.Run("change duplicated nickname", func(t *testing.T) {
+		defer helper.ClearCollections(t, db)
+
 		t.Skip("add this after implement create user api")
 	})
 }

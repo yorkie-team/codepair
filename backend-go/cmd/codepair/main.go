@@ -19,12 +19,12 @@ func main() {
 		e.Logger.Fatal(err)
 	}
 
-	conf, err := config.LoadConfig(configPath)
+	err := config.LoadConfig(configPath)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
 
-	cp, err := server.New(e, conf)
+	cp, err := server.New(e)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}

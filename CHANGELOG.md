@@ -7,6 +7,65 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.37] - 2025-07-26
+
+### Added
+
+- [BE] Add document title search functionality to CodePair by @devleejb in https://github.com/yorkie-team/codepair/pull/509
+- [FE] Add document title search functionality to CodePair by @devleejb in https://github.com/yorkie-team/codepair/pull/510
+
+### Changed
+
+- Remove tag system description from `CONTRIBUTING.md` by @devleejb in https://github.com/yorkie-team/codepair/pull/504
+
+### Fixed
+
+- Fix editor scroll jumping to top when closing toolbar menu by @saemileee in https://github.com/yorkie-team/codepair/pull/508
+
+## [0.1.36] - 2025-07-18
+
+### Added
+
+- Implement `workspaces` API for `backend-go` by @window9u in https://github.com/yorkie-team/codepair/pull/486
+- Implement `workspace-users` API for `backend-go` by @sigmaith in https://github.com/yorkie-team/codepair/pull/491
+- Add Feature to Show Active Users in Document List by @kokodak in https://github.com/yorkie-team/codepair/pull/498
+
+### Changed
+
+- Align with updated GetDocuments API request/response format by @kokodak in https://github.com/yorkie-team/codepair/pull/497
+- Adjust deprecated fields(pprof flag & top-level version) by @pengooseDev in https://github.com/yorkie-team/codepair/pull/496
+- Bump up Yorkie to v0.6.20 by @kokodak in https://github.com/yorkie-team/codepair/pull/500
+
+## [0.1.35] - 2025-06-08
+
+### Added
+
+- Implement `files` service API for `backend-go` by @sigmaith in https://github.com/yorkie-team/codepair/pull/478
+- Integrate `service` layer into `handler` by @window9u in https://github.com/yorkie-team/codepair/pull/483
+- Implement `settings` API for `backend-go` by @blurfx in https://github.com/yorkie-team/codepair/pull/482
+
+### Changed
+
+- Change config to singleton instance by @blurfx in https://github.com/yorkie-team/codepair/pull/481
+- Update golangci-lint version to 2 by @blurfx in https://github.com/yorkie-team/codepair/pull/485
+
+### Fixed
+
+- Fix version pinning prisma and install pnpm from npm by @blurfx in https://github.com/yorkie-team/codepair/pull/484
+
+## [0.1.34] - 2025-05-28
+
+### Added
+
+- Implement Auth Service with GitHub OAuth by @window9u in https://github.com/yorkie-team/codepair/pull/467
+- Add Summarization Feature in Yorkie Intelligence by @krapie in https://github.com/yorkie-team/codepair/pull/479
+
+### Changed
+
+- Bump up Yorkie to v0.6.10 by @hackerwins in https://github.com/yorkie-team/codepair/pull/474
+- Bump up Yorkie to v0.6.12 by @hackerwins in https://github.com/yorkie-team/codepair/pull/477
+- Bump JamesIves/github-pages-deploy-action from 4.7.2 to 4.7.3 by @dependabot in https://github.com/yorkie-team/codepair/pull/460
+
 ## [0.1.33] - 2025-05-03
 
 ### Added

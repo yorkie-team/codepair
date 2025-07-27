@@ -3,7 +3,7 @@ import * as cmView from "@codemirror/view";
 import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
 import _ from "lodash";
-import * as yorkie from "yorkie-js-sdk";
+import * as yorkie from "@yorkie-js/sdk";
 import {
 	YorkieCodeMirrorDocType,
 	YorkieCodeMirrorPresenceType,

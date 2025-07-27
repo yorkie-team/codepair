@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 
-	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
@@ -13,7 +12,8 @@ import (
 )
 
 // Dial creates an instance of Mongo and dials the given MongoDB.
-func Dial(conf *config.Mongo, logger echo.Logger) (*mongo.Client, error) {
+func Dial() (*mongo.Client, error) {
+	conf := config.GetConfig().Mongo
 	client, err := mongo.Connect(
 		options.Client().
 			ApplyURI(conf.ConnectionURI).
@@ -34,8 +34,6 @@ func Dial(conf *config.Mongo, logger echo.Logger) (*mongo.Client, error) {
 	if err := ensureIndexes(context.Background(), client.Database(conf.DatabaseName)); err != nil {
 		return nil, err
 	}
-
-	logger.Infof("MongoDB connected, URI: %s, DB: %s", conf.ConnectionURI, conf.DatabaseName)
 
 	return client, nil
 }

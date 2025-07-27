@@ -19,15 +19,17 @@ type Config struct {
 	Storage *Storage
 }
 
+var config *Config
+
 // LoadConfig loads configuration settings from a file (if provided) and from environment variables.
 // It returns the populated Config, a status message describing which sources were used, and an error if any.
-func LoadConfig(filePath string) (*Config, error) {
+func LoadConfig(filePath string) error {
 	if err := bindEnvironmentVariables(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := readConfigFile(filePath); err != nil {
-		return nil, err
+		return err
 	}
 
 	cfg := &Config{
@@ -39,16 +41,17 @@ func LoadConfig(filePath string) (*Config, error) {
 		Storage: &Storage{},
 	}
 	if err := viper.Unmarshal(cfg); err != nil {
-		return nil, fmt.Errorf("unable to decode configuration into struct: %w", err)
+		return fmt.Errorf("unable to decode configuration into struct: %w", err)
 	}
 
 	cfg.EnsureDefaultValue()
 
 	if err := cfg.validate(); err != nil {
-		return nil, fmt.Errorf("failed to validate config: %w", err)
+		return fmt.Errorf("failed to validate config: %w", err)
 	}
 
-	return cfg, nil
+	config = cfg
+	return nil
 }
 
 // bindEnvironmentVariables binds each configuration key to its corresponding environment variable.
@@ -137,4 +140,18 @@ func (c *Config) validate() error {
 	}
 
 	return nil
+}
+
+func GetConfig() *Config {
+	if config == nil {
+		panic("config not initialized")
+	}
+
+	return config
+}
+
+// SetConfig sets the global config instance.
+// This is primarily used for testing purposes.
+func SetConfig(cfg *Config) {
+	config = cfg
 }

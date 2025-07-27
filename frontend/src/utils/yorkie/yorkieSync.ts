@@ -1,6 +1,6 @@
 import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
-import * as yorkie from "yorkie-js-sdk";
+import * as yorkie from "@yorkie-js/sdk";
 
 export type YorkieCodeMirrorDocType = {
 	content: yorkie.Text<yorkie.Indexable>;
