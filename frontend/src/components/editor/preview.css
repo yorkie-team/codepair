@@ -1095,6 +1095,10 @@ body[data-color-mode*="light"] {
 			}
 		}
 	}
+
+	.code-block-wrapper {
+		position: relative;
+	}
 }
 
 .markdown-preview {

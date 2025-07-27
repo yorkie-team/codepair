@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from "@mui/material";
+import { CircularProgress, Stack, Snackbar, Alert } from "@mui/material";
 import "katex/dist/katex.min.css";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -18,6 +18,8 @@ import "./editor.css";
 import "./preview.css";
 import _ from "lodash";
 import { addSoftLineBreak } from "../../utils/document";
+import CodeBlockCopyButton from "../common/CodeBlockCopyButton";
+import { useCodeBlocks } from "../../hooks/useCodeBlocks";
 
 const DELAY = 500;
 
@@ -55,7 +57,10 @@ const Preview = () => {
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
+	const [showCopySuccess, setShowCopySuccess] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const { codeBlocks, detectCodeBlocks } = useCodeBlocks();
+
 	const throttledUpdatePreviewContent = useMemo(
 		() =>
 			_.throttle(
@@ -95,6 +100,9 @@ const Preview = () => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		IncrementalDOM.patch(containerRef.current, md.renderToIncrementalDOM(content));
+
+		setTimeout(() => detectCodeBlocks(containerRef), 0);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
 
 	if (!editorStore?.doc) {
@@ -106,12 +114,38 @@ const Preview = () => {
 	}
 
 	return (
-		<div
-			ref={containerRef}
-			data-color-mode={currentTheme}
-			style={{ paddingBottom: "2rem" }}
-			className="markdown-preview"
-		/>
+		<>
+			<div
+				ref={containerRef}
+				data-color-mode={currentTheme}
+				style={{ paddingBottom: "2rem" }}
+				className="markdown-preview"
+			/>
+
+			{codeBlocks.map(({ id, text, container }) => (
+				<CodeBlockCopyButton
+					key={id}
+					codeText={text}
+					onCopy={() => setShowCopySuccess(true)}
+					container={container}
+				/>
+			))}
+
+			<Snackbar
+				open={showCopySuccess}
+				autoHideDuration={2000}
+				onClose={() => setShowCopySuccess(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setShowCopySuccess(false)}
+					severity="success"
+					sx={{ width: "100%" }}
+				>
+					Code copied to clipboard!
+				</Alert>
+			</Snackbar>
+		</>
 	);
 };
 
