@@ -2,12 +2,13 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
 	AppBar,
-	Grid2 as Grid,
+	Box,
 	IconButton,
 	Stack,
 	Toolbar,
 	Tooltip,
 	Typography,
+	useMediaQuery,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 import { useUserPresence } from "../../hooks/useUserPresence";
 import { selectDocument } from "../../store/documentSlice";
+import { DRAWER_WIDTH } from "../../constants/layout";
 import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
 import { selectWorkspace } from "../../store/workspaceSlice";
 import { ShareRole } from "../../utils/share";
@@ -38,6 +40,7 @@ function DocumentHeader() {
 	const isEditingDisabled = Boolean(editorState.shareRole);
 	const { enqueueSnackbar } = useSnackbar();
 	const [moreButtonAnchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const isWideEnough = useMediaQuery(`(min-width:${DRAWER_WIDTH + 512}px)`);
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -85,9 +88,23 @@ function DocumentHeader() {
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
 			<Toolbar>
-				<Grid container spacing={2} width="100%">
-					<Grid size={4}>
-						<Stack direction="row" spacing={1} alignItems="center" gap={1}>
+				<Stack
+					width="100%"
+					direction="row"
+					justifyContent="space-between"
+					alignItems="center"
+				>
+					<Box>
+						<Stack
+							direction="row"
+							spacing={1}
+							alignItems="center"
+							gap={1}
+							sx={{
+								width: isWideEnough ? DRAWER_WIDTH : undefined,
+								textAlign: "left",
+							}}
+						>
 							{!editorState.shareRole && (
 								<Tooltip title="Back to Previous Page">
 									<IconButton color="inherit" onClick={handleToPrevious}>
@@ -95,32 +112,39 @@ function DocumentHeader() {
 									</IconButton>
 								</Tooltip>
 							)}
-							<Typography variant="h6" sx={{ fontWeight: 500 }}>
-								{workspaceState.data?.title}
-							</Typography>
-							<DownloadMenu />
+							{isWideEnough && (
+								<>
+									<Typography variant="h6" component="span" noWrap>
+										{workspaceState.data?.title}
+									</Typography>
+									<DownloadMenu />
+								</>
+							)}
 						</Stack>
-					</Grid>
-					<Grid size={4}>
+					</Box>
+					<Box sx={{ flexGrow: 1, overflow: "hidden", px: 2 }}>
 						<Stack alignItems="center" justifyContent="center" height="100%">
 							<Typography
 								contentEditable={!isEditingDisabled}
-								suppressContentEditableWarning={true}
 								sx={{
+									maxWidth: "100%",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
 									":focus": {
 										outline: "none",
 										border: "none",
 									},
 								}}
-								onBlur={(e) => handleUpdateDocumentTitle(e)}
-								maxWidth={300}
 								noWrap
+								suppressContentEditableWarning
+								onBlur={handleUpdateDocumentTitle}
 							>
 								{documentStore.data?.title}
 							</Typography>
 						</Stack>
-					</Grid>
-					<Grid size={4}>
+					</Box>
+
+					<Box>
 						<Stack direction="row" justifyContent="end" gap={1}>
 							<UserPresenceList presenceList={presenceList} />
 							{!editorState.shareRole && <ShareButton />}
@@ -133,8 +157,8 @@ function DocumentHeader() {
 								onClose={handleDocumentMenuClose}
 							/>
 						</Stack>
-					</Grid>
-				</Grid>
+					</Box>
+				</Stack>
 			</Toolbar>
 		</AppBar>
 	);
