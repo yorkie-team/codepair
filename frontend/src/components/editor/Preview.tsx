@@ -101,9 +101,11 @@ const Preview = () => {
 		// @ts-ignore
 		IncrementalDOM.patch(containerRef.current, md.renderToIncrementalDOM(content));
 
-		setTimeout(() => detectCodeBlocks(containerRef), 0);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content]);
+		// Use requestAnimationFrame for more reliable DOM update detection
+		requestAnimationFrame(() => {
+			detectCodeBlocks(containerRef);
+		});
+	}, [content, detectCodeBlocks]);
 
 	if (!editorStore?.doc) {
 		return (
