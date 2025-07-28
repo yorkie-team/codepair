@@ -31,10 +31,16 @@ const CopyButton = styled(IconButton)(({ theme }) => ({
 type CodeBlockCopyButtonProps = {
 	codeText: string;
 	onCopy: () => void;
+	onError?: (error: string) => void;
 	container: HTMLElement;
 };
 
-const CodeBlockCopyButton = ({ codeText, onCopy, container }: CodeBlockCopyButtonProps) => {
+const CodeBlockCopyButton = ({
+	codeText,
+	onCopy,
+	onError,
+	container,
+}: CodeBlockCopyButtonProps) => {
 	const [copied, setCopied] = useState(false);
 
 	const handleCopy = async () => {
@@ -48,6 +54,7 @@ const CodeBlockCopyButton = ({ codeText, onCopy, container }: CodeBlockCopyButto
 			}, 2000);
 		} catch (error) {
 			console.error("Failed to copy code:", error);
+			onError?.("Failed to copy code to clipboard");
 			// fallback: copy to clipboard using textarea
 			try {
 				const textArea = document.createElement("textarea");
@@ -67,9 +74,12 @@ const CodeBlockCopyButton = ({ codeText, onCopy, container }: CodeBlockCopyButto
 					setTimeout(() => {
 						setCopied(false);
 					}, 2000);
+				} else {
+					onError?.("Failed to copy code to clipboard");
 				}
 			} catch (fallbackError) {
 				console.error("Fallback copy failed:", fallbackError);
+				onError?.("Failed to copy code to clipboard");
 			}
 		}
 	};

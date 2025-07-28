@@ -58,6 +58,7 @@ const Preview = () => {
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
 	const [showCopySuccess, setShowCopySuccess] = useState(false);
+	const [showCopyError, setShowCopyError] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { codeBlocks, detectCodeBlocks } = useCodeBlocks();
 
@@ -129,6 +130,7 @@ const Preview = () => {
 					key={id}
 					codeText={text}
 					onCopy={() => setShowCopySuccess(true)}
+					onError={() => setShowCopyError(true)}
 					container={container}
 				/>
 			))}
@@ -145,6 +147,21 @@ const Preview = () => {
 					sx={{ width: "100%" }}
 				>
 					Code copied to clipboard!
+				</Alert>
+			</Snackbar>
+
+			<Snackbar
+				open={showCopyError}
+				autoHideDuration={3000}
+				onClose={() => setShowCopyError(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setShowCopyError(false)}
+					severity="error"
+					sx={{ width: "100%" }}
+				>
+					Failed to copy code to clipboard
 				</Alert>
 			</Snackbar>
 		</>
