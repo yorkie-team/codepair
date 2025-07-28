@@ -128,7 +128,7 @@ function DocumentHeader() {
 								contentEditable={!isEditingDisabled}
 								sx={{
 									maxWidth: "100%",
-									overflowX: "auto",
+									overflow: "hidden",
 									textOverflow: "ellipsis",
 									":focus": {
 										outline: "none",
