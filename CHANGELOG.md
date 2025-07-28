@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.38] - 2025-07-28
+
+### Changed
+
+- Bump up Yorkie to v0.6.22 by @kokodak in https://github.com/yorkie-team/codepair/pull/515
+
 ## [0.1.37] - 2025-07-26
 
 ### Added
