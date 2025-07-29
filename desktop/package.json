@@ -14,7 +14,7 @@
 		"start": "pnpm run build-ts && cross-env NODE_ENV=production electron .",
 		"start:dev": "pnpm run build-ts && cross-env NODE_ENV=development electron .",
 		"build-ts": "tsc -p tsconfig.json",
-		"build-electron": "pnpm run build-ts && electron-builder",
+		"build-electron": "pnpm run build-ts && electron-builder --publish never",
 		"release": "pnpm run build-ts && electron-builder --publish always",
 		"lint": "eslint . --report-unused-disable-directives --max-warnings 0",
 		"format": "prettier . --write",
