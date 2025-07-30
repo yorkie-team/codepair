@@ -9,7 +9,7 @@ import {
 	Box,
 	Button,
 	CircularProgress,
-	Grid2,
+	Grid2 as Grid,
 	Paper,
 	Stack,
 	Tab,
@@ -140,17 +140,17 @@ function WorkspaceIndex() {
 				}
 			>
 				<Box width={1}>
-					<Grid2
+					<Grid
 						container
 						spacing={{ xs: 2, md: 3 }}
 						columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
 					>
 						{documentList.map((document) => (
-							<Grid2 key={document.id} size={4}>
+							<Grid key={document.id} size={4}>
 								<DocumentCard document={document} />
-							</Grid2>
+							</Grid>
 						))}
-					</Grid2>
+					</Grid>
 				</Box>
 			</InfiniteScroll>
 			<CreateModal
