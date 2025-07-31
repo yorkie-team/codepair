@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const CopyButtonContainer = styled("div")(({ theme }) => ({
 	position: "absolute",
@@ -42,6 +42,16 @@ const CodeBlockCopyButton = ({
 	container,
 }: CodeBlockCopyButtonProps) => {
 	const [copied, setCopied] = useState(false);
+	const timeoutRef = useRef<number>();
+
+	// Cleanup timeout on unmount
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) {
+				window.clearTimeout(timeoutRef.current);
+			}
+		};
+	}, []);
 
 	const handleCopy = async () => {
 		try {
@@ -49,8 +59,15 @@ const CodeBlockCopyButton = ({
 			setCopied(true);
 			onCopy();
 
-			setTimeout(() => {
+			// Clear any existing timeout
+			if (timeoutRef.current) {
+				window.clearTimeout(timeoutRef.current);
+			}
+
+			// Set new timeout and store its ID
+			timeoutRef.current = window.setTimeout(() => {
 				setCopied(false);
+				timeoutRef.current = undefined;
 			}, 2000);
 		} catch (error) {
 			console.error("Failed to copy code:", error);
@@ -71,8 +88,16 @@ const CodeBlockCopyButton = ({
 				if (successful) {
 					setCopied(true);
 					onCopy();
-					setTimeout(() => {
+
+					// Clear any existing timeout
+					if (timeoutRef.current) {
+						window.clearTimeout(timeoutRef.current);
+					}
+
+					// Set new timeout and store its ID
+					timeoutRef.current = window.setTimeout(() => {
 						setCopied(false);
+						timeoutRef.current = undefined;
 					}, 2000);
 				} else {
 					onError?.(new Error("Failed to copy code to clipboard"));
