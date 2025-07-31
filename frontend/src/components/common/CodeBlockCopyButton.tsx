@@ -76,9 +76,11 @@ const CodeBlockCopyButton = ({
 			try {
 				const textArea = document.createElement("textarea");
 				textArea.value = codeText;
-				textArea.style.position = "fixed";
-				textArea.style.left = "-999999px";
-				textArea.style.top = "-999999px";
+				textArea.style.position = "absolute";
+				textArea.style.clip = "rect(0, 0, 0, 0)";
+				textArea.style.whiteSpace = "pre";
+				textArea.style.border = "none";
+				textArea.style.outline = "none";
 				document.body.appendChild(textArea);
 				textArea.focus();
 				textArea.select();
