@@ -15,8 +15,8 @@ const CopyButtonContainer = styled("div")(({ theme }) => ({
 const CopyButton = styled(IconButton)(({ theme }) => ({
 	background: theme.palette.background.default,
 	color: theme.palette.text.primary,
-	width: 32,
-	height: 32,
+	width: "2rem",
+	height: "2rem",
 	"&:hover": {
 		background: theme.palette.background.paper,
 	},
