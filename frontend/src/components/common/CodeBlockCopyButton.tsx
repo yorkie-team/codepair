@@ -30,7 +30,7 @@ const CopyButton = styled(IconButton)(({ theme }) => ({
 
 type CodeBlockCopyButtonProps = {
 	codeText: string;
-	onCopy: () => void;
+	onCopy?: () => void;
 	onError?: (error: Error) => void;
 	container: HTMLElement;
 };
@@ -57,7 +57,7 @@ const CodeBlockCopyButton = ({
 		try {
 			await navigator.clipboard.writeText(codeText);
 			setCopied(true);
-			onCopy();
+			onCopy?.();
 
 			// Clear any existing timeout
 			if (timeoutRef.current) {
@@ -87,7 +87,7 @@ const CodeBlockCopyButton = ({
 
 				if (successful) {
 					setCopied(true);
-					onCopy();
+					onCopy?.();
 
 					// Clear any existing timeout
 					if (timeoutRef.current) {
