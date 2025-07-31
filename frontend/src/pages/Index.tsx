@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid2 as Grid, Paper, Stack, Typography } from "@mui/material";
 import CodePairIcon from "../components/icons/CodePairIcon";
 import { GithubLoginButton } from "react-social-login-buttons";
 
@@ -30,15 +30,15 @@ function Index() {
 						</Box>
 						<Stack gap={2}>
 							<Grid container spacing={1} alignItems="center">
-								<Grid item xs>
+								<Grid size="grow">
 									<Divider sx={{ width: 1 }} />
 								</Grid>
-								<Grid item xs="auto">
+								<Grid size="auto">
 									<Typography variant="body2" color="text.secondary">
 										Login with
 									</Typography>
 								</Grid>
-								<Grid item xs>
+								<Grid size="grow">
 									<Divider sx={{ width: 1 }} />
 								</Grid>
 							</Grid>

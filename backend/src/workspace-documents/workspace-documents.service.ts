@@ -69,7 +69,8 @@ export class WorkspaceDocumentsService {
 		userId: string,
 		workspaceId: string,
 		pageSize: number,
-		cursor?: string
+		cursor?: string,
+		search?: string
 	): Promise<FindWorkspaceDocumentsResponse> {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
@@ -85,22 +86,27 @@ export class WorkspaceDocumentsService {
 		}
 
 		const additionalOptions: Prisma.DocumentFindManyArgs = {};
+		const whereOptions: Prisma.DocumentWhereInput = {
+			workspaceId,
+			...(search && {
+				title: {
+					contains: search,
+					mode: "insensitive",
+				},
+			}),
+		};
 
 		if (cursor) {
 			additionalOptions.cursor = { id: cursor };
 		}
 
 		const totalLength = await this.prismaService.document.count({
-			where: {
-				workspaceId,
-			},
+			where: whereOptions,
 		});
 
 		const documentList = await this.prismaService.document.findMany({
 			take: pageSize + 1,
-			where: {
-				workspaceId,
-			},
+			where: whereOptions,
 			orderBy: {
 				id: "desc",
 			},
@@ -122,6 +128,8 @@ export class WorkspaceDocumentsService {
 				updatedAt: yorkieDocumentUpdatedAt
 					? moment(yorkieDocumentUpdatedAt).toDate()
 					: doc.updatedAt,
+				root: yorkieDocumentMap.get(doc.yorkieDocumentId)?.root ?? null,
+				presences: yorkieDocumentMap.get(doc.yorkieDocumentId)?.presences ?? null,
 			};
 		});
 

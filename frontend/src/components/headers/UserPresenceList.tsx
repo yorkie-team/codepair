@@ -62,12 +62,14 @@ function UserPresenceList(props: UserPresenceListProps) {
 	return (
 		<>
 			<AvatarGroup>
-				{presenceList.slice(0, MAX_VISIBLE_AVATARS).map(renderAvatar)}
-				{presenceList.length > MAX_VISIBLE_AVATARS && (
-					<Avatar onClick={handleOpenPopover}>
-						+{presenceList.length - MAX_VISIBLE_AVATARS}
-					</Avatar>
-				)}
+				{presenceList.length > MAX_VISIBLE_AVATARS + 1
+					? [
+							...presenceList.slice(0, MAX_VISIBLE_AVATARS).map(renderAvatar),
+							<Avatar key="more" onClick={handleOpenPopover}>
+								+{presenceList.length - MAX_VISIBLE_AVATARS}
+							</Avatar>,
+						]
+					: presenceList.map(renderAvatar)}
 			</AvatarGroup>
 			<Popover
 				open={popoverOpen}

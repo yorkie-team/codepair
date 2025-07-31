@@ -1,0 +1,41 @@
+name: CI Desktop Electron
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci_desktop.yaml"
+      - "desktop/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci_desktop.yaml"
+      - "desktop/**"
+
+jobs:
+  test:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./desktop
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: "pnpm"
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.working-directory }}
+      - name: Prettier
+        run: pnpm run format:check
+        working-directory: ${{ env.working-directory }}
+      - name: Lint
+        run: pnpm run lint
+        working-directory: ${{ env.working-directory }}
+      - name: Build Electron Application
+        run: pnpm run build-electron
+        working-directory: ${{ env.working-directory }}
