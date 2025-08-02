@@ -9,14 +9,12 @@ import {
 	Box,
 	Button,
 	CircularProgress,
-	Grid2 as Grid,
 	Paper,
 	Stack,
 	Tab,
 	Tabs,
 	Typography,
 } from "@mui/material";
-import DocumentCard from "../../components/cards/DocumentCard";
 import { useMemo, useState } from "react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -25,11 +23,10 @@ import { Document } from "../../hooks/api/types/document.d";
 import InfiniteScroll from "react-infinite-scroller";
 import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
+import BoardTab from "../../components/workspace/BoardTab";
+import TableTab from "../../components/workspace/TableTab";
 
-const tabs = [
-	"BOARD",
-	// "TABLE"
-];
+const tabs = ["BOARD", "TABLE"];
 
 function WorkspaceIndex() {
 	const params = useParams();
@@ -37,6 +34,11 @@ function WorkspaceIndex() {
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
 	const [search, setSearch] = useState("");
+	const [currentTab, setCurrentTab] = useState("BOARD");
+
+	const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
+		setCurrentTab(newValue);
+	};
 
 	const {
 		data: documentPageList,
@@ -123,7 +125,7 @@ function WorkspaceIndex() {
 				</Stack>
 			</Paper>
 			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={4}>
-				<Tabs value={tabs[0]}>
+				<Tabs value={currentTab} onChange={handleTabChange}>
 					{tabs.map((tab) => (
 						<Tab key={tab} label={tab} value={tab} />
 					))}
@@ -140,17 +142,8 @@ function WorkspaceIndex() {
 				}
 			>
 				<Box width={1}>
-					<Grid
-						container
-						spacing={{ xs: 2, md: 3 }}
-						columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
-					>
-						{documentList.map((document) => (
-							<Grid key={document.id} size={4}>
-								<DocumentCard document={document} />
-							</Grid>
-						))}
-					</Grid>
+					{currentTab === "BOARD" && <BoardTab documents={documentList} />}
+					{currentTab === "TABLE" && <TableTab documents={documentList} />}
 				</Box>
 			</InfiniteScroll>
 			<CreateModal
