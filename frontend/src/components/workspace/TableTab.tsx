@@ -35,7 +35,6 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 			selection: data.selection,
 		};
 	};
-	let presenceList = [];
 
 	return (
 		<TableContainer component={Box}>
@@ -57,7 +56,7 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 					}}
 				>
 					{documents.map((doc) => {
-						presenceList = Object.values(doc.presences || {}).map((presence) =>
+						const presenceList = Object.values(doc.presences || {}).map((presence) =>
 							parsePresenceData(presence.data)
 						);
 						return (
