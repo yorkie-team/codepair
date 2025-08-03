@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 
 type CodeBlock = {
 	id: string;
@@ -11,6 +11,7 @@ type CodeBlock = {
  */
 export const useCodeBlocks = () => {
 	const [codeBlocks, setCodeBlocks] = useState<CodeBlock[]>([]);
+	const isMapRef = useRef(new WeakMap<HTMLElement, string>());
 
 	/**
 	 * Function to detect and manage code blocks in the DOM
@@ -22,35 +23,33 @@ export const useCodeBlocks = () => {
 		const preElements = containerRef.current.querySelectorAll("pre");
 		const newCodeBlocks: CodeBlock[] = [];
 
-		preElements.forEach((preElement, index) => {
+		preElements.forEach((preElement) => {
 			const codeElement = preElement.querySelector("code");
 			if (!codeElement) return;
 
 			const codeText = codeElement.textContent || "";
-			const blockId = `code-block-${index}`;
+			let id = isMapRef.current.get(preElement);
+			if (!id) {
+				id = crypto.randomUUID();
+				isMapRef.current.set(preElement, id);
 
-			if (preElement.getAttribute("data-block-id")) return;
+				const wrapper = document.createElement("div");
+				wrapper.className = "code-block-wrapper";
+				wrapper.style.position = "relative";
 
-			preElement.setAttribute("data-block-id", blockId);
+				preElement.parentNode?.insertBefore(wrapper, preElement);
+				wrapper.appendChild(preElement);
 
-			const wrapper = document.createElement("div");
-			wrapper.className = "code-block-wrapper";
-			wrapper.style.position = "relative";
-			wrapper.setAttribute("data-block-id", blockId);
+				const portalContainer = document.createElement("div");
+				portalContainer.className = "copy-button-container";
+				wrapper.appendChild(portalContainer);
 
-			preElement.parentNode?.insertBefore(wrapper, preElement);
-			wrapper.appendChild(preElement);
-
-			const portalContainer = document.createElement("div");
-			portalContainer.className = "copy-button-container";
-			portalContainer.setAttribute("data-block-id", blockId);
-			wrapper.appendChild(portalContainer);
-
-			newCodeBlocks.push({
-				id: blockId,
-				text: codeText,
-				container: portalContainer,
-			});
+				newCodeBlocks.push({
+					id: id,
+					text: codeText,
+					container: portalContainer,
+				});
+			}
 		});
 
 		setCodeBlocks(newCodeBlocks);
