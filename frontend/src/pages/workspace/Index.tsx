@@ -27,7 +27,7 @@ import BoardTab from "../../components/workspace/BoardTab";
 import TableTab from "../../components/workspace/TableTab";
 
 const TABS = ["BOARD", "TABLE"] as const;
-type TabType = (typeof TABS)[keyof typeof TABS];
+type TabType = (typeof TABS)[number];
 
 function WorkspaceIndex() {
 	const params = useParams();
