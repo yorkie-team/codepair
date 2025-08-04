@@ -26,7 +26,8 @@ import AddIcon from "@mui/icons-material/Add";
 import BoardTab from "../../components/workspace/BoardTab";
 import TableTab from "../../components/workspace/TableTab";
 
-const tabs = ["BOARD", "TABLE"];
+const TABS = ["BOARD", "TABLE"] as const;
+type TabType = (typeof TABS)[keyof typeof TABS];
 
 function WorkspaceIndex() {
 	const params = useParams();
@@ -34,9 +35,9 @@ function WorkspaceIndex() {
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
 	const [search, setSearch] = useState("");
-	const [currentTab, setCurrentTab] = useState("BOARD");
+	const [currentTab, setCurrentTab] = useState<TabType>("BOARD");
 
-	const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
+	const handleTabChange = (_: React.SyntheticEvent, newValue: TabType) => {
 		setCurrentTab(newValue);
 	};
 
@@ -126,7 +127,7 @@ function WorkspaceIndex() {
 			</Paper>
 			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={4}>
 				<Tabs value={currentTab} onChange={handleTabChange}>
-					{tabs.map((tab) => (
+					{TABS.map((tab) => (
 						<Tab key={tab} label={tab} value={tab} />
 					))}
 				</Tabs>
