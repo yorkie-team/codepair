@@ -7,7 +7,6 @@ import {
 	Box,
 	TableContainer,
 	Typography,
-	IconButton,
 	AvatarGroup,
 	useMediaQuery,
 	useTheme,
@@ -16,7 +15,6 @@ import {
 import { Document } from "../../hooks/api/types/document.d";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export default function TableContent({ documents }: { documents: Document[] }) {
 	const params = useParams();
@@ -103,9 +101,10 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 									{moment(doc.updatedAt).fromNow()}
 								</TableCell>
 								<TableCell sx={{ py: 0 }} align="right">
-									<IconButton color="inherit" onClick={() => {}}>
+									{/* TODO(yeonthusiast): When the document deletion is implemented, uncomment the following code */}
+									{/* <IconButton color="inherit" onClick={() => {}}>
 										<MoreVertIcon fontSize="small" />
-									</IconButton>
+									</IconButton> */}
 								</TableCell>
 							</TableRow>
 						);
