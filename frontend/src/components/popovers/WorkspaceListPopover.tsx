@@ -49,12 +49,19 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 
 	const handleReorder = useCallback(
 		async (newWorkspaceList: Workspace[]) => {
+			const previousList = workspaceList;
 			setWorkspaceList(newWorkspaceList);
-			await reorderWorkspaces({
-				workspaceIds: newWorkspaceList.map((w) => w.id),
-			});
+
+			try {
+				await reorderWorkspaces({
+					workspaceIds: newWorkspaceList.map((w) => w.id),
+				});
+			} catch (error) {
+				setWorkspaceList(previousList);
+				throw error;
+			}
 		},
-		[reorderWorkspaces]
+		[reorderWorkspaces, workspaceList]
 	);
 
 	const { dragState, containerRef, setItemRef, dragHandlers } = useDragSort({
