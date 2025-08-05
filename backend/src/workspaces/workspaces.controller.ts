@@ -6,6 +6,7 @@ import {
 	Param,
 	ParseIntPipe,
 	Post,
+	Put,
 	Query,
 	Req,
 } from "@nestjs/common";
@@ -27,11 +28,13 @@ import { AuthorizedRequest } from "src/utils/types/req.type";
 import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
+import { ReorderWorkspacesDto } from "./dto/reorder-workspaces.dto";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
+import { ReorderWorkspacesResponse } from "./types/reorder-workspaces-response.type";
 import { WorkspacesService } from "./workspaces.service";
 
 @ApiTags("Workspaces")
@@ -147,5 +150,26 @@ export class WorkspacesController {
 		@Body() joinWorkspaceDto: JoinWorkspaceDto
 	): Promise<JoinWorkspaceResponse> {
 		return this.workspacesService.join(req.user.id, joinWorkspaceDto.invitationToken);
+	}
+
+	@Put("reorder")
+	@ApiOperation({
+		summary: "Reorder Workspaces",
+		description: "Update the order of user's workspaces.",
+	})
+	@ApiBody({ type: ReorderWorkspacesDto })
+	@ApiOkResponse({ type: ReorderWorkspacesResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "Some workspaces not found, or the user lacks the appropriate permissions.",
+	})
+	async reorderWorkspaces(
+		@Req() req: AuthorizedRequest,
+		@Body() reorderWorkspacesDto: ReorderWorkspacesDto
+	): Promise<ReorderWorkspacesResponse> {
+		return this.workspacesService.reorderWorkspaces(
+			req.user.id,
+			reorderWorkspacesDto.workspaceIds
+		);
 	}
 }
