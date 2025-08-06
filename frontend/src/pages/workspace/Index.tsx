@@ -9,7 +9,7 @@ import {
 	Box,
 	Button,
 	CircularProgress,
-	Grid2,
+	Grid,
 	Paper,
 	Stack,
 	Tab,
@@ -25,6 +25,8 @@ import { Document } from "../../hooks/api/types/document.d";
 import InfiniteScroll from "react-infinite-scroller";
 import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const tabs = [
 	"BOARD",
@@ -35,6 +37,9 @@ function WorkspaceIndex() {
 	const params = useParams();
 	const navigate = useNavigate();
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
+
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
 	const [search, setSearch] = useState("");
 
@@ -90,10 +95,12 @@ function WorkspaceIndex() {
 			>
 				<Stack direction="row" justifyContent="space-between" alignItems="center" pt={6}>
 					<Typography variant="h5" fontWeight="bold">
-						{workspace?.title}{" "}
-						<Typography component="span" variant="inherit" color="primary">
-							{documentPageList?.pages[0].totalLength}
-						</Typography>
+						{!isMobile && workspace?.title}{" "}
+						{!isMobile && (
+							<Typography component="span" variant="inherit" color="primary">
+								{documentPageList?.pages[0].totalLength}
+							</Typography>
+						)}
 					</Typography>
 					<Stack direction="row" alignItems="center" gap={2}>
 						<TextField
@@ -140,17 +147,17 @@ function WorkspaceIndex() {
 				}
 			>
 				<Box width={1}>
-					<Grid2
+					<Grid
 						container
 						spacing={{ xs: 2, md: 3 }}
 						columns={{ xs: 4, sm: 8, md: 12, lg: 12 }}
 					>
 						{documentList.map((document) => (
-							<Grid2 key={document.id} size={4}>
+							<Grid key={document.id} size={4}>
 								<DocumentCard document={document} />
-							</Grid2>
+							</Grid>
 						))}
-					</Grid2>
+					</Grid>
 				</Box>
 			</InfiniteScroll>
 			<CreateModal
