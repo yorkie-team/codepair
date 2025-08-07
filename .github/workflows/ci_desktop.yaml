@@ -25,7 +25,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install packages
         run: pnpm install --frozen-lockfile
@@ -37,5 +37,5 @@ jobs:
         run: pnpm run lint
         working-directory: ${{ env.working-directory }}
       - name: Build Electron Application
-        run: pnpm run build-electron
+        run: pnpm run build
         working-directory: ${{ env.working-directory }}
