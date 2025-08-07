@@ -71,7 +71,9 @@ const CodeBlockCopyButton = ({
 			}, 2000);
 		} catch (error) {
 			console.error("Failed to copy code:", error);
-			onError?.(new Error("Failed to copy code to clipboard"));
+			onError?.(
+				error instanceof Error ? error : new Error("Failed to copy code to clipboard")
+			);
 			// fallback: copy to clipboard using textarea
 			try {
 				const textArea = document.createElement("textarea");
@@ -83,6 +85,9 @@ const CodeBlockCopyButton = ({
 				textArea.select();
 				const successful = document.execCommand("copy");
 				document.body.removeChild(textArea);
+				if (!successful) {
+					throw new Error("Failed to copy code to clipboard");
+				}
 
 				if (successful) {
 					setCopied(true);
@@ -98,12 +103,14 @@ const CodeBlockCopyButton = ({
 						setCopied(false);
 						timeoutRef.current = undefined;
 					}, 2000);
-				} else {
-					onError?.(new Error("Failed to copy code to clipboard"));
 				}
 			} catch (fallbackError) {
 				console.error("Fallback copy failed:", fallbackError);
-				onError?.(new Error("Failed to copy code to clipboard"));
+				onError?.(
+					fallbackError instanceof Error
+						? fallbackError
+						: new Error("Failed to copy code to clipboard")
+				);
 			}
 		}
 	};
