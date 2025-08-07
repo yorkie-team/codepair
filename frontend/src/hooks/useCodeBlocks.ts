@@ -11,7 +11,7 @@ type CodeBlock = {
  */
 export const useCodeBlocks = () => {
 	const [codeBlocks, setCodeBlocks] = useState<CodeBlock[]>([]);
-	const isMapRef = useRef(new WeakMap<HTMLElement, string>());
+	const idMapRef = useRef(new WeakMap<HTMLElement, string>());
 
 	/**
 	 * Function to detect and manage code blocks in the DOM
@@ -28,10 +28,10 @@ export const useCodeBlocks = () => {
 			if (!codeElement) return;
 
 			const codeText = codeElement.textContent || "";
-			let id = isMapRef.current.get(preElement);
+			let id = idMapRef.current.get(preElement);
 			if (!id) {
 				id = crypto.randomUUID();
-				isMapRef.current.set(preElement, id);
+				idMapRef.current.set(preElement, id);
 
 				const wrapper = document.createElement("div");
 				wrapper.className = "code-block-wrapper";
