@@ -1050,17 +1050,21 @@ body[data-color-mode*="light"] {
 	pre {
 		position: relative;
 		.copied {
-			visibility: hidden;
+			width: 36px;
+			height: 36px;
 			display: flex;
+			align-items: center;
+			justify-content: center;
 			position: absolute;
 			cursor: pointer;
 			color: var(--color-fg-default);
 			top: 6px;
 			right: 6px;
 			border-radius: 5px;
+			border: none;
 			background: var(--color-border-default);
 			padding: 6px;
-			font-size: 12px;
+			font-size: 18px;
 			transition: all 0.3s;
 
 			.octicon-copy {
@@ -1072,19 +1076,16 @@ body[data-color-mode*="light"] {
 			}
 		}
 		&:hover {
-			.copied {
-				visibility: visible;
-			}
-			.copied:hover {
-				background: var(--color-prettylights-syntax-entity-tag);
+			.copied:not(.active):hover {
+				background: var(--color-accent-fg);
 				color: var(--color-canvas-default);
 			}
 		}
-		&:hover .copied:active,
 		.copied.active {
 			background: var(--color-copied-active-bg);
 			color: var(--color-canvas-default);
 		}
+
 		.active {
 			.octicon-copy {
 				display: none;
@@ -1095,6 +1096,14 @@ body[data-color-mode*="light"] {
 			}
 		}
 	}
+}
+
+/* Simple glyphs to emulate icon visuals without React components */
+.markdown-preview pre .copied .octicon-copy::before {
+	content: "⧉";
+}
+.markdown-preview pre .copied .octicon-check::before {
+	content: "✓";
 }
 
 .markdown-preview {
