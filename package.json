@@ -1,6 +1,6 @@
 {
   "name": "codepair",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Build your own AI-powered collaborative markdown editor in just 5 minutes",
   "keywords": [],
   "author": "yorkie-team",
@@ -15,7 +15,6 @@
     "lint:check": "pnpm run --parallel lint:check",
     "format": "pnpm run --parallel format",
     "format:check": "pnpm run --parallel format:check",
-    "generate:backend": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g go-echo-server -o ./backend-go/api/codepair/v1 --global-property models --type-mappings int32=int",
     "generate:frontend": "openapi-generator-cli generate -i ./api/backend-openapi-spec.json -g typescript-axios -o ./frontend/src/api"
   },
   "devDependencies": {
