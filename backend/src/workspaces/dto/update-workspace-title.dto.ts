@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MinLength } from "class-validator";
+import { Length } from "class-validator";
 
 export class UpdateWorkspaceTitleDto {
 	@ApiProperty({
@@ -8,6 +8,6 @@ export class UpdateWorkspaceTitleDto {
 		minLength: 2,
 		maxLength: 120,
 	})
-	@MinLength(2)
+	@Length(2, 120)
 	title: string;
 }
