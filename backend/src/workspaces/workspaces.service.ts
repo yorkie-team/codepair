@@ -198,7 +198,6 @@ export class WorkspacesService {
 		return newUserWorkspace.workspace;
 	}
 
-
 	async setWorkspaceOrder(userId: string, workspaceIds: string[]): Promise<void> {
 		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
 			where: {
@@ -233,6 +232,7 @@ export class WorkspacesService {
 				});
 			})
 		);
+	}
 
 	async updateTitle(
 		userId: string,

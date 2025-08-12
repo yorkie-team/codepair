@@ -7,7 +7,6 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
-	Patch,
 	Query,
 	Req,
 } from "@nestjs/common";
@@ -172,6 +171,8 @@ export class WorkspacesController {
 		return this.workspacesService.setWorkspaceOrder(
 			req.user.id,
 			setWorkspaceOrderDto.workspaceIds
+		);
+	}
 
 	@Patch(":workspace_id/title")
 	@ApiOperation({
