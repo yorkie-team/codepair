@@ -33,10 +33,10 @@ export class JoinWorkspaceRequest {
 
 export class JoinWorkspaceResponse extends Workspace {}
 
-export class ReorderWorkspacesRequest {
+export class SetWorkspaceOrderRequest {
 	workspaceIds: string[];
 }
 
-export class ReorderWorkspacesResponse {
+export class SetWorkspaceOrderResponse {
 	message: string;
 }

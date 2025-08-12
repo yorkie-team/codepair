@@ -12,7 +12,7 @@ import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
-import { ReorderWorkspacesResponse } from "./types/reorder-workspaces-response.type";
+import { SetWorkspaceOrderResponse } from "./types/reorder-workspaces-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -198,10 +198,10 @@ export class WorkspacesService {
 		return newUserWorkspace.workspace;
 	}
 
-	async reorderWorkspaces(
+	async setWorkspaceOrder(
 		userId: string,
 		workspaceIds: string[]
-	): Promise<ReorderWorkspacesResponse> {
+	): Promise<SetWorkspaceOrderResponse> {
 		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
 			where: {
 				userId,

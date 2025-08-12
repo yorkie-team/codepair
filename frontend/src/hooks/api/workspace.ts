@@ -9,8 +9,8 @@ import {
 	GetWorkspaceResponse,
 	JoinWorkspaceRequest,
 	JoinWorkspaceResponse,
-	ReorderWorkspacesRequest,
-	ReorderWorkspacesResponse,
+	SetWorkspaceOrderRequest,
+	SetWorkspaceOrderResponse,
 } from "./types/workspace";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -110,12 +110,12 @@ export const useJoinWorkspaceMutation = () => {
 	});
 };
 
-export const useReorderWorkspacesMutation = () => {
+export const useSetWorkspaceOrderMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (data: ReorderWorkspacesRequest) => {
-			const res = await axios.put<ReorderWorkspacesResponse>("/workspaces/reorder", data);
+		mutationFn: async (data: SetWorkspaceOrderRequest) => {
+			const res = await axios.patch<SetWorkspaceOrderResponse>("/workspaces/order", data);
 
 			return res.data;
 		},

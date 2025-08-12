@@ -6,7 +6,7 @@ import {
 	Param,
 	ParseIntPipe,
 	Post,
-	Put,
+	Patch,
 	Query,
 	Req,
 } from "@nestjs/common";
@@ -28,13 +28,13 @@ import { AuthorizedRequest } from "src/utils/types/req.type";
 import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
-import { ReorderWorkspacesDto } from "./dto/reorder-workspaces.dto";
+import { SetWorkspaceOrderDto } from "./dto/reorder-workspaces.dto";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
-import { ReorderWorkspacesResponse } from "./types/reorder-workspaces-response.type";
+import { SetWorkspaceOrderResponse } from "./types/reorder-workspaces-response.type";
 import { WorkspacesService } from "./workspaces.service";
 
 @ApiTags("Workspaces")
@@ -152,24 +152,24 @@ export class WorkspacesController {
 		return this.workspacesService.join(req.user.id, joinWorkspaceDto.invitationToken);
 	}
 
-	@Put("reorder")
+	@Patch("order")
 	@ApiOperation({
-		summary: "Reorder Workspaces",
-		description: "Update the order of user's workspaces.",
+		summary: "Set workspace order",
+		description: "Replace the entire order of the user's workspaces.",
 	})
-	@ApiBody({ type: ReorderWorkspacesDto })
-	@ApiOkResponse({ type: ReorderWorkspacesResponse })
+	@ApiBody({ type: SetWorkspaceOrderDto })
+	@ApiOkResponse({ type: SetWorkspaceOrderResponse })
 	@ApiNotFoundResponse({
 		type: HttpExceptionResponse,
 		description: "Some workspaces not found, or the user lacks the appropriate permissions.",
 	})
-	async reorderWorkspaces(
+	async setWorkspaceOrder(
 		@Req() req: AuthorizedRequest,
-		@Body() reorderWorkspacesDto: ReorderWorkspacesDto
-	): Promise<ReorderWorkspacesResponse> {
-		return this.workspacesService.reorderWorkspaces(
+		@Body() setWorkspaceOrderDto: SetWorkspaceOrderDto
+	): Promise<SetWorkspaceOrderResponse> {
+		return this.workspacesService.setWorkspaceOrder(
 			req.user.id,
-			reorderWorkspacesDto.workspaceIds
+			setWorkspaceOrderDto.workspaceIds
 		);
 	}
 }
