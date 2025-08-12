@@ -36,7 +36,3 @@ export class JoinWorkspaceResponse extends Workspace {}
 export class SetWorkspaceOrderRequest {
 	workspaceIds: string[];
 }
-
-export class SetWorkspaceOrderResponse {
-	message: string;
-}

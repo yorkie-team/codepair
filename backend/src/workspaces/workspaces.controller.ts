@@ -34,7 +34,6 @@ import { CreateWorkspaceResponse } from "./types/create-workspace-response.type"
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
-import { SetWorkspaceOrderResponse } from "./types/reorder-workspaces-response.type";
 import { WorkspacesService } from "./workspaces.service";
 
 @ApiTags("Workspaces")
@@ -158,7 +157,7 @@ export class WorkspacesController {
 		description: "Replace the entire order of the user's workspaces.",
 	})
 	@ApiBody({ type: SetWorkspaceOrderDto })
-	@ApiOkResponse({ type: SetWorkspaceOrderResponse })
+	@ApiOkResponse()
 	@ApiNotFoundResponse({
 		type: HttpExceptionResponse,
 		description: "Some workspaces not found, or the user lacks the appropriate permissions.",
@@ -166,7 +165,7 @@ export class WorkspacesController {
 	async setWorkspaceOrder(
 		@Req() req: AuthorizedRequest,
 		@Body() setWorkspaceOrderDto: SetWorkspaceOrderDto
-	): Promise<SetWorkspaceOrderResponse> {
+	): Promise<void> {
 		return this.workspacesService.setWorkspaceOrder(
 			req.user.id,
 			setWorkspaceOrderDto.workspaceIds
