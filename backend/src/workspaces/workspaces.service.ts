@@ -211,13 +211,14 @@ export class WorkspacesService {
 			},
 		});
 
-		if (userWorkspaces.length !== workspaceIds.length) {
+		const userWorkspaceMap = new Map(userWorkspaces.map((uw) => [uw.workspaceId, uw.id]));
+		const missingWorkspaceIds = workspaceIds.filter((id) => !userWorkspaceMap.has(id));
+
+		if (missingWorkspaceIds.length > 0) {
 			throw new NotFoundException(
 				"Some workspaces not found, or the user lacks the appropriate permissions."
 			);
 		}
-
-		const userWorkspaceMap = new Map(userWorkspaces.map((uw) => [uw.workspaceId, uw.id]));
 
 		const now = new Date();
 		await this.prismaService.$transaction(
