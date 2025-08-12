@@ -12,6 +12,7 @@ import { WorkspaceRoleConstants } from "src/utils/constants/auth-role";
 import { generateRandomKey } from "src/utils/functions/random-string";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
+import { UpdateWorkspaceTitleResponse } from "./types/update-workspace-title-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -197,6 +198,7 @@ export class WorkspacesService {
 		return newUserWorkspace.workspace;
 	}
 
+
 	async setWorkspaceOrder(userId: string, workspaceIds: string[]): Promise<void> {
 		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
 			where: {
@@ -231,5 +233,41 @@ export class WorkspacesService {
 				});
 			})
 		);
+
+	async updateTitle(
+		userId: string,
+		workspaceId: string,
+		newTitle: string
+	): Promise<UpdateWorkspaceTitleResponse> {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch {
+			throw new NotFoundException(
+				"Workspace not found, or the user lacks the appropriate permissions."
+			);
+		}
+
+		const { conflict } = await this.checkService.checkNameConflict(newTitle);
+
+		if (conflict) {
+			throw new ConflictException("Workspace title is already in use.");
+		}
+
+		const updatedWorkspace = await this.prismaService.workspace.update({
+			where: {
+				id: workspaceId,
+			},
+			data: {
+				title: newTitle,
+				slug: encodeURI(newTitle),
+			},
+		});
+
+		return updatedWorkspace;
 	}
 }

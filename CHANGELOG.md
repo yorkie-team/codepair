@@ -7,6 +7,29 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.40] - 2025-08-12
+
+### Fixed
+
+- Bump up Yorkie to v0.6.25 by @hackerwins in https://github.com/yorkie-team/codepair/pull/527
+
+## [0.1.39] - 2025-08-06
+
+### Added
+
+- Add Desktop CI by @JIWEON-JEONG in https://github.com/yorkie-team/codepair/pull/518
+- Implement Table View design in Figma by @yeonthusiast in https://github.com/yorkie-team/codepair/pull/521
+
+### Changed
+
+- Migrate deprecated MUI Grid to the new Grid2 component by @yeonthusiast in https://github.com/yorkie-team/codepair/pull/512
+- Close Go backend migration initiative and continue with NestJS architecture by @window9u in https://github.com/yorkie-team/codepair/pull/520
+- Bump up Yorkie to v0.6.24 by @hackerwins in https://github.com/yorkie-team/codepair/pull/524
+
+### Fixed
+
+- Fix header layout on small screens and AvatarGroup overflow by @KMSstudio in https://github.com/yorkie-team/codepair/pull/517
+
 ## [0.1.38] - 2025-07-28
 
 ### Changed

@@ -5,6 +5,7 @@ import {
 	Get,
 	Param,
 	ParseIntPipe,
+	Patch,
 	Post,
 	Patch,
 	Query,
@@ -29,11 +30,13 @@ import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
 import { SetWorkspaceOrderDto } from "./dto/reorder-workspaces.dto";
+import { UpdateWorkspaceTitleDto } from "./dto/update-workspace-title.dto";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
 import { FindWorkspaceResponse } from "./types/find-workspace-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
+import { UpdateWorkspaceTitleResponse } from "./types/update-workspace-title-response.type";
 import { WorkspacesService } from "./workspaces.service";
 
 @ApiTags("Workspaces")
@@ -169,6 +172,31 @@ export class WorkspacesController {
 		return this.workspacesService.setWorkspaceOrder(
 			req.user.id,
 			setWorkspaceOrderDto.workspaceIds
+
+	@Patch(":workspace_id/title")
+	@ApiOperation({
+		summary: "Update Workspace Title",
+		description: "Update the title of an existing workspace.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace to update",
+	})
+	@ApiBody({ type: UpdateWorkspaceTitleDto })
+	@ApiOkResponse({ type: UpdateWorkspaceTitleResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "Workspace not found, or the user lacks the appropriate permissions.",
+	})
+	async updateTitle(
+		@Req() req: AuthorizedRequest,
+		@Param("workspace_id") workspaceId: string,
+		@Body() updateWorkspaceTitleDto: UpdateWorkspaceTitleDto
+	): Promise<UpdateWorkspaceTitleResponse> {
+		return this.workspacesService.updateTitle(
+			req.user.id,
+			workspaceId,
+			updateWorkspaceTitleDto.title
 		);
 	}
 }
