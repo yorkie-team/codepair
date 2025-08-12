@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsString, ArrayNotEmpty, ArrayUnique } from "class-validator";
 
-export class SetWorkspaceOrderDto {
+export class UpdateWorkspaceOrderDto {
 	@ApiProperty({ type: [String], description: "Ordered list of workspace IDs" })
 	@IsArray()
 	@ArrayNotEmpty()

@@ -12,7 +12,7 @@ import {
 import {
 	useCreateWorkspaceMutation,
 	useGetWorkspaceListQuery,
-	useSetWorkspaceOrderMutation,
+	useUpdateWorkspaceOrderMutation,
 } from "../../hooks/api/workspace";
 import InfiniteScroll from "react-infinite-scroller";
 import { useState, useCallback, useEffect } from "react";
@@ -34,7 +34,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const params = useParams();
 	const { data: workspacePageList, hasNextPage, fetchNextPage } = useGetWorkspaceListQuery();
 	const { mutateAsync: createWorkspace } = useCreateWorkspaceMutation();
-	const { mutateAsync: setWorkspaceOrder } = useSetWorkspaceOrderMutation();
+	const { mutateAsync: setWorkspaceOrder } = useUpdateWorkspaceOrderMutation();
 
 	const [workspaceList, setWorkspaceList] = useState<Workspace[]>([]);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);

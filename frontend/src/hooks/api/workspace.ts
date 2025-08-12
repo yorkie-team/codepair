@@ -9,7 +9,7 @@ import {
 	GetWorkspaceResponse,
 	JoinWorkspaceRequest,
 	JoinWorkspaceResponse,
-	SetWorkspaceOrderRequest,
+	UpdateWorkspaceOrderRequest,
 } from "./types/workspace";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -109,11 +109,11 @@ export const useJoinWorkspaceMutation = () => {
 	});
 };
 
-export const useSetWorkspaceOrderMutation = () => {
+export const useUpdateWorkspaceOrderMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (data: SetWorkspaceOrderRequest) => {
+		mutationFn: async (data: UpdateWorkspaceOrderRequest) => {
 			const res = await axios.patch<void>("/workspaces/order", data);
 
 			return res.data;
