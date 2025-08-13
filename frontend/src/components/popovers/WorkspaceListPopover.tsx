@@ -64,7 +64,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 		[setWorkspaceOrder, workspaceList]
 	);
 
-	const { dragState, containerRef, setItemRef, dragHandlers } = useDragSort({
+	const { dragState, containerRef, setItemRef, dragHandlers, isRecentlyDropped } = useDragSort({
 		items: workspaceList,
 		onReorder: handleReorder,
 		getItemKey: (workspace) => workspace.id,
@@ -145,6 +145,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 									isSelected={params.workspaceSlug === workspace.slug}
 									isDragging={dragState.isDragging}
 									isDraggedItem={dragState.draggedIndex === index}
+									isRecentlyDropped={isRecentlyDropped}
 									onSelect={handleMoveToSelectedWorkspace}
 									onPointerDown={(event) =>
 										dragHandlers.onPointerDown(event, index)

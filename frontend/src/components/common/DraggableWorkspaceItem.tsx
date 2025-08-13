@@ -17,6 +17,7 @@ interface DraggableWorkspaceItemProps {
 	isSelected: boolean;
 	isDragging: boolean;
 	isDraggedItem: boolean;
+	isRecentlyDropped?: boolean;
 	onSelect: (slug: string) => void;
 	onPointerDown: (event: React.PointerEvent) => void;
 	onPointerMove: (event: React.PointerEvent) => void;
@@ -30,6 +31,7 @@ const DraggableWorkspaceItem = forwardRef<HTMLLIElement, DraggableWorkspaceItemP
 			isSelected,
 			isDragging,
 			isDraggedItem,
+			isRecentlyDropped,
 			onSelect,
 			onPointerDown,
 			onPointerMove,
@@ -43,7 +45,15 @@ const DraggableWorkspaceItem = forwardRef<HTMLLIElement, DraggableWorkspaceItemP
 		return (
 			<MenuItem
 				ref={ref}
-				onClick={() => onSelect(workspace.slug)}
+				onClickCapture={(e) => {
+					if (isDragging || isRecentlyDropped) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				}}
+				onClick={() => {
+					if (!isDragging && !isRecentlyDropped) onSelect(workspace.slug);
+				}}
 				onPointerMove={onPointerMove}
 				onPointerUp={onPointerUp}
 				sx={{
