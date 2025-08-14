@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Length } from "class-validator";
 
-export class CreateWorkspaceDto {
+export class UpdateWorkspaceTitleDto {
 	@ApiProperty({
-		description: "Title of project to create",
+		description: "New title of the workspace",
 		type: String,
 		minLength: 2,
 		maxLength: 120,
