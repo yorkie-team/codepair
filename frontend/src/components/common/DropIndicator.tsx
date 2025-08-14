@@ -23,7 +23,7 @@ function DropIndicator({ show, yPosition }: DropIndicatorProps) {
 				"&::before": {
 					content: '""',
 					position: "absolute",
-					left: -4,
+					left: 0,
 					top: -2,
 					width: 6,
 					height: 6,
@@ -33,7 +33,7 @@ function DropIndicator({ show, yPosition }: DropIndicatorProps) {
 				"&::after": {
 					content: '""',
 					position: "absolute",
-					right: -4,
+					right: 0,
 					top: -2,
 					width: 6,
 					height: 6,
