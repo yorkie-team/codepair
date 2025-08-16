@@ -1,0 +1,6 @@
+dependencies:
+- name: yorkie-mongodb
+  repository: https://yorkie-team.github.io/yorkie/helm-charts
+  version: 0.4.13
+digest: sha256:cc8f0136f05468ef7ad3b79470f59c47b0a2b82ee7826881c5b688f072b1033d
+generated: "2025-05-05T15:58:01.457671+09:00"

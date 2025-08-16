@@ -1,0 +1,112 @@
+# Configuration for CodePair application
+codepair:
+  name: codepair
+  namespace: codepair
+
+  autoscaling:
+    enabled: false
+    replicaCount: 1
+
+  image:
+    repository: yorkieteam/codepair
+    pullPolicy: IfNotPresent
+    tag: "0.1.32"
+
+  ports:
+    serverPort: 3000
+
+  env:
+    databaseUrl: "mongodb://mongodb.mongodb.svc.cluster.local:27017/codepair"
+    
+    # GitHub OAuth Settings
+    githubClientId: ""
+    githubClientSecret: ""
+    githubCallbackUrl: ""
+    githubAuthorizationUrl: "https://github.com/login/oauth/authorize"
+    githubTokenUrl: "https://github.com/login/oauth/access_token"
+    githubUserProfileUrl: "https://api.github.com/user"
+    
+    # JWT Settings
+    jwtAccessTokenSecret: ""
+    jwtAccessTokenExpirationTime: "86400"
+    jwtRefreshTokenSecret: ""
+    jwtRefreshTokenExpirationTime: "2592000"
+    
+    # Frontend and API URLs
+    frontendBaseUrl: ""
+    yorkieApiAddr: ""
+    
+    # Yorkie Project Settings
+    yorkieProjectName: "codepair"
+    yorkieProjectSecretKey: ""
+    
+    # AI/Intelligence Settings
+    yorkieIntelligence: "openai:gpt-4o-mini"
+    openaiApiKey: ""
+    
+    # LangChain Settings
+    langchainTracingV2: "true"
+    langchainApiKey: ""
+    langchainProject: "codepair-prod"
+    
+    # File Upload Settings
+    fileUpload: "s3"
+    awsAccessKeyId: ""
+    awsSecretAccessKey: ""
+    awsRegion: "ap-northeast-2"
+    bucketName: "yorkie-codepair"
+
+  resources: {}
+  
+# Configuration for ingress
+ingress:
+  ingressClassName: nginx
+  ## Set to alb if you are using AWS, NCP ALB
+  # ingressClassName: alb
+  
+  hosts:
+    enabled: false
+    apiHost: "codepair-api.yorkie.dev"
+  
+  # AWS ALB configuration
+  awsAlb:
+    enabled: false
+    scheme: internet-facing
+    certArn: "arn:aws:acm:ap-northeast-2:123412341234:certificate/1234-1234-1234-1234-1234"
+    listenPorts: '[{"HTTPS": 443}]'
+    backendProtocol: HTTP
+    backendProtocolVersion: HTTP1
+    groupName: "api.yorkie.dev"
+    groupOrder: "3"
+  
+  # NCP ALB configuration
+  ncpAlb:
+    enabled: false
+    certNo: "1234"
+    healthcheckPath: "/healthz"
+    listenPorts: '[{"HTTP": 80},{"HTTPS":443}]'
+    sslRedirect: "443"
+    backendProtocol: HTTP
+    enableHttp2: "true"
+  
+  # Nginx configuration
+  nginx:
+    enabled: true
+    rewriteTarget: "/"
+
+# Configuration for yorkie-mongodb
+yorkie-mongodb:
+  name: mongodb
+  namespace: mongodb
+  port: 27017
+  image:
+    registry: docker.io
+    repository: mongo
+    tag: "6.0"
+  persistence:
+    dataSize: 1Gi
+    configSize: 500Mi
+    storageClass: standard
+  sharded:
+    enabled: false
+  enabled: true
