@@ -74,28 +74,29 @@ export class WorkspacesService {
 		pageSize: number,
 		cursor?: string
 	): Promise<FindWorkspacesResponse> {
-		const additionalOptions: Prisma.WorkspaceFindManyArgs = {};
+		const additionalOptions: Prisma.UserWorkspaceFindManyArgs = {};
 
 		if (cursor) {
 			additionalOptions.cursor = { id: cursor };
 		}
 
-		const workspaceList = await this.prismaService.workspace.findMany({
+		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
 			take: pageSize + 1,
 			where: {
-				userWorkspaceList: {
-					some: {
-						userId: {
-							equals: userId,
-						},
-					},
+				userId: {
+					equals: userId,
 				},
 			},
+			include: {
+				workspace: true,
+			},
 			orderBy: {
-				id: "desc",
+				order: "asc",
 			},
 			...additionalOptions,
 		});
+
+		const workspaceList = userWorkspaces.map((uw) => uw.workspace);
 
 		return {
 			workspaces: workspaceList.slice(0, pageSize),
@@ -195,6 +196,42 @@ export class WorkspacesService {
 		});
 
 		return newUserWorkspace.workspace;
+	}
+
+	async updateWorkspaceOrder(userId: string, workspaceIds: string[]): Promise<void> {
+		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
+			where: {
+				userId,
+				workspaceId: {
+					in: workspaceIds,
+				},
+			},
+		});
+
+		const userWorkspaceMap = new Map(userWorkspaces.map((uw) => [uw.workspaceId, uw.id]));
+		const missingWorkspaceIds = workspaceIds.filter((id) => !userWorkspaceMap.has(id));
+
+		if (missingWorkspaceIds.length > 0) {
+			throw new NotFoundException(
+				"Some workspaces not found, or the user lacks the appropriate permissions."
+			);
+		}
+
+		const now = new Date();
+		await this.prismaService.$transaction(
+			workspaceIds.map((workspaceId, index) => {
+				const userWorkspaceId = userWorkspaceMap.get(workspaceId);
+				return this.prismaService.userWorkspace.update({
+					where: {
+						id: userWorkspaceId,
+					},
+					data: {
+						order: index,
+						updatedAt: now,
+					},
+				});
+			})
+		);
 	}
 
 	async updateTitle(
