@@ -46,3 +46,5 @@ coverage/
 .nyc_output/
 
 release/
+
+desktop/out
