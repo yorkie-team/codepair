@@ -3,7 +3,6 @@ import {
 	CircularProgress,
 	Divider,
 	ListItemIcon,
-	ListItemSecondaryAction,
 	ListItemText,
 	MenuItem,
 	MenuList,
@@ -97,6 +96,11 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 								<MenuItem
 									key={workspace.id}
 									onClick={() => handleMoveToSelectedWorkspace(workspace.slug)}
+									sx={{
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "space-between",
+									}}
 								>
 									<ListItemText
 										primaryTypographyProps={{
@@ -107,9 +111,7 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 										{workspace.title}
 									</ListItemText>
 									{params.workspaceSlug === workspace.slug && (
-										<ListItemSecondaryAction>
-											<CheckIcon fontSize="small" />
-										</ListItemSecondaryAction>
+										<CheckIcon fontSize="small" />
 									)}
 								</MenuItem>
 							))}
