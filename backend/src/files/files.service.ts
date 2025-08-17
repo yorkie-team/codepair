@@ -53,7 +53,14 @@ export class FilesService {
 			throw new UnprocessableEntityException("Content length too long.");
 		}
 
-		const fileKey = `${workspace.slug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
+		let decodedSlug: string;
+		try {
+			decodedSlug = decodeURIComponent(workspace.slug);
+		} catch {
+			decodedSlug = workspace.slug;
+		}
+
+		const fileKey = `${decodedSlug}-${generateRandomKey()}.${contentType.split("/")[1]}`;
 		const command = new PutObjectCommand({
 			Bucket: this.configService.get("BUCKET_NAME"),
 			Key: fileKey,
