@@ -13,6 +13,6 @@
 		/* Linting */
 		"strict": true
 	},
-	"include": ["electron"],
+	"include": ["src"],
 	"exclude": ["dist"]
 }
