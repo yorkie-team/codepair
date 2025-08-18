@@ -3,7 +3,7 @@ import {
 	useCreateDocumentMutation,
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
-import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { useDeleteWorkSpaceMutation, useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import {
 	Backdrop,
 	Box,
@@ -25,6 +25,8 @@ import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
 import BoardTab from "../../components/workspace/BoardTab";
 import TableTab from "../../components/workspace/TableTab";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteModal from "../../components/modals/DeleteModal";
 
 const TABS = ["BOARD", "TABLE"] as const;
 type TabType = (typeof TABS)[number];
@@ -48,6 +50,10 @@ function WorkspaceIndex() {
 	} = useGetWorkspaceDocumentListQuery(workspace?.id, search);
 	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [createDocumentModalOpen, setCreateDocumentModalOpen] = useState(false);
+
+	const { mutateAsync: deleteWorkspace } = useDeleteWorkSpaceMutation(workspace?.id);
+	const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] = useState(false);
+
 	const documentList = useMemo(() => {
 		return (
 			documentPageList?.pages.reduce((prev, page) => {
@@ -76,6 +82,14 @@ function WorkspaceIndex() {
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);
+	};
+
+	const handleDeleteWorkspaceModalOpen = () => {
+		setDeleteWorkspaceModalOpen((prev) => !prev);
+	};
+
+	const handleDeleteWorkspace = async () => {
+		await deleteWorkspace();
 	};
 
 	return (
@@ -122,6 +136,15 @@ function WorkspaceIndex() {
 						>
 							New Note
 						</Button>
+
+						<Button
+							variant="contained"
+							color="error"
+							startIcon={<DeleteIcon />}
+							onClick={handleDeleteWorkspaceModalOpen}
+						>
+							Delete
+						</Button>
 					</Stack>
 				</Stack>
 			</Paper>
@@ -152,6 +175,12 @@ function WorkspaceIndex() {
 				title="Note"
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateDocumentModalOpen}
+			/>
+			<DeleteModal
+				open={deleteWorkspaceModalOpen}
+				title={workspace?.title}
+				onSuccess={handleDeleteWorkspace}
+				onClose={handleDeleteWorkspaceModalOpen}
 			/>
 		</Stack>
 	);
