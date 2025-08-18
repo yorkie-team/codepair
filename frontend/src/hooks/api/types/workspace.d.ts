@@ -33,4 +33,7 @@ export class JoinWorkspaceRequest {
 
 export class JoinWorkspaceResponse extends Workspace {}
 
-export class DeleteWorkspaceResponse extends Workspace {}
+export class DeleteWorkspaceResponse {
+	deleteWorkspace: Workspace;
+	lastWorkspaceSlug: string;
+}

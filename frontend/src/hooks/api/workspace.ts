@@ -110,18 +110,11 @@ export const useJoinWorkspaceMutation = () => {
 };
 
 export const useDeleteWorkSpaceMutation = (workspaceId?: string) => {
-	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: async () => {
 			const res = await axios.delete<DeleteWorkspaceResponse>(`/workspaces/${workspaceId}`);
 
 			return res.data;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: generateGetWorkspaceListQueryKey(),
-			});
 		},
 	});
 };
