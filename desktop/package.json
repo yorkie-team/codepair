@@ -2,7 +2,7 @@
 	"name": "@codepair/desktop",
 	"type": "module",
 	"version": "0.1.40",
-	"main": "dist/main.js",
+	"main": "out/main/index.js",
 	"description": "Codepair Desktop",
 	"author": "yorkie-team",
 	"repository": {
@@ -11,11 +11,11 @@
 	},
 	"license": "Apache-2.0",
 	"scripts": {
-		"start": "pnpm run build-ts && cross-env NODE_ENV=production electron .",
-		"start:dev": "pnpm run build-ts && cross-env NODE_ENV=development electron .",
-		"build-ts": "tsc -p tsconfig.json",
-		"build-electron": "pnpm run build-ts && electron-builder --publish never",
-		"release": "pnpm run build-ts && electron-builder --publish always",
+		"start": "cross-env NODE_ENV=production electron-vite preview",
+		"dev": "cross-env NODE_ENV=development electron-vite dev",
+		"build": "electron-vite build",
+		"build-electron": "pnpm run build && electron-builder --publish never",
+		"release": "pnpm run build && electron-builder --publish always",
 		"lint": "eslint . --report-unused-disable-directives --max-warnings 0",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check"
@@ -24,7 +24,8 @@
 		"@types/node": "^22.9.0",
 		"cross-env": "^7.0.3",
 		"electron": "^33.0.1",
-		"electron-builder": "^25.1.8"
+		"electron-builder": "^26.0.12",
+		"electron-vite": "^4.0.0"
 	},
 	"build": {
 		"publish": {
@@ -35,7 +36,7 @@
 		"productName": "CodePair",
 		"icon": "build/icon.png",
 		"files": [
-			"dist/**/*",
+			"out/**/*",
 			"node_modules/**/*",
 			"package.json",
 			"!node_modules/**/*.{ts,map}"
@@ -63,5 +64,9 @@
 		"linux": {
 			"target": "AppImage"
 		}
+	},
+	"dependencies": {
+		"@electron-toolkit/preload": "^3.0.2",
+		"@electron-toolkit/utils": "^4.0.0"
 	}
 }
