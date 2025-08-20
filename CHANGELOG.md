@@ -7,6 +7,22 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.41] - 2025-08-20
+
+### Added
+
+- Add ability to change workspace name by @ezcolin2 in https://github.com/yorkie-team/codepair/pull/526
+
+### Changed
+
+- Enhance GitHub OAuth setup guide by @witch-factory in https://github.com/yorkie-team/codepair/pull/529
+- Migrate build system from electron-builder to electron-vite by @Banal972 in https://github.com/yorkie-team/codepair/pull/519
+- Bump up Yorkie to v0.6.26 by @hackerwins in https://github.com/yorkie-team/codepair/pull/535
+
+### Fixed
+
+- Decode workspace.slug to handle encoded Unicode characters properly by @SANGHEEJEONG in https://github.com/yorkie-team/codepair/pull/532
+
 ## [0.1.40] - 2025-08-12
 
 ### Fixed
