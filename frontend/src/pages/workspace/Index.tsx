@@ -1,9 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
 	useCreateDocumentMutation,
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
-import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { useDeleteWorkSpaceMutation, useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import {
 	Backdrop,
 	Box,
@@ -25,6 +25,8 @@ import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
 import BoardTab from "../../components/workspace/BoardTab";
 import TableTab from "../../components/workspace/TableTab";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteModal from "../../components/modals/DeleteModal";
 
 const TABS = ["BOARD", "TABLE"] as const;
 type TabType = (typeof TABS)[number];
@@ -32,6 +34,7 @@ type TabType = (typeof TABS)[number];
 function WorkspaceIndex() {
 	const params = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
 	const [search, setSearch] = useState("");
@@ -48,6 +51,10 @@ function WorkspaceIndex() {
 	} = useGetWorkspaceDocumentListQuery(workspace?.id, search);
 	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [createDocumentModalOpen, setCreateDocumentModalOpen] = useState(false);
+
+	const { mutateAsync: deleteWorkspace } = useDeleteWorkSpaceMutation(workspace?.id);
+	const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] = useState(false);
+
 	const documentList = useMemo(() => {
 		return (
 			documentPageList?.pages.reduce((prev, page) => {
@@ -76,6 +83,16 @@ function WorkspaceIndex() {
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);
+	};
+
+	const handleDeleteWorkspaceModalOpen = () => {
+		setDeleteWorkspaceModalOpen((prev) => !prev);
+	};
+
+	const handleDeleteWorkspace = async () => {
+		const { lastWorkspaceSlug } = await deleteWorkspace();
+		handleDeleteWorkspaceModalOpen();
+		navigate(`/${lastWorkspaceSlug}`, { state: { from: location }, replace: true });
 	};
 
 	return (
@@ -122,6 +139,15 @@ function WorkspaceIndex() {
 						>
 							New Note
 						</Button>
+
+						<Button
+							variant="contained"
+							color="error"
+							startIcon={<DeleteIcon />}
+							onClick={handleDeleteWorkspaceModalOpen}
+						>
+							Delete
+						</Button>
 					</Stack>
 				</Stack>
 			</Paper>
@@ -152,6 +178,12 @@ function WorkspaceIndex() {
 				title="Note"
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateDocumentModalOpen}
+			/>
+			<DeleteModal
+				open={deleteWorkspaceModalOpen}
+				title={workspace?.title}
+				onSuccess={handleDeleteWorkspace}
+				onClose={handleDeleteWorkspaceModalOpen}
 			/>
 		</Stack>
 	);

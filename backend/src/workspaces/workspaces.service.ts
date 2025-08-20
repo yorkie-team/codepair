@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ConflictException,
 	Injectable,
 	NotFoundException,
@@ -232,5 +233,59 @@ export class WorkspacesService {
 		});
 
 		return updatedWorkspace;
+	}
+
+	async remove(userId: string, workspaceId: string) {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+				},
+			});
+		} catch {
+			throw new NotFoundException(
+				"Workspace not found, or the user lacks the appropriate permissions."
+			);
+		}
+
+		const count = await this.prismaService.userWorkspace.count({
+			where: {
+				userId,
+			},
+		});
+
+		if (count <= 1) {
+			throw new BadRequestException(
+				"At least one workspace must remain. You cannot delete the last workspace."
+			);
+		}
+
+		const deleteWorkspace = await this.prismaService.workspace.delete({
+			where: {
+				id: workspaceId,
+			},
+		});
+
+		const lastWorkspace = await this.prismaService.userWorkspace.findFirst({
+			select: {
+				workspace: {
+					select: {
+						slug: true,
+					},
+				},
+			},
+			where: {
+				userId,
+			},
+			orderBy: {
+				id: "desc",
+			},
+		});
+
+		return {
+			deleteWorkspace,
+			lastWorkspaceSlug: lastWorkspace?.workspace?.slug,
+		};
 	}
 }
