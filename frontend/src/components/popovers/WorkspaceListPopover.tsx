@@ -112,7 +112,8 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 						ref={containerRef}
 						style={{
 							maxHeight: 300,
-							overflow: "auto",
+							overflowY: "auto",
+							overflowX: "hidden",
 							position: "relative",
 							paddingBottom: 8,
 						}}
