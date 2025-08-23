@@ -28,6 +28,12 @@ This repository contains multiple packages/modules that make up our project. Eac
 - **Frontend**: Contains the frontend code of our application. Please refer to [frontend/README.md](frontend/README.md) for detailed information on setting up and running the frontend.
 - **Backend**: Contains the backend code of our application. Please refer to [backend/README.md](backend/README.md) for detailed information on setting up and running the backend.
 
+## Node.js Version Support
+
+- **Supported:** **20.x (LTS)**, **22.x (Active LTS)**, **24.x (Current)**
+- **Dropped:** **18.x** (End-of-life)
+
+
 ## Getting Started with Development
 
 ### 1. Set Up GitHub OAuth Key
