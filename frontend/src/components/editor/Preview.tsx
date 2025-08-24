@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from "@mui/material";
+import { CircularProgress, Stack, Snackbar, Alert } from "@mui/material";
 import "katex/dist/katex.min.css";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -20,6 +20,41 @@ import _ from "lodash";
 import { addSoftLineBreak } from "../../utils/document";
 
 const DELAY = 500;
+
+// markdown-it plugin to inject a copy button into fenced code blocks (single render pass)
+const markdownItFencedCodeBlockCopy = (md: MarkdownIt) => {
+	md.renderer.rules.fence = (tokens, idx) => {
+		const token = tokens[idx];
+		const info = token.info ? token.info.trim() : "";
+		const lang = info.split(/\s+/g)[0] || "";
+		const code = token.content || "";
+		const hasContent = code.trim().length > 0;
+
+		// Prefer using configured highlighter if available (keeps current highlighting behavior)
+		let highlighted = "";
+		try {
+			const rendererWithHighlight = md as MarkdownIt & {
+				options?: { highlight?: (str: string, lang: string) => string };
+			};
+			const highlighter = rendererWithHighlight.options?.highlight;
+			if (typeof highlighter === "function") {
+				highlighted = highlighter(code, lang) || "";
+			}
+		} catch {
+			highlighted = "";
+		}
+
+		const buttonHtml = `<button type="button" class="copy-button" aria-label="Copy code" title="Copy code">
+				<span class="material-icons">content_copy</span><span class="material-icons">check</span>
+				</button>`;
+
+		// If highlighting succeeded, add copy button (if content exists)
+		if (!hasContent) {
+			return highlighted;
+		}
+		return highlighted.replace(/<pre(\s[^>]*)?>/, (m) => `${m}${buttonHtml}`);
+	};
+};
 
 const md = new MarkdownIt({
 	html: true,
@@ -47,6 +82,7 @@ const md = new MarkdownIt({
 	.use(markdownItIncrementalDOM, IncrementalDOM, {
 		incrementalizeDefaultRules: false,
 	})
+	.use(markdownItFencedCodeBlockCopy)
 	.use(markdownItKatex)
 	.use(markdownItSanitizer)
 	.use(markdownItImageLazyLoading);
@@ -55,7 +91,10 @@ const Preview = () => {
 	const currentTheme = useCurrentTheme();
 	const editorStore = useSelector(selectEditor);
 	const [content, setContent] = useState("");
+	const [showCopySuccess, setShowCopySuccess] = useState(false);
+	const [showCopyError, setShowCopyError] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+
 	const throttledUpdatePreviewContent = useMemo(
 		() =>
 			_.throttle(
@@ -91,11 +130,66 @@ const Preview = () => {
 		if (containerRef.current == null) {
 			return;
 		}
-
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		IncrementalDOM.patch(containerRef.current, md.renderToIncrementalDOM(content));
 	}, [content]);
+
+	// Event delegation for copy button interactions
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		const copyText = async (text: string): Promise<boolean> => {
+			try {
+				await navigator.clipboard.writeText(text);
+				return true;
+			} catch {
+				try {
+					const textArea = document.createElement("textarea");
+					textArea.value = text;
+					textArea.style.position = "absolute";
+					textArea.style.visibility = "hidden";
+					document.body.appendChild(textArea);
+					textArea.select();
+					const success = document.execCommand("copy");
+					document.body.removeChild(textArea);
+					return success;
+				} catch {
+					return false;
+				}
+			}
+		};
+
+		const activate = (el: HTMLElement) => {
+			el.classList.add("active");
+			window.setTimeout(() => el.classList.remove("active"), 2000);
+		};
+
+		const onClick = async (e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+			const copyButton = target.closest(".copy-button") as HTMLElement | null;
+			if (!copyButton) return;
+
+			const pre = copyButton.closest("pre");
+			const code = pre?.querySelector("code");
+			const text = code?.textContent ?? "";
+			if (!text) return;
+
+			const success = await copyText(text);
+			if (success) {
+				activate(copyButton);
+				setShowCopySuccess(true);
+			} else {
+				setShowCopyError(true);
+			}
+		};
+
+		container.addEventListener("click", onClick);
+		return () => {
+			container.removeEventListener("click", onClick);
+		};
+	}, []);
 
 	if (!editorStore?.doc) {
 		return (
@@ -106,12 +200,44 @@ const Preview = () => {
 	}
 
 	return (
-		<div
-			ref={containerRef}
-			data-color-mode={currentTheme}
-			style={{ paddingBottom: "2rem" }}
-			className="markdown-preview"
-		/>
+		<>
+			<div
+				ref={containerRef}
+				data-color-mode={currentTheme}
+				style={{ paddingBottom: "2rem" }}
+				className="markdown-preview"
+			/>
+
+			<Snackbar
+				open={showCopySuccess}
+				autoHideDuration={2000}
+				onClose={() => setShowCopySuccess(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setShowCopySuccess(false)}
+					severity="success"
+					sx={{ width: "100%" }}
+				>
+					Code copied to clipboard!
+				</Alert>
+			</Snackbar>
+
+			<Snackbar
+				open={showCopyError}
+				autoHideDuration={3000}
+				onClose={() => setShowCopyError(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setShowCopyError(false)}
+					severity="error"
+					sx={{ width: "100%" }}
+				>
+					Failed to copy code to clipboard
+				</Alert>
+			</Snackbar>
+		</>
 	);
 };
 
