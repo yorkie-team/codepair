@@ -22,12 +22,13 @@ import { addSoftLineBreak } from "../../utils/document";
 const DELAY = 500;
 
 // markdown-it plugin to inject a copy button into fenced code blocks (single render pass)
-const addCopyButtonFencePlugin = (md: MarkdownIt) => {
+const markdownItFencedCodeBlockCopy = (md: MarkdownIt) => {
 	md.renderer.rules.fence = (tokens, idx) => {
 		const token = tokens[idx];
 		const info = token.info ? token.info.trim() : "";
 		const lang = info.split(/\s+/g)[0] || "";
 		const code = token.content || "";
+		const hasContent = code.trim().length > 0;
 
 		// Prefer using configured highlighter if available (keeps current highlighting behavior)
 		let highlighted = "";
@@ -43,20 +44,15 @@ const addCopyButtonFencePlugin = (md: MarkdownIt) => {
 			highlighted = "";
 		}
 
-		const buttonHtml =
-			'<button type="button" class="copied" aria-label="Copy code" title="Copy code">' +
-			'<span class="octicon-copy"></span><span class="octicon-check"></span>' +
-			"</button>";
+		const buttonHtml = `<button type="button" class="copy-button" aria-label="Copy code" title="Copy code">
+				<span class="material-icons">content_copy</span><span class="material-icons">check</span>
+				</button>`;
 
-		if (highlighted && highlighted !== code) {
-			// If highlighter returns full markup, insert button as first child of <pre>
-			return highlighted.replace(/<pre(\s[^>]*)?>/, (m) => `${m}${buttonHtml}`);
+		// If highlighting succeeded, add copy button (if content exists)
+		if (!hasContent) {
+			return highlighted;
 		}
-
-		// Fallback rendering if no highlighter result: escape and wrap manually
-		const escaped = md.utils.escapeHtml(code);
-		const langClass = lang ? ` language-${lang}` : "";
-		return `<pre class="${langClass.trim()}">${buttonHtml}<code>${escaped}</code></pre>`;
+		return highlighted.replace(/<pre(\s[^>]*)?>/, (m) => `${m}${buttonHtml}`);
 	};
 };
 
@@ -86,7 +82,7 @@ const md = new MarkdownIt({
 	.use(markdownItIncrementalDOM, IncrementalDOM, {
 		incrementalizeDefaultRules: false,
 	})
-	.use(addCopyButtonFencePlugin)
+	.use(markdownItFencedCodeBlockCopy)
 	.use(markdownItKatex)
 	.use(markdownItSanitizer)
 	.use(markdownItImageLazyLoading);
@@ -156,9 +152,9 @@ const Preview = () => {
 					textArea.style.visibility = "hidden";
 					document.body.appendChild(textArea);
 					textArea.select();
-					const ok = document.execCommand("copy");
+					const success = document.execCommand("copy");
 					document.body.removeChild(textArea);
-					return ok;
+					return success;
 				} catch {
 					return false;
 				}
@@ -172,17 +168,17 @@ const Preview = () => {
 
 		const onClick = async (e: MouseEvent) => {
 			const target = e.target as HTMLElement;
-			const btn = target.closest(".copied") as HTMLElement | null;
-			if (!btn) return;
+			const copyButton = target.closest(".copy-button") as HTMLElement | null;
+			if (!copyButton) return;
 
-			const pre = btn.closest("pre");
+			const pre = copyButton.closest("pre");
 			const code = pre?.querySelector("code");
 			const text = code?.textContent ?? "";
 			if (!text) return;
 
-			const ok = await copyText(text);
-			if (ok) {
-				activate(btn);
+			const success = await copyText(text);
+			if (success) {
+				activate(copyButton);
 				setShowCopySuccess(true);
 			} else {
 				setShowCopyError(true);
