@@ -32,3 +32,7 @@ export class JoinWorkspaceRequest {
 }
 
 export class JoinWorkspaceResponse extends Workspace {}
+
+export class UpdateWorkspaceOrderRequest {
+	workspaceIds: string[];
+}

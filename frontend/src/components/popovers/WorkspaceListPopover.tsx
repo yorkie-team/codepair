@@ -3,21 +3,26 @@ import {
 	CircularProgress,
 	Divider,
 	ListItemIcon,
-	ListItemSecondaryAction,
 	ListItemText,
 	MenuItem,
 	MenuList,
 	Popover,
 	PopoverProps,
 } from "@mui/material";
-import { useCreateWorkspaceMutation, useGetWorkspaceListQuery } from "../../hooks/api/workspace";
+import {
+	useCreateWorkspaceMutation,
+	useGetWorkspaceListQuery,
+	useUpdateWorkspaceOrderMutation,
+} from "../../hooks/api/workspace";
 import InfiniteScroll from "react-infinite-scroller";
-import { useMemo, useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { CreateWorkspaceRequest, Workspace } from "../../hooks/api/types/workspace";
 import { useNavigate, useParams } from "react-router-dom";
-import CheckIcon from "@mui/icons-material/Check";
 import AddIcon from "@mui/icons-material/Add";
 import CreateModal from "../modals/CreateModal";
+import { useDragSort } from "../../hooks/useDragSort";
+import DraggableWorkspaceItem from "../common/DraggableWorkspaceItem";
+import DropIndicator from "../common/DropIndicator";
 
 interface WorkspaceListPopoverProps extends PopoverProps {
 	width?: number;
@@ -29,14 +34,41 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const params = useParams();
 	const { data: workspacePageList, hasNextPage, fetchNextPage } = useGetWorkspaceListQuery();
 	const { mutateAsync: createWorkspace } = useCreateWorkspaceMutation();
-	const workspaceList = useMemo(() => {
-		return (
+	const { mutateAsync: setWorkspaceOrder } = useUpdateWorkspaceOrderMutation();
+
+	const [workspaceList, setWorkspaceList] = useState<Workspace[]>([]);
+	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
+
+	useEffect(() => {
+		const newWorkspaceList =
 			workspacePageList?.pages.reduce((prev: Array<Workspace>, page) => {
 				return prev.concat(page.workspaces);
-			}, [] as Array<Workspace>) ?? []
-		);
+			}, [] as Array<Workspace>) ?? [];
+		setWorkspaceList(newWorkspaceList);
 	}, [workspacePageList?.pages]);
-	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
+
+	const handleReorder = useCallback(
+		async (newWorkspaceList: Workspace[]) => {
+			const previousList = workspaceList;
+			setWorkspaceList(newWorkspaceList);
+
+			try {
+				await setWorkspaceOrder({
+					workspaceIds: newWorkspaceList.map((w) => w.id),
+				});
+			} catch (error) {
+				setWorkspaceList(previousList);
+				throw error;
+			}
+		},
+		[setWorkspaceOrder, workspaceList]
+	);
+
+	const { dragState, containerRef, setItemRef, dragHandlers, isRecentlyDropped } = useDragSort({
+		items: workspaceList,
+		onReorder: handleReorder,
+		getItemKey: (workspace) => workspace.id,
+	});
 
 	const moveToWorkspace = (slug: string) => {
 		navigate(`/${slug}`);
@@ -77,9 +109,13 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 			>
 				<MenuList sx={{ width }}>
 					<Box
+						ref={containerRef}
 						style={{
 							maxHeight: 300,
-							overflow: "auto",
+							overflowY: "auto",
+							overflowX: "hidden",
+							position: "relative",
+							paddingBottom: 8,
 						}}
 					>
 						<InfiniteScroll
@@ -93,25 +129,31 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 							}
 							useWindow={false}
 						>
-							{workspaceList.map((workspace) => (
-								<MenuItem
+							<DropIndicator
+								show={
+									dragState.isDragging &&
+									dragState.dropIndex !== null &&
+									Math.abs(dragState.currentY - dragState.startY) > 10
+								}
+								yPosition={dragState.dropIndicatorY}
+							/>
+
+							{workspaceList.map((workspace, index) => (
+								<DraggableWorkspaceItem
 									key={workspace.id}
-									onClick={() => handleMoveToSelectedWorkspace(workspace.slug)}
-								>
-									<ListItemText
-										primaryTypographyProps={{
-											noWrap: true,
-											variant: "body2",
-										}}
-									>
-										{workspace.title}
-									</ListItemText>
-									{params.workspaceSlug === workspace.slug && (
-										<ListItemSecondaryAction>
-											<CheckIcon fontSize="small" />
-										</ListItemSecondaryAction>
-									)}
-								</MenuItem>
+									ref={(el) => setItemRef(workspace.id, el)}
+									workspace={workspace}
+									isSelected={params.workspaceSlug === workspace.slug}
+									isDragging={dragState.isDragging}
+									isDraggedItem={dragState.draggedIndex === index}
+									isRecentlyDropped={isRecentlyDropped}
+									onSelect={handleMoveToSelectedWorkspace}
+									onPointerDown={(event) =>
+										dragHandlers.onPointerDown(event, index)
+									}
+									onPointerMove={dragHandlers.onPointerMove}
+									onPointerUp={dragHandlers.onPointerUp}
+								/>
 							))}
 						</InfiniteScroll>
 					</Box>

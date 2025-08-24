@@ -28,6 +28,7 @@ import { AuthorizedRequest } from "src/utils/types/req.type";
 import { CreateInvitationTokenDto } from "./dto/create-invitation-token.dto";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { JoinWorkspaceDto } from "./dto/join-workspace.dto";
+import { UpdateWorkspaceOrderDto } from "./dto/update-workspace-order.dto";
 import { UpdateWorkspaceTitleDto } from "./dto/update-workspace-title.dto";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { CreateWorkspaceResponse } from "./types/create-workspace-response.type";
@@ -150,6 +151,27 @@ export class WorkspacesController {
 		@Body() joinWorkspaceDto: JoinWorkspaceDto
 	): Promise<JoinWorkspaceResponse> {
 		return this.workspacesService.join(req.user.id, joinWorkspaceDto.invitationToken);
+	}
+
+	@Patch("order")
+	@ApiOperation({
+		summary: "Set workspace order",
+		description: "Replace the entire order of the user's workspaces.",
+	})
+	@ApiBody({ type: UpdateWorkspaceOrderDto })
+	@ApiOkResponse()
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "Some workspaces not found, or the user lacks the appropriate permissions.",
+	})
+	async updateWorkspaceOrder(
+		@Req() req: AuthorizedRequest,
+		@Body() updateWorkspaceOrderDto: UpdateWorkspaceOrderDto
+	): Promise<void> {
+		return this.workspacesService.updateWorkspaceOrder(
+			req.user.id,
+			updateWorkspaceOrderDto.workspaceIds
+		);
 	}
 
 	@Patch(":workspace_id/title")
