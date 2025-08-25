@@ -13,26 +13,11 @@ export class UsersService {
 	) {}
 
 	async findOne(userId: string): Promise<FindUserResponse> {
-		const foundUserWorkspace = await this.prismaService.userWorkspace.findFirst({
-			select: {
-				workspace: {
-					select: {
-						slug: true,
-					},
-				},
-			},
-			where: {
-				userId,
-			},
-			orderBy: {
-				id: "desc",
-			},
-		});
-
 		const foundUser = await this.prismaService.user.findUnique({
 			select: {
 				id: true,
 				nickname: true,
+				lastWorkspaceSlug: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -41,10 +26,7 @@ export class UsersService {
 			},
 		});
 
-		return {
-			...foundUser,
-			lastWorkspaceSlug: foundUserWorkspace?.workspace?.slug,
-		};
+		return foundUser;
 	}
 
 	async findOrCreate(socialProvider: string, socialUid: string): Promise<User | null> {
@@ -115,5 +97,25 @@ export class UsersService {
 				},
 			});
 		}
+	}
+
+	async updateLastWorkspaceSlug(userId: string, workspaceSlug: string): Promise<void> {
+		await this.prismaService.userWorkspace.findFirstOrThrow({
+			where: {
+				userId,
+				workspace: {
+					slug: workspaceSlug,
+				},
+			},
+		});
+
+		await this.prismaService.user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				lastWorkspaceSlug: workspaceSlug,
+			},
+		});
 	}
 }
