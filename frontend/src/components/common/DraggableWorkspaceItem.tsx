@@ -1,12 +1,4 @@
-import {
-	ListItemText,
-	MenuItem,
-	IconButton,
-	Box,
-	ListItemSecondaryAction,
-	useMediaQuery,
-	useTheme,
-} from "@mui/material";
+import { ListItemText, MenuItem, IconButton, Box, useMediaQuery, useTheme } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CheckIcon from "@mui/icons-material/Check";
 import { forwardRef } from "react";
@@ -121,9 +113,16 @@ const DraggableWorkspaceItem = forwardRef<HTMLLIElement, DraggableWorkspaceItemP
 				</ListItemText>
 
 				{isSelected && (
-					<ListItemSecondaryAction>
+					<Box
+						sx={{
+							position: "absolute",
+							right: 16,
+							top: "50%",
+							transform: "translateY(-50%)",
+						}}
+					>
 						<CheckIcon fontSize="small" color="primary" />
-					</ListItemSecondaryAction>
+					</Box>
 				)}
 			</MenuItem>
 		);
