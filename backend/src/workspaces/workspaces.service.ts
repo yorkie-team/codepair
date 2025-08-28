@@ -304,25 +304,8 @@ export class WorkspacesService {
 			},
 		});
 
-		const lastWorkspace = await this.prismaService.userWorkspace.findFirst({
-			select: {
-				workspace: {
-					select: {
-						slug: true,
-					},
-				},
-			},
-			where: {
-				userId,
-			},
-			orderBy: {
-				id: "desc",
-			},
-		});
-
 		return {
 			deleteWorkspace,
-			lastWorkspaceSlug: lastWorkspace?.workspace?.slug,
 		};
 	}
 }

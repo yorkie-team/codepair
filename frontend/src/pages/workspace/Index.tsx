@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	useCreateDocumentMutation,
 	useGetWorkspaceDocumentListQuery,
@@ -34,7 +34,6 @@ type TabType = (typeof TABS)[number];
 function WorkspaceIndex() {
 	const params = useParams();
 	const navigate = useNavigate();
-	const location = useLocation();
 	const { data: workspace, isLoading } = useGetWorkspaceQuery(params.workspaceSlug);
 
 	const [search, setSearch] = useState("");
@@ -49,6 +48,7 @@ function WorkspaceIndex() {
 		fetchNextPage,
 		hasNextPage,
 	} = useGetWorkspaceDocumentListQuery(workspace?.id, search);
+
 	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [createDocumentModalOpen, setCreateDocumentModalOpen] = useState(false);
 
@@ -90,9 +90,9 @@ function WorkspaceIndex() {
 	};
 
 	const handleDeleteWorkspace = async () => {
-		const { lastWorkspaceSlug } = await deleteWorkspace();
+		await deleteWorkspace();
 		handleDeleteWorkspaceModalOpen();
-		navigate(`/${lastWorkspaceSlug}`, { state: { from: location }, replace: true });
+		navigate(`../`, { replace: true });
 	};
 
 	return (
