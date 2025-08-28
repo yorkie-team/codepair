@@ -10,6 +10,7 @@ import {
 	GetWorkspaceResponse,
 	JoinWorkspaceRequest,
 	JoinWorkspaceResponse,
+	UpdateWorkspaceOrderRequest,
 } from "./types/workspace";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -115,6 +116,23 @@ export const useDeleteWorkSpaceMutation = (workspaceId?: string) => {
 			const res = await axios.delete<DeleteWorkspaceResponse>(`/workspaces/${workspaceId}`);
 
 			return res.data;
+		},
+	});
+};
+
+export const useUpdateWorkspaceOrderMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (data: UpdateWorkspaceOrderRequest) => {
+			const res = await axios.patch<void>("/workspaces/order", data);
+
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: generateGetWorkspaceListQueryKey(),
+			});
 		},
 	});
 };
