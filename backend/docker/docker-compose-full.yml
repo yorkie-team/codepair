@@ -15,7 +15,6 @@ services:
             JWT_REFRESH_TOKEN_EXPIRATION_TIME: 604800
             FRONTEND_BASE_URL: "http://localhost:5173"
             YORKIE_API_ADDR: "http://yorkie:8080"
-            YORKIE_PROJECT_NAME: "default"
             YORKIE_PROJECT_SECRET_KEY: ""
             YORKIE_PROJECT_TOKEN: ""
             YORKIE_INTELLIGENCE: "ollama:gemma2:2b"
