@@ -52,6 +52,7 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 			if (!containerRef.current) return { dropIndex: 0, dropIndicatorY: 0 };
 
 			const containerRect = containerRef.current.getBoundingClientRect();
+			const scrollTop = containerRef.current.scrollTop;
 			const relativeY = clientY - containerRect.top;
 
 			let dropIndex = 0;
@@ -66,8 +67,8 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 				const rect = element.getBoundingClientRect();
 				itemPositions.push({
 					index,
-					top: rect.top - containerRect.top,
-					bottom: rect.bottom - containerRect.top,
+					top: rect.top - containerRect.top + scrollTop,
+					bottom: rect.bottom - containerRect.top + scrollTop,
 				});
 			});
 
@@ -75,19 +76,19 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 
 			if (itemPositions.length === 0) {
 				dropIndex = 0;
-				dropIndicatorY = 10;
+				dropIndicatorY = 10 + scrollTop;
 			} else {
 				let foundPosition = false;
 
 				for (let i = 0; i < itemPositions.length; i++) {
 					const item = itemPositions[i];
 
-					if (relativeY <= item.top) {
+					if (relativeY + scrollTop <= item.top) {
 						dropIndex = item.index;
 						dropIndicatorY = Math.max(2, item.top);
 						foundPosition = true;
 						break;
-					} else if (relativeY <= item.bottom) {
+					} else if (relativeY + scrollTop <= item.bottom) {
 						dropIndex = item.index + 1;
 						dropIndicatorY = item.bottom;
 						foundPosition = true;
