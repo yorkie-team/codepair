@@ -7,6 +7,18 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.42] - 2025-09-02
+
+### Added
+
+- Implement workspace reordering with drag and drop by @LeeWxx in https://github.com/yorkie-team/codepair/pull/522
+
+### Changed
+
+- Update CI workflows Node.js support (20.x / 22.x / 24.x) by @ahyeon-github in https://github.com/yorkie-team/codepair/pull/538
+- Reflect recent AdminAPI changes to CodePair by @kokodak in https://github.com/yorkie-team/codepair/pull/542
+- Bump up Yorkie to v0.6.28 by @kokodak in https://github.com/yorkie-team/codepair/pull/544
+
 ## [0.1.41] - 2025-08-20
 
 ### Added
