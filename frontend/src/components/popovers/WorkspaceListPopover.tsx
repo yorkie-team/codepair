@@ -14,8 +14,7 @@ import {
 	useGetWorkspaceListQuery,
 	useUpdateWorkspaceOrderMutation,
 } from "../../hooks/api/workspace";
-import InfiniteScroll from "react-infinite-scroller";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { CreateWorkspaceRequest, Workspace } from "../../hooks/api/types/workspace";
 import { useNavigate, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,36 +31,23 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 	const { width, ...popoverProps } = props;
 	const navigate = useNavigate();
 	const params = useParams();
-	const { data: workspacePageList, hasNextPage, fetchNextPage } = useGetWorkspaceListQuery();
+	const { data: workspaceList = [], isLoading } = useGetWorkspaceListQuery();
 	const { mutateAsync: createWorkspace } = useCreateWorkspaceMutation();
 	const { mutateAsync: setWorkspaceOrder } = useUpdateWorkspaceOrderMutation();
 
-	const [workspaceList, setWorkspaceList] = useState<Workspace[]>([]);
 	const [createWorkspaceModalOpen, setCreateWorkspaceModalOpen] = useState(false);
-
-	useEffect(() => {
-		const newWorkspaceList =
-			workspacePageList?.pages.reduce((prev: Array<Workspace>, page) => {
-				return prev.concat(page.workspaces);
-			}, [] as Array<Workspace>) ?? [];
-		setWorkspaceList(newWorkspaceList);
-	}, [workspacePageList?.pages]);
 
 	const handleReorder = useCallback(
 		async (newWorkspaceList: Workspace[]) => {
-			const previousList = workspaceList;
-			setWorkspaceList(newWorkspaceList);
-
 			try {
 				await setWorkspaceOrder({
 					workspaceIds: newWorkspaceList.map((w) => w.id),
 				});
 			} catch (error) {
-				setWorkspaceList(previousList);
 				throw error;
 			}
 		},
-		[setWorkspaceOrder, workspaceList]
+		[setWorkspaceOrder]
 	);
 
 	const { dragState, containerRef, setItemRef, dragHandlers, isRecentlyDropped } = useDragSort({
@@ -108,26 +94,20 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 				{...popoverProps}
 			>
 				<MenuList sx={{ width }}>
-					<Box
-						ref={containerRef}
-						style={{
-							maxHeight: 300,
-							overflowY: "auto",
-							overflowX: "hidden",
-							position: "relative",
-							paddingBottom: 8,
-						}}
-					>
-						<InfiniteScroll
-							pageStart={0}
-							loadMore={() => fetchNextPage()}
-							hasMore={hasNextPage}
-							loader={
-								<Box className="loader" key={0}>
-									<CircularProgress size="sm" />
-								</Box>
-							}
-							useWindow={false}
+					{isLoading ? (
+						<Box display="flex" justifyContent="center" p={2}>
+							<CircularProgress size={20} />
+						</Box>
+					) : (
+						<Box
+							ref={containerRef}
+							style={{
+								maxHeight: 300,
+								overflowY: "auto",
+								overflowX: "hidden",
+								position: "relative",
+								paddingBottom: 8,
+							}}
 						>
 							<DropIndicator
 								show={
@@ -155,8 +135,8 @@ function WorkspaceListPopover(props: WorkspaceListPopoverProps) {
 									onPointerUp={dragHandlers.onPointerUp}
 								/>
 							))}
-						</InfiniteScroll>
-					</Box>
+						</Box>
+					)}
 				</MenuList>
 				<Divider />
 				<MenuList sx={{ width }}>
