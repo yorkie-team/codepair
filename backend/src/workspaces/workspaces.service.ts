@@ -28,6 +28,10 @@ export class WorkspacesService {
 			throw new ConflictException("Workspace title is already in use.");
 		}
 
+		const currentWorkspaceCount = await this.prismaService.userWorkspace.count({
+			where: { userId },
+		});
+
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
@@ -40,6 +44,7 @@ export class WorkspacesService {
 				workspaceId: workspace.id,
 				userId,
 				role: WorkspaceRoleConstants.OWNER,
+				order: currentWorkspaceCount,
 			},
 		});
 
@@ -172,11 +177,16 @@ export class WorkspacesService {
 			return userWorkspace.workspace;
 		}
 
+		const currentWorkspaceCount = await this.prismaService.userWorkspace.count({
+			where: { userId },
+		});
+
 		const newUserWorkspace = await this.prismaService.userWorkspace.create({
 			data: {
 				userId,
 				workspaceId,
 				role: WorkspaceRoleConstants.MEMBER,
+				order: currentWorkspaceCount,
 			},
 			include: {
 				workspace: true,
