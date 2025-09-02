@@ -1,6 +1,7 @@
 import CodePairError from "./components/common/CodePairError";
 import GuestRoute from "./components/common/GuestRoute";
 import PrivateRoute from "./components/common/PrivateRoute";
+import WorkspaceRedirectHandler from "./components/common/WorkspaceRedirectHandler";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import MainLayout from "./components/layouts/MainLayout";
 import SettingLayout from "./components/layouts/SettingLayout";
@@ -44,6 +45,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 				element: <Index />,
 			},
 		],
+	},
+	{
+		path: "workspace",
+		accessType: AccessType.PRIVATE,
+		element: <WorkspaceRedirectHandler />,
 	},
 	{
 		path: ":workspaceSlug",

@@ -15,13 +15,11 @@ const GuestRoute = (props: RejectLoggedInRouteProps) => {
 	const userStore = useSelector(selectUser);
 
 	if (isLoggedIn) {
-		return (
-			<Navigate
-				to={`/${userStore.data?.lastWorkspaceSlug}`}
-				state={{ from: location }}
-				replace
-			/>
-		);
+		const redirectPath = userStore.data?.lastWorkspaceSlug
+			? `/${userStore.data.lastWorkspaceSlug}`
+			: "/workspace";
+
+		return <Navigate to={redirectPath} state={{ from: location }} replace />;
 	}
 
 	return children;

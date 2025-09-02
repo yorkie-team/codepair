@@ -108,3 +108,23 @@ export const useUpdateUserNicknameMutation = () => {
 		},
 	});
 };
+
+export const useUpdateLastWorkspaceSlugMutation = () => {
+	const authStore = useSelector(selectAuth);
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (workspaceSlug: string) => {
+			const res = await axios.patch<void>("/users/last-workspace-slug", {
+				workspaceSlug,
+			});
+
+			return res.data;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
+			});
+		},
+	});
+};
