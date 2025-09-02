@@ -37,7 +37,7 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 
 	const containerRef = useRef<HTMLElement>(null);
 	const itemRefs = useRef<Map<string | number, HTMLElement>>(new Map());
-	const suppressClickRef = useRef(false);
+	const [isRecentlyDropped, setIsRecentlyDropped] = useState(false);
 
 	const setItemRef = useCallback((key: string | number, element: HTMLElement | null) => {
 		if (element) {
@@ -181,9 +181,9 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 				newItems.splice(dragState.dropIndex, 0, movedItem);
 				onReorder(newItems);
 
-				suppressClickRef.current = true;
+				setIsRecentlyDropped(true);
 				setTimeout(() => {
-					suppressClickRef.current = false;
+					setIsRecentlyDropped(false);
 				}, 150);
 			}
 
@@ -212,6 +212,6 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 		containerRef,
 		setItemRef,
 		dragHandlers,
-		isRecentlyDropped: suppressClickRef.current,
+		isRecentlyDropped,
 	};
 }
