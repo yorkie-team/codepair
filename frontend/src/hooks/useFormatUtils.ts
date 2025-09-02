@@ -58,6 +58,7 @@ export const useFormatUtils = () => {
 						)
 						.indexOf(marker);
 					const afterIdx = state.sliceDoc(range.to, range.to + maxLength).indexOf(marker);
+					const endsWithNewline = state.sliceDoc(range.to - 1, range.to) === "\n";
 
 					const changes = [
 						beforeIdx === -1
@@ -73,7 +74,7 @@ export const useFormatUtils = () => {
 
 						afterIdx === -1
 							? {
-									from: range.to,
+									from: endsWithNewline ? range.to - 1 : range.to,
 									insert: Text.of([marker]),
 								}
 							: {
@@ -90,7 +91,7 @@ export const useFormatUtils = () => {
 						changes,
 						range: EditorSelection.range(
 							range.from + extendBefore,
-							range.to + extendAfter
+							range.to + extendAfter + (endsWithNewline ? -1 : 0)
 						),
 					};
 				});

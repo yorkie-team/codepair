@@ -49,6 +49,12 @@ function DocumentView() {
 								<Paper
 									id="splitter"
 									{...separatorProps}
+									onMouseDown={() => {
+										document.body.style.userSelect = "none";
+									}}
+									onMouseUp={() => {
+										document.body.style.userSelect = "auto";
+									}}
 									sx={{
 										height: "100%",
 										width: 8,
