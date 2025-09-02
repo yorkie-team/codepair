@@ -4,7 +4,7 @@ import {
 	NotFoundException,
 	UnauthorizedException,
 } from "@nestjs/common";
-import { Prisma, Workspace } from "@prisma/client";
+import { Workspace } from "@prisma/client";
 import * as moment from "moment";
 import { CheckService } from "src/check/check.service";
 import { PrismaService } from "src/db/prisma.service";
@@ -28,6 +28,10 @@ export class WorkspacesService {
 			throw new ConflictException("Workspace title is already in use.");
 		}
 
+		const currentWorkspaceCount = await this.prismaService.userWorkspace.count({
+			where: { userId },
+		});
+
 		const workspace = await this.prismaService.workspace.create({
 			data: {
 				title,
@@ -40,6 +44,7 @@ export class WorkspacesService {
 				workspaceId: workspace.id,
 				userId,
 				role: WorkspaceRoleConstants.OWNER,
+				order: currentWorkspaceCount,
 			},
 		});
 
@@ -69,19 +74,8 @@ export class WorkspacesService {
 		}
 	}
 
-	async findMany(
-		userId: string,
-		pageSize: number,
-		cursor?: string
-	): Promise<FindWorkspacesResponse> {
-		const additionalOptions: Prisma.UserWorkspaceFindManyArgs = {};
-
-		if (cursor) {
-			additionalOptions.cursor = { id: cursor };
-		}
-
+	async findMany(userId: string): Promise<FindWorkspacesResponse> {
 		const userWorkspaces = await this.prismaService.userWorkspace.findMany({
-			take: pageSize + 1,
 			where: {
 				userId: {
 					equals: userId,
@@ -90,18 +84,17 @@ export class WorkspacesService {
 			include: {
 				workspace: true,
 			},
-			orderBy: {
-				order: "asc",
-			},
-			...additionalOptions,
+			orderBy: [
+				{
+					order: "asc",
+				},
+				{
+					id: "asc",
+				},
+			],
 		});
 
-		const workspaceList = userWorkspaces.map((uw) => uw.workspace);
-
-		return {
-			workspaces: workspaceList.slice(0, pageSize),
-			cursor: workspaceList.length > pageSize ? workspaceList[pageSize].id : null,
-		};
+		return userWorkspaces.map((uw) => uw.workspace);
 	}
 
 	async createInvitationToken(
@@ -184,11 +177,16 @@ export class WorkspacesService {
 			return userWorkspace.workspace;
 		}
 
+		const currentWorkspaceCount = await this.prismaService.userWorkspace.count({
+			where: { userId },
+		});
+
 		const newUserWorkspace = await this.prismaService.userWorkspace.create({
 			data: {
 				userId,
 				workspaceId,
 				role: WorkspaceRoleConstants.MEMBER,
+				order: currentWorkspaceCount,
 			},
 			include: {
 				workspace: true,

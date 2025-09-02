@@ -37,7 +37,8 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 
 	const containerRef = useRef<HTMLElement>(null);
 	const itemRefs = useRef<Map<string | number, HTMLElement>>(new Map());
-	const suppressClickRef = useRef(false);
+	const [isRecentlyDropped, setIsRecentlyDropped] = useState(false);
+	const autoScrollInterval = useRef<number | null>(null);
 
 	const setItemRef = useCallback((key: string | number, element: HTMLElement | null) => {
 		if (element) {
@@ -52,6 +53,7 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 			if (!containerRef.current) return { dropIndex: 0, dropIndicatorY: 0 };
 
 			const containerRect = containerRef.current.getBoundingClientRect();
+			const scrollTop = containerRef.current.scrollTop;
 			const relativeY = clientY - containerRect.top;
 
 			let dropIndex = 0;
@@ -66,8 +68,8 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 				const rect = element.getBoundingClientRect();
 				itemPositions.push({
 					index,
-					top: rect.top - containerRect.top,
-					bottom: rect.bottom - containerRect.top,
+					top: rect.top - containerRect.top + scrollTop,
+					bottom: rect.bottom - containerRect.top + scrollTop,
 				});
 			});
 
@@ -75,19 +77,19 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 
 			if (itemPositions.length === 0) {
 				dropIndex = 0;
-				dropIndicatorY = 10;
+				dropIndicatorY = 10 + scrollTop;
 			} else {
 				let foundPosition = false;
 
 				for (let i = 0; i < itemPositions.length; i++) {
 					const item = itemPositions[i];
 
-					if (relativeY <= item.top) {
+					if (relativeY + scrollTop <= item.top) {
 						dropIndex = item.index;
 						dropIndicatorY = Math.max(2, item.top);
 						foundPosition = true;
 						break;
-					} else if (relativeY <= item.bottom) {
+					} else if (relativeY + scrollTop <= item.bottom) {
 						dropIndex = item.index + 1;
 						dropIndicatorY = item.bottom;
 						foundPosition = true;
@@ -147,11 +149,54 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 		[items, getItemKey]
 	);
 
+	const startAutoScroll = useCallback((direction: "up" | "down") => {
+		if (autoScrollInterval.current || !containerRef.current) return;
+
+		const container = containerRef.current;
+		const scrollSpeed = 5;
+
+		autoScrollInterval.current = window.setInterval(() => {
+			if (direction === "up" && container.scrollTop > 0) {
+				container.scrollTop = Math.max(0, container.scrollTop - scrollSpeed);
+			} else if (direction === "down") {
+				const maxScroll = container.scrollHeight - container.clientHeight;
+				if (container.scrollTop < maxScroll) {
+					container.scrollTop = Math.min(maxScroll, container.scrollTop + scrollSpeed);
+				}
+			}
+		}, 16);
+	}, []);
+
+	const stopAutoScroll = useCallback(() => {
+		if (autoScrollInterval.current) {
+			clearInterval(autoScrollInterval.current);
+			autoScrollInterval.current = null;
+		}
+	}, []);
+
 	const handlePointerMove = useCallback(
 		(event: React.PointerEvent) => {
 			if (!dragState.isDragging || !containerRef.current) return;
 
 			event.preventDefault();
+
+			const container = containerRef.current;
+			const containerRect = container.getBoundingClientRect();
+			const scrollZone = 50;
+			const relativeY = event.clientY - containerRect.top;
+
+			if (relativeY < scrollZone && container.scrollTop > 0) {
+				startAutoScroll("up");
+			} else if (relativeY > containerRect.height - scrollZone) {
+				const maxScroll = container.scrollHeight - container.clientHeight;
+				if (container.scrollTop < maxScroll) {
+					startAutoScroll("down");
+				} else {
+					stopAutoScroll();
+				}
+			} else {
+				stopAutoScroll();
+			}
 
 			const { dropIndex, dropIndicatorY } = calculateDropPosition(event.clientY);
 
@@ -162,7 +207,7 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 				dropIndicatorY,
 			}));
 		},
-		[dragState.isDragging, calculateDropPosition]
+		[dragState.isDragging, calculateDropPosition, startAutoScroll, stopAutoScroll]
 	);
 
 	const handlePointerUp = useCallback(
@@ -175,15 +220,17 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 			document.body.style.userSelect = "";
 			document.body.style.touchAction = "";
 
+			stopAutoScroll();
+
 			if (dragState.dropIndex !== null && dragState.dropIndex !== dragState.draggedIndex) {
 				const newItems = [...items];
 				const [movedItem] = newItems.splice(dragState.draggedIndex, 1);
 				newItems.splice(dragState.dropIndex, 0, movedItem);
 				onReorder(newItems);
 
-				suppressClickRef.current = true;
+				setIsRecentlyDropped(true);
 				setTimeout(() => {
-					suppressClickRef.current = false;
+					setIsRecentlyDropped(false);
 				}, 150);
 			}
 
@@ -198,7 +245,7 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 				pointerOffset: { x: 0, y: 0 },
 			});
 		},
-		[dragState, items, onReorder]
+		[dragState, items, onReorder, stopAutoScroll]
 	);
 
 	const dragHandlers: DragHandlers = {
@@ -212,6 +259,6 @@ export function useDragSort<T>({ items, onReorder, getItemKey }: UseDragSortOpti
 		containerRef,
 		setItemRef,
 		dragHandlers,
-		isRecentlyDropped: suppressClickRef.current,
+		isRecentlyDropped,
 	};
 }
