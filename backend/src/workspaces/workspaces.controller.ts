@@ -1,15 +1,4 @@
-import {
-	Body,
-	Controller,
-	DefaultValuePipe,
-	Get,
-	Param,
-	ParseIntPipe,
-	Patch,
-	Post,
-	Query,
-	Req,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Req } from "@nestjs/common";
 import {
 	ApiBearerAuth,
 	ApiBody,
@@ -19,7 +8,6 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
-	ApiQuery,
 	ApiTags,
 	ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
@@ -77,29 +65,12 @@ export class WorkspacesController {
 
 	@Get("")
 	@ApiOperation({
-		summary: "Retrieve the Workspaces",
-		description: "Return the user's workspaces. This API supports KeySet pagination.",
+		summary: "Retrieve All Workspaces",
+		description: "Return all user's workspaces ordered by their position.",
 	})
 	@ApiFoundResponse({ type: FindWorkspacesResponse })
-	@ApiQuery({
-		name: "page_size",
-		type: Number,
-		description: "Page size to fetch (Default to 10)",
-		required: false,
-	})
-	@ApiQuery({
-		name: "cursor",
-		type: String,
-		description:
-			"API returns a limited set of results after a given cursor. If no value is provided, it returns the first page.",
-		required: false,
-	})
-	async findMany(
-		@Req() req: AuthorizedRequest,
-		@Query("page_size", new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
-		@Query("cursor", new DefaultValuePipe(undefined)) cursor?: string
-	): Promise<FindWorkspacesResponse> {
-		return this.workspacesService.findMany(req.user.id, pageSize, cursor);
+	async findMany(@Req() req: AuthorizedRequest): Promise<FindWorkspacesResponse> {
+		return this.workspacesService.findMany(req.user.id);
 	}
 
 	@Post(":workspace_id/invite-token")
