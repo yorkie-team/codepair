@@ -215,7 +215,6 @@ export class WorkspaceDocumentsService {
 			client.on("error", (err) => reject(err));
 
 			const requestBody = JSON.stringify({
-				project_name: this.configService.get<string>("YORKIE_PROJECT_NAME"),
 				document_keys: documentKeyList,
 				include_root: false,
 				include_presences: true,
@@ -225,7 +224,9 @@ export class WorkspaceDocumentsService {
 				":path": "/yorkie.v1.AdminService/GetDocuments",
 				"Content-Type": "application/json",
 				"content-length": Buffer.byteLength(requestBody),
-				Authorization: this.configService.get<string>("YORKIE_PROJECT_SECRET_KEY"),
+				Authorization: `API-Key ${this.configService.get<string>(
+					"YORKIE_PROJECT_SECRET_KEY"
+				)}`,
 			});
 
 			req.write(requestBody);
