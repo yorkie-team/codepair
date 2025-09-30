@@ -41,6 +41,10 @@ function DocumentHeader() {
 	const { enqueueSnackbar } = useSnackbar();
 	const [moreButtonAnchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const isWideEnough = useMediaQuery(`(min-width:${DRAWER_WIDTH + 512}px)`);
+	{
+		/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */
+	}
+	// const [value, setValue] = useState<TagType[]>([]);
 
 	useEffect(() => {
 		if (editorState.shareRole === ShareRole.READ) {
@@ -145,7 +149,9 @@ function DocumentHeader() {
 					</Box>
 
 					<Box>
-						<Stack direction="row" justifyContent="end" gap={1}>
+						<Stack direction="row" justifyContent="end" gap={1} alignItems="center">
+							{/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */}
+							{/* <DropdownTags value={value} onChange={setValue} /> */}
 							<UserPresenceList presenceList={presenceList} />
 							{!editorState.shareRole && <ShareButton />}
 							<IconButton color="inherit" onClick={handleMoreButtonClick}>

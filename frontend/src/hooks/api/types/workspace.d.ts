@@ -8,10 +8,7 @@ export class Workspace {
 
 export class GetWorkspaceResponse extends Workspace {}
 
-export class GetWorkspaceListResponse {
-	cursor: string | null;
-	workspaces: Array<Workspace>;
-}
+export type GetWorkspaceListResponse = Array<Workspace>;
 
 export class CreateWorkspaceRequest {
 	title: string;
