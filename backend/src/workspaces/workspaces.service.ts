@@ -278,6 +278,7 @@ export class WorkspacesService {
 				where: {
 					userId,
 					workspaceId,
+					role: WorkspaceRoleConstants.OWNER,
 				},
 			});
 		} catch {
