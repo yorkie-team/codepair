@@ -17,7 +17,6 @@ export class UsersService {
 			select: {
 				id: true,
 				nickname: true,
-				lastWorkspaceSlug: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -97,25 +96,5 @@ export class UsersService {
 				},
 			});
 		}
-	}
-
-	async updateLastWorkspaceSlug(userId: string, workspaceSlug: string): Promise<void> {
-		await this.prismaService.userWorkspace.findFirstOrThrow({
-			where: {
-				userId,
-				workspace: {
-					slug: workspaceSlug,
-				},
-			},
-		});
-
-		await this.prismaService.user.update({
-			where: {
-				id: userId,
-			},
-			data: {
-				lastWorkspaceSlug: workspaceSlug,
-			},
-		});
 	}
 }

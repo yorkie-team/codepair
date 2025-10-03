@@ -14,7 +14,6 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setWorkspaceData } from "../../store/workspaceSlice";
-import { useUpdateLastWorkspaceSlugMutation } from "./user";
 
 export const generateGetWorkspaceQueryKey = (workspaceSlug: string) => {
 	return ["workspaces", workspaceSlug];
@@ -26,7 +25,6 @@ export const generateGetWorkspaceListQueryKey = () => {
 
 export const useGetWorkspaceQuery = (workspaceSlug?: string) => {
 	const dispatch = useDispatch();
-	const { mutateAsync: updateLastWorkspaceSlug } = useUpdateLastWorkspaceSlugMutation();
 	const query = useQuery({
 		queryKey: generateGetWorkspaceQueryKey(workspaceSlug || ""),
 		enabled: Boolean(workspaceSlug),
@@ -42,13 +40,12 @@ export const useGetWorkspaceQuery = (workspaceSlug?: string) => {
 	useEffect(() => {
 		if (query.data) {
 			dispatch(setWorkspaceData(query.data));
-			updateLastWorkspaceSlug(query.data.slug).catch(() => {});
 		}
 
 		return () => {
 			dispatch(setWorkspaceData(null));
 		};
-	}, [dispatch, query.data, updateLastWorkspaceSlug]);
+	}, [dispatch, query.data]);
 
 	return query;
 };

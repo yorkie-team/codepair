@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { selectUser } from "../../store/userSlice";
 import { useGetWorkspaceListQuery } from "../../hooks/api/workspace";
+import { getLastWorkspaceSlug } from "../../utils/lastWorkspace";
 
 const WorkspaceRedirectHandler = () => {
 	const user = useSelector(selectUser);
@@ -13,8 +14,9 @@ const WorkspaceRedirectHandler = () => {
 	useEffect(() => {
 		if (isLoading) return;
 
-		if (user?.data?.lastWorkspaceSlug) {
-			navigate(`/${user.data.lastWorkspaceSlug}`, { replace: true });
+		const lastSlug = getLastWorkspaceSlug(user?.data?.id ?? null);
+		if (lastSlug) {
+			navigate(`/${lastSlug}`, { replace: true });
 			return;
 		}
 
@@ -23,7 +25,7 @@ const WorkspaceRedirectHandler = () => {
 			navigate(`/${firstWorkspace.slug}`, { replace: true });
 			return;
 		}
-	}, [user, workspaceList, navigate, isLoading]);
+	}, [user?.data?.id, workspaceList, navigate, isLoading]);
 
 	return (
 		<Backdrop open>

@@ -6,6 +6,10 @@ import { selectConfig } from "../../store/configSlice";
 import { useSelector } from "react-redux";
 import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
 import { Stack } from "@mui/material";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { selectUser } from "../../store/userSlice";
+import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
 
 export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 	display: "flex",
@@ -18,6 +22,14 @@ export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 
 function WorkspaceLayout() {
 	const { drawerOpen } = useSelector(selectConfig);
+	const { data: user } = useSelector(selectUser);
+	const { workspaceSlug } = useParams();
+
+	useEffect(() => {
+		if (user?.id && workspaceSlug) {
+			setLastWorkspaceSlug(user.id, workspaceSlug);
+		}
+	}, [user?.id, workspaceSlug]);
 
 	return (
 		<Stack gap={0}>
