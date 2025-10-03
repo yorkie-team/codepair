@@ -20,8 +20,9 @@ const WorkspaceRedirectHandler = () => {
 			return;
 		}
 
-		if (workspaceList?.pages?.[0]?.workspaces?.length) {
-			const firstWorkspace = workspaceList.pages[0].workspaces[0];
+		const firstWorkspace = workspaceList?.[0];
+
+		if (firstWorkspace) {
 			navigate(`/${firstWorkspace.slug}`, { replace: true });
 			return;
 		}
