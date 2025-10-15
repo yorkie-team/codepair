@@ -1049,52 +1049,76 @@ body[data-color-mode*="light"] {
 .markdown-preview {
 	pre {
 		position: relative;
-		.copied {
-			visibility: hidden;
+		.copy-button {
+			width: 2rem;
+			height: 2rem;
 			display: flex;
+			align-items: center;
+			justify-content: center;
 			position: absolute;
 			cursor: pointer;
 			color: var(--color-fg-default);
 			top: 6px;
 			right: 6px;
 			border-radius: 5px;
+			border: none;
 			background: var(--color-border-default);
 			padding: 6px;
-			font-size: 12px;
 			transition: all 0.3s;
 
-			.octicon-copy {
+			.copy-icon {
 				display: block;
 			}
 
-			.octicon-check {
+			.check-icon {
 				display: none;
 			}
 		}
 		&:hover {
-			.copied {
-				visibility: visible;
-			}
-			.copied:hover {
-				background: var(--color-prettylights-syntax-entity-tag);
+			.copy-button:not(.active):hover {
+				background: var(--color-accent-fg);
 				color: var(--color-canvas-default);
 			}
 		}
-		&:hover .copied:active,
-		.copied.active {
+		.copy-button.active {
 			background: var(--color-copied-active-bg);
 			color: var(--color-canvas-default);
 		}
+
 		.active {
-			.octicon-copy {
+			.copy-icon {
 				display: none;
 			}
 
-			.octicon-check {
+			.check-icon {
 				display: block;
 			}
 		}
 	}
+}
+
+/* Material Icons for copy functionality - optimized for HTML structure */
+.markdown-preview pre .copy-button .material-icons {
+	font-size: 1rem;
+	white-space: nowrap;
+}
+
+/* Icon visibility states */
+.markdown-preview pre .copy-button .material-icons:first-child {
+	display: inline-block;
+}
+
+.markdown-preview pre .copy-button .material-icons:last-child {
+	display: none;
+}
+
+/* Active state - show check icon, hide copy icon */
+.markdown-preview pre .copy-button.active .material-icons:first-child {
+	display: none;
+}
+
+.markdown-preview pre .copy-button.active .material-icons:last-child {
+	display: inline-block;
 }
 
 .markdown-preview {
