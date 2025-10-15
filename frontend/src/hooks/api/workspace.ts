@@ -5,6 +5,7 @@ import {
 	CreateWorkspaceInviteTokenResponse,
 	CreateWorkspaceRequest,
 	CreateWorkspaceResponse,
+	DeleteWorkspaceResponse,
 	GetWorkspaceListResponse,
 	GetWorkspaceResponse,
 	JoinWorkspaceRequest,
@@ -98,6 +99,14 @@ export const useJoinWorkspaceMutation = () => {
 			const res = await axios.post<JoinWorkspaceResponse>("/workspaces/join", data);
 
 			return res.data;
+		},
+	});
+};
+
+export const useDeleteWorkSpaceMutation = (workspaceId?: string) => {
+	return useMutation({
+		mutationFn: async () => {
+			await axios.delete<DeleteWorkspaceResponse>(`/workspaces/${workspaceId}`);
 		},
 	});
 };

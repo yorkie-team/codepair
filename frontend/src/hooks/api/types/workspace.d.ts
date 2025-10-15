@@ -30,6 +30,11 @@ export class JoinWorkspaceRequest {
 
 export class JoinWorkspaceResponse extends Workspace {}
 
+export class DeleteWorkspaceResponse {
+	deleteWorkspace: Workspace;
+	lastWorkspaceSlug: string;
+}
+
 export class UpdateWorkspaceOrderRequest {
 	workspaceIds: string[];
 }
