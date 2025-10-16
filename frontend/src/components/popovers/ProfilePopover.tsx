@@ -10,19 +10,22 @@ import {
 	Popover,
 	PopoverProps,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { logout } from "../../store/authSlice";
 import { setTheme, ThemeType } from "../../store/configSlice";
-import { setUserData } from "../../store/userSlice";
+import { selectUser, setUserData } from "../../store/userSlice";
+import { clearLastWorkspaceSlug } from "../../utils/lastWorkspace";
 
 function ProfilePopover(props: PopoverProps) {
 	const dispatch = useDispatch();
+	const userStore = useSelector(selectUser);
 	const themeMode = useCurrentTheme();
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
+		clearLastWorkspaceSlug(userStore.data?.id);
 		dispatch(logout());
 		dispatch(setUserData(null));
 	};

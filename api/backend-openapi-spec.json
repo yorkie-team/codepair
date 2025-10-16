@@ -1245,10 +1245,6 @@
             "type": "string",
             "description": "User nickname"
           },
-          "lastWorkspaceSlug": {
-            "type": "string",
-            "description": "Last accessed workspace slug"
-          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
