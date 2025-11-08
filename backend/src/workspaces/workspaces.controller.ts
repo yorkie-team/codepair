@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from "@nestjs/common";
 import {
+	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
@@ -186,6 +187,10 @@ export class WorkspacesController {
 	@ApiNotFoundResponse({
 		type: HttpExceptionResponse,
 		description: "Workspace not found, or the user lacks the appropriate permissions.",
+	})
+	@ApiBadRequestResponse({
+		type: HttpExceptionResponse,
+		description: "Cannot delete the only remaining workspace for the user.",
 	})
 	async remove(
 		@Req() req: AuthorizedRequest,

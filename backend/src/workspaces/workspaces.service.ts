@@ -14,6 +14,7 @@ import { generateRandomKey } from "src/utils/functions/random-string";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { UpdateWorkspaceTitleResponse } from "./types/update-workspace-title-response.type";
+import { DeleteWorkspaceResponse } from "./types/delete-workspace-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -270,7 +271,7 @@ export class WorkspacesService {
 		return updatedWorkspace;
 	}
 
-	async remove(userId: string, workspaceId: string) {
+	async remove(userId: string, workspaceId: string): Promise<DeleteWorkspaceResponse> {
 		try {
 			await this.prismaService.userWorkspace.findFirstOrThrow({
 				where: {

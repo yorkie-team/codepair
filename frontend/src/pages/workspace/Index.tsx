@@ -91,8 +91,8 @@ function WorkspaceIndex() {
 
 	const handleDeleteWorkspace = async () => {
 		await deleteWorkspace();
-		handleDeleteWorkspaceModalOpen();
-		navigate(`../`, { replace: true });
+		setDeleteWorkspaceModalOpen(false);
+		navigate("/", { replace: true });
 	};
 
 	return (
