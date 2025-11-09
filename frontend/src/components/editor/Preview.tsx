@@ -61,6 +61,9 @@ const md = new MarkdownIt({
 	linkify: true,
 	breaks: true,
 	highlight: (code: string, lang: string): string => {
+		if (lang.trim() === "") {
+			return `<pre><code>${md.utils.escapeHtml(code)}</code></pre>`;
+		}
 		try {
 			return `<pre class="language-${lang}"><code>${toHtml(
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,7 +71,7 @@ const md = new MarkdownIt({
 			)}</code></pre>`;
 		} catch (error) {
 			console.error(`Error highlighting code with language '${lang}':`, error);
-			return `<pre class="language-"><code>${md.utils.escapeHtml(code)}</code></pre>`;
+			return `<pre><code>${md.utils.escapeHtml(code)}</code></pre>`;
 		}
 	},
 })
