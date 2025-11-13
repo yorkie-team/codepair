@@ -15,6 +15,7 @@ model User {
   socialProvider      String            @map("social_provider")
   socialUid           String            @unique @map("social_uid")
   nickname            String?
+  profileIcon         String?           @map("profile_icon")
   createdAt           DateTime          @default(now()) @map("created_at")
   updatedAt           DateTime          @updatedAt @map("updated_at")
   userWorkspaceList   UserWorkspace[]
