@@ -27,6 +27,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, "github") {
 			socialProvider: "github",
 			socialUid: profile.id,
 			nickname: profile.username,
+			profileIcon: profile.photos?.[0]?.value || null,
 		};
 	}
 }
