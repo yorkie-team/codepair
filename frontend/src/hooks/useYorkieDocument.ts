@@ -77,12 +77,13 @@ export const useYorkieDocument = (
 				initialPresence: {
 					name: presenceName,
 					color: Color(randomColor()).fade(0.15).toString(),
+					profileIcon: userStore.data?.profileIcon || null,
 					selection: null,
 					cursor: null,
 				},
 			});
 		},
-		[]
+		[userStore.data?.profileIcon]
 	);
 
 	const cleanUpYorkieDocument = useCallback(async () => {

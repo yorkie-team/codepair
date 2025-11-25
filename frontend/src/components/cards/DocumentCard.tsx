@@ -26,12 +26,14 @@ function DocumentCard(props: DocumentCardProps) {
 		color: string;
 		name: string;
 		cursor: string | null;
+		profileIcon?: string | null;
 		selection: string | null;
 	}) => {
 		return {
 			color: data.color.replace(/^"|"$/g, ""),
 			name: data.name.replace(/^"|"$/g, ""),
 			cursor: data.cursor,
+			profileIcon: data.profileIcon ? data.profileIcon.replace(/^"|"$/g, "") : null,
 			selection: data.selection,
 		};
 	};
@@ -106,7 +108,12 @@ function DocumentCard(props: DocumentCardProps) {
 					}}
 				>
 					{presenceList.map((presence, index) => (
-						<Avatar key={index} sx={{ bgcolor: presence.color }} alt={presence.name}>
+						<Avatar
+							key={index}
+							src={presence.profileIcon || ""}
+							sx={{ bgcolor: presence.color }}
+							alt={presence.name}
+						>
 							{presence.name[0]}
 						</Avatar>
 					))}

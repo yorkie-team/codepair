@@ -52,6 +52,7 @@ function UserPresenceList(props: UserPresenceListProps) {
 			<Avatar
 				onClick={() => handleScrollToUserLocation(presence)}
 				alt={presence.presence.name}
+				src={presence.presence.profileIcon || ""}
 				sx={{ bgcolor: presence.presence.color }}
 			>
 				{presence.presence.name[0]}
@@ -90,6 +91,7 @@ function UserPresenceList(props: UserPresenceListProps) {
 						>
 							<ListItemAvatar>
 								<Avatar
+									src={presence.presence.profileIcon || ""}
 									sx={{
 										bgcolor: presence.presence.color,
 										width: 24,
