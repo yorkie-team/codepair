@@ -33,6 +33,7 @@ export class UsersService {
 			select: {
 				id: true,
 				nickname: true,
+				profileIcon: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -47,7 +48,11 @@ export class UsersService {
 		};
 	}
 
-	async findOrCreate(socialProvider: string, socialUid: string): Promise<User | null> {
+	async findOrCreate(
+		socialProvider: string,
+		socialUid: string,
+		profileIcon: string | null
+	): Promise<User | null> {
 		const foundUser = await this.prismaService.user.findFirst({
 			where: {
 				socialProvider,
@@ -56,6 +61,12 @@ export class UsersService {
 		});
 
 		if (foundUser) {
+			if (profileIcon && foundUser.profileIcon !== profileIcon) {
+				return await this.prismaService.user.update({
+					where: { id: foundUser.id },
+					data: { profileIcon },
+				});
+			}
 			return foundUser;
 		}
 
@@ -63,6 +74,7 @@ export class UsersService {
 			data: {
 				socialProvider,
 				socialUid,
+				profileIcon: profileIcon || null,
 			},
 		});
 

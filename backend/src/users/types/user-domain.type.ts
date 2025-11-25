@@ -5,6 +5,8 @@ export class UserDomain {
 	id: string;
 	@ApiProperty({ type: String, description: "Nickname of user", required: false })
 	nickname?: string;
+	@ApiProperty({ type: String, description: "Profile icon of user", required: false })
+	profileIcon?: string;
 	@ApiProperty({ type: String, description: "Last worksace slug of user", required: false })
 	lastWorkspaceSlug?: string;
 	@ApiProperty({ type: Date, description: "Created date of user" })
