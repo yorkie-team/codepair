@@ -24,12 +24,14 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 		color: string;
 		name: string;
 		cursor: string | null;
+		profileIcon?: string | null;
 		selection: string | null;
 	}) => {
 		return {
 			color: data.color.replace(/^"|"$/g, ""),
 			name: data.name.replace(/^"|"$/g, ""),
 			cursor: data.cursor,
+			profileIcon: data.profileIcon ? data.profileIcon.replace(/^"|"$/g, "") : null,
 			selection: data.selection,
 		};
 	};
@@ -86,6 +88,7 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 										{presenceList.map((presence, index) => (
 											<Avatar
 												key={index}
+												src={presence.profileIcon || ""}
 												sx={{ bgcolor: presence.color }}
 												alt={presence.name}
 											>
