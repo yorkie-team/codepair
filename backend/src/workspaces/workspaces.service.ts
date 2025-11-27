@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ConflictException,
 	Injectable,
 	NotFoundException,
@@ -13,6 +14,7 @@ import { generateRandomKey } from "src/utils/functions/random-string";
 import { CreateInvitationTokenResponse } from "./types/create-inviation-token-response.type";
 import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { UpdateWorkspaceTitleResponse } from "./types/update-workspace-title-response.type";
+import { DeleteWorkspaceResponse } from "./types/delete-workspace-response.type";
 
 @Injectable()
 export class WorkspacesService {
@@ -267,5 +269,43 @@ export class WorkspacesService {
 		});
 
 		return updatedWorkspace;
+	}
+
+	async remove(userId: string, workspaceId: string): Promise<DeleteWorkspaceResponse> {
+		try {
+			await this.prismaService.userWorkspace.findFirstOrThrow({
+				where: {
+					userId,
+					workspaceId,
+					role: WorkspaceRoleConstants.OWNER,
+				},
+			});
+		} catch {
+			throw new NotFoundException(
+				"Workspace not found, or the user lacks the appropriate permissions."
+			);
+		}
+
+		const count = await this.prismaService.userWorkspace.count({
+			where: {
+				userId,
+			},
+		});
+
+		if (count <= 1) {
+			throw new BadRequestException(
+				"At least one workspace must remain. You cannot delete the last workspace."
+			);
+		}
+
+		const deleteWorkspace = await this.prismaService.workspace.delete({
+			where: {
+				id: workspaceId,
+			},
+		});
+
+		return {
+			deleteWorkspace,
+		};
 	}
 }

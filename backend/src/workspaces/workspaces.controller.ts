@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from "@nestjs/common";
 import {
+	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiBody,
 	ApiCreatedResponse,
@@ -25,6 +26,7 @@ import { FindWorkspacesResponse } from "./types/find-workspaces-response.type";
 import { JoinWorkspaceResponse } from "./types/join-workspace-response.type";
 import { UpdateWorkspaceTitleResponse } from "./types/update-workspace-title-response.type";
 import { WorkspacesService } from "./workspaces.service";
+import { DeleteWorkspaceResponse } from "./types/delete-workspace-response.type";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth()
@@ -170,5 +172,30 @@ export class WorkspacesController {
 			workspaceId,
 			updateWorkspaceTitleDto.title
 		);
+	}
+
+	@Delete(":workspace_id")
+	@ApiOperation({
+		summary: "Delete Workspace",
+		description: "Delete an existing workspace.",
+	})
+	@ApiParam({
+		name: "workspace_id",
+		description: "ID of workspace to delete",
+	})
+	@ApiOkResponse({ type: DeleteWorkspaceResponse })
+	@ApiNotFoundResponse({
+		type: HttpExceptionResponse,
+		description: "Workspace not found, or the user lacks the appropriate permissions.",
+	})
+	@ApiBadRequestResponse({
+		type: HttpExceptionResponse,
+		description: "Cannot delete the only remaining workspace for the user.",
+	})
+	async remove(
+		@Req() req: AuthorizedRequest,
+		@Param("workspace_id") workspaceId: string
+	): Promise<DeleteWorkspaceResponse> {
+		return this.workspacesService.remove(req.user.id, workspaceId);
 	}
 }
