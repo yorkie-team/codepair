@@ -40,6 +40,7 @@
 		"@uiw/codemirror-theme-xcode": "^4.21.21",
 		"@uiw/react-markdown-preview": "^5.0.7",
 		"@vscode/markdown-it-katex": "^1.1.0",
+		"@yorkie-js/sdk": "0.6.28",
 		"axios": "^1.6.5",
 		"browser-image-resizer": "^2.4.1",
 		"clipboardy": "^4.0.0",
@@ -50,7 +51,9 @@
 		"color": "^4.2.3",
 		"form-data": "^4.0.0",
 		"hast-util-to-html": "^9.0.3",
+		"html2canvas": "^1.4.1",
 		"incremental-dom": "^0.6.0",
+		"jspdf": "^3.0.3",
 		"katex": "^0.16.9",
 		"lib0": "^0.2.88",
 		"lodash": "^4.17.21",
@@ -61,6 +64,7 @@
 		"markdown-it-prism": "^2.3.0",
 		"markdown-it-sanitizer": "^0.4.3",
 		"markdown-it-task-checkbox": "^1.0.6",
+		"marked": "^16.3.0",
 		"match-sorter": "^6.3.3",
 		"moment": "^2.30.1",
 		"notistack": "^3.0.1",
@@ -81,8 +85,7 @@
 		"redux-persist": "^6.0.0",
 		"refractor": "^4.8.1",
 		"validator": "^13.12.0",
-		"vite-plugin-package-version": "^1.1.0",
-		"@yorkie-js/sdk": "0.6.28"
+		"vite-plugin-package-version": "^1.1.0"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^2.20.1",
