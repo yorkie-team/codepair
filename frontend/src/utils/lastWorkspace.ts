@@ -1,4 +1,4 @@
-export const getLastWorkspaceKey = (userId: string) => `cp:last-workspace:${userId}`;
+const getLastWorkspaceKey = (userId: string) => `cp:last-workspace:${userId}`;
 
 export const getLastWorkspaceSlug = (userId?: string | null): string | null => {
 	if (!userId) return null;
