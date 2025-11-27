@@ -3,7 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectAuth, setAccessToken } from "../../store/authSlice";
-import { User, setUserData } from "../../store/userSlice";
+import { User, selectUser, setUserData } from "../../store/userSlice";
+import { clearLastWorkspaceSlug } from "../../utils/lastWorkspace";
 import {
 	GetUserResponse,
 	RefreshTokenRequest,
@@ -37,6 +38,7 @@ export const useRefreshTokenMutation = () => {
 export const useGetUserQuery = () => {
 	const dispatch = useDispatch();
 	const authStore = useSelector(selectAuth);
+	const userStore = useSelector(selectUser);
 	const { mutateAsync: mutateRefreshToken } = useRefreshTokenMutation();
 	const [axiosInterceptorAdded, setAxiosInterceptorAdded] = useState(false);
 
@@ -46,6 +48,7 @@ export const useGetUserQuery = () => {
 			async (error) => {
 				if (error.response?.status === 401 && !error.config._retry) {
 					if (error.config.url === "/auth/refresh") {
+						clearLastWorkspaceSlug(userStore.data?.id);
 						dispatch(logout());
 						dispatch(setUserData(null));
 						return Promise.reject(error);
@@ -66,7 +69,7 @@ export const useGetUserQuery = () => {
 			setAxiosInterceptorAdded(false);
 			axios.interceptors.response.eject(interceptor);
 		};
-	}, [authStore, dispatch, mutateRefreshToken]);
+	}, [authStore, dispatch, mutateRefreshToken, userStore.data?.id]);
 
 	const query = useQuery({
 		queryKey: generateGetUserQueryKey(authStore.accessToken || ""),
@@ -82,11 +85,12 @@ export const useGetUserQuery = () => {
 		if (query.isSuccess) {
 			dispatch(setUserData(query.data as User));
 		} else if (query.isError) {
+			clearLastWorkspaceSlug(userStore.data?.id);
 			dispatch(logout());
 			dispatch(setUserData(null));
 			axios.defaults.headers.common["Authorization"] = "";
 		}
-	}, [dispatch, query.data, query.isError, query.isSuccess]);
+	}, [dispatch, query.data, query.isError, query.isSuccess, userStore.data?.id]);
 
 	return { ...query, isLoading: query.isLoading || !axiosInterceptorAdded };
 };

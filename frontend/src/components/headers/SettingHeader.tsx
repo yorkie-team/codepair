@@ -20,7 +20,7 @@ function SettingHeader() {
 	};
 
 	const handleToWorkspace = () => {
-		navigate(`/${userStore.data?.lastWorkspaceSlug}`);
+		navigate("/workspace");
 	};
 
 	return (
