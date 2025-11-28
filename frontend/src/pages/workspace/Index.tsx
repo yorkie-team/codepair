@@ -139,15 +139,22 @@ function WorkspaceIndex() {
 						>
 							New Note
 						</Button>
-
-						<Button
-							variant="contained"
-							color="error"
-							startIcon={<DeleteIcon />}
-							onClick={handleDeleteWorkspaceModalOpen}
-						>
-							Delete
-						</Button>
+						{/* NOTE(kokodak): Delete workspace button should only be always visible after
+							the following requirements are met:
+							- Members should NOT see the delete button.
+							- Even Owners should go through an extra confirmation step before delete.
+							Once these requirements are met, we can safely remove the MODE condition below.
+						*/}
+						{import.meta.env.MODE !== "production" && (
+							<Button
+								variant="contained"
+								color="error"
+								startIcon={<DeleteIcon />}
+								onClick={handleDeleteWorkspaceModalOpen}
+							>
+								Delete
+							</Button>
+						)}
 					</Stack>
 				</Stack>
 			</Paper>
