@@ -7,6 +7,27 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.43] - 2025-11-28
+
+### Added
+
+- Add Tag feature frontend for document management in Workspaces by @yeonthusiast in https://github.com/yorkie-team/codepair/pull/548
+- Add Clipboard Copy Functionality For Code Blocks In View Mode by @Indigochi1d in https://github.com/yorkie-team/codepair/pull/513
+- Implement Workspaces Delete by @Banal972 in https://github.com/yorkie-team/codepair/pull/534
+- Add automatic redirect to last accessed workspace by @LeeWxx in https://github.com/yorkie-team/codepair/pull/539
+
+### Changed
+
+- Replace deprecated ListItemSecondaryAction with simple box by @witch-factory in https://github.com/yorkie-team/codepair/pull/540
+- Bump up Yorkie to v0.6.39 by @kokodak in https://github.com/yorkie-team/codepair/pull/555
+- Hide workspace delete button in production mode by @kokodak in https://github.com/yorkie-team/codepair/pull/556
+
+### Fixed
+
+- Fix workspace disappearing issue by @LeeWxx in https://github.com/yorkie-team/codepair/pull/547
+- Fix text selection issues with newline and split pane resizing by @ggyuchive in https://github.com/yorkie-team/codepair/pull/541
+- Prevent code highlighting if no language provided by @blurfx in https://github.com/yorkie-team/codepair/pull/552
+
 ## [0.1.42] - 2025-09-02
 
 ### Added
