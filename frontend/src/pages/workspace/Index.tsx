@@ -140,14 +140,16 @@ function WorkspaceIndex() {
 							New Note
 						</Button>
 
-						<Button
-							variant="contained"
-							color="error"
-							startIcon={<DeleteIcon />}
-							onClick={handleDeleteWorkspaceModalOpen}
-						>
-							Delete
-						</Button>
+						{import.meta.env.MODE !== "production" && (
+							<Button
+								variant="contained"
+								color="error"
+								startIcon={<DeleteIcon />}
+								onClick={handleDeleteWorkspaceModalOpen}
+							>
+								Delete
+							</Button>
+						)}
 					</Stack>
 				</Stack>
 			</Paper>
