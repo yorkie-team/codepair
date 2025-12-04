@@ -76,13 +76,29 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 			root.content = new yorkie.Text();
 		});
 
-		this._doc.subscribe("$.content", (event) => {
+		this._doc.subscribe((event) => {
 			if (event.type !== "remote-change") return;
 
 			const { operations } = event.value;
 
+			// Check if content itself is replaced
+			const contentReplaced = operations.some(
+				(op) => op.type === "remove" && op.path === "$"
+			);
+
+			if (contentReplaced) {
+				// Content object is replaced, reload entire document
+				const text = this._doc.getRoot().content;
+				view.dispatch({
+					changes: { from: 0, to: view.state.doc.length, insert: text.toString() },
+					annotations: [cmState.Transaction.remote.of(true)],
+				});
+				return;
+			}
+
+			// Handle individual edit operations
 			operations.forEach((op) => {
-				if (op.type === "edit") {
+				if (op.type === "edit" && op.path?.startsWith("$.content")) {
 					const changes = [
 						{
 							from: Math.max(0, op.from),
