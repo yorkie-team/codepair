@@ -1,5 +1,6 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import HistoryIcon from "@mui/icons-material/History";
 import {
 	AppBar,
 	Box,
@@ -25,6 +26,7 @@ import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import DocumentPopover from "../popovers/DocumentPopover";
 import UserPresenceList from "./UserPresenceList";
+import RevisionPanel from "../editor/RevisionPanel";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();
@@ -40,6 +42,7 @@ function DocumentHeader() {
 	const isEditingDisabled = Boolean(editorState.shareRole);
 	const { enqueueSnackbar } = useSnackbar();
 	const [moreButtonAnchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const [revisionPanelOpen, setRevisionPanelOpen] = useState(false);
 	const isWideEnough = useMediaQuery(`(min-width:${DRAWER_WIDTH + 512}px)`);
 	{
 		/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */
@@ -91,7 +94,7 @@ function DocumentHeader() {
 
 	return (
 		<AppBar position="static" sx={{ zIndex: 100 }}>
-			<Toolbar>
+			<Toolbar sx={{ px: { xs: 1, sm: 2 }, minHeight: { xs: 56, sm: 64 } }}>
 				<Stack
 					width="100%"
 					direction="row"
@@ -111,8 +114,15 @@ function DocumentHeader() {
 						>
 							{!editorState.shareRole && (
 								<Tooltip title="Back to Previous Page">
-									<IconButton color="inherit" onClick={handleToPrevious}>
-										<ArrowBackIosNewIcon />
+									<IconButton
+										color="inherit"
+										onClick={handleToPrevious}
+										size="small"
+										sx={{ p: { xs: 0.75, sm: 1 } }}
+									>
+										<ArrowBackIosNewIcon
+											sx={{ fontSize: { xs: 20, sm: 24 } }}
+										/>
 									</IconButton>
 								</Tooltip>
 							)}
@@ -126,7 +136,7 @@ function DocumentHeader() {
 							)}
 						</Stack>
 					</Box>
-					<Box sx={{ flexGrow: 1, overflow: "hidden", px: 2 }}>
+					<Box sx={{ flexGrow: 1, overflow: "hidden", px: { xs: 0.5, sm: 2 } }}>
 						<Stack alignItems="center" justifyContent="center" height="100%">
 							<Typography
 								contentEditable={!isEditingDisabled}
@@ -149,11 +159,28 @@ function DocumentHeader() {
 					</Box>
 
 					<Box>
-						<Stack direction="row" justifyContent="end" gap={1} alignItems="center">
+						<Stack
+							direction="row"
+							justifyContent="end"
+							gap={{ xs: 0.5, sm: 1 }}
+							alignItems="center"
+						>
 							{/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */}
 							{/* <DropdownTags value={value} onChange={setValue} /> */}
-							<UserPresenceList presenceList={presenceList} />
+							<Box sx={{ display: { xs: "none", sm: "block" } }}>
+								<UserPresenceList presenceList={presenceList} />
+							</Box>
 							{!editorState.shareRole && <ShareButton />}
+							{!editorState.shareRole && (
+								<Tooltip title="History">
+									<IconButton
+										color="inherit"
+										onClick={() => setRevisionPanelOpen(true)}
+									>
+										<HistoryIcon />
+									</IconButton>
+								</Tooltip>
+							)}
 							<IconButton color="inherit" onClick={handleMoreButtonClick}>
 								<MoreVertIcon />
 							</IconButton>
@@ -166,6 +193,7 @@ function DocumentHeader() {
 					</Box>
 				</Stack>
 			</Toolbar>
+			<RevisionPanel open={revisionPanelOpen} onClose={() => setRevisionPanelOpen(false)} />
 		</AppBar>
 	);
 }

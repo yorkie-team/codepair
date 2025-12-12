@@ -12,8 +12,13 @@ function ShareButton() {
 
 	return (
 		<>
-			<IconButton onClick={handleShareModalOpen} color="inherit">
-				<ShareIcon />
+			<IconButton
+				onClick={handleShareModalOpen}
+				color="inherit"
+				size="small"
+				sx={{ p: { xs: 0.75, sm: 1 } }}
+			>
+				<ShareIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
 			</IconButton>
 			<ShareModal open={shareModalOpen} onClose={handleShareModalOpen} />
 		</>
