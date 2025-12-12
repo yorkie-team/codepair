@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.44] - 2025-12-12
+
+### Added
+
+- Add Revision History Feature by @hackerwins in https://github.com/yorkie-team/codepair/pull/561
+
 ## [0.1.43] - 2025-11-28
 
 ### Added
