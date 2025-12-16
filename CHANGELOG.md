@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.45] - 2025-12-16
+
+### Added
+
+- Introduce Multi-User Undo/Redo for Collaborative Editing by @JOOHOJANG in https://github.com/yorkie-team/codepair/pull/563
+
 ## [0.1.44] - 2025-12-12
 
 ### Added
