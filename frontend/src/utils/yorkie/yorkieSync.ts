@@ -119,10 +119,14 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 
 					if (isUndoRedo) {
 						const newPos = op.from + (op.value?.content?.length || 0);
+						const docLength =
+							view.state.doc.length +
+							((op.value?.content?.length || 0) - (op.to - op.from));
+						const boundedPos = Math.min(Math.max(0, newPos), docLength);
 
 						transactionSpec.selection = {
-							anchor: newPos,
-							head: newPos,
+							anchor: boundedPos,
+							head: boundedPos,
 						};
 					}
 
