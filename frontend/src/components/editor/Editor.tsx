@@ -83,7 +83,7 @@ function Editor(props: EditorProps) {
 			extensions: [
 				configStore.codeKey === CodeKeyType.VIM ? vim() : [],
 				keymap.of(setKeymapConfig()),
-				basicSetup({ highlightSelectionMatches: false }),
+				basicSetup({ highlightSelectionMatches: false, history: false }),
 				markdown(),
 				themeMode === "light" ? xcodeLight : xcodeDark,
 				EditorView.theme({ "&": { width: "100%" } }),

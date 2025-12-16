@@ -20,7 +20,7 @@ export enum FormatType {
 }
 
 export const useFormatUtils = () => {
-	const { cmView } = useSelector(selectEditor);
+	const { cmView, doc } = useSelector(selectEditor);
 
 	const getFormatMarker = useCallback((formatType: FormatType) => {
 		switch (formatType) {
@@ -109,6 +109,22 @@ export const useFormatUtils = () => {
 		[getFormatMarker, getFormatMarkerLength]
 	);
 
+	const handleYorkieUndo = useCallback(() => {
+		if (doc?.history.canUndo()) {
+			doc.history.undo();
+		}
+
+		return true;
+	}, [doc]);
+
+	const handleYorkieRedo = useCallback(() => {
+		if (doc?.history.canRedo()) {
+			doc.history.redo();
+		}
+
+		return true;
+	}, [doc]);
+
 	const setKeymapConfig = useCallback(
 		() => [
 			indentWithTab,
@@ -116,8 +132,11 @@ export const useFormatUtils = () => {
 			{ key: "Mod-i", run: applyFormat(FormatType.ITALIC) },
 			{ key: "Mod-e", run: applyFormat(FormatType.CODE) },
 			{ key: "Mod-Shift-x", run: applyFormat(FormatType.STRIKETHROUGH) },
+			{ key: "Mod-z", run: handleYorkieUndo, preventDefault: true },
+			{ key: "Mod-y", run: handleYorkieRedo, preventDefault: true },
+			{ key: "Mod-Shift-z", run: handleYorkieRedo, preventDefault: true },
 		],
-		[applyFormat]
+		[applyFormat, handleYorkieUndo, handleYorkieRedo]
 	);
 
 	const toggleButtonChangeHandler = useCallback(
@@ -165,5 +184,7 @@ export const useFormatUtils = () => {
 		setKeymapConfig,
 		toggleButtonChangeHandler,
 		checkAndAddFormat,
+		handleYorkieUndo,
+		handleYorkieRedo,
 	};
 };

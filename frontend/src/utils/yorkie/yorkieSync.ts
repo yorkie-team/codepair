@@ -77,8 +77,14 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 		});
 
 		this._doc.subscribe((event) => {
-			if (event.type !== "remote-change") return;
+			if (
+				event.type !== "remote-change" &&
+				!(event.type === "local-change" && event.source === "undoredo")
+			) {
+				return;
+			}
 
+			const isUndoRedo = event.type === "local-change" && event.source === "undoredo";
 			const { operations } = event.value;
 
 			// Check if content itself is replaced
@@ -106,11 +112,25 @@ class YorkieSyncPluginValue implements cmView.PluginValue {
 							insert: op.value!.content,
 						},
 					];
-
-					view.dispatch({
+					const transactionSpec: cmState.TransactionSpec = {
 						changes,
 						annotations: [cmState.Transaction.remote.of(true)],
-					});
+					};
+
+					if (isUndoRedo) {
+						const newPos = op.from + (op.value?.content?.length || 0);
+						const docLength =
+							view.state.doc.length +
+							((op.value?.content?.length || 0) - (op.to - op.from));
+						const boundedPos = Math.min(Math.max(0, newPos), docLength);
+
+						transactionSpec.selection = {
+							anchor: boundedPos,
+							head: boundedPos,
+						};
+					}
+
+					view.dispatch(transactionSpec);
 				}
 			});
 		});
