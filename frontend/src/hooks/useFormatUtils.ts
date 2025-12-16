@@ -110,31 +110,19 @@ export const useFormatUtils = () => {
 	);
 
 	const handleYorkieUndo = useCallback(() => {
-		if (!doc) {
-			return false;
-		}
-
-		if (doc.history.canUndo()) {
+		if (doc?.history.canUndo()) {
 			doc.history.undo();
-
-			return true;
 		}
 
-		return false;
+		return true;
 	}, [doc]);
 
 	const handleYorkieRedo = useCallback(() => {
-		if (!doc) {
-			return false;
-		}
-
-		if (doc.history.canRedo()) {
+		if (doc?.history.canRedo()) {
 			doc.history.redo();
-
-			return true;
 		}
 
-		return false;
+		return true;
 	}, [doc]);
 
 	const setKeymapConfig = useCallback(
