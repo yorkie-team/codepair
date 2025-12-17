@@ -3,7 +3,7 @@ import {
 	useCreateDocumentMutation,
 	useGetWorkspaceDocumentListQuery,
 } from "../../hooks/api/workspaceDocument";
-import { useDeleteWorkSpaceMutation, useGetWorkspaceQuery } from "../../hooks/api/workspace";
+import { useGetWorkspaceQuery } from "../../hooks/api/workspace";
 import {
 	Backdrop,
 	Box,
@@ -25,8 +25,6 @@ import CreateModal from "../../components/modals/CreateModal";
 import AddIcon from "@mui/icons-material/Add";
 import BoardTab from "../../components/workspace/BoardTab";
 import TableTab from "../../components/workspace/TableTab";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteModal from "../../components/modals/DeleteModal";
 
 const TABS = ["BOARD", "TABLE"] as const;
 type TabType = (typeof TABS)[number];
@@ -51,9 +49,6 @@ function WorkspaceIndex() {
 
 	const { mutateAsync: createDocument } = useCreateDocumentMutation(workspace?.id || "");
 	const [createDocumentModalOpen, setCreateDocumentModalOpen] = useState(false);
-
-	const { mutateAsync: deleteWorkspace } = useDeleteWorkSpaceMutation(workspace?.id);
-	const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] = useState(false);
 
 	const documentList = useMemo(() => {
 		return (
@@ -85,16 +80,6 @@ function WorkspaceIndex() {
 		setSearch(e.target.value);
 	};
 
-	const handleDeleteWorkspaceModalOpen = () => {
-		setDeleteWorkspaceModalOpen((prev) => !prev);
-	};
-
-	const handleDeleteWorkspace = async () => {
-		await deleteWorkspace();
-		setDeleteWorkspaceModalOpen(false);
-		navigate("/", { replace: true });
-	};
-
 	return (
 		<Stack position="relative" pb={6}>
 			<Paper
@@ -104,24 +89,35 @@ function WorkspaceIndex() {
 					top: 64,
 					left: 0,
 					width: "100%",
-					pb: 4,
+					pb: { xs: 2, sm: 4 },
 					zIndex: 3,
 				}}
 			>
-				<Stack direction="row" justifyContent="space-between" alignItems="center" pt={6}>
-					<Typography variant="h5" fontWeight="bold">
-						{workspace?.title}{" "}
+				<Stack
+					direction={{ xs: "column", sm: "row" }}
+					justifyContent="space-between"
+					alignItems={{ xs: "flex-start", sm: "center" }}
+					gap={2}
+					pt={{ xs: 2, sm: 6 }}
+				>
+					<Typography
+						variant="h6"
+						fontWeight="bold"
+						sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+					>
+						Documents{" "}
 						<Typography component="span" variant="inherit" color="primary">
 							{documentPageList?.pages[0].totalLength}
 						</Typography>
 					</Typography>
-					<Stack direction="row" alignItems="center" gap={2}>
+					<Stack direction="row" alignItems="center" gap={2} flexWrap="wrap">
 						<TextField
 							placeholder="Search notes..."
 							variant="outlined"
 							value={search}
 							onChange={handleSearchChange}
 							size="small"
+							sx={{ minWidth: { xs: "100%", sm: 200 } }}
 							slotProps={{
 								input: {
 									startAdornment: (
@@ -136,31 +132,25 @@ function WorkspaceIndex() {
 							variant="contained"
 							startIcon={<AddIcon />}
 							onClick={handleCreateDocumentModalOpen}
+							sx={{ minWidth: { xs: "100%", sm: "auto" } }}
 						>
-							New Note
+							New Document
 						</Button>
-						{/* NOTE(kokodak): Delete workspace button should be visible after
-							the following requirements are met:
-							- Members should NOT see the delete button.
-							- Even Owners should go through an extra confirmation step before delete.
-							Once these requirements are met, we can safely remove the MODE condition below.
-							For more details, see PR #556: https://github.com/yorkie-team/codepair/pull/556
-						*/}
-						{import.meta.env.MODE !== "production" && (
-							<Button
-								variant="contained"
-								color="error"
-								startIcon={<DeleteIcon />}
-								onClick={handleDeleteWorkspaceModalOpen}
-							>
-								Delete
-							</Button>
-						)}
 					</Stack>
 				</Stack>
 			</Paper>
-			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={4}>
-				<Tabs value={currentTab} onChange={handleTabChange}>
+			<Box sx={{ borderBottom: 1, borderColor: "divider" }} mb={{ xs: 2, sm: 4 }}>
+				<Tabs
+					value={currentTab}
+					onChange={handleTabChange}
+					sx={{
+						minHeight: { xs: 40, sm: 48 },
+						"& .MuiTab-root": {
+							minHeight: { xs: 40, sm: 48 },
+							py: { xs: 1, sm: 1.5 },
+						},
+					}}
+				>
 					{TABS.map((tab) => (
 						<Tab key={tab} label={tab} value={tab} />
 					))}
@@ -186,12 +176,6 @@ function WorkspaceIndex() {
 				title="Note"
 				onSuccess={handleCreateWorkspace}
 				onClose={handleCreateDocumentModalOpen}
-			/>
-			<DeleteModal
-				open={deleteWorkspaceModalOpen}
-				title={workspace?.title}
-				onSuccess={handleDeleteWorkspace}
-				onClose={handleDeleteWorkspaceModalOpen}
 			/>
 		</Stack>
 	);

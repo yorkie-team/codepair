@@ -1,6 +1,7 @@
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import PeopleIcon from "@mui/icons-material/People";
+import SettingsIcon from "@mui/icons-material/Settings";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import {
 	Box,
@@ -45,6 +46,12 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 				IconComponent: PeopleIcon,
 				selected: currentPage === "member",
 				moveTo: `/${params.workspaceSlug}/member`,
+			},
+			{
+				title: "Settings",
+				IconComponent: SettingsIcon,
+				selected: currentPage === "settings",
+				moveTo: `/${params.workspaceSlug}/settings`,
 			},
 		];
 	}, [currentPage, params.workspaceSlug]);
