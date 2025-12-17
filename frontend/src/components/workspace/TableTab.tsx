@@ -39,12 +39,11 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 			<Table stickyHeader>
 				<TableHead>
 					<TableRow>
-						<TableCell sx={{ width: "18%" }}>Title</TableCell>
-						<TableCell sx={{ width: "18%" }}>Tag</TableCell>
-						<TableCell sx={{ width: "18%" }}>User</TableCell>
-						<TableCell sx={{ width: "18%" }}>Date</TableCell>
-						<TableCell sx={{ width: "18%" }}>Last Edit</TableCell>
-						<TableCell sx={{ width: "10%" }}></TableCell>
+						<TableCell sx={{ width: "55%" }}>Title</TableCell>
+						<TableCell sx={{ width: "15%" }}>Online Users</TableCell>
+						<TableCell sx={{ width: "10%" }}>Tags</TableCell>
+						<TableCell sx={{ width: "15%" }}>Created At</TableCell>
+						<TableCell sx={{ width: "5%" }}></TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody
@@ -72,7 +71,6 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 										</Typography>
 									</Link>
 								</TableCell>
-								<TableCell>-</TableCell>
 								<TableCell>
 									<AvatarGroup
 										max={isSmallScreen ? 2 : 4}
@@ -94,12 +92,8 @@ export default function TableContent({ documents }: { documents: Document[] }) {
 										))}
 									</AvatarGroup>
 								</TableCell>
-								<TableCell sx={{ color: "primary.main" }}>
-									{moment(doc.createdAt).format("D MMM YYYY")}
-								</TableCell>
-								<TableCell sx={{ color: "text.secondary" }}>
-									{moment(doc.updatedAt).fromNow()}
-								</TableCell>
+								<TableCell></TableCell>
+								<TableCell>{moment(doc.createdAt).format("D MMM YYYY")}</TableCell>
 								<TableCell sx={{ py: 0 }} align="right">
 									{/* TODO(yeonthusiast): When the document deletion is implemented, uncomment the following code */}
 									{/* <IconButton color="inherit" onClick={() => {}}>

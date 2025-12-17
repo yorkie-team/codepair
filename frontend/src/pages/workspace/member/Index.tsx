@@ -47,10 +47,20 @@ function MemberIndex() {
 
 	return (
 		<Container maxWidth="lg">
-			<Stack gap={4} py={6}>
-				<Stack direction="row" justifyContent="space-between" alignItems="center" px={2}>
-					<Typography variant="h5" fontWeight="bold">
-						{workspace?.title}{" "}
+			<Stack gap={{ xs: 2, sm: 4 }} py={{ xs: 2, sm: 6 }}>
+				<Stack
+					direction={{ xs: "column", sm: "row" }}
+					justifyContent="space-between"
+					alignItems={{ xs: "flex-start", sm: "center" }}
+					gap={2}
+					px={2}
+				>
+					<Typography
+						variant="h6"
+						fontWeight="bold"
+						sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+					>
+						Members{" "}
 						<Typography component="span" variant="inherit" color="primary">
 							{workspaceUserPageList?.pages[0].totalLength}
 						</Typography>
@@ -59,6 +69,7 @@ function MemberIndex() {
 						variant="contained"
 						startIcon={<AddIcon />}
 						onClick={handleMemberModalOpen}
+						sx={{ minWidth: { xs: "100%", sm: "auto" } }}
 					>
 						Add Members
 					</Button>
