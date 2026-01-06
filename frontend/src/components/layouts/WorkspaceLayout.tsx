@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { selectUser } from "../../store/userSlice";
 import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { DRAWER_WIDTH, COLLAPSED_DRAWER_WIDTH } from "../../constants/layout";
 
 export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({
 	display: "flex",
@@ -36,7 +37,11 @@ function WorkspaceLayout() {
 			<WorkspaceHeader />
 			<Stack direction="row">
 				<WorkspaceDrawer open={drawerOpen} />
-				<Box flexGrow={1} maxWidth="100%" px={2}>
+				<Box
+					flexGrow={1}
+					maxWidth={`calc(100% - ${drawerOpen ? DRAWER_WIDTH : COLLAPSED_DRAWER_WIDTH}px)`}
+					px={2}
+				>
 					<WorkspaceDrawerHeader />
 					<Box mx="auto" maxWidth={1440} width="100%">
 						<Outlet />
