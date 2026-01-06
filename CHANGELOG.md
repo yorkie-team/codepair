@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.46] - 2026-01-06
+
+### Added
+
+- Add settings page and simple styling for mobile by @hackerwins in https://github.com/yorkie-team/codepair/pull/565
+
 ## [0.1.45] - 2025-12-16
 
 ### Added
