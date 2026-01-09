@@ -40,7 +40,7 @@ function Editor(props: EditorProps) {
 	const workspaceStore = useSelector(selectWorkspace);
 	const { mutateAsync: createUploadUrl } = useCreateUploadUrlMutation();
 	const { mutateAsync: uploadFile } = useUploadFileMutation();
-	const { applyFormat, setKeymapConfig } = useFormatUtils();
+	const { applyFormat, setKeymapConfig, setupVimKeybindings } = useFormatUtils();
 	const { toolBarState, setToolBarState, updateFormatBar } = useToolBar();
 
 	const {
@@ -77,6 +77,11 @@ function Editor(props: EditorProps) {
 
 			return `${import.meta.env.VITE_API_ADDR}/files/${uploadUrlData.fileKey}`;
 		};
+
+		// Setup vim keybindings when vim mode is activated
+		if (configStore.codeKey === CodeKeyType.VIM) {
+			setupVimKeybindings();
+		}
 
 		const state = EditorState.create({
 			doc: editorStore.doc.getRoot().content?.toString() ?? "",
@@ -122,6 +127,7 @@ function Editor(props: EditorProps) {
 		applyFormat,
 		updateFormatBar,
 		setKeymapConfig,
+		setupVimKeybindings,
 	]);
 
 	return (
