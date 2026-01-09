@@ -5,6 +5,7 @@ import { indentWithTab } from "@codemirror/commands";
 import { Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../store/editorSlice";
+import { Vim } from "@replit/codemirror-vim";
 
 export interface ToolBarState {
 	show: boolean;
@@ -125,6 +126,25 @@ export const useFormatUtils = () => {
 		return true;
 	}, [doc]);
 
+	// Setup Vim keybindings to use Yorkie undo/redo
+	const setupVimKeybindings = useCallback(() => {
+		// Map 'u' key in vim mode to Yorkie undo
+		Vim.defineAction("yorkieUndo", () => {
+			handleYorkieUndo();
+		});
+
+		// Map redo command in vim mode to Yorkie redo
+		Vim.defineAction("yorkieRedo", () => {
+			handleYorkieRedo();
+		});
+
+		// Map 'u' key to Yorkie undo action
+		Vim.mapCommand("u", "action", "yorkieUndo", {}, { context: "normal" });
+
+		// Map 'Ctrl-r' key to Yorkie redo action
+		Vim.mapCommand("<C-r>", "action", "yorkieRedo", {}, { context: "normal" });
+	}, [handleYorkieUndo, handleYorkieRedo]);
+
 	const setKeymapConfig = useCallback(
 		() => [
 			indentWithTab,
@@ -186,5 +206,6 @@ export const useFormatUtils = () => {
 		checkAndAddFormat,
 		handleYorkieUndo,
 		handleYorkieRedo,
+		setupVimKeybindings,
 	};
 };
