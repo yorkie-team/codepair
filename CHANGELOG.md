@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.47] - 2026-01-09
+
+### Fixed
+
+- Apply Vim keybindings for Yorkie undo/redo by @hackerwins in https://github.com/yorkie-team/codepair/pull/569
+- Adjust Workspace Layout max width based on drawer state by @hackerwins in https://github.com/yorkie-team/codepair/pull/568
+
 ## [0.1.46] - 2026-01-06
 
 ### Added
