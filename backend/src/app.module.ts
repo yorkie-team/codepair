@@ -15,6 +15,7 @@ import { UsersModule } from "./users/users.module";
 import { WorkspaceDocumentsModule } from "./workspace-documents/workspace-documents.module";
 import { WorkspaceUsersModule } from "./workspace-users/workspace-users.module";
 import { WorkspacesModule } from "./workspaces/workspaces.module";
+import { RagModule } from "./rag/rag.module";
 
 @Module({
 	imports: [
@@ -36,6 +37,7 @@ import { WorkspacesModule } from "./workspaces/workspaces.module";
 		ConfigModule,
 		SettingsModule,
 		StorageModule,
+		RagModule,
 	],
 	controllers: [],
 	providers: [
