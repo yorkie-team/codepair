@@ -21,11 +21,11 @@
 		"format:check": "prettier . --check"
 	},
 	"devDependencies": {
-		"@types/node": "^22.9.0",
+		"@types/node": "^22.19.7",
 		"cross-env": "^7.0.3",
-		"electron": "^33.0.1",
-		"electron-builder": "^26.0.12",
-		"electron-vite": "^4.0.0"
+		"electron": "^33.4.11",
+		"electron-builder": "^26.4.0",
+		"electron-vite": "^4.0.1"
 	},
 	"build": {
 		"publish": {
