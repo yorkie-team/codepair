@@ -15,11 +15,20 @@ const WorkspaceRedirectHandler = () => {
 		if (isLoading) return;
 
 		const lastSlug = getLastWorkspaceSlug(user?.data?.id ?? null);
+
+		// Check if the last accessed workspace is still accessible to the user
 		if (lastSlug) {
-			navigate(`/${lastSlug}`, { replace: true });
-			return;
+			const hasAccessToLastWorkspace = workspaceList?.some(
+				(workspace) => workspace.slug === lastSlug
+			);
+
+			if (hasAccessToLastWorkspace) {
+				navigate(`/${lastSlug}`, { replace: true });
+				return;
+			}
 		}
 
+		// Fallback to first workspace if last workspace is not accessible
 		const firstWorkspace = workspaceList?.[0];
 
 		if (firstWorkspace) {
