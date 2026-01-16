@@ -7,6 +7,12 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.48] - 2026-01-16
+
+### Fixed
+
+- Fix invalid redirection to check user access by @hackerwins in https://github.com/yorkie-team/codepair/pull/572
+
 ## [0.1.47] - 2026-01-09
 
 ### Fixed
