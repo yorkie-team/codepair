@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { BufferMemory } from "langchain/memory";
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { Feature } from "./types/feature.type";
 import { githubIssuePromptTemplate } from "./prompt/github-issue";
 import { StringOutputParser } from "@langchain/core/output_parsers";
@@ -77,10 +77,6 @@ export class IntelligenceService {
 		runFollowUpDto: RunFollowUpDto,
 		handleChunk: (token: string) => void
 	) {
-		const chatPromptMemory = new BufferMemory({
-			memoryKey: "chat_history",
-			returnMessages: true,
-		});
 		const intelligenceLogList = await this.prismaService.intelligenceLog.findMany({
 			where: {
 				memoryKey: runFollowUpDto.memoryKey,
@@ -88,14 +84,15 @@ export class IntelligenceService {
 			},
 		});
 
-		for (const intelligenceLog of intelligenceLogList) {
-			await chatPromptMemory.chatHistory.addUserMessage(intelligenceLog.question);
-			await chatPromptMemory.chatHistory.addAIChatMessage(intelligenceLog.answer);
-		}
+		// Convert DB logs to message array for chat history
+		const chatHistory = intelligenceLogList.flatMap((log) => [
+			new HumanMessage(log.question),
+			new AIMessage(log.answer),
+		]);
 
 		const prompt = await followUpPromptTemplate.format({
 			content: runFollowUpDto.content,
-			chat_history: (await chatPromptMemory.loadMemoryVariables({})).chat_history,
+			chat_history: chatHistory,
 		});
 
 		const stream = await this.chatModel.pipe(new StringOutputParser()).stream(prompt, {
