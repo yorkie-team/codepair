@@ -15,6 +15,7 @@ import DocumentShareIndex from "./pages/workspace/document/share/Index";
 import JoinIndex from "./pages/workspace/join/Index";
 import MemberIndex from "./pages/workspace/member/Index";
 import SettingsIndex from "./pages/workspace/settings/Index";
+import { RagSearchPage } from "./pages/workspace/search/Index";
 
 interface CodePairRoute {
 	path: string;
@@ -61,7 +62,11 @@ const codePairRoutes: Array<CodePairRoute> = [
 				element: <WorkspaceIndex />,
 			},
 			{
-				path: "member",
+				path: "search",
+				element: <RagSearchPage />,
+			},
+			{
+				path: "members",
 				element: <MemberIndex />,
 			},
 			{

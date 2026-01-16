@@ -12,23 +12,51 @@ services:
         restart: always
         ports:
             - "11434:11434"
+        healthcheck:
+            test: ["CMD", "ollama", "list"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    init_ollama:
+        image: "ollama/ollama:latest"
+        depends_on:
+            yorkie-intelligence:
+                condition: service_healthy
+        environment:
+            OLLAMA_HOST: "http://yorkie-intelligence:11434"
+        entrypoint: >
+            /bin/sh -c "
+            echo 'Pulling nomic-embed-text model...';
+            ollama pull nomic-embed-text;
+            echo 'Model downloaded successfully';
+            exit 0;
+            "
 
     mongo:
         build:
             context: ./mongodb_replica
             args:
-                MONGO_VERSION: 4
+                MONGO_VERSION: 8
         environment:
             MONGO_REPLICA_HOST: 127.0.0.1
             MONGO_REPLICA_PORT: 27017
             MONGO_INITDB_DATABASE: "codepair"
-            MONGO_COMMAND: "mongo"
+            MONGO_COMMAND: "mongosh"
         ports:
             - "27017:27017"
         restart: unless-stopped
         healthcheck:
             test:
-                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+                [
+                    "CMD",
+                    "mongosh",
+                    "admin",
+                    "--port",
+                    "27017",
+                    "--eval",
+                    "db.adminCommand('ping').ok",
+                ]
             interval: 5s
             timeout: 2s
             retries: 20

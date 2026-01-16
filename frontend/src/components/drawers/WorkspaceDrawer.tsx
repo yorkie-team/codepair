@@ -45,7 +45,7 @@ function WorkspaceDrawer(props: WorkspaceDrawerProps) {
 				title: "Members",
 				IconComponent: PeopleIcon,
 				selected: currentPage === "member",
-				moveTo: `/${params.workspaceSlug}/member`,
+				moveTo: `/${params.workspaceSlug}/members`,
 			},
 			{
 				title: "Settings",

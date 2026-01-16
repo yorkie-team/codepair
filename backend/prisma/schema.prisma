@@ -19,6 +19,7 @@ model User {
   updatedAt           DateTime          @updatedAt @map("updated_at")
   userWorkspaceList   UserWorkspace[]
   intelligenceLogList IntelligenceLog[]
+  searchAuditLogList  SearchAuditLog[]
 
   @@map("users")
 }
@@ -46,6 +47,8 @@ model Workspace {
   documentList                 Document[]
   userWorkspaceList            UserWorkspace[]
   workspaceInvitationTokenList WorkspaceInvitationToken[]
+  documentChunkList            DocumentChunk[]
+  searchAuditLogList           SearchAuditLog[]
 
   @@map("workspaces")
 }
@@ -54,13 +57,13 @@ model Document {
   id                       String                 @id @default(auto()) @map("_id") @db.ObjectId
   yorkieDocumentId         String                 @map("yorkie_document_id")
   title                    String
-  content                  String?
   createdAt                DateTime               @default(now()) @map("created_at")
   updatedAt                DateTime               @updatedAt @map("updated_at")
   workspace                Workspace              @relation(onDelete: Cascade, fields: [workspaceId], references: [id])
   workspaceId              String                 @map("workspace_id") @db.ObjectId
   documentSharingTokenList DocumentSharingToken[]
   intelligenceLogList      IntelligenceLog[]
+  documentChunkList        DocumentChunk[]
 
   @@map("documents")
 }
@@ -104,4 +107,59 @@ model IntelligenceLog {
   updatedAt  DateTime  @updatedAt @map("updated_at")
 
   @@map("intelligence_logs")
+}
+
+model DocumentChunk {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  documentId       String    @map("document_id") @db.ObjectId
+  workspaceId      String    @map("workspace_id") @db.ObjectId
+  workspaceOnly    Boolean   @default(true) @map("workspace_only")
+  chunkIndex       Int       @map("chunk_index")
+  content          String
+  contentHash      String    @map("content_hash")
+  embedding        Float[]
+  embeddingModel   String    @map("embedding_model")
+  embeddingVersion String    @map("embedding_version")
+  chunkType        String    @map("chunk_type")
+  language         String?
+  section          String?
+  metadata         Json?
+  indexedAt        DateTime  @map("indexed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  document         Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, documentId])
+  @@index([contentHash])
+  @@index([workspaceId, workspaceOnly])
+  @@map("document_chunks")
+}
+
+model SearchAuditLog {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String    @map("user_id") @db.ObjectId
+  workspaceId           String    @map("workspace_id") @db.ObjectId
+  query                 String
+  queryHash             String    @map("query_hash")
+  retrievedChunkIds     String[]  @map("retrieved_chunk_ids") @db.ObjectId
+  usedChunkIds          String[]  @map("used_chunk_ids") @db.ObjectId
+  resultCount           Int       @map("result_count")
+  model                 String
+  embeddingModel        String    @map("embedding_model")
+  embeddingVersion      String    @map("embedding_version")
+  embeddingLatencyMs    Int       @map("embedding_latency_ms")
+  vectorSearchLatencyMs Int       @map("vector_search_latency_ms")
+  llmLatencyMs          Int       @map("llm_latency_ms")
+  totalLatencyMs        Int       @map("total_latency_ms")
+  ipAddress             String?   @map("ip_address")
+  userAgent             String?   @map("user_agent")
+  errorMessage          String?   @map("error_message")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace             Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@map("search_audit_logs")
 }
