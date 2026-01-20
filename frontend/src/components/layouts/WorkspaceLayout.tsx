@@ -39,7 +39,9 @@ function WorkspaceLayout() {
 				<WorkspaceDrawer open={drawerOpen} />
 				<Box
 					flexGrow={1}
-					maxWidth={`calc(100% - ${drawerOpen ? DRAWER_WIDTH : COLLAPSED_DRAWER_WIDTH}px)`}
+					maxWidth={`calc(100% - ${
+						drawerOpen ? DRAWER_WIDTH : COLLAPSED_DRAWER_WIDTH
+					}px)`}
 					px={2}
 				>
 					<WorkspaceDrawerHeader />
