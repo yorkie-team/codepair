@@ -178,7 +178,7 @@ features/<feature-name>/
 | `auth` | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute |
 | `editor` | Core markdown editor | Editor, Preview, ToolBar, Yorkie integration |
 | `document` | Document state & utilities | documentSlice, soft line break utils |
-| `intelligence` | AI/LLM features | Intelligence hooks, CodeMirror extensions |
+| `intelligence` | AI/LLM features | YorkieIntelligence UI, hooks, CodeMirror extensions |
 | `settings` | App configuration | configSlice (theme, vim mode), featureSettingSlice |
 | `share` | Document sharing | ShareRole types |
 | `user` | User profile | userSlice |

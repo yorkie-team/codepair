@@ -3,7 +3,7 @@ import YorkieIntelligenceFeatureList from "./YorkieIntelligenceFeatureList";
 import { useEffect, useMemo, useRef, useState } from "react";
 import YorkieIntelligenceFeature from "./YorkieIntelligenceFeature";
 import { useSelector } from "react-redux";
-import { selectEditor } from "../store/editorSlice";
+import { selectEditor } from "../../editor";
 import CloseIntelligenceModal from "../../../components/modals/CloseIntelligenceModal";
 
 interface YorkieIntelligenceFooterProps {

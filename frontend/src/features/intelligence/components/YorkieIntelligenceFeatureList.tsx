@@ -10,7 +10,7 @@ import {
 import { matchSorter } from "match-sorter";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectFeatureSetting } from "../../../features/settings";
+import { selectFeatureSetting } from "../../settings";
 
 interface YorkieIntelligenceFeatureListProps {
 	onSelectFeature: (feature: string, title: string) => void;

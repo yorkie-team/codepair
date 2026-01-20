@@ -2,8 +2,8 @@ import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
-import { INTELLIGENCE_FOOTER_ID } from "../../../features/intelligence";
-import { selectFeatureSetting } from "../../../features/settings";
+import { INTELLIGENCE_FOOTER_ID } from "../constants/intelligence";
+import { selectFeatureSetting } from "../../settings";
 import YorkieIntelligenceFooter from "./YorkieIntelligenceFooter";
 
 function YorkieIntelligence() {

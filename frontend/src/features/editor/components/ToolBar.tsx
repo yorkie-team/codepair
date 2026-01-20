@@ -1,7 +1,7 @@
 import { Popover, ToggleButtonGroup, Divider, Stack, Fade } from "@mui/material";
 import TooltipToggleButton from "../../../components/common/TooltipToggleButton";
 import { ToolBarState, useFormatUtils, FormatType } from "../hooks/useFormatUtils";
-import YorkieIntelligence from "./YorkieIntelligence";
+import { YorkieIntelligence } from "../../intelligence";
 import { useDebounce } from "react-use";
 import { useState } from "react";
 

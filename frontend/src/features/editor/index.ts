@@ -42,7 +42,3 @@ export { default as RevisionListItem } from "./components/RevisionListItem";
 export { default as CreateRevisionDialog } from "./components/CreateRevisionDialog";
 export { default as RestoreRevisionDialog } from "./components/RestoreRevisionDialog";
 export { default as PreviewRevisionDialog } from "./components/PreviewRevisionDialog";
-export { default as YorkieIntelligence } from "./components/YorkieIntelligence";
-export { default as YorkieIntelligenceFeature } from "./components/YorkieIntelligenceFeature";
-export { default as YorkieIntelligenceFeatureList } from "./components/YorkieIntelligenceFeatureList";
-export { default as YorkieIntelligenceFooter } from "./components/YorkieIntelligenceFooter";

@@ -10,20 +10,20 @@ import {
 	Typography,
 	useTheme,
 } from "@mui/material";
-import { INTELLIGENCE_FOOTER_ID } from "../../../features/intelligence";
+import { INTELLIGENCE_FOOTER_ID } from "../constants/intelligence";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import SendIcon from "@mui/icons-material/Send";
-import { useIntelligenceFeatureStream, useIntelligenceStream } from "../../../hooks/api/intelligence";
+import { useIntelligenceFeatureStream, useIntelligenceStream } from "../hooks/useIntelligence";
 import { useEffect, useMemo, useRef, useState } from "react";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { useCurrentTheme } from "../../../hooks/useCurrentTheme";
-import { addSoftLineBreak } from "../../../features/document";
+import { addSoftLineBreak } from "../../document";
 import { useSelector } from "react-redux";
-import { selectEditor } from "../store/editorSlice";
+import { selectEditor } from "../../editor";
 
 interface YorkieIntelligenceFeatureProps {
 	title: string;
