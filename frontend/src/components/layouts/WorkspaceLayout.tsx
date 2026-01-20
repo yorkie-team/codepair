@@ -9,7 +9,7 @@ import { Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { selectUser } from "../../features/user";
-import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { setLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
 import { DRAWER_WIDTH, COLLAPSED_DRAWER_WIDTH } from "../../constants/layout";
 
 export const WorkspaceDrawerHeader = styled("div")(({ theme }) => ({

@@ -3,7 +3,10 @@ import { persistReducer } from "redux-persist";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { authReducer as authSlice } from "../features/auth";
-import { configReducer as configSlice, featureSettingReducer as featureSettingSlice } from "../features/settings";
+import {
+	configReducer as configSlice,
+	featureSettingReducer as featureSettingSlice,
+} from "../features/settings";
 import { documentReducer as documentSlice } from "../features/document";
 import { editorReducer as editorSlice } from "../features/editor";
 import { userReducer as userSlice } from "../features/user";

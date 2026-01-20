@@ -16,7 +16,7 @@ import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import { logout } from "../../features/auth";
 import { setTheme, ThemeType } from "../../features/settings";
 import { selectUser, setUserData } from "../../features/user";
-import { clearLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { clearLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
 
 function ProfilePopover(props: PopoverProps) {
 	const dispatch = useDispatch();

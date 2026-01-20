@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
-import { useUserPresence } from "../../hooks/useUserPresence";
+import { useUserPresence } from "../../features/editor/hooks/useUserPresence";
 import { selectDocument } from "../../features/document";
 import { DRAWER_WIDTH } from "../../constants/layout";
 import { EditorModeType, selectEditor, setMode } from "../../features/editor";

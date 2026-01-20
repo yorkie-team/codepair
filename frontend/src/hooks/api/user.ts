@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectAuth, setAccessToken } from "../../features/auth";
 import { User, selectUser, setUserData } from "../../features/user";
-import { clearLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { clearLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
 import {
 	GetUserResponse,
 	RefreshTokenRequest,

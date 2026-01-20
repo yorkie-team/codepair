@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { selectUser } from "../../features/user";
-import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { setLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
 import DocumentHeader from "../headers/DocumentHeader";
 
 function DocumentLayout() {
