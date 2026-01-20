@@ -184,6 +184,20 @@ features/<feature-name>/
 | `user` | User profile | userSlice |
 | `workspace` | Workspace management | workspaceSlice |
 
+### Feature Dependencies
+
+Some features depend on others. Dependencies are **one-way only** (no circular dependencies).
+
+```
+intelligence ──▶ editor    (uses doc, cmView for AI content insertion)
+intelligence ──▶ document  (uses addSoftLineBreak)
+intelligence ──▶ settings  (uses selectFeatureSetting for feature flags)
+editor ──▶ share           (uses ShareRole type)
+editor ──▶ intelligence    (uses intelligencePivot extension)
+```
+
+> **Note**: `editor` owns the Yorkie `doc` and `client` instances. The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
+
 ## Import Guidelines
 
 ### From Features
