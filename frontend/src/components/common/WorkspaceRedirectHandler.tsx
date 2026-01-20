@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { selectUser } from "../../features/user";
 import { useGetWorkspaceListQuery } from "../../hooks/api/workspace";
-import { getLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
+import { getLastWorkspaceSlug } from "../../features/workspace";
 
 const WorkspaceRedirectHandler = () => {
 	const user = useSelector(selectUser);

@@ -5,7 +5,7 @@ import { selectDocument } from "../../../features/document";
 
 export const useIntelligenceFeatureStream = (feature: string) => {
 	const authStore = useSelector(selectAuth);
-	const documentSotre = useSelector(selectDocument);
+	const documentStore = useSelector(selectDocument);
 	const [data, setData] = useState<string | null>(null);
 	const [memoryKey, setMemoryKey] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -17,47 +17,64 @@ export const useIntelligenceFeatureStream = (feature: string) => {
 			setIsComplete(false);
 			setMemoryKey(null);
 			setData(null);
-			const response = await fetch(
-				`${import.meta.env.VITE_API_ADDR}/intelligence/${feature}`,
-				{
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${authStore.accessToken}`,
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						documentId: documentSotre.data?.id,
-						content,
-					}),
-				}
-			);
-			const reader = response.body?.getReader();
-			let isFirst = true;
-			let result = "";
 
-			while (reader) {
-				const { done, value } = await reader.read();
+			try {
+				const response = await fetch(
+					`${import.meta.env.VITE_API_ADDR}/intelligence/${feature}`,
+					{
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${authStore.accessToken}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							documentId: documentStore.data?.id,
+							content,
+						}),
+					}
+				);
+
+				if (!response.ok) {
+					throw new Error("Request failed with status " + response.status);
+				}
+
+				const reader = response?.body?.getReader();
+
+				if (!reader) {
+					throw new Error("Response body is not readable");
+				}
+
+				let isFirst = true;
+				let result = "";
+
+				while (reader) {
+					const { done, value } = await reader.read();
+					setIsLoading(false);
+
+					if (done) {
+						break;
+					}
+
+					let text = new TextDecoder().decode(value);
+
+					if (isFirst) {
+						const splitted = text.split("\n");
+						setMemoryKey(splitted[0]);
+						isFirst = false;
+						text = splitted.slice(1).join("\n");
+					}
+
+					result += text;
+					setData(result);
+				}
+			} catch (error) {
+				console.error("Intelligence stream error:", error);
+			} finally {
 				setIsLoading(false);
-
-				if (done) {
-					break;
-				}
-
-				let text = new TextDecoder().decode(value);
-
-				if (isFirst) {
-					const splitted = text.split("\n");
-					setMemoryKey(splitted[0]);
-					isFirst = false;
-					text = splitted.slice(1).join("\n");
-				}
-
-				result += text;
-				setData(result);
 			}
 			setIsComplete(true);
 		},
-		[authStore.accessToken, documentSotre.data?.id, feature]
+		[authStore.accessToken, documentStore.data?.id, feature]
 	);
 
 	return {
@@ -71,7 +88,7 @@ export const useIntelligenceFeatureStream = (feature: string) => {
 
 export const useIntelligenceStream = (memoryKey: string | null) => {
 	const authStore = useSelector(selectAuth);
-	const documentSotre = useSelector(selectDocument);
+	const documentStore = useSelector(selectDocument);
 	const [data, setData] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isComplete, setIsComplete] = useState(false);
@@ -90,7 +107,7 @@ export const useIntelligenceStream = (memoryKey: string | null) => {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					documentId: documentSotre.data?.id,
+					documentId: documentStore.data?.id,
 					memoryKey,
 					content,
 				}),
@@ -113,7 +130,7 @@ export const useIntelligenceStream = (memoryKey: string | null) => {
 			}
 			setIsComplete(true);
 		},
-		[authStore.accessToken, documentSotre.data?.id, memoryKey]
+		[authStore.accessToken, documentStore.data?.id, memoryKey]
 	);
 
 	return {
