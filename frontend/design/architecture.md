@@ -14,11 +14,11 @@ The primary goal of this architecture is to **make implementation swappable**.
 
 Each feature encapsulates its implementation details behind a clean public API (`index.ts`). This means:
 
-- **Editor replacement**: The `editor` feature currently uses CodeMirror, but if we need to switch to Monaco, ProseMirror, or any other editor, we only need to modify files inside `features/editor/`. The rest of the application only imports from `@/features/editor` and doesn't know or care about CodeMirror internals.
+-   **Editor replacement**: The `editor` feature currently uses CodeMirror, but if we need to switch to Monaco, ProseMirror, or any other editor, we only need to modify files inside `features/editor/`. The rest of the application only imports from `@/features/editor` and doesn't know or care about CodeMirror internals.
 
-- **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
+-   **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
 
-- **Auth mechanism change**: Moving from JWT to OAuth or adding SSO? Changes stay within `features/auth/`.
+-   **Auth mechanism change**: Moving from JWT to OAuth or adding SSO? Changes stay within `features/auth/`.
 
 ### Isolation of Change
 
@@ -48,12 +48,12 @@ Each feature encapsulates its implementation details behind a clean public API (
 
 If we decide to replace CodeMirror with a different editor:
 
-| Without modular architecture | With modular architecture |
-|------------------------------|---------------------------|
+| Without modular architecture                                                   | With modular architecture                    |
+| ------------------------------------------------------------------------------ | -------------------------------------------- |
 | Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `features/editor/` |
-| Update 15+ files in different directories | Update files in one directory |
-| Risk breaking unrelated features | Changes isolated to editor feature |
-| Hard to test incrementally | Can test editor feature in isolation |
+| Update 15+ files in different directories                                      | Update files in one directory                |
+| Risk breaking unrelated features                                               | Changes isolated to editor feature           |
+| Hard to test incrementally                                                     | Can test editor feature in isolation         |
 
 This is the core value: **features are replaceable units** with stable interfaces.
 
@@ -94,10 +94,11 @@ src/
 ```
 
 **Problems with this approach:**
-- Related code is scattered across multiple directories
-- Hard to understand what code belongs to which feature
-- Difficult to modify or extend a feature without touching many directories
-- No clear boundaries between features
+
+-   Related code is scattered across multiple directories
+-   Hard to understand what code belongs to which feature
+-   Difficult to modify or extend a feature without touching many directories
+-   No clear boundaries between features
 
 ### Feature-based Structure (After)
 
@@ -144,14 +145,14 @@ src/
 
 ## Benefits of Feature-based Architecture
 
-| Aspect | Type-based | Feature-based |
-|--------|------------|---------------|
-| **Finding code** | Need to look in multiple directories | All related code in one place |
-| **Adding features** | Create files in 4-5 different directories | Create one feature folder |
-| **Understanding scope** | Unclear boundaries | Clear feature boundaries |
-| **Refactoring** | High risk of side effects | Isolated changes |
-| **Team collaboration** | Frequent merge conflicts | Teams can own features |
-| **Code removal** | Hard to identify all related files | Delete one folder |
+| Aspect                  | Type-based                                | Feature-based                 |
+| ----------------------- | ----------------------------------------- | ----------------------------- |
+| **Finding code**        | Need to look in multiple directories      | All related code in one place |
+| **Adding features**     | Create files in 4-5 different directories | Create one feature folder     |
+| **Understanding scope** | Unclear boundaries                        | Clear feature boundaries      |
+| **Refactoring**         | High risk of side effects                 | Isolated changes              |
+| **Team collaboration**  | Frequent merge conflicts                  | Teams can own features        |
+| **Code removal**        | Hard to identify all related files        | Delete one folder             |
 
 ## Feature Modules
 
@@ -172,15 +173,15 @@ features/<feature-name>/
 
 ### Current Features
 
-| Feature | Description | Main Contents |
-|---------|-------------|---------------|
-| `auth` | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute |
-| `editor` | Core markdown editor | Editor, Preview, ToolBar, Yorkie integration |
-| `document` | Document state & utilities | documentSlice, ShareRole, soft line break utils |
-| `intelligence` | AI/LLM features | YorkieIntelligence UI, hooks, CodeMirror extensions |
-| `settings` | App configuration | configSlice (theme, vim mode), featureSettingSlice |
-| `user` | User profile | userSlice |
-| `workspace` | Workspace management | workspaceSlice |
+| Feature        | Description                    | Main Contents                                       |
+| -------------- | ------------------------------ | --------------------------------------------------- |
+| `auth`         | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute |
+| `editor`       | Core markdown editor           | Editor, Preview, ToolBar, Yorkie integration        |
+| `document`     | Document state & utilities     | documentSlice, ShareRole, soft line break utils     |
+| `intelligence` | AI/LLM features                | YorkieIntelligence UI, hooks, CodeMirror extensions |
+| `settings`     | App configuration              | configSlice (theme, vim mode), featureSettingSlice  |
+| `user`         | User profile                   | userSlice                                           |
+| `workspace`    | Workspace management           | workspaceSlice                                      |
 
 ### Feature Dependencies
 
@@ -196,57 +197,13 @@ editor ──▶ intelligence    (uses intelligencePivot extension)
 
 > **Note**: `editor` owns the Yorkie `doc` and `client` instances. The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
 
-## Import Guidelines
-
-### From Features
-
-Import from the feature's `index.ts`:
-
-```typescript
-// Recommended
-import { selectEditor, EditorModeType } from "@/features/editor";
-import { useAuth } from "@/features/auth";
-import { ShareRole } from "@/features/share";
-```
-
-### From Shared Resources
-
-Shared code that doesn't belong to a specific feature:
-
-```typescript
-// API hooks
-import { useDocumentQuery } from "@/hooks/api/document";
-
-// Shared components
-import { ThemeButton } from "@/components/common/ThemeButton";
-
-// Shared utilities
-import axios from "@/utils/axios.default";
-```
-
-## Adding a New Feature
-
-1. Create `features/<feature-name>/` directory
-2. Add subdirectories as needed (`components/`, `hooks/`, `store/`, etc.)
-3. Create `index.ts` to export the public API
-4. If using Redux, register the slice in `store/store.ts`
-
-Example:
-
-```typescript
-// features/notifications/index.ts
-export { NotificationBell } from "./components/NotificationBell";
-export { useNotifications } from "./hooks/useNotifications";
-export { notificationSlice, selectNotifications } from "./store/notificationSlice";
-```
-
 ## Decision Guide: Feature vs Shared
 
-| Question | If Yes → Feature | If No → Shared |
-|----------|------------------|----------------|
-| Is it used by only one feature? | ✓ | |
-| Does it have feature-specific state? | ✓ | |
-| Would removing the feature remove this too? | ✓ | |
-| Is it a generic UI component? | | ✓ |
-| Is it used across multiple features? | | ✓ |
-| Is it an API/data fetching hook? | | ✓ |
+| Question                                    | If Yes → Feature | If No → Shared |
+| ------------------------------------------- | ---------------- | -------------- |
+| Is it used by only one feature?             | ✓                |                |
+| Does it have feature-specific state?        | ✓                |                |
+| Would removing the feature remove this too? | ✓                |                |
+| Is it a generic UI component?               |                  | ✓              |
+| Is it used across multiple features?        |                  | ✓              |
+| Is it an API/data fetching hook?            |                  | ✓              |

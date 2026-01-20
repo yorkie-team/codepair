@@ -2,7 +2,8 @@
 
 ## Contents
 
-- [Redux & React Query Structure](./redux-query.md): The structure of `redux` & `react-query`
+-   [Architecture](./architecture.md): Feature-based architecture overview
+-   [Redux & React Query Structure](./redux-query.md): The structure of `redux` & `react-query`
 
 ## Maintaining the Document
 
@@ -10,8 +11,8 @@ For significant scope and complex new features, it is recommended to write a Des
 
 Writing a design document for big features has many advantages:
 
-- It helps new visitors or contributors understand the inner workings or the architecture of the project.
-- We can agree with the community before code is written that could waste effort in the wrong direction.
+-   It helps new visitors or contributors understand the inner workings or the architecture of the project.
+-   We can agree with the community before code is written that could waste effort in the wrong direction.
 
 While working on your design, writing code to prototype your functionality may be useful to refine your approach.
 
