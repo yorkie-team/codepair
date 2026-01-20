@@ -118,10 +118,9 @@ src/
 │   │   ├── store/
 │   │   ├── utils/
 │   │   └── index.ts
-│   ├── document/                # Document management
+│   ├── document/                # Document management & sharing
 │   ├── intelligence/            # AI features
 │   ├── settings/                # App settings
-│   ├── share/                   # Sharing functionality
 │   ├── user/                    # User profile
 │   └── workspace/               # Workspace management
 │
@@ -177,10 +176,9 @@ features/<feature-name>/
 |---------|-------------|---------------|
 | `auth` | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute |
 | `editor` | Core markdown editor | Editor, Preview, ToolBar, Yorkie integration |
-| `document` | Document state & utilities | documentSlice, soft line break utils |
+| `document` | Document state & utilities | documentSlice, ShareRole, soft line break utils |
 | `intelligence` | AI/LLM features | YorkieIntelligence UI, hooks, CodeMirror extensions |
 | `settings` | App configuration | configSlice (theme, vim mode), featureSettingSlice |
-| `share` | Document sharing | ShareRole types |
 | `user` | User profile | userSlice |
 | `workspace` | Workspace management | workspaceSlice |
 
@@ -192,7 +190,7 @@ Some features depend on others. Dependencies are **one-way only** (no circular d
 intelligence ──▶ editor    (uses doc, cmView for AI content insertion)
 intelligence ──▶ document  (uses addSoftLineBreak)
 intelligence ──▶ settings  (uses selectFeatureSetting for feature flags)
-editor ──▶ share           (uses ShareRole type)
+editor ──▶ document        (uses ShareRole type)
 editor ──▶ intelligence    (uses intelligencePivot extension)
 ```
 

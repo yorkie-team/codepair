@@ -21,7 +21,7 @@ import { selectDocument } from "../../features/document";
 import { DRAWER_WIDTH } from "../../constants/layout";
 import { EditorModeType, selectEditor, setMode } from "../../features/editor";
 import { selectWorkspace } from "../../features/workspace";
-import { ShareRole } from "../../features/share";
+import { ShareRole } from "../../features/document";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import DocumentPopover from "../popovers/DocumentPopover";

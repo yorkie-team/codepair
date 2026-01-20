@@ -13,7 +13,7 @@ import {
 } from "../../../../features/editor";
 import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
 import { selectUser } from "../../../../features/user";
-import { ShareRole } from "../../../../features/share";
+import { ShareRole } from "../../../../features/document";
 
 function DocumentShareIndex() {
 	const dispatch = useDispatch();
