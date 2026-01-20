@@ -1,8 +1,8 @@
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { selectDocument } from "../store/documentSlice";
-import { selectEditor } from "../store/editorSlice";
+import { selectDocument } from "../features/document";
+import { selectEditor } from "../features/editor";
 import { useExportFileMutation } from "./api/file";
 
 export const enum FileExtension {

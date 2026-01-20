@@ -15,13 +15,13 @@ import { useState } from "react";
 import moment, { unitOfTime } from "moment";
 import { useParams } from "react-router";
 import { useCreateWorkspaceSharingTokenMutation } from "../../hooks/api/workspaceDocument";
-import { ShareRole } from "../../utils/share";
+import { ShareRole } from "../../features/share";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSelector } from "react-redux";
-import { selectDocument } from "../../store/documentSlice";
+import { selectDocument } from "../../features/document";
 
 type ShareModalProps = Omit<ModalProps, "children">;
 

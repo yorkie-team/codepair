@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { ActorID } from "@yorkie-js/sdk";
-import { CodePairDocType } from "../store/editorSlice";
-import { YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import { CodePairDocType, YorkieCodeMirrorPresenceType } from "../features/editor";
 
 export type Presence = {
 	clientID: ActorID;

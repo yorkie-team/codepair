@@ -1,7 +1,7 @@
 import { MouseEventHandler, useState } from "react";
 import { AppBar, Avatar, IconButton, Stack, Toolbar } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../store/userSlice";
+import { selectUser } from "../../features/user";
 import ProfilePopover from "../popovers/ProfilePopover";
 import CodePairIcon from "../icons/CodePairIcon";
 import { useNavigate } from "react-router-dom";

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { setAccessToken, setRefreshToken } from "../../../store/authSlice";
+import { setAccessToken, setRefreshToken } from "../../../features/auth";
 
 function CallbackIndex() {
 	const dispatch = useDispatch();

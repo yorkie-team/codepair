@@ -2,13 +2,13 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router-dom";
 import WorkspaceHeader from "../headers/WorkspaceHeader";
-import { selectConfig } from "../../store/configSlice";
+import { selectConfig } from "../../features/settings";
 import { useSelector } from "react-redux";
 import WorkspaceDrawer from "../drawers/WorkspaceDrawer";
 import { Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { selectUser } from "../../store/userSlice";
+import { selectUser } from "../../features/user";
 import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
 import { DRAWER_WIDTH, COLLAPSED_DRAWER_WIDTH } from "../../constants/layout";
 

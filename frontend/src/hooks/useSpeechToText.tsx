@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectEditor } from "../store/editorSlice";
+import { selectEditor } from "../features/editor";
 
 interface SpeechRecognition extends EventTarget {
 	continuous: boolean;

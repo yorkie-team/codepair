@@ -1,6 +1,5 @@
 import CodePairError from "./components/common/CodePairError";
-import GuestRoute from "./components/common/GuestRoute";
-import PrivateRoute from "./components/common/PrivateRoute";
+import { GuestRoute, PrivateRoute } from "./features/auth";
 import WorkspaceRedirectHandler from "./components/common/WorkspaceRedirectHandler";
 import DocumentLayout from "./components/layouts/DocumentLayout";
 import MainLayout from "./components/layouts/MainLayout";

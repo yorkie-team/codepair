@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectConfig } from "../store/configSlice";
+import { selectConfig } from "../features/settings";
 
 export function useCurrentTheme() {
 	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");

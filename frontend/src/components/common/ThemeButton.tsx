@@ -3,7 +3,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import { IconButton } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
-import { setTheme, ThemeType } from "../../store/configSlice";
+import { setTheme, ThemeType } from "../../features/settings";
 
 function ThemeButton() {
 	const dispatch = useDispatch();

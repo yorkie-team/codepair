@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Backdrop, CircularProgress } from "@mui/material";
-import { selectUser } from "../../store/userSlice";
+import { selectUser } from "../../features/user";
 import { useGetWorkspaceListQuery } from "../../hooks/api/workspace";
 import { getLastWorkspaceSlug } from "../../utils/lastWorkspace";
 

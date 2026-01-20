@@ -1,9 +1,9 @@
 import { MouseEventHandler, useState } from "react";
 import { AppBar, Avatar, Button, IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../store/userSlice";
+import { selectUser } from "../../features/user";
 import ProfilePopover from "../popovers/ProfilePopover";
-import { selectWorkspace } from "../../store/workspaceSlice";
+import { selectWorkspace } from "../../features/workspace";
 import WorkspaceListPopover from "../popovers/WorkspaceListPopover";
 import { DRAWER_WIDTH } from "../../constants/layout";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";

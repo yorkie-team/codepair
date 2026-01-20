@@ -14,7 +14,7 @@ import {
 } from "./types/workspace";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setWorkspaceData } from "../../store/workspaceSlice";
+import { setWorkspaceData } from "../../features/workspace";
 
 export const generateGetWorkspaceQueryKey = (workspaceSlug: string) => {
 	return ["workspaces", workspaceSlug];

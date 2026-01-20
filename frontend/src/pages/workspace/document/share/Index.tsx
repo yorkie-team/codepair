@@ -2,18 +2,18 @@ import { Box } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useLocation, useSearchParams } from "react-router-dom";
-import DocumentView from "../../../../components/editor/DocumentView";
-import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
-import { useYorkieDocument } from "../../../../hooks/useYorkieDocument";
 import {
+	DocumentView,
+	useYorkieDocument,
 	EditorModeType,
 	setClient,
 	setDoc,
 	setMode,
 	setShareRole,
-} from "../../../../store/editorSlice";
-import { selectUser } from "../../../../store/userSlice";
-import { ShareRole } from "../../../../utils/share";
+} from "../../../../features/editor";
+import { useGetDocumentBySharingTokenQuery } from "../../../../hooks/api/document";
+import { selectUser } from "../../../../features/user";
+import { ShareRole } from "../../../../features/share";
 
 function DocumentShareIndex() {
 	const dispatch = useDispatch();

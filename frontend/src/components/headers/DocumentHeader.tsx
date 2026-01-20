@@ -17,16 +17,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateDocumentTitleMutation } from "../../hooks/api/workspaceDocument";
 import { useUserPresence } from "../../hooks/useUserPresence";
-import { selectDocument } from "../../store/documentSlice";
+import { selectDocument } from "../../features/document";
 import { DRAWER_WIDTH } from "../../constants/layout";
-import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
-import { selectWorkspace } from "../../store/workspaceSlice";
-import { ShareRole } from "../../utils/share";
+import { EditorModeType, selectEditor, setMode } from "../../features/editor";
+import { selectWorkspace } from "../../features/workspace";
+import { ShareRole } from "../../features/share";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import DocumentPopover from "../popovers/DocumentPopover";
 import UserPresenceList from "./UserPresenceList";
-import RevisionPanel from "../editor/RevisionPanel";
+import { RevisionPanel } from "../../features/editor";
 
 function DocumentHeader() {
 	const dispatch = useDispatch();

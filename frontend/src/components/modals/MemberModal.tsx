@@ -19,7 +19,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import clipboard from "clipboardy";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
-import { selectWorkspace } from "../../store/workspaceSlice";
+import { selectWorkspace } from "../../features/workspace";
 
 interface MemberModalProps {
 	open: boolean;

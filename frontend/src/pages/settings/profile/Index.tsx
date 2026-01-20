@@ -1,7 +1,7 @@
 import { Container, Stack, Avatar, Typography, Button, FormControl } from "@mui/material";
 import { TextFieldElement, FormContainer } from "react-hook-form-mui";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../../store/userSlice";
+import { selectUser } from "../../../features/user";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { useUpdateUserNicknameMutation } from "../../../hooks/api/user";
