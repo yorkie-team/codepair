@@ -14,11 +14,11 @@ The primary goal of this architecture is to **make implementation swappable**.
 
 Each feature encapsulates its implementation details behind a clean public API (`index.ts`). This means:
 
--   **Editor replacement**: The `editor` feature currently uses CodeMirror, but if we need to switch to Monaco, ProseMirror, or any other editor, we only need to modify files inside `features/editor/`. The rest of the application only imports from `@/features/editor` and doesn't know or care about CodeMirror internals.
+- **Editor replacement**: The `editor` feature currently uses CodeMirror, but if we need to switch to Monaco, ProseMirror, or any other editor, we only need to modify files inside `features/editor/`. The rest of the application only imports from `@/features/editor` and doesn't know or care about CodeMirror internals.
 
--   **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
+- **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
 
--   **Auth mechanism change**: Moving from JWT to OAuth or adding SSO? Changes stay within `features/auth/`.
+- **Auth mechanism change**: Moving from JWT to OAuth or adding SSO? Changes stay within `features/auth/`.
 
 ### Isolation of Change
 
@@ -95,10 +95,10 @@ src/
 
 **Problems with this approach:**
 
--   Related code is scattered across multiple directories
--   Hard to understand what code belongs to which feature
--   Difficult to modify or extend a feature without touching many directories
--   No clear boundaries between features
+- Related code is scattered across multiple directories
+- Hard to understand what code belongs to which feature
+- Difficult to modify or extend a feature without touching many directories
+- No clear boundaries between features
 
 ### Feature-based Structure (After)
 
