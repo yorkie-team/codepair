@@ -23,7 +23,7 @@ import { yorkieCodeMirror } from "../utils/yorkie";
 import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
 import SpeechToTextButton from "../../../components/common/SpeechToTextButton";
-import { useSpeechToText } from "../../../hooks/useSpeechToText";
+import { useSpeechToText } from "../hooks/useSpeechToText";
 
 interface EditorProps {
 	width: number | string;

@@ -19,6 +19,8 @@ export type { ToolBarState } from "./hooks/useFormatUtils";
 export { useYorkieDocument } from "./hooks/useYorkieDocument";
 export { useYorkieRevisions } from "./hooks/useYorkieRevisions";
 export type { UseYorkieRevisionsOptions } from "./hooks/useYorkieRevisions";
+export { useSpeechToText } from "./hooks/useSpeechToText";
+export type { SpeechToTextState } from "./hooks/useSpeechToText";
 
 // Utils
 export { yorkieCodeMirror, yorkieSync, yorkieSyncFacet, YorkieSyncConfig } from "./utils/yorkie";
