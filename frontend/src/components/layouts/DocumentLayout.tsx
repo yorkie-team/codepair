@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useParams, useLocation } from "react-router-dom";
-import { selectUser } from "../../store/userSlice";
-import { setLastWorkspaceSlug } from "../../utils/lastWorkspace";
+import { selectUser } from "../../features/user";
+import { setLastWorkspaceSlug } from "../../features/workspace/utils/lastWorkspace";
 import DocumentHeader from "../headers/DocumentHeader";
 
 function DocumentLayout() {

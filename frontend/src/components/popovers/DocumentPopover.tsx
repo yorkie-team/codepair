@@ -7,7 +7,7 @@ import {
 	PopoverProps,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectConfig, setDisableScrollSync, setTheme, ThemeType } from "../../store/configSlice";
+import { selectConfig, setDisableScrollSync, setTheme, ThemeType } from "../../features/settings";
 import { useCurrentTheme } from "../../hooks/useCurrentTheme";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";

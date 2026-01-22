@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { setClient, setDoc } from "../../../store/editorSlice";
+import { setClient, setDoc, DocumentView, useYorkieDocument } from "../../../features/editor";
 import { useDispatch, useSelector } from "react-redux";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { selectUser } from "../../../store/userSlice";
+import { selectUser } from "../../../features/user";
 import { useGetDocumentQuery } from "../../../hooks/api/workspaceDocument";
 import { useGetWorkspaceQuery } from "../../../hooks/api/workspace";
-import DocumentView from "../../../components/editor/DocumentView";
-import { useYorkieDocument } from "../../../hooks/useYorkieDocument";
 
 function DocumentIndex() {
 	const dispatch = useDispatch();

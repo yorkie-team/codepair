@@ -1,7 +1,7 @@
 import { SaveAlt as SaveAltIcon } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem, Paper } from "@mui/material";
 import { MouseEvent, useState } from "react";
-import { useFileExport } from "../../hooks/useFileExport";
+import { useFileExport } from "../../features/document/hooks/useFileExport";
 
 function DownloadMenu() {
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

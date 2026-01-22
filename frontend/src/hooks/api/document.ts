@@ -3,7 +3,7 @@ import axios from "axios";
 import { GetDocumentBySharingTokenResponse } from "./types/document";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setDocumentData } from "../../store/documentSlice";
+import { setDocumentData } from "../../features/document";
 
 export const generateGetDocumentBySharingTokenQueryKey = (sharingToken: string) => {
 	return ["documents", "share", sharingToken];

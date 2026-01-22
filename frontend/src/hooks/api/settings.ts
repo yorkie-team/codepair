@@ -6,7 +6,7 @@ import {
 	selectFeatureSetting,
 	setFileUpload,
 	setYorkieIntelligence,
-} from "../../store/featureSettingSlice";
+} from "../../features/settings";
 import { GetSettingsResponse } from "./types/settings";
 
 export const generateGetSettingsQueryKey = () => {

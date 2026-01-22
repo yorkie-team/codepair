@@ -12,8 +12,8 @@ import {
 import { EditorView } from "codemirror";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Presence } from "../../hooks/useUserPresence";
-import { selectEditor } from "../../store/editorSlice";
+import { Presence } from "../../features/editor/hooks/useUserPresence";
+import { selectEditor } from "../../features/editor";
 
 interface UserPresenceListProps {
 	presenceList: Presence[];

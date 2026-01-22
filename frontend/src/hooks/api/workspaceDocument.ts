@@ -10,7 +10,7 @@ import {
 } from "./types/workspaceDocument";
 
 import { useEffect } from "react";
-import { setDocumentData } from "../../store/documentSlice";
+import { setDocumentData } from "../../features/document";
 import { UpdateDocumentRequest } from "./types/document";
 import { useDispatch } from "react-redux";
 

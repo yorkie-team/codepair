@@ -15,9 +15,9 @@ import {
 import "./App.css";
 import { useGetSettingsQuery } from "./hooks/api/settings";
 import { useErrorHandler } from "./hooks/useErrorHandler";
-import AuthProvider from "./providers/AuthProvider";
+import { AuthProvider } from "./features/auth";
 import { routes } from "./routes";
-import { selectConfig } from "./store/configSlice";
+import { selectConfig } from "./features/settings";
 import { isAxios404Error, isAxios500Error } from "./utils/axios.default";
 
 if (import.meta.env.PROD) {

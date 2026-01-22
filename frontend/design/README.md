@@ -2,6 +2,7 @@
 
 ## Contents
 
+- [Architecture](./architecture.md): Feature-based architecture overview
 - [Redux & React Query Structure](./redux-query.md): The structure of `redux` & `react-query`
 
 ## Maintaining the Document

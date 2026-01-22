@@ -16,7 +16,7 @@ import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { COLLAPSED_DRAWER_WIDTH, DRAWER_WIDTH } from "../../constants/layout";
-import { setDrawerOpen } from "../../store/configSlice";
+import { setDrawerOpen } from "../../features/settings";
 import { WorkspaceDrawerHeader } from "../layouts/WorkspaceLayout";
 
 interface WorkspaceDrawerProps {
