@@ -24,13 +24,37 @@ const chatModelFactory = {
 					streaming: true,
 				});
 			} else if (provider === "openai") {
-				chatModel = new ChatOpenAI({ modelName: model });
+				const baseURL = configService.get("OPENAI_BASE_URL");
+				chatModel = new ChatOpenAI({
+					modelName: model,
+					...(baseURL && { configuration: { baseURL } }),
+				});
+			} else if (provider === "openai-compat") {
+				const baseURL = configService.get("OPENAI_COMPAT_BASE_URL");
+				const apiKey = configService.get("OPENAI_COMPAT_API_KEY");
+
+				if (!baseURL) {
+					throw new Error(
+						"OPENAI_COMPAT_BASE_URL is required for openai-compat provider"
+					);
+				}
+
+				chatModel = new ChatOpenAI({
+					modelName: model,
+					configuration: {
+						baseURL,
+						...(apiKey && { apiKey }),
+					},
+				});
 			}
 
 			if (!chatModel) throw new Error();
 
 			return chatModel;
-		} catch {
+		} catch (error) {
+			if (error instanceof Error && error.message) {
+				throw error;
+			}
 			throw new Error(`${modelType} is not found. Please check your model name`);
 		}
 	},

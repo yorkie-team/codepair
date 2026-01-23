@@ -80,6 +80,50 @@ pnpm backend start
 
 Starts the server in production mode.
 
+## Yorkie Intelligence Configuration
+
+Yorkie Intelligence provides AI-powered features for collaborative editing. You can configure it using the `YORKIE_INTELLIGENCE` environment variable in `.env.development`.
+
+### Available Providers
+
+| Provider          | Format                  | Description                                             | Required Environment Variables                               |
+| ----------------- | ----------------------- | ------------------------------------------------------- | ------------------------------------------------------------ |
+| **ollama**        | `ollama:<model>`        | Use local Ollama models                                 | `OLLAMA_HOST_URL`                                            |
+| **openai**        | `openai:<model>`        | Use OpenAI API                                          | `OPENAI_API_KEY`, optionally `OPENAI_BASE_URL`               |
+| **openai-compat** | `openai-compat:<model>` | Use OpenAI-compatible API servers (vLLM, LocalAI, etc.) | `OPENAI_COMPAT_BASE_URL`, optionally `OPENAI_COMPAT_API_KEY` |
+
+### Examples
+
+```bash
+# Disable Yorkie Intelligence
+YORKIE_INTELLIGENCE="false"
+
+# Use Ollama (local)
+YORKIE_INTELLIGENCE="ollama:llama3.2:1b"
+OLLAMA_HOST_URL="http://localhost:11434"
+
+# Use OpenAI
+YORKIE_INTELLIGENCE="openai:gpt-4o-mini"
+OPENAI_API_KEY="sk-xxx"
+
+# Use OpenAI with custom endpoint (proxy)
+YORKIE_INTELLIGENCE="openai:gpt-4"
+OPENAI_API_KEY="sk-xxx"
+OPENAI_BASE_URL="https://your-proxy.com/v1"
+
+# Use vLLM server
+YORKIE_INTELLIGENCE="openai-compat:mistral-7b"
+OPENAI_COMPAT_BASE_URL="http://localhost:8000/v1"
+
+# Use LocalAI
+YORKIE_INTELLIGENCE="openai-compat:gpt-3.5-turbo"
+OPENAI_COMPAT_BASE_URL="http://localhost:8080/v1"
+
+# Use Ollama in OpenAI-compatible mode
+YORKIE_INTELLIGENCE="openai-compat:llama3"
+OPENAI_COMPAT_BASE_URL="http://localhost:11434/v1"
+```
+
 ## Directory Structure
 
 ```
