@@ -33,33 +33,55 @@ services:
             exit 0;
             "
 
+    # MongoDB Community Server + mongot (Search Server) for $vectorSearch
+    #
+    # Reference: https://www.mongodb.com/docs/atlas/atlas-vector-search/tutorials/vector-search-quick-start/?deployment-type=self
+    secrets-init:
+        image: alpine:latest
+        volumes:
+            - mongot_secrets:/secrets
+        command: >
+            sh -c "echo -n 'mongotpassword' > /secrets/passwordFile && chmod 400 /secrets/passwordFile"
+
     mongo:
-        build:
-            context: ./mongodb_replica
-            args:
-                MONGO_VERSION: 8
-        environment:
-            MONGO_REPLICA_HOST: 127.0.0.1
-            MONGO_REPLICA_PORT: 27017
-            MONGO_INITDB_DATABASE: "codepair"
-            MONGO_COMMAND: "mongosh"
+        image: mongodb/mongodb-community-server:8.2.0-ubi9
+        command: ["mongod", "--config", "/etc/mongod.conf"]
         ports:
             - "27017:27017"
+        volumes:
+            - mongo_data:/data/db
+            - ./mongo_vector_search/config/mongod.conf:/etc/mongod.conf:ro
         restart: unless-stopped
         healthcheck:
-            test:
-                [
-                    "CMD",
-                    "mongosh",
-                    "admin",
-                    "--port",
-                    "27017",
-                    "--eval",
-                    "db.adminCommand('ping').ok",
-                ]
-            interval: 5s
-            timeout: 2s
+            test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
+            interval: 10s
+            timeout: 5s
             retries: 20
+
+    mongo-init:
+        image: mongodb/mongodb-community-server:8.2.0-ubi9
+        depends_on:
+            mongo:
+                condition: service_healthy
+        volumes:
+            - ./mongo_vector_search/scripts:/scripts:ro
+        entrypoint: ["/bin/sh", "/scripts/init-replica-set.sh"]
+        restart: "no"
+
+    mongot:
+        image: mongodb/mongodb-community-search:0.60.1
+        ports:
+            - "27028:27028"
+        volumes:
+            - mongot_data:/var/lib/mongot
+            - mongot_secrets:/secrets:ro
+            - ./mongo_vector_search/config/mongot.conf:/mongot-community/config.default.yml:ro
+        depends_on:
+            mongo-init:
+                condition: service_completed_successfully
+            secrets-init:
+                condition: service_completed_successfully
+        restart: unless-stopped
 
     minio:
         image: minio/minio
@@ -87,3 +109,8 @@ services:
             mc mb codepair/default-storage;
             exit 0;
             "
+
+volumes:
+    mongo_data:
+    mongot_data:
+    mongot_secrets:

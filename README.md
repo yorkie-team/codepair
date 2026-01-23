@@ -94,6 +94,9 @@ We offer two options. Choose the one that best suits your needs:
    GITHUB_CLIENT_SECRET=your_github_client_secret_here
    ```
 
+   > Note: If you run the backend on your host machine (not in Docker) while MongoDB is in Docker with a replica set,
+   > set `DATABASE_URL="mongodb://localhost:27017/codepair?directConnection=true"`.
+
 2. Run `./backend/docker/docker-compose.yml`.
 
    ```bash

@@ -85,11 +85,9 @@ Starts the server in production mode.
 ```
 backend/
 ├── docker/                               # Docker configuration files
-│   ├── mongodb_replica/                  # Configuration for MongoDB replica set
-│   │   ├── docker-compose.yml            # Docker Compose configuration for MongoDB replica set
-│   │   └── Dockerfile                    # Dockerfile for MongoDB replica set
-│   ├── docker-compose-full.yml           # Full Docker Compose configuration (Backend + MongoDB)
-│   └── docker-compose.yml                # Default Docker Compose configuration
+│   ├── mongo_vector_search/              # Self-managed MongoDB $vectorSearch PoC config (mongod + mongot)
+│   ├── docker-compose.yml                # Local dev dependencies (Yorkie, MongoDB, MinIO, etc.)
+│   └── docker-compose-full.yml           # Full stack (standalone) Docker Compose config
 ├── prisma/                               # Prisma configuration files
 ├── src/                                  # Source code
 │   ├── admin/                            # Admin-related modules

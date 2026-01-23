@@ -53,6 +53,8 @@ export class VectorSearchService {
 		// See design document for index configuration
 
 		try {
+			const workspaceIdFilter = this.toMongoIdFilter(workspaceId);
+
 			const results = await this.prismaService.$runCommandRaw({
 				aggregate: "document_chunks",
 				pipeline: [
@@ -64,10 +66,8 @@ export class VectorSearchService {
 							numCandidates: limit * 10,
 							limit: limit,
 							filter: {
-								$and: [
-									{ workspace_id: workspaceId },
-									{ $or: [{ workspace_only: true }] },
-								],
+								workspace_id: workspaceIdFilter,
+								workspace_only: true,
 							},
 						},
 					},
@@ -162,9 +162,9 @@ export class VectorSearchService {
 	 */
 	private transformMongoChunk(mongoChunk: MongoChunkResult): DocumentChunk {
 		return {
-			id: mongoChunk._id,
-			documentId: mongoChunk.document_id,
-			workspaceId: mongoChunk.workspace_id,
+			id: this.normalizeMongoId(mongoChunk._id),
+			documentId: this.normalizeMongoId(mongoChunk.document_id),
+			workspaceId: this.normalizeMongoId(mongoChunk.workspace_id),
 			content: mongoChunk.content,
 			chunkType: mongoChunk.chunk_type,
 			language: mongoChunk.language,
@@ -180,6 +180,30 @@ export class VectorSearchService {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		} as DocumentChunk;
+	}
+
+	private toMongoIdFilter(id: string): string | { $oid: string } {
+		// Prisma Mongo raw commands accept Extended JSON for ObjectId.
+		// If it's a 24-hex string, treat as ObjectId, otherwise treat as string.
+		if (/^[a-f0-9]{24}$/i.test(id)) {
+			return { $oid: id };
+		}
+		return id;
+	}
+
+	private normalizeMongoId(value: unknown): string {
+		// Prisma Mongo can return ObjectId values as Extended JSON: { $oid: "..." }.
+		// Convert to the plain hex string so downstream Prisma queries work.
+		if (typeof value === "string") {
+			return value;
+		}
+		if (value && typeof value === "object") {
+			const maybeOid = (value as { $oid?: unknown }).$oid;
+			if (typeof maybeOid === "string") {
+				return maybeOid;
+			}
+		}
+		return String(value);
 	}
 
 	/**

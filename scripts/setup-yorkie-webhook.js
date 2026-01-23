@@ -9,8 +9,7 @@ const YORKIE_PROJECT_NAME = process.env.YORKIE_PROJECT_NAME || "codepair";
 const YORKIE_USERNAME = process.env.YORKIE_USERNAME || "admin";
 const YORKIE_PASSWORD = process.env.YORKIE_PASSWORD || "admin";
 const WEBHOOK_URL =
-  process.env.WEBHOOK_URL ||
-  "http://host.docker.internal:3000/yorkie/document-events";
+  process.env.WEBHOOK_URL || "http://localhost:3000/yorkie/document-events";
 const BACKEND_ENV_FILE =
   process.env.BACKEND_ENV_FILE ||
   path.join(__dirname, "..", "backend", ".env.development");
@@ -26,7 +25,7 @@ function execCommand(command) {
     });
   } catch (error) {
     throw new Error(
-      `Command failed: ${command}\n${error.stderr || error.message}`,
+      `Command failed: ${command}\n${error.stderr || error.message}`
     );
   }
 }
@@ -41,10 +40,10 @@ async function setupYorkieWebhook() {
     } catch {
       console.error("❌ Yorkie CLI is not installed");
       console.error(
-        "💡 Install it with: brew tap yorkie-team/yorkie && brew install yorkie",
+        "💡 Install it with: brew tap yorkie-team/yorkie && brew install yorkie"
       );
       console.error(
-        "   Or download from: https://github.com/yorkie-team/yorkie/releases",
+        "   Or download from: https://github.com/yorkie-team/yorkie/releases"
       );
       process.exit(1);
     }
@@ -52,14 +51,14 @@ async function setupYorkieWebhook() {
     // Login to Yorkie
     console.log(`🔑 Logging in to Yorkie (${YORKIE_API_ADDR})...`);
     execCommand(
-      `yorkie login -u ${YORKIE_USERNAME} -p ${YORKIE_PASSWORD} --insecure --rpc-addr ${YORKIE_API_ADDR}`,
+      `yorkie login -u ${YORKIE_USERNAME} -p ${YORKIE_PASSWORD} --insecure --rpc-addr ${YORKIE_API_ADDR}`
     );
     console.log("✅ Logged in successfully");
 
     // Get project info
     console.log(`📡 Fetching project '${YORKIE_PROJECT_NAME}' information...`);
     const projectListOutput = execCommand(
-      "yorkie project ls --verbose --output json",
+      "yorkie project ls --verbose --output json"
     );
 
     // Parse JSON output
@@ -83,14 +82,14 @@ async function setupYorkieWebhook() {
 
         // Fetch project list again to get the new project
         const updatedProjectListOutput = execCommand(
-          "yorkie project ls --verbose --output json",
+          "yorkie project ls --verbose --output json"
         );
         projects = JSON.parse(updatedProjectListOutput);
         project = projects.find((p) => p.name === YORKIE_PROJECT_NAME);
 
         if (!project) {
           console.error(
-            `❌ Failed to find newly created project '${YORKIE_PROJECT_NAME}'`,
+            `❌ Failed to find newly created project '${YORKIE_PROJECT_NAME}'`
           );
           process.exit(1);
         }
@@ -119,10 +118,10 @@ async function setupYorkieWebhook() {
     }
 
     console.log(
-      `✅ Project secret key retrieved: ${secretKey.substring(0, 10)}...`,
+      `✅ Project secret key retrieved: ${secretKey.substring(0, 10)}...`
     );
     console.log(
-      `✅ Project public key retrieved: ${publicKey.substring(0, 10)}...`,
+      `✅ Project public key retrieved: ${publicKey.substring(0, 10)}...`
     );
 
     // Update webhook using CLI (only if different from current)
@@ -130,18 +129,18 @@ async function setupYorkieWebhook() {
     if (currentWebhookUrl !== WEBHOOK_URL) {
       console.log(`🔗 Setting webhook URL: ${WEBHOOK_URL}`);
       execCommand(
-        `yorkie project update ${YORKIE_PROJECT_NAME} --event-webhook-url "${WEBHOOK_URL}" --event-webhook-events-add "DocumentRootChanged"`,
+        `yorkie project update ${YORKIE_PROJECT_NAME} --event-webhook-url "${WEBHOOK_URL}" --event-webhook-events-add "DocumentRootChanged"`
       );
       console.log(
-        "✅ Webhook configured successfully with DocumentRootChanged event",
+        "✅ Webhook configured successfully with DocumentRootChanged event"
       );
     } else {
       console.log(`✅ Webhook URL already set: ${WEBHOOK_URL}`);
       console.log(
-        `🔗 Updating webhook methods to include DocumentRootChanged...`,
+        `🔗 Updating webhook methods to include DocumentRootChanged...`
       );
       execCommand(
-        `yorkie project update ${YORKIE_PROJECT_NAME} --event-webhook-events-add "DocumentRootChanged"`,
+        `yorkie project update ${YORKIE_PROJECT_NAME} --event-webhook-events-add "DocumentRootChanged"`
       );
       console.log("✅ Webhook methods updated");
     }
@@ -163,7 +162,7 @@ async function setupYorkieWebhook() {
     if (envContent.includes("YORKIE_PROJECT_SECRET_KEY=")) {
       envContent = envContent.replace(
         /^YORKIE_PROJECT_SECRET_KEY=.*/m,
-        secretKeyLine,
+        secretKeyLine
       );
     } else {
       envContent += `\n${secretKeyLine}\n`;
@@ -184,7 +183,7 @@ async function setupYorkieWebhook() {
     if (frontendEnvContent.includes("VITE_YORKIE_API_KEY=")) {
       frontendEnvContent = frontendEnvContent.replace(
         /^VITE_YORKIE_API_KEY=.*/m,
-        publicKeyLine,
+        publicKeyLine
       );
     } else {
       frontendEnvContent += `\n${publicKeyLine}\n`;
@@ -204,7 +203,7 @@ async function setupYorkieWebhook() {
     console.error("  - Docker containers are running");
     console.error(`  - Yorkie server is accessible at ${YORKIE_API_ADDR}`);
     console.error(
-      `  - Login credentials are correct (${YORKIE_USERNAME}:${YORKIE_PASSWORD})`,
+      `  - Login credentials are correct (${YORKIE_USERNAME}:${YORKIE_PASSWORD})`
     );
     process.exit(1);
   }
