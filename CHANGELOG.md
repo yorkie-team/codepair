@@ -7,6 +7,17 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.49] - 2026-01-23
+
+### Added
+
+- Enhance Yorkie Intelligence to support OpenAI-compatible providers by @emplam27 in https://github.com/yorkie-team/codepair/pull/578
+
+### Changed
+
+- Bump up backend libs by @hackerwins in https://github.com/yorkie-team/codepair/pull/574
+- Refact frontend architecture by @JOOHOJANG in https://github.com/yorkie-team/codepair/pull/577
+
 ## [0.1.48] - 2026-01-16
 
 ### Fixed
