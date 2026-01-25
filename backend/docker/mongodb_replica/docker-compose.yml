@@ -5,7 +5,7 @@ services:
         build:
             context: ./
             args:
-                MONGO_VERSION: 8
+                MONGO_VERSION: 7.0
         environment:
             MONGO_REPLICA_HOST: 127.0.0.1
             MONGO_REPLICA_PORT: 27017
