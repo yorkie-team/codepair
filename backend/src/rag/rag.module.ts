@@ -11,6 +11,7 @@ import { RagAnswerService } from "./answer/rag-answer.service";
 import { RagController } from "./rag.controller";
 import { YorkieModule } from "src/yorkie/yorkie.module";
 import { LangchainModule } from "src/langchain/langchain.module";
+import { QdrantService } from "./qdrant/qdrant.service";
 
 @Module({
 	imports: [ConfigModule, forwardRef(() => YorkieModule), LangchainModule],
@@ -20,11 +21,18 @@ import { LangchainModule } from "src/langchain/langchain.module";
 		EmbeddingService,
 		ContentSanitizer,
 		MarkdownChunker,
+		QdrantService,
 		IndexingService,
 		IndexingQueueService,
 		VectorSearchService,
 		RagAnswerService,
 	],
-	exports: [IndexingService, IndexingQueueService, VectorSearchService, RagAnswerService],
+	exports: [
+		QdrantService,
+		IndexingService,
+		IndexingQueueService,
+		VectorSearchService,
+		RagAnswerService,
+	],
 })
 export class RagModule {}

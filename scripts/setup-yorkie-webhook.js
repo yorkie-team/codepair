@@ -10,7 +10,7 @@ const YORKIE_USERNAME = process.env.YORKIE_USERNAME || "admin";
 const YORKIE_PASSWORD = process.env.YORKIE_PASSWORD || "admin";
 const WEBHOOK_URL =
   process.env.WEBHOOK_URL ||
-  "http://host.docker.internal:3000/yorkie/document-events";
+  "http://localhost:3000/yorkie/document-events";
 const BACKEND_ENV_FILE =
   process.env.BACKEND_ENV_FILE ||
   path.join(__dirname, "..", "backend", ".env.development");

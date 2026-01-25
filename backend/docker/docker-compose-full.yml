@@ -73,7 +73,7 @@ services:
         build:
             context: ./mongodb_replica
             args:
-                MONGO_VERSION: 8
+                MONGO_VERSION: 7.0
         environment:
             MONGO_REPLICA_HOST: "mongo"
             MONGO_REPLICA_PORT: 27017
@@ -124,3 +124,20 @@ services:
             mc mb codepair/default-storage;
             exit 0;
             "
+
+    qdrant:
+        image: qdrant/qdrant:v1.16.2
+        ports:
+            - "6333:6333" # HTTP API
+            - "6334:6334" # gRPC (optional)
+        volumes:
+            - qdrant_data:/qdrant/storage
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    qdrant_data:

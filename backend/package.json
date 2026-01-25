@@ -43,6 +43,7 @@
 		"@nestjs/platform-express": "^11.1.12",
 		"@nestjs/swagger": "^11.2.5",
 		"@prisma/client": "^5.22.0",
+		"@qdrant/qdrant-js": "^1.16.2",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.3",
 		"express": "^5.2.1",

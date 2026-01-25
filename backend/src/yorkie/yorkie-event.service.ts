@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { IndexingQueueService } from "src/rag/indexing/indexing-queue.service";
+import { QdrantService } from "src/rag/qdrant/qdrant.service";
 import { DocumentEventDto, DocumentEventType } from "./dto/document-event.dto";
 
 // Debounce time constants (in milliseconds)
@@ -15,7 +16,8 @@ export class YorkieEventService {
 
 	constructor(
 		private prismaService: PrismaService,
-		private indexingQueueService: IndexingQueueService
+		private indexingQueueService: IndexingQueueService,
+		private qdrantService: QdrantService
 	) {}
 
 	/**
@@ -88,18 +90,23 @@ export class YorkieEventService {
 	 */
 	private async calculateDebounceTime(documentId: string): Promise<number> {
 		try {
-			const lastChunk = await this.prismaService.documentChunk.findFirst({
-				where: { documentId },
-				select: { indexedAt: true },
-				orderBy: { indexedAt: "desc" },
-			});
+			// Get document chunks from Qdrant
+			const points = await this.qdrantService.getDocumentPoints(documentId);
 
-			if (!lastChunk || !lastChunk.indexedAt) {
+			if (points.length === 0) {
 				// Never indexed before - use shorter debounce
 				return DEFAULT_DEBOUNCE_MS;
 			}
 
-			const minutesSinceIndexing = (Date.now() - lastChunk.indexedAt.getTime()) / 60000;
+			// Find the most recent indexedAt time
+			const mostRecentPoint = points.reduce((latest, point) => {
+				const currentTime = new Date(point.payload.indexedAt).getTime();
+				const latestTime = new Date(latest.payload.indexedAt).getTime();
+				return currentTime > latestTime ? point : latest;
+			});
+
+			const lastIndexedAt = new Date(mostRecentPoint.payload.indexedAt);
+			const minutesSinceIndexing = (Date.now() - lastIndexedAt.getTime()) / 60000;
 
 			if (minutesSinceIndexing < RECENT_INDEX_THRESHOLD_MINUTES) {
 				return LONG_DEBOUNCE_MS;

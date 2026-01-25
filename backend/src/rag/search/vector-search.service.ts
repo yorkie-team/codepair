@@ -1,9 +1,17 @@
-import { Injectable } from "@nestjs/common";
-import * as crypto from "crypto";
-import { PrismaService } from "src/db/prisma.service";
+import { Injectable, Logger } from "@nestjs/common";
 import { EmbeddingService } from "../embedding/embedding.service";
-import { DocumentChunk } from "@prisma/client";
-import { MongoVectorSearchResult, MongoChunkResult } from "../types/mongo-search.type";
+import { QdrantService } from "../qdrant/qdrant.service";
+
+export interface DocumentChunk {
+	id: string;
+	documentId: string;
+	workspaceId: string;
+	chunkIndex: number;
+	content: string;
+	chunkType: string;
+	language?: string;
+	section?: string;
+}
 
 export interface SearchResult {
 	chunk: DocumentChunk;
@@ -12,13 +20,15 @@ export interface SearchResult {
 
 @Injectable()
 export class VectorSearchService {
+	private readonly logger = new Logger(VectorSearchService.name);
+
 	constructor(
-		private prismaService: PrismaService,
-		private embeddingService: EmbeddingService
+		private embeddingService: EmbeddingService,
+		private qdrantService: QdrantService
 	) {}
 
 	/**
-	 * Search for relevant chunks using vector similarity
+	 * Search for relevant chunks using Qdrant vector similarity
 	 */
 	async searchChunks(
 		userId: string,
@@ -26,166 +36,40 @@ export class VectorSearchService {
 		query: string,
 		limit: number = 10
 	): Promise<SearchResult[]> {
-		// 1. Generate query embedding
-		const queryEmbedding = await this.embeddingService.embedQuery(query);
-
-		// 2. For development: Use simple cosine similarity
-		// In production with MongoDB Atlas M10+, use $vectorSearch
-		const useVectorSearch = process.env.USE_MONGODB_VECTOR_SEARCH === "true";
-
-		if (useVectorSearch) {
-			return this.mongodbVectorSearch(workspaceId, userId, queryEmbedding, limit);
-		} else {
-			return this.fallbackCosineSimilaritySearch(workspaceId, userId, queryEmbedding, limit);
-		}
-	}
-
-	/**
-	 * MongoDB Vector Search (requires Atlas M10+)
-	 */
-	private async mongodbVectorSearch(
-		workspaceId: string,
-		userId: string,
-		queryEmbedding: number[],
-		limit: number
-	): Promise<SearchResult[]> {
-		// Note: This requires MongoDB Atlas Vector Search index to be created
-		// See design document for index configuration
-
 		try {
-			const results = await this.prismaService.$runCommandRaw({
-				aggregate: "document_chunks",
-				pipeline: [
-					{
-						$vectorSearch: {
-							index: "vector_index",
-							path: "embedding",
-							queryVector: queryEmbedding,
-							numCandidates: limit * 10,
-							limit: limit,
-							filter: {
-								$and: [
-									{ workspace_id: workspaceId },
-									{ $or: [{ workspace_only: true }] },
-								],
-							},
-						},
-					},
-					{
-						$project: {
-							_id: 1,
-							document_id: 1,
-							workspace_id: 1,
-							content: 1,
-							chunk_type: 1,
-							language: 1,
-							section: 1,
-							chunk_index: 1,
-							score: { $meta: "vectorSearchScore" },
-						},
-					},
-				],
-				cursor: {},
-			});
+			// 1. Generate query embedding
+			const queryEmbedding = await this.embeddingService.embedQuery(query);
 
-			// Transform results
-			const searchResult = results as unknown as MongoVectorSearchResult;
-			const chunks = searchResult.cursor.firstBatch;
-			return chunks.map((chunk: MongoChunkResult) => ({
-				chunk: this.transformMongoChunk(chunk),
-				score: chunk.score,
+			// 2. Search in Qdrant
+			const results = await this.qdrantService.search(queryEmbedding, workspaceId, limit);
+
+			// Warn if no results found
+			if (results.length === 0) {
+				this.logger.warn(
+					`No search results found - workspaceId: ${workspaceId}, query: "${query.substring(0, 50)}..."`
+				);
+			}
+
+			// 3. Transform to SearchResult format
+			return results.map((r) => ({
+				chunk: {
+					id: r.id,
+					documentId: r.payload.documentId,
+					workspaceId: r.payload.workspaceId,
+					chunkIndex: r.payload.chunkIndex,
+					content: r.payload.content,
+					chunkType: r.payload.chunkType,
+					language: r.payload.language,
+					section: r.payload.section,
+				},
+				score: r.score,
 			}));
 		} catch (error) {
-			console.error("MongoDB Vector Search failed:", error);
-			// Fallback to cosine similarity
-			return this.fallbackCosineSimilaritySearch(workspaceId, userId, queryEmbedding, limit);
+			this.logger.error(
+				`Vector search failed - workspaceId: ${workspaceId}, error: ${error.message}`,
+				error.stack
+			);
+			throw error;
 		}
-	}
-
-	/**
-	 * Fallback: In-memory cosine similarity search (for development)
-	 */
-	private async fallbackCosineSimilaritySearch(
-		workspaceId: string,
-		userId: string,
-		queryEmbedding: number[],
-		limit: number
-	): Promise<SearchResult[]> {
-		// Get all chunks for the workspace
-		const chunks = await this.prismaService.documentChunk.findMany({
-			where: { workspaceId, OR: [{ workspaceOnly: true }] },
-		});
-
-		// Calculate cosine similarity for each chunk
-		const scored = chunks.map((chunk) => ({
-			chunk,
-			score: this.cosineSimilarity(queryEmbedding, chunk.embedding),
-		}));
-
-		// Sort by score (descending) and return top N
-		return scored
-			.sort((a, b) => b.score - a.score)
-			.slice(0, limit)
-			.filter((result) => result.score > 0.5); // Minimum similarity threshold
-	}
-
-	/**
-	 * Calculate cosine similarity between two vectors
-	 */
-	private cosineSimilarity(a: number[], b: number[]): number {
-		if (a.length !== b.length) {
-			throw new Error("Vectors must have the same length");
-		}
-
-		let dotProduct = 0;
-		let magnitudeA = 0;
-		let magnitudeB = 0;
-
-		for (let i = 0; i < a.length; i++) {
-			dotProduct += a[i] * b[i];
-			magnitudeA += a[i] * a[i];
-			magnitudeB += b[i] * b[i];
-		}
-
-		magnitudeA = Math.sqrt(magnitudeA);
-		magnitudeB = Math.sqrt(magnitudeB);
-
-		if (magnitudeA === 0 || magnitudeB === 0) {
-			return 0;
-		}
-
-		return dotProduct / (magnitudeA * magnitudeB);
-	}
-
-	/**
-	 * Transform MongoDB chunk to Prisma DocumentChunk
-	 */
-	private transformMongoChunk(mongoChunk: MongoChunkResult): DocumentChunk {
-		return {
-			id: mongoChunk._id,
-			documentId: mongoChunk.document_id,
-			workspaceId: mongoChunk.workspace_id,
-			content: mongoChunk.content,
-			chunkType: mongoChunk.chunk_type,
-			language: mongoChunk.language,
-			section: mongoChunk.section,
-			chunkIndex: mongoChunk.chunk_index,
-			contentHash: "",
-			embedding: [],
-			embeddingModel: "",
-			embeddingVersion: "",
-			workspaceOnly: true,
-			metadata: null,
-			indexedAt: new Date(),
-			createdAt: new Date(),
-			updatedAt: new Date(),
-		} as DocumentChunk;
-	}
-
-	/**
-	 * Generate hash for query (for audit logging)
-	 */
-	hashQuery(query: string): string {
-		return crypto.createHash("sha256").update(query).digest("hex");
 	}
 }

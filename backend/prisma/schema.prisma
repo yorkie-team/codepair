@@ -46,7 +46,6 @@ model Workspace {
   documentList                 Document[]
   userWorkspaceList            UserWorkspace[]
   workspaceInvitationTokenList WorkspaceInvitationToken[]
-  documentChunkList            DocumentChunk[]
 
   @@map("workspaces")
 }
@@ -61,7 +60,6 @@ model Document {
   workspaceId              String                 @map("workspace_id") @db.ObjectId
   documentSharingTokenList DocumentSharingToken[]
   intelligenceLogList      IntelligenceLog[]
-  documentChunkList        DocumentChunk[]
 
   @@map("documents")
 }
@@ -105,31 +103,4 @@ model IntelligenceLog {
   updatedAt  DateTime  @updatedAt @map("updated_at")
 
   @@map("intelligence_logs")
-}
-
-model DocumentChunk {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  documentId       String    @map("document_id") @db.ObjectId
-  workspaceId      String    @map("workspace_id") @db.ObjectId
-  workspaceOnly    Boolean   @default(true) @map("workspace_only")
-  chunkIndex       Int       @map("chunk_index")
-  content          String
-  contentHash      String    @map("content_hash")
-  embedding        Float[]
-  embeddingModel   String    @map("embedding_model")
-  embeddingVersion String    @map("embedding_version")
-  chunkType        String    @map("chunk_type")
-  language         String?
-  section          String?
-  metadata         Json?
-  indexedAt        DateTime  @map("indexed_at")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  document         Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-
-  @@index([workspaceId, documentId])
-  @@index([contentHash])
-  @@index([workspaceId, workspaceOnly])
-  @@map("document_chunks")
 }
