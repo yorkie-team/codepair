@@ -3,8 +3,6 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { PrismaService } from "src/db/prisma.service";
 import { VectorSearchService } from "../search/vector-search.service";
-import { EmbeddingService } from "../embedding/embedding.service";
-import * as crypto from "crypto";
 
 export interface RagAnswerResult {
 	answer: string;
@@ -29,7 +27,6 @@ export class RagAnswerService {
 	constructor(
 		@Inject("ChatModel") private chatModel: BaseChatModel,
 		private vectorSearchService: VectorSearchService,
-		private embeddingService: EmbeddingService,
 		private prismaService: PrismaService
 	) {}
 
@@ -111,17 +108,6 @@ ${sectionInfo}${result.chunk.content}`;
 
 			timings.totalLatencyMs = Date.now() - startTime;
 
-			// 7. Log search (audit)
-			await this.logSearch(
-				userId,
-				workspaceId,
-				query,
-				searchResults.map((r) => r.chunk.id),
-				searchResults.map((r) => r.chunk.id), // For now, all retrieved chunks are used
-				timings,
-				null // No error
-			);
-
 			return {
 				answer,
 				sources,
@@ -129,10 +115,6 @@ ${sectionInfo}${result.chunk.content}`;
 			};
 		} catch (error) {
 			timings.totalLatencyMs = Date.now() - startTime;
-
-			// Log error
-			await this.logSearch(userId, workspaceId, query, [], [], timings, error.message);
-
 			throw error;
 		}
 	}
@@ -223,17 +205,6 @@ ${sectionInfo}${result.chunk.content}`;
 				type: "done",
 				data: { timings },
 			}) + "\n";
-
-			// 8. Log search
-			await this.logSearch(
-				userId,
-				workspaceId,
-				query,
-				searchResults.map((r) => r.chunk.id),
-				searchResults.map((r) => r.chunk.id),
-				timings,
-				null
-			);
 		} catch (error) {
 			timings.totalLatencyMs = Date.now() - startTime;
 
@@ -241,8 +212,6 @@ ${sectionInfo}${result.chunk.content}`;
 				type: "error",
 				data: error.message,
 			}) + "\n";
-
-			await this.logSearch(userId, workspaceId, query, [], [], timings, error.message);
 		}
 	}
 
@@ -269,48 +238,5 @@ ${context}
 Question: ${query}
 
 Answer:`;
-	}
-
-	/**
-	 * Log search to audit trail
-	 */
-	private async logSearch(
-		userId: string,
-		workspaceId: string,
-		query: string,
-		retrievedChunkIds: string[],
-		usedChunkIds: string[],
-		timings: {
-			embeddingLatencyMs: number;
-			vectorSearchLatencyMs: number;
-			llmLatencyMs: number;
-			totalLatencyMs: number;
-		},
-		errorMessage: string | null
-	): Promise<void> {
-		try {
-			await this.prismaService.searchAuditLog.create({
-				data: {
-					userId,
-					workspaceId,
-					query,
-					queryHash: crypto.createHash("sha256").update(query).digest("hex"),
-					retrievedChunkIds,
-					usedChunkIds,
-					resultCount: retrievedChunkIds.length,
-					model: this.chatModel?.name || "unknown",
-					embeddingModel: this.embeddingService.getEmbeddingModel(),
-					embeddingVersion: this.embeddingService.getEmbeddingVersion(),
-					embeddingLatencyMs: timings.embeddingLatencyMs,
-					vectorSearchLatencyMs: timings.vectorSearchLatencyMs,
-					llmLatencyMs: timings.llmLatencyMs,
-					totalLatencyMs: timings.totalLatencyMs,
-					errorMessage,
-				},
-			});
-		} catch (error) {
-			// Don't fail the request if audit logging fails
-			console.error("Failed to log search:", error);
-		}
 	}
 }

@@ -19,7 +19,6 @@ model User {
   updatedAt           DateTime          @updatedAt @map("updated_at")
   userWorkspaceList   UserWorkspace[]
   intelligenceLogList IntelligenceLog[]
-  searchAuditLogList  SearchAuditLog[]
 
   @@map("users")
 }
@@ -48,7 +47,6 @@ model Workspace {
   userWorkspaceList            UserWorkspace[]
   workspaceInvitationTokenList WorkspaceInvitationToken[]
   documentChunkList            DocumentChunk[]
-  searchAuditLogList           SearchAuditLog[]
 
   @@map("workspaces")
 }
@@ -134,32 +132,4 @@ model DocumentChunk {
   @@index([contentHash])
   @@index([workspaceId, workspaceOnly])
   @@map("document_chunks")
-}
-
-model SearchAuditLog {
-  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId                String    @map("user_id") @db.ObjectId
-  workspaceId           String    @map("workspace_id") @db.ObjectId
-  query                 String
-  queryHash             String    @map("query_hash")
-  retrievedChunkIds     String[]  @map("retrieved_chunk_ids") @db.ObjectId
-  usedChunkIds          String[]  @map("used_chunk_ids") @db.ObjectId
-  resultCount           Int       @map("result_count")
-  model                 String
-  embeddingModel        String    @map("embedding_model")
-  embeddingVersion      String    @map("embedding_version")
-  embeddingLatencyMs    Int       @map("embedding_latency_ms")
-  vectorSearchLatencyMs Int       @map("vector_search_latency_ms")
-  llmLatencyMs          Int       @map("llm_latency_ms")
-  totalLatencyMs        Int       @map("total_latency_ms")
-  ipAddress             String?   @map("ip_address")
-  userAgent             String?   @map("user_agent")
-  errorMessage          String?   @map("error_message")
-  createdAt             DateTime  @default(now()) @map("created_at")
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  workspace             Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt])
-  @@index([workspaceId, createdAt])
-  @@map("search_audit_logs")
 }
