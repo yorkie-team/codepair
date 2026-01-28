@@ -18,6 +18,7 @@ export class YorkieAdminService {
 		this.logger.log(`Fetching Yorkie document: ${documentKey}`);
 
 		return new Promise((resolve, reject) => {
+			const TIMEOUT_MS = 30000;
 			const apiAddr = this.configService.get<string>("YORKIE_API_ADDR");
 			const secretKey = this.configService.get<string>("YORKIE_PROJECT_SECRET_KEY");
 
@@ -28,6 +29,7 @@ export class YorkieAdminService {
 			const client = connect(apiAddr);
 
 			client.on("error", (err) => {
+				clearTimeout(timeout);
 				this.logger.error(`HTTP/2 connection error: ${err.message}`);
 				reject(err);
 			});
@@ -44,6 +46,12 @@ export class YorkieAdminService {
 				Authorization: `API-Key ${secretKey}`,
 			});
 
+			const timeout = setTimeout(() => {
+				this.logger.error(`Yorkie request timed out for ${documentKey}`);
+				client.close();
+				reject(new Error("Yorkie request timed out"));
+			}, TIMEOUT_MS);
+
 			req.write(requestBody);
 			req.setEncoding("utf8");
 
@@ -54,6 +62,7 @@ export class YorkieAdminService {
 			});
 
 			req.on("end", () => {
+				clearTimeout(timeout);
 				client.close();
 
 				try {
@@ -82,6 +91,7 @@ export class YorkieAdminService {
 			});
 
 			req.on("error", (err) => {
+				clearTimeout(timeout);
 				this.logger.error(`Request error: ${err.message}`);
 				client.close();
 				reject(err);
@@ -100,6 +110,7 @@ export class YorkieAdminService {
 		this.logger.log(`Fetching ${documentKeys.length} Yorkie documents`);
 
 		return new Promise((resolve, reject) => {
+			const TIMEOUT_MS = 30000;
 			const apiAddr = this.configService.get<string>("YORKIE_API_ADDR");
 			const secretKey = this.configService.get<string>("YORKIE_PROJECT_SECRET_KEY");
 
@@ -110,7 +121,16 @@ export class YorkieAdminService {
 
 			const client = connect(apiAddr);
 
+			const timeout = setTimeout(() => {
+				this.logger.error(
+					`Yorkie request timed out for documents ${documentKeys.join(", ")}`
+				);
+				client.close();
+				reject(new Error("Yorkie request timed out"));
+			}, TIMEOUT_MS);
+
 			client.on("error", (err) => {
+				clearTimeout(timeout);
 				this.logger.error(`HTTP/2 connection error: ${err.message}`);
 				reject(err);
 			});
@@ -139,6 +159,7 @@ export class YorkieAdminService {
 			});
 
 			req.on("end", () => {
+				clearTimeout(timeout);
 				client.close();
 
 				try {
@@ -169,6 +190,7 @@ export class YorkieAdminService {
 			});
 
 			req.on("error", (err) => {
+				clearTimeout(timeout);
 				this.logger.error(`Request error: ${err.message}`);
 				client.close();
 				reject(err);
