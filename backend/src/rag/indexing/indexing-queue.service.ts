@@ -47,13 +47,15 @@ export class IndexingQueueService {
 		this.queue.set(documentId, {
 			documentId,
 			workspaceId,
-			scheduledAt: new Date(Date.now() + delay),
+			scheduledAt: new Date(), // Set a new token on each schedule
 			timer,
 			retryCount: existing?.retryCount ?? 0,
 		});
 
 		this.logger.log(
-			`Indexing scheduled for document ${documentId} in ${delay / 1000} seconds (queue size: ${this.queue.size})`
+			`Indexing scheduled for document ${documentId} in ${delay / 1000} seconds (queue size: ${
+				this.queue.size
+			})`
 		);
 	}
 
@@ -69,31 +71,46 @@ export class IndexingQueueService {
 			return;
 		}
 
+		// Capture the token to detect if the job is rescheduled while running
+		const initialScheduledAt = queued.scheduledAt;
+
 		try {
 			this.logger.log(`Executing indexing for document ${documentId}`);
-
 			await this.indexingService.reindexDocument(documentId, queued.workspaceId);
 
-			// Remove from queue on success
-			this.queue.delete(documentId);
-
-			this.logger.log(
-				`Successfully indexed document ${documentId} (queue size: ${this.queue.size})`
-			);
+			// On success, only remove the entry if it hasn't been rescheduled
+			const currentQueued = this.queue.get(documentId);
+			if (currentQueued?.scheduledAt.getTime() === initialScheduledAt.getTime()) {
+				this.queue.delete(documentId);
+				this.logger.log(
+					`Successfully indexed and removed document ${documentId} (queue size: ${this.queue.size})`
+				);
+			} else {
+				this.logger.log(
+					`Successfully indexed document ${documentId}, but not removing from queue as it has been rescheduled.`
+				);
+			}
 		} catch (error) {
 			this.logger.error(
 				`Failed to index document ${documentId}: ${error.message}`,
 				error.stack
 			);
 
-			// Retry logic
-			if (queued.retryCount < this.MAX_RETRY_COUNT) {
-				this.scheduleRetry(documentId, queued.workspaceId, queued.retryCount + 1);
+			// On failure, only retry or delete if the entry hasn't been rescheduled
+			const currentQueued = this.queue.get(documentId);
+			if (currentQueued?.scheduledAt.getTime() === initialScheduledAt.getTime()) {
+				if (queued.retryCount < this.MAX_RETRY_COUNT) {
+					this.scheduleRetry(documentId, queued.workspaceId, queued.retryCount + 1);
+				} else {
+					this.logger.error(
+						`Max retry count reached for document ${documentId}, removing from queue`
+					);
+					this.queue.delete(documentId);
+				}
 			} else {
-				this.logger.error(
-					`Max retry count reached for document ${documentId}, removing from queue`
+				this.logger.log(
+					`Failed to index document ${documentId}, but not retrying as it has been rescheduled.`
 				);
-				this.queue.delete(documentId);
 			}
 		}
 	}
@@ -109,7 +126,9 @@ export class IndexingQueueService {
 		const delayMs = Math.pow(2, retryCount) * 60000; // Exponential backoff in minutes
 
 		this.logger.warn(
-			`Scheduling retry ${retryCount}/${this.MAX_RETRY_COUNT} for document ${documentId} in ${delayMs / 1000} seconds`
+			`Scheduling retry ${retryCount}/${this.MAX_RETRY_COUNT} for document ${documentId} in ${
+				delayMs / 1000
+			} seconds`
 		);
 
 		const timer = setTimeout(() => {
@@ -119,7 +138,7 @@ export class IndexingQueueService {
 		this.queue.set(documentId, {
 			documentId,
 			workspaceId,
-			scheduledAt: new Date(Date.now() + delayMs),
+			scheduledAt: new Date(),
 			timer,
 			retryCount,
 		});

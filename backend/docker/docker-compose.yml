@@ -70,7 +70,7 @@ services:
             - qdrant_data:/qdrant/storage
         restart: unless-stopped
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+            test: ["CMD", "bash", "-c", "echo >/dev/tcp/localhost/6333"]
             interval: 10s
             timeout: 5s
             retries: 5

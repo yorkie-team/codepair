@@ -1,5 +1,5 @@
 services:
-    # This config is for MongoDB v8
+    # This config is for MongoDB v7.0
     # It's a Replica Set (required for Prisma Client)
     mongo:
         build:

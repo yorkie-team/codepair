@@ -25,7 +25,7 @@ export class IndexingService {
 	 */
 	async indexDocument(documentId: string, workspaceId: string): Promise<void> {
 		try {
-			// 1. Get document metadata
+			// 1. Get document metadata and validate workspace
 			const document = await this.prismaService.document.findUnique({
 				where: { id: documentId },
 				select: {
@@ -37,6 +37,13 @@ export class IndexingService {
 
 			if (!document) {
 				throw new Error(`Document ${documentId} not found`);
+			}
+
+			// Validate that the provided workspaceId matches the document's actual workspace
+			if (document.workspaceId !== workspaceId) {
+				throw new Error(
+					`Workspace mismatch: Document ${documentId} belongs to workspace ${document.workspaceId}.`
+				);
 			}
 
 			// 2. Get content from Yorkie
@@ -88,7 +95,7 @@ export class IndexingService {
 				// Build payload, excluding undefined values
 				const payload = {
 					documentId,
-					workspaceId,
+					workspaceId: document.workspaceId,
 					chunkIndex: index,
 					content: chunk.content,
 					contentHash: this.hashContent(chunk.content),
