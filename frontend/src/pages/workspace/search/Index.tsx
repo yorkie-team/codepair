@@ -79,6 +79,9 @@ export function RagSearchPage() {
 						case "chunk":
 							setAnswer((prev) => prev + chunk.data);
 							break;
+						case "answer":
+							setAnswer(chunk.data);
+							break;
 						case "done":
 							setTimings(chunk.data.timings);
 							setIsLoading(false);

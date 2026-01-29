@@ -173,6 +173,11 @@ ${sectionInfo}${result.chunk.content}`;
 					type: "answer",
 					data: "I couldn't find any relevant information in the workspace to answer your question.",
 				}) + "\n";
+				timings.totalLatencyMs = Date.now() - startTime;
+				yield JSON.stringify({
+					type: "done",
+					data: { timings },
+				}) + "\n";
 				return;
 			}
 
