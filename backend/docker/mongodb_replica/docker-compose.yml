@@ -1,23 +1,31 @@
 services:
-    # This config is for MongoDB v4
+    # This config is for MongoDB v7.0
     # It's a Replica Set (required for Prisma Client)
     mongo:
         build:
             context: ./
             args:
-                MONGO_VERSION: 4
+                MONGO_VERSION: 7.0
         environment:
             MONGO_REPLICA_HOST: 127.0.0.1
             MONGO_REPLICA_PORT: 27017
-            # Use "mongosh" instead of "mongo" for v5+
-            MONGO_COMMAND: "mongo"
+            # Use "mongosh" for MongoDB v5+
+            MONGO_COMMAND: "mongosh"
         ports:
             - "27017:27017"
         restart: unless-stopped
         healthcheck:
-            # Use "mongosh" instead of "mongo" for v5+
+            # Use "mongosh" for MongoDB v5+
             test:
-                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+                [
+                    "CMD",
+                    "mongosh",
+                    "admin",
+                    "--port",
+                    "27017",
+                    "--eval",
+                    "db.adminCommand('ping').ok",
+                ]
             interval: 5s
             timeout: 2s
             retries: 20

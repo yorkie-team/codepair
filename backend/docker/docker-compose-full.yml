@@ -15,8 +15,7 @@ services:
             JWT_REFRESH_TOKEN_EXPIRATION_TIME: 604800
             FRONTEND_BASE_URL: "http://localhost:5173"
             YORKIE_API_ADDR: "http://yorkie:8080"
-            YORKIE_PROJECT_SECRET_KEY: ""
-            YORKIE_PROJECT_TOKEN: ""
+            YORKIE_PROJECT_SECRET_KEY: "your_yorkie_project_secret_key_here"
             YORKIE_INTELLIGENCE: "ollama:gemma2:2b"
             OLLAMA_HOST_URL: http://yorkie-intelligence:11434
             OPENAI_API_KEY: "your_openai_api_key_here"
@@ -49,23 +48,51 @@ services:
         restart: always
         expose:
             - "11434"
+        healthcheck:
+            test: ["CMD", "ollama", "list"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    init_ollama:
+        image: "ollama/ollama:latest"
+        depends_on:
+            yorkie-intelligence:
+                condition: service_healthy
+        environment:
+            OLLAMA_HOST: "http://yorkie-intelligence:11434"
+        entrypoint: >
+            /bin/sh -c "
+            echo 'Pulling nomic-embed-text model...';
+            ollama pull nomic-embed-text;
+            echo 'Model downloaded successfully';
+            exit 0;
+            "
 
     mongo:
         build:
             context: ./mongodb_replica
             args:
-                MONGO_VERSION: 4
+                MONGO_VERSION: 7.0
         environment:
             MONGO_REPLICA_HOST: "mongo"
             MONGO_REPLICA_PORT: 27017
             MONGO_INITDB_DATABASE: "codepair"
-            MONGO_COMMAND: "mongo"
+            MONGO_COMMAND: "mongosh"
         expose:
             - "27017"
         restart: unless-stopped
         healthcheck:
             test:
-                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+                [
+                    "CMD",
+                    "mongosh",
+                    "admin",
+                    "--port",
+                    "27017",
+                    "--eval",
+                    "db.adminCommand('ping').ok",
+                ]
             interval: 5s
             timeout: 2s
             retries: 20
@@ -97,3 +124,20 @@ services:
             mc mb codepair/default-storage;
             exit 0;
             "
+
+    qdrant:
+        image: qdrant/qdrant:v1.16.2
+        ports:
+            - "6333:6333" # HTTP API
+            - "6334:6334" # gRPC (optional)
+        volumes:
+            - qdrant_data:/qdrant/storage
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "bash", "-c", "echo >/dev/tcp/localhost/6333"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    qdrant_data:

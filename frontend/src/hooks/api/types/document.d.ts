@@ -5,7 +5,6 @@ export class Document {
 	workspaceId: string;
 	yorkieDocumentId: string;
 	title: string;
-	content?: string;
 	createdAt: Date;
 	updatedAt: Date;
 	presences?: Record<

@@ -33,7 +33,6 @@ This repository contains multiple packages/modules that make up our project. Eac
 - **Supported:** **20.x (LTS)**, **22.x (Active LTS)**, **24.x (Current)**
 - **Dropped:** **18.x** (End-of-life)
 
-
 ## Getting Started with Development
 
 ### 1. Set Up GitHub OAuth Key
@@ -107,14 +106,20 @@ We offer two options. Choose the one that best suits your needs:
    pnpm install
    ```
 
-4. Run the Backend application and the Frontend application:
+4. Set up the Yorkie webhook:
+
+   ```bash
+   pnpm setup:webhook
+   ```
+
+5. Run the Backend application and the Frontend application:
 
    ```bash
    pnpm backend start:dev
    pnpm frontend dev
    ```
 
-5. Visit http://localhost:5173 to enjoy your CodePair.
+6. Visit http://localhost:5173 to enjoy your CodePair.
 
 ## Contributing
 
