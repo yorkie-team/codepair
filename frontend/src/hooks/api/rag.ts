@@ -58,6 +58,7 @@ interface Timings {
 type RagStreamChunkData =
 	| { type: "sources"; data: Source[] }
 	| { type: "chunk"; data: string }
+	| { type: "answer"; data: string }
 	| { type: "done"; data: { timings: Timings } }
 	| { type: "error"; data: string };
 

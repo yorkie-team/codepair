@@ -152,6 +152,9 @@ function WorkspaceIndex() {
 						case "chunk":
 							setAiAnswer((prev) => prev + chunk.data);
 							break;
+						case "answer":
+							setAiAnswer(chunk.data);
+							break;
 						case "done":
 							setAiTimings(chunk.data.timings);
 							setIsAiSearching(false);

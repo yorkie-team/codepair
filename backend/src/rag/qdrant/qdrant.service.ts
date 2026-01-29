@@ -130,7 +130,6 @@ export class QdrantService implements OnModuleInit {
 				],
 			},
 			with_payload: true,
-			score_threshold: 0.5, // Minimum similarity threshold
 		});
 
 		return response.map((r) => ({
