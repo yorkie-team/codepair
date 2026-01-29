@@ -7,6 +7,13 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-29
+
+### Added
+
+- Implement RAG system with Qdrant vector database by @kokodak in https://github.com/yorkie-team/codepair/pull/580
+- Remove score threshold from vector search by @kokodak in https://github.com/yorkie-team/codepair/pull/581
+
 ## [0.1.49] - 2026-01-23
 
 ### Added
