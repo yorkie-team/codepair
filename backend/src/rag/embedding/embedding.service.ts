@@ -38,6 +38,32 @@ export class EmbeddingService {
 					modelName: config.model,
 				});
 				this.embeddingModel = config.model;
+			} else if (provider === "openai-compat") {
+				// For OpenAI-compatible providers, use configuration from environment variables
+				const baseURL = this.configService.get("OPENAI_COMPAT_BASE_URL");
+				const apiKey = this.configService.get("OPENAI_COMPAT_API_KEY");
+				const embeddingModel = this.configService.get("OPENAI_COMPAT_EMBEDDING_MODEL");
+
+				if (!baseURL) {
+					throw new Error(
+						"OPENAI_COMPAT_BASE_URL is required for openai-compat provider"
+					);
+				}
+
+				if (!embeddingModel) {
+					throw new Error(
+						"OPENAI_COMPAT_EMBEDDING_MODEL is required for openai-compat provider"
+					);
+				}
+
+				this.embeddings = new OpenAIEmbeddings({
+					modelName: embeddingModel,
+					...(apiKey && { apiKey }),
+					configuration: {
+						baseURL,
+					},
+				});
+				this.embeddingModel = embeddingModel;
 			} else {
 				throw new Error(`Unsupported provider: ${provider}`);
 			}
