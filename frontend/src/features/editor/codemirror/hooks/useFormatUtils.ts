@@ -4,7 +4,7 @@ import { EditorView } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
-import { selectEditor } from "../store/editorSlice";
+import { selectEditor } from "../../store/editorSlice";
 import { Vim } from "@replit/codemirror-vim";
 
 export interface ToolBarState {

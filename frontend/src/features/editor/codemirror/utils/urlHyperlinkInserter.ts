@@ -1,6 +1,6 @@
 import { EditorView } from "codemirror";
 import validator from "validator";
-import { CodePairDocType } from "../store/editorSlice";
+import { CodePairDocType } from "../../store/editorSlice";
 
 const isValidUrl = (url: string) => {
 	return validator.isURL(url);

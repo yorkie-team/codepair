@@ -2,8 +2,8 @@ import { CircularProgress, Stack, Snackbar, Alert } from "@mui/material";
 import "katex/dist/katex.min.css";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useCurrentTheme } from "../../../hooks/useCurrentTheme";
-import { selectEditor } from "../store/editorSlice";
+import { useCurrentTheme } from "../../../../hooks/useCurrentTheme";
+import { selectEditor } from "../../store/editorSlice";
 import MarkdownIt from "markdown-it";
 import { toHtml } from "hast-util-to-html";
 import markdownItKatex from "@vscode/markdown-it-katex";
@@ -17,7 +17,7 @@ import * as IncrementalDOM from "incremental-dom";
 import "./editor.css";
 import "./preview.css";
 import _ from "lodash";
-import { addSoftLineBreak } from "../../../features/document";
+import { addSoftLineBreak } from "../../../../features/document";
 
 const DELAY = 500;
 
