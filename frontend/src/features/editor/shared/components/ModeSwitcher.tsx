@@ -8,9 +8,9 @@ import {
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { EditorModeType, selectEditor, setMode } from "../store/editorSlice";
-import { ShareRole } from "../../document";
-import { useCurrentTheme } from "../../../hooks/useCurrentTheme";
+import { EditorModeType, selectEditor, setMode } from "../../store/editorSlice";
+import { ShareRole } from "../../../document";
+import { useCurrentTheme } from "../../../../hooks/useCurrentTheme";
 
 const ModeSwitcher = () => {
 	const dispatch = useDispatch();

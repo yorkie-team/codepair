@@ -3,10 +3,10 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { selectConfig } from "../../../features/settings";
-import { EditorModeType, selectEditor } from "../store/editorSlice";
-import Editor from "./Editor";
-import Preview from "./Preview";
+import { selectConfig } from "../../../../features/settings";
+import { EditorModeType, selectEditor } from "../../store/editorSlice";
+import Editor from "../../codemirror/components/Editor";
+import Preview from "../../codemirror/components/Preview";
 import ModeSwitcher from "./ModeSwitcher";
 
 function DocumentView() {
