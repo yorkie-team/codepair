@@ -3,7 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { EditorView } from "codemirror";
 import * as yorkie from "@yorkie-js/sdk";
 import { ShareRole } from "../../document";
-import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import {
+	YorkieCodeMirrorDocType,
+	YorkieCodeMirrorPresenceType,
+} from "../codemirror/utils/yorkie/yorkieSync";
 import { RootState } from "../../../store/store";
 
 export enum EditorModeType {
