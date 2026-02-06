@@ -1,14 +1,10 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import HistoryIcon from "@mui/icons-material/History";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
 	AppBar,
 	Box,
-	Button,
 	IconButton,
-	Menu,
-	MenuItem,
 	Stack,
 	Toolbar,
 	Tooltip,
@@ -26,7 +22,6 @@ import { DRAWER_WIDTH } from "../../constants/layout";
 import { EditorModeType, selectEditor, setMode } from "../../features/editor";
 import { selectWorkspace } from "../../features/workspace";
 import { ShareRole } from "../../features/document";
-import { selectConfig, setEditorVersion, EditorVersion } from "../../features/settings";
 import DownloadMenu from "../common/DownloadMenu";
 import ShareButton from "../common/ShareButton";
 import DocumentPopover from "../popovers/DocumentPopover";
@@ -39,7 +34,6 @@ function DocumentHeader() {
 	const editorState = useSelector(selectEditor);
 	const workspaceState = useSelector(selectWorkspace);
 	const documentStore = useSelector(selectDocument);
-	const configState = useSelector(selectConfig);
 	const { presenceList } = useUserPresence(editorState.doc);
 	const { mutateAsync: updateDocumentTitle } = useUpdateDocumentTitleMutation(
 		workspaceState.data?.id || "",
@@ -48,7 +42,6 @@ function DocumentHeader() {
 	const isEditingDisabled = Boolean(editorState.shareRole);
 	const { enqueueSnackbar } = useSnackbar();
 	const [moreButtonAnchorEl, setMoreButtonAnchorEl] = useState<HTMLButtonElement | null>(null);
-	const [editorMenuAnchorEl, setEditorMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const [revisionPanelOpen, setRevisionPanelOpen] = useState(false);
 	const isWideEnough = useMediaQuery(`(min-width:${DRAWER_WIDTH + 512}px)`);
 	{
@@ -97,29 +90,6 @@ function DocumentHeader() {
 
 	const handleDocumentMenuClose = () => {
 		setMoreButtonAnchorEl(null);
-	};
-
-	const handleEditorMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setEditorMenuAnchorEl(event.currentTarget);
-	};
-
-	const handleEditorMenuClose = () => {
-		setEditorMenuAnchorEl(null);
-	};
-
-	const handleEditorVersionChange = (version: EditorVersion) => {
-		dispatch(setEditorVersion(version));
-		handleEditorMenuClose();
-	};
-
-	/**
-	 * Editor version display labels.
-	 * When adding a new editor, add its display label here.
-	 */
-	const editorVersionLabels: Record<EditorVersion, string> = {
-		[EditorVersion.CODEMIRROR]: "CodeMirror",
-		// Add more editor labels here when implementing new editors:
-		// [EditorVersion.MONACO]: "Monaco",
 	};
 
 	return (
@@ -197,39 +167,6 @@ function DocumentHeader() {
 						>
 							{/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */}
 							{/* <DropdownTags value={value} onChange={setValue} /> */}
-
-							{/* Editor Version Selector */}
-							<Box sx={{ display: { xs: "none", md: "block" } }}>
-								<Tooltip title="Select Editor">
-									<Button
-										color="inherit"
-										onClick={handleEditorMenuOpen}
-										endIcon={<KeyboardArrowDownIcon />}
-										sx={{
-											textTransform: "none",
-											bgcolor: "background.paper",
-											"&:hover": { bgcolor: "action.hover" },
-										}}
-									>
-										{editorVersionLabels[configState.editorVersion]}
-									</Button>
-								</Tooltip>
-								<Menu
-									anchorEl={editorMenuAnchorEl}
-									open={Boolean(editorMenuAnchorEl)}
-									onClose={handleEditorMenuClose}
-								>
-									{Object.values(EditorVersion).map((version) => (
-										<MenuItem
-											key={version}
-											selected={version === configState.editorVersion}
-											onClick={() => handleEditorVersionChange(version)}
-										>
-											{editorVersionLabels[version]}
-										</MenuItem>
-									))}
-								</Menu>
-							</Box>
 
 							<Box sx={{ display: { xs: "none", sm: "block" } }}>
 								<UserPresenceList presenceList={presenceList} />

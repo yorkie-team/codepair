@@ -5,12 +5,10 @@ export {
 	setDrawerOpen,
 	setCodeKeyType,
 	setDisableScrollSync,
-	setEditorVersion,
 	selectConfig,
 	configSlice,
 	ThemeType,
 	CodeKeyType,
-	EditorVersion,
 } from "./store/configSlice";
 export type { ConfigState } from "./store/configSlice";
 
