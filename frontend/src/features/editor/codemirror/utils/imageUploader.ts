@@ -1,5 +1,5 @@
 import { EditorView } from "codemirror";
-import { CodePairDocType } from "../store/editorSlice";
+import { CodePairDocType } from "../../store/editorSlice";
 
 export type UploadCallback = (file: File) => Promise<string>;
 

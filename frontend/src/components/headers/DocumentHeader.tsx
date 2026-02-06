@@ -167,6 +167,7 @@ function DocumentHeader() {
 						>
 							{/* TODO(yeonthusiast): When the tagging is implemented, uncomment the following code */}
 							{/* <DropdownTags value={value} onChange={setValue} /> */}
+
 							<Box sx={{ display: { xs: "none", sm: "block" } }}>
 								<UserPresenceList presenceList={presenceList} />
 							</Box>

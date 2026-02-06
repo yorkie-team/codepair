@@ -28,8 +28,8 @@ import markdownItImageLazyLoading from "markdown-it-image-lazy-loading";
 import mila from "markdown-it-link-attributes";
 import * as IncrementalDOM from "incremental-dom";
 import "katex/dist/katex.min.css";
-import "./editor.css";
-import "./preview.css";
+import "../codemirror/components/editor.css";
+import "../codemirror/components/preview.css";
 import { addSoftLineBreak } from "../../../features/document";
 
 interface PreviewRevisionDialogProps {

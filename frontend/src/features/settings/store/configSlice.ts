@@ -54,7 +54,7 @@ export const selectConfig = (state: RootState) => state.config;
 /**
  * Handles global application settings.
  *
- *  * This slice handles:
+ * This slice handles:
  * - `theme`: The application theme (default, dark, or light).
  * - `drawerOpen`: Whether the application drawer (sidebar) is open.
  * - `codeKey`: The preferred keybinding type for code editing (Sublime, Vim, etc.).

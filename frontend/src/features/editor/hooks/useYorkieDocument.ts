@@ -6,7 +6,10 @@ import { useSearchParams } from "react-router-dom";
 import * as yorkie from "@yorkie-js/sdk";
 import { selectAuth } from "../../auth";
 import { CodePairDocType } from "../store/editorSlice";
-import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "../utils/yorkie/yorkieSync";
+import {
+	YorkieCodeMirrorDocType,
+	YorkieCodeMirrorPresenceType,
+} from "../codemirror/utils/yorkie/yorkieSync";
 import { useRefreshTokenMutation } from "../../../hooks/api/user";
 import { selectUser } from "../../../features/user";
 
