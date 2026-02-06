@@ -3,16 +3,49 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { useSelector } from "react-redux";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { selectConfig } from "../../../../features/settings";
+import { selectConfig, EditorVersion } from "../../../../features/settings";
 import { EditorModeType, selectEditor } from "../../store/editorSlice";
-import Editor from "../../codemirror/components/Editor";
-import Preview from "../../codemirror/components/Preview";
 import ModeSwitcher from "./ModeSwitcher";
+
+// CodeMirror editor components
+import CodeMirrorEditor from "../../codemirror/components/Editor";
+import CodeMirrorPreview from "../../codemirror/components/Preview";
+
+/**
+ * Editor component mapping by version.
+ *
+ * This architecture supports multiple editor implementations.
+ * To add a new editor:
+ * 1. Create Editor and Preview components in a new directory (e.g., features/editor/monaco/)
+ * 2. Import them here
+ * 3. Add entries to EDITOR_COMPONENTS and PREVIEW_COMPONENTS maps
+ * 4. Add the corresponding EditorVersion enum value in configSlice.ts
+ *
+ * Each editor implementation should:
+ * - Accept a `width` prop for the Editor component
+ * - Handle Yorkie document synchronization internally
+ * - Follow the same component interface pattern
+ */
+const EDITOR_COMPONENTS: Record<EditorVersion, React.ComponentType<{ width: number | string }>> = {
+	[EditorVersion.CODEMIRROR]: CodeMirrorEditor,
+	// Add more editors here:
+	// [EditorVersion.MONACO]: MonacoEditor,
+};
+
+const PREVIEW_COMPONENTS: Record<EditorVersion, React.ComponentType> = {
+	[EditorVersion.CODEMIRROR]: CodeMirrorPreview,
+	// Add more previews here:
+	// [EditorVersion.MONACO]: MonacoPreview,
+};
 
 function DocumentView() {
 	const editorStore = useSelector(selectEditor);
 	const windowWidth = useWindowWidth();
 	const configStore = useSelector(selectConfig);
+
+	// Select editor components based on current editor version
+	const Editor = EDITOR_COMPONENTS[configStore.editorVersion];
+	const Preview = PREVIEW_COMPONENTS[configStore.editorVersion];
 
 	if (!editorStore.doc || !editorStore.client)
 		return (
