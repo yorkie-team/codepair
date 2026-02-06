@@ -14,7 +14,7 @@ The primary goal of this architecture is to **make implementation swappable**.
 
 Each feature encapsulates its implementation details behind a clean public API (`index.ts`). This means:
 
-- **Editor replacement**: The `editor` feature currently uses CodeMirror, but if we need to switch to Monaco, ProseMirror, or any other editor, we only need to modify files inside `features/editor/`. The rest of the application only imports from `@/features/editor` and doesn't know or care about CodeMirror internals.
+- **Editor replacement**: The `editor` feature separates CodeMirror-specific code (`codemirror/`) from editor-agnostic shared components (`shared/`). This means adding a new editor (e.g., ProseMirror, ProseMirror) only requires creating a new subdirectory alongside `codemirror/` and wiring it into `DocumentView` — shared components like `ModeSwitcher` and `EditorBottomBar` can be reused as-is. The rest of the application only imports from `@/features/editor` and doesn't know or care about which editor is used internally.
 
 - **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
 
@@ -48,12 +48,24 @@ Each feature encapsulates its implementation details behind a clean public API (
 
 If we decide to replace CodeMirror with a different editor:
 
-| Without modular architecture                                                   | With modular architecture                    |
-| ------------------------------------------------------------------------------ | -------------------------------------------- |
-| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `features/editor/` |
-| Update 15+ files in different directories                                      | Update files in one directory                |
-| Risk breaking unrelated features                                               | Changes isolated to editor feature           |
-| Hard to test incrementally                                                     | Can test editor feature in isolation         |
+| Without modular architecture                                                   | With modular architecture                                        |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `features/editor/codemirror/`          |
+| Update 15+ files in different directories                                      | Replace one subdirectory, shared components remain untouched     |
+| Risk breaking unrelated features                                               | Changes isolated to editor feature                               |
+| Hard to test incrementally                                                     | Can test editor feature in isolation                             |
+
+For example, to add a ProseMirror editor:
+```
+features/editor/
+├── codemirror/       # Existing CodeMirror implementation
+├── prosemirror/           # New — same structure as codemirror/
+│   ├── components/
+│   ├── hooks/
+│   └── utils/
+├── shared/           # Reused by both editors
+└── index.ts          # Switch which editor to export
+```
 
 This is the core value: **features are replaceable units** with stable interfaces.
 
@@ -114,10 +126,15 @@ src/
 │   │   ├── store/
 │   │   └── index.ts
 │   ├── editor/                  # Editor feature (largest)
-│   │   ├── components/
-│   │   ├── hooks/
+│   │   ├── codemirror/          # CodeMirror-specific implementation
+│   │   │   ├── components/      #   Editor, Preview, ToolBar
+│   │   │   ├── hooks/           #   useFormatUtils, useToolBar, useSpeechToText
+│   │   │   └── utils/           #   imageUploader, yorkie sync, etc.
+│   │   ├── shared/              # Editor-agnostic shared components
+│   │   │   └── components/      #   DocumentView, ModeSwitcher, EditorBottomBar
+│   │   ├── components/          # Revision-related components
+│   │   ├── hooks/               # useYorkieDocument, useYorkieRevisions, useUserPresence
 │   │   ├── store/
-│   │   ├── utils/
 │   │   └── index.ts
 │   ├── document/                # Document management & sharing
 │   ├── intelligence/            # AI features
@@ -176,10 +193,10 @@ features/<feature-name>/
 | Feature        | Description                    | Main Contents                                       |
 | -------------- | ------------------------------ | --------------------------------------------------- |
 | `auth`         | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute |
-| `editor`       | Core markdown editor           | Editor, Preview, ToolBar, Yorkie integration        |
+| `editor`       | Core markdown editor           | CodeMirror (Editor, Preview, ToolBar), shared (DocumentView, ModeSwitcher), Yorkie integration, Revisions |
 | `document`     | Document state & utilities     | documentSlice, ShareRole, soft line break utils     |
 | `intelligence` | AI/LLM features                | YorkieIntelligence UI, hooks, CodeMirror extensions |
-| `settings`     | App configuration              | configSlice (theme, vim mode), featureSettingSlice  |
+| `settings`     | App configuration              | configSlice (theme, keybinding, scroll sync), featureSettingSlice |
 | `user`         | User profile                   | userSlice                                           |
 | `workspace`    | Workspace management           | workspaceSlice                                      |
 
