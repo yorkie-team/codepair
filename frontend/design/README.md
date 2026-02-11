@@ -4,6 +4,7 @@
 
 - [Architecture](./architecture.md): Feature-based architecture overview
 - [Redux & React Query Structure](./redux-query.md): The structure of `redux` & `react-query`
+- [EditorPort Interface](./editor-port.md): Editor abstraction layer decoupling external consumers from CodeMirror
 
 ## Maintaining the Document
 

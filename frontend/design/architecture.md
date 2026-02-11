@@ -206,14 +206,14 @@ features/<feature-name>/
 Some features depend on others. Dependencies are **one-way only** (no circular dependencies).
 
 ```
-intelligence ──▶ editor    (uses doc, cmView for AI content insertion)
+intelligence ──▶ editor    (uses doc, EditorPort for AI content insertion)
 intelligence ──▶ document  (uses addSoftLineBreak)
 intelligence ──▶ settings  (uses selectFeatureSetting for feature flags)
 editor ──▶ document        (uses ShareRole type)
 editor ──▶ intelligence    (uses intelligencePivot extension)
 ```
 
-> **Note**: `editor` owns the Yorkie `doc` and `client` instances. The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
+> **Note**: `editor` owns the Yorkie `doc`, `client`, and `editorPort` (an [`EditorPort`](./editor-port.md) instance). The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
 
 ## Decision Guide: Feature vs Shared
 

@@ -108,10 +108,10 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 	};
 
 	const handleAddContent = (replace: boolean = false) => {
-		if (!editorStore.cmView) return;
-		const selection = editorStore.cmView.state.selection.main;
-		let from = Math.min(selection.to, selection.from);
-		const to = Math.max(selection.to, selection.from);
+		if (!editorStore.editorPort) return;
+		const selection = editorStore.editorPort.getSelection();
+		let from = selection.from;
+		const to = selection.to;
 		let insert = data as string;
 
 		if (!replace) {
@@ -122,18 +122,9 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 		const selectionFrom = replace ? from : from + 1;
 		const selectionTo = from + insert.length;
 
-		editorStore.doc?.update((root, presence) => {
-			root.content.edit(from, to, insert);
-			presence.set({
-				selection: root.content.indexRangeToPosRange([selectionFrom, selectionTo]),
-			});
-		});
-		editorStore.cmView?.dispatch({
-			changes: { from, to, insert },
-			selection: {
-				anchor: selectionFrom,
-				head: selectionTo,
-			},
+		editorStore.editorPort.replaceRange(from, to, insert, {
+			anchor: selectionFrom,
+			head: selectionTo,
 		});
 		onClose();
 	};

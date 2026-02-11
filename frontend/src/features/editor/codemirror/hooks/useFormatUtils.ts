@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../../store/editorSlice";
 import { Vim } from "@replit/codemirror-vim";
+import { CMEditorAdapter } from "../CMEditorAdapter";
 
 export interface ToolBarState {
 	show: boolean;
@@ -21,7 +22,7 @@ export enum FormatType {
 }
 
 export const useFormatUtils = () => {
-	const { cmView, doc } = useSelector(selectEditor);
+	const { editorPort, doc } = useSelector(selectEditor);
 
 	const getFormatMarker = useCallback((formatType: FormatType) => {
 		switch (formatType) {
@@ -165,7 +166,7 @@ export const useFormatUtils = () => {
 			onChangeToolBarState: Dispatch<SetStateAction<ToolBarState>>
 		) => {
 			return (_event: MouseEvent<HTMLElement>, format: FormatType) => {
-				if (!cmView) return;
+				if (!editorPort) return;
 
 				const newSelectedFormats = new Set(selectedFormats);
 				if (newSelectedFormats.has(format)) {
@@ -177,10 +178,10 @@ export const useFormatUtils = () => {
 					...prev,
 					selectedFormats: newSelectedFormats,
 				}));
-				applyFormat(format)(cmView);
+				applyFormat(format)((editorPort as CMEditorAdapter).view);
 			};
 		},
-		[cmView, applyFormat]
+		[editorPort, applyFormat]
 	);
 
 	const checkAndAddFormat = useCallback(

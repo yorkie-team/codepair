@@ -68,10 +68,10 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 	}, []);
 
 	useEffect(() => {
-		if (!recognitionRef.current || !editorStore.cmView || !editorStore.doc) return;
+		if (!recognitionRef.current || !editorStore.editorPort) return;
 
 		recognitionRef.current.onresult = (event) => {
-			if (!editorStore.cmView) return;
+			if (!editorStore.editorPort) return;
 
 			let interimTranscript = "";
 			let finalTranscript = "";
@@ -88,21 +88,12 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 			if (finalTranscript) {
 				finalTranscriptRef.current = finalTranscript;
 
-				const cursor = editorStore.cmView.state.selection.main;
-				const from = cursor.from;
-				const to = cursor.to;
+				const { from, to } = editorStore.editorPort.getSelection();
 				const newCursorPos = from + finalTranscript.length;
 
-				editorStore.doc?.update((root, presence) => {
-					root.content.edit(from, to, finalTranscript);
-					presence.set({
-						selection: root.content.indexRangeToPosRange([newCursorPos, newCursorPos]),
-					});
-				});
-
-				editorStore.cmView?.dispatch({
-					changes: { from, to, insert: finalTranscript },
-					selection: { anchor: newCursorPos, head: newCursorPos },
+				editorStore.editorPort.replaceRange(from, to, finalTranscript, {
+					anchor: newCursorPos,
+					head: newCursorPos,
 				});
 			}
 
@@ -119,7 +110,7 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 			setInterimTranscript("");
 			finalTranscriptRef.current = "";
 		};
-	}, [editorStore.cmView, editorStore.doc]);
+	}, [editorStore.editorPort]);
 
 	const toggleListening = useCallback(() => {
 		if (!recognitionRef.current) {

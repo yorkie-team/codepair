@@ -22,8 +22,8 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 
 	const width = useMemo(
-		() => editorStore.cmView!.contentDOM.getBoundingClientRect().width - 12,
-		[editorStore.cmView]
+		() => editorStore.editorPort!.getContentWidth() - 12,
+		[editorStore.editorPort]
 	);
 
 	useEffect(() => {

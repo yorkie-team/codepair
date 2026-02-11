@@ -13,7 +13,8 @@ import { useCurrentTheme } from "../../../../hooks/useCurrentTheme";
 import { useFormatUtils } from "../hooks/useFormatUtils";
 import { useToolBar } from "../hooks/useToolBar";
 import { CodeKeyType, selectConfig, selectFeatureSetting } from "../../../../features/settings";
-import { selectEditor, setCmView } from "../../store/editorSlice";
+import { selectEditor, setEditorPort } from "../../store/editorSlice";
+import { CMEditorAdapter } from "../CMEditorAdapter";
 import { selectWorkspace } from "../../../../features/workspace";
 import { imageUploader } from "../utils/imageUploader";
 import { intelligencePivot } from "../../../../features/intelligence";
@@ -107,7 +108,8 @@ function Editor(props: EditorProps) {
 		});
 
 		const view = new EditorView({ state, parent: element });
-		dispatch(setCmView(view));
+		const adapter = new CMEditorAdapter(view);
+		dispatch(setEditorPort(adapter));
 
 		return () => {
 			view?.destroy();

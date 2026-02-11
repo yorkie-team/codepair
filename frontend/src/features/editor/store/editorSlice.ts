@@ -1,6 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import { EditorView } from "codemirror";
 import * as yorkie from "@yorkie-js/sdk";
 import { ShareRole } from "../../document";
 import {
@@ -8,6 +7,7 @@ import {
 	YorkieCodeMirrorPresenceType,
 } from "../codemirror/utils/yorkie/yorkieSync";
 import { RootState } from "../../../store/store";
+import { EditorPort } from "../port/EditorPort";
 
 export enum EditorModeType {
 	EDIT = "edit",
@@ -25,7 +25,7 @@ export interface EditorState {
 	shareRole: ShareRole | null;
 	doc: CodePairDocType | null;
 	client: yorkie.Client | null;
-	cmView: EditorView | null;
+	editorPort: EditorPort | null;
 }
 
 const initialState: EditorState = {
@@ -33,7 +33,7 @@ const initialState: EditorState = {
 	shareRole: null,
 	doc: null,
 	client: null,
-	cmView: null,
+	editorPort: null,
 };
 
 export const editorSlice = createSlice({
@@ -52,13 +52,13 @@ export const editorSlice = createSlice({
 		setClient: (state, action: PayloadAction<yorkie.Client | null>) => {
 			state.client = action.payload;
 		},
-		setCmView: (state, action: PayloadAction<EditorView | null>) => {
-			Object.assign(state, { cmView: action.payload });
+		setEditorPort: (state, action: PayloadAction<EditorPort | null>) => {
+			Object.assign(state, { editorPort: action.payload });
 		},
 	},
 });
 
-export const { setMode, setShareRole, setDoc, setClient, setCmView } = editorSlice.actions;
+export const { setMode, setShareRole, setDoc, setClient, setEditorPort } = editorSlice.actions;
 
 export const selectEditor = (state: RootState) => state.editor;
 
@@ -70,7 +70,7 @@ export const selectEditor = (state: RootState) => state.editor;
  * - `shareRole`: The user's role in the session (e.g., viewer, editor).
  * - `doc`: The Yorkie document for real-time collaboration.
  * - `client`: The Yorkie client for syncing data with the server.
- * - `cmView`: The CodeMirror editor instance.
+ * - `editorPort`: The editor instance (behind the EditorPort interface).
  */
 const reducer = editorSlice.reducer;
 

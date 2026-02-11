@@ -6,11 +6,12 @@ export {
 	setShareRole,
 	setDoc,
 	setClient,
-	setCmView,
+	setEditorPort,
 	editorSlice,
 	EditorModeType,
 } from "./store/editorSlice";
 export type { EditorState, CodePairDocType } from "./store/editorSlice";
+export type { EditorPort } from "./port/EditorPort";
 
 // Shared components
 export { default as DocumentView } from "./shared/components/DocumentView";

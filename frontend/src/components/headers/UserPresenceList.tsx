@@ -9,7 +9,6 @@ import {
 	Tooltip,
 	Typography,
 } from "@mui/material";
-import { EditorView } from "codemirror";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Presence } from "../../features/editor/hooks/useUserPresence";
@@ -37,11 +36,7 @@ function UserPresenceList(props: UserPresenceListProps) {
 		const cursor = presence.presence.cursor;
 		if (cursor === null) return;
 
-		editorStore.cmView?.dispatch({
-			effects: EditorView.scrollIntoView(cursor[0], {
-				y: "center",
-			}),
-		});
+		editorStore.editorPort?.scrollIntoView(cursor[0]);
 	};
 
 	const MAX_VISIBLE_AVATARS = 4;
