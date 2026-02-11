@@ -83,13 +83,21 @@ services:
             MONGO_REPLICA_HOST: "mongo"
             MONGO_REPLICA_PORT: 27017
             MONGO_INITDB_DATABASE: "codepair"
-            MONGO_COMMAND: "mongo"
+            MONGO_COMMAND: "mongosh"
         expose:
             - "27017"
         restart: unless-stopped
         healthcheck:
             test:
-                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
+                [
+                    "CMD",
+                    "mongosh",
+                    "admin",
+                    "--port",
+                    "27017",
+                    "--eval",
+                    "db.adminCommand('ping').ok",
+                ]
             interval: 5s
             timeout: 2s
             retries: 20
