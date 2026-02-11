@@ -31,7 +31,7 @@ A full abstraction covering formatting, extensions, and document lifecycle was c
 ## Interface
 
 ```
-features/editor/port/EditorPort.ts
+packages/ui/src/types/EditorPort.ts
 ```
 
 ```typescript
@@ -58,7 +58,7 @@ export interface EditorPort {
 ## Adapter
 
 ```
-features/editor/codemirror/CMEditorAdapter.ts
+packages/codemirror/src/CMEditorAdapter.ts
 ```
 
 The `CMEditorAdapter` implements `EditorPort` and wraps an `EditorView`:
@@ -96,20 +96,22 @@ This works because `CMEditorAdapter.replaceRange()` annotates the transaction wi
 ## File Structure
 
 ```
-features/editor/
-├── port/
-│   └── EditorPort.ts          # Editor-agnostic interface
-├── codemirror/
-│   ├── CMEditorAdapter.ts     # CodeMirror implementation of EditorPort
-│   ├── components/
-│   │   └── Editor.tsx         # Creates adapter, dispatches setEditorPort
-│   ├── hooks/
-│   │   ├── useFormatUtils.ts  # Casts to CMEditorAdapter for CM-specific ops
-│   │   └── useSpeechToText.ts # Uses EditorPort (no more dual-write)
-│   └── utils/
+packages/ui/src/types/
+└── EditorPort.ts                  # Editor-agnostic interface
+
+packages/codemirror/src/
+├── CMEditorAdapter.ts             # CodeMirror implementation of EditorPort
+├── components/
+│   └── Editor.tsx                 # Creates adapter, dispatches setEditorPort
+├── hooks/
+│   ├── useFormatUtils.ts          # Casts to CMEditorAdapter for CM-specific ops
+│   └── useSpeechToText.ts         # Uses EditorPort (no more dual-write)
+└── utils/
+
+packages/frontend/src/features/editor/
 ├── store/
-│   └── editorSlice.ts         # Stores EditorPort (not EditorView)
-└── index.ts                   # Exports setEditorPort, EditorPort type
+│   └── editorSlice.ts             # Stores EditorPort (not EditorView)
+└── index.ts                       # Exports setEditorPort, EditorPort type
 ```
 
 ## Redux State Change

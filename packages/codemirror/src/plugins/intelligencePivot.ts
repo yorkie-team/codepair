@@ -22,7 +22,7 @@ class IntelligencePivotWidget extends cmView.WidgetType {
 		return dom.element("span", [
 			pair.create("id", this.id),
 			pair.create("content", this.content),
-			pair.create("style", `position: relaitve;`),
+			pair.create("style", `position: relative;`),
 		]) as HTMLElement;
 	}
 

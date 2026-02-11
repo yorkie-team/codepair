@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useMemo, useState, useRef } from "react";
 import type { EditorPort } from "@codepair/ui";
 import { EditorModeType } from "@codepair/ui";
 import { CMEditorContext, CMEditorContextValue } from "./CMEditorContext";
@@ -50,19 +50,34 @@ function CMEditorSuite({
 		onEditorPortChangeRef.current?.(port);
 	}, []);
 
-	const ctxValue: CMEditorContextValue = {
-		doc,
-		client,
-		editorPort,
-		setEditorPort,
-		themeMode,
-		codeKey,
-		setCodeKey: onCodeKeyChange,
-		fileUploadEnabled,
-		handleUploadImage,
-		intelligenceEnabled,
-		width,
-	};
+	const ctxValue: CMEditorContextValue = useMemo(
+		() => ({
+			doc,
+			client,
+			editorPort,
+			setEditorPort,
+			themeMode,
+			codeKey,
+			setCodeKey: onCodeKeyChange,
+			fileUploadEnabled,
+			handleUploadImage,
+			intelligenceEnabled,
+			width,
+		}),
+		[
+			doc,
+			client,
+			editorPort,
+			setEditorPort,
+			themeMode,
+			codeKey,
+			onCodeKeyChange,
+			fileUploadEnabled,
+			handleUploadImage,
+			intelligenceEnabled,
+			width,
+		]
+	);
 
 	const windowWidth = typeof width === "number" ? width : 800;
 
@@ -99,9 +114,11 @@ function CMEditorSuite({
 									{...separatorProps}
 									onMouseDown={() => {
 										document.body.style.userSelect = "none";
-									}}
-									onMouseUp={() => {
-										document.body.style.userSelect = "auto";
+										const cleanup = () => {
+											document.body.style.userSelect = "auto";
+											window.removeEventListener("mouseup", cleanup);
+										};
+										window.addEventListener("mouseup", cleanup);
 									}}
 									sx={{
 										height: "100%",

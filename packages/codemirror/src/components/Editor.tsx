@@ -92,6 +92,7 @@ function Editor(props: EditorProps) {
 		setEditorPort(adapter);
 
 		return () => {
+			setEditorPort(null);
 			view?.destroy();
 		};
 	}, [
