@@ -6,13 +6,13 @@ This document describes the `EditorPort` abstraction layer introduced to decoupl
 
 The feature-based architecture documented in [architecture.md](./architecture.md) promises swappable implementations — adding a new editor (e.g., ProseMirror, Monaco) should only require creating a new subdirectory alongside `codemirror/`. In practice, several violations existed:
 
-| Location | Violation |
-| --- | --- |
-| `store/editorSlice.ts` | Stored `EditorView` directly, importing from `"codemirror"` |
+| Location                                                | Violation                                                           |
+| ------------------------------------------------------- | ------------------------------------------------------------------- |
+| `store/editorSlice.ts`                                  | Stored `EditorView` directly, importing from `"codemirror"`         |
 | `intelligence/components/YorkieIntelligenceFeature.tsx` | Called `cmView.dispatch()` and `doc.update()` directly (dual-write) |
-| `intelligence/components/YorkieIntelligenceFooter.tsx` | Accessed `cmView.contentDOM.getBoundingClientRect()` |
-| `components/headers/UserPresenceList.tsx` | Imported `EditorView` from `"codemirror"` for scroll dispatch |
-| `codemirror/hooks/useSpeechToText.ts` | Dual-wrote to both `doc.update()` and `cmView.dispatch()` |
+| `intelligence/components/YorkieIntelligenceFooter.tsx`  | Accessed `cmView.contentDOM.getBoundingClientRect()`                |
+| `components/headers/UserPresenceList.tsx`               | Imported `EditorView` from `"codemirror"` for scroll dispatch       |
+| `codemirror/hooks/useSpeechToText.ts`                   | Dual-wrote to both `doc.update()` and `cmView.dispatch()`           |
 
 These couplings meant that replacing CodeMirror would require changes across features and shared components — exactly what the architecture is designed to prevent.
 
@@ -36,20 +36,24 @@ features/editor/port/EditorPort.ts
 
 ```typescript
 export interface EditorPort {
-  getSelection(): { from: number; to: number };
-  replaceRange(from: number, to: number, insert: string,
-    selection?: { anchor: number; head?: number }): void;
-  scrollIntoView(pos: number): void;
-  getContentWidth(): number;
+	getSelection(): { from: number; to: number };
+	replaceRange(
+		from: number,
+		to: number,
+		insert: string,
+		selection?: { anchor: number; head?: number }
+	): void;
+	scrollIntoView(pos: number): void;
+	getContentWidth(): number;
 }
 ```
 
-| Method | Purpose | Used by |
-| --- | --- | --- |
-| `getSelection()` | Get normalized (from <= to) selection range | Intelligence, Speech-to-text |
-| `replaceRange()` | Replace text range with optional cursor placement | Intelligence, Speech-to-text |
-| `scrollIntoView()` | Scroll editor to a document position | UserPresenceList |
-| `getContentWidth()` | Get editor content area width for UI sizing | Intelligence footer |
+| Method              | Purpose                                           | Used by                      |
+| ------------------- | ------------------------------------------------- | ---------------------------- |
+| `getSelection()`    | Get normalized (from <= to) selection range       | Intelligence, Speech-to-text |
+| `replaceRange()`    | Replace text range with optional cursor placement | Intelligence, Speech-to-text |
+| `scrollIntoView()`  | Scroll editor to a document position              | UserPresenceList             |
+| `getContentWidth()` | Get editor content area width for UI sizing       | Intelligence footer          |
 
 ## Adapter
 
@@ -110,10 +114,10 @@ features/editor/
 
 ## Redux State Change
 
-| Before | After |
-| --- | --- |
+| Before                                    | After                                         |
+| ----------------------------------------- | --------------------------------------------- |
 | `state.editor.cmView: EditorView \| null` | `state.editor.editorPort: EditorPort \| null` |
-| `setCmView` action | `setEditorPort` action |
+| `setCmView` action                        | `setEditorPort` action                        |
 
 The serialization and immutability checks in `store.ts` are updated accordingly.
 
