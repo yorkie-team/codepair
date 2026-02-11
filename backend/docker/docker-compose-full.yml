@@ -28,11 +28,13 @@ services:
             MINIO_ENDPOINT: "http://localhost:9000"
             MINIO_ACCESS_KEY: "minioadmin"
             MINIO_SECRET_KEY: "minioadmin"
+            QDRANT_URL: "http://qdrant:6333"
         ports:
             - "3000:3000"
         depends_on:
             - mongo
             - minio
+            - qdrant
         restart: unless-stopped
 
     yorkie:
