@@ -89,15 +89,7 @@ services:
         restart: unless-stopped
         healthcheck:
             test:
-                [
-                    "CMD",
-                    "mongo",
-                    "admin",
-                    "--port",
-                    "27017",
-                    "--eval",
-                    "db.adminCommand('ping').ok",
-                ]
+                ["CMD", "mongo", "admin", "--port", "27017", "--eval", "db.adminCommand('ping').ok"]
             interval: 5s
             timeout: 2s
             retries: 20
