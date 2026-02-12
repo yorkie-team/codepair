@@ -6,14 +6,14 @@ This project is the backend part of the CodePair service developed using NestJS.
 
 1. Set Up GitHub OAuth Key
 
-    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
+    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
     After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
-2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./backend/.env.development`.
+2. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./packages/backend/.env.development`.
 
     ```bash
-    vi ./backend/.env.development
+    vi ./packages/backend/.env.development
 
     # In the file, update the following values:
     # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
@@ -21,10 +21,10 @@ This project is the backend part of the CodePair service developed using NestJS.
     GITHUB_CLIENT_SECRET=your_github_client_secret_here
     ```
 
-3. Run `.backend/docker/docker-compose.yml`.
+3. Run `./packages/backend/docker/docker-compose.yml`.
 
     ```bash
-    docker-compose -f ./backend/docker/docker-compose.yml up -d
+    docker-compose -f ./packages/backend/docker/docker-compose.yml up -d
     ```
 
 4. Install dependencies from the root.
@@ -127,7 +127,7 @@ OPENAI_COMPAT_BASE_URL="http://localhost:11434/v1"
 ## Directory Structure
 
 ```
-backend/
+packages/backend/
 ├── docker/                               # Docker configuration files
 │   ├── mongodb_replica/                  # Configuration for MongoDB replica set
 │   │   ├── docker-compose.yml            # Docker Compose configuration for MongoDB replica set
@@ -153,5 +153,5 @@ backend/
 
 ## Contributing
 
-Please see the [CONTRIBUTING.md](../CONTRIBUTING.md) file for details on how to contribute to this project.  
+Please see the [CONTRIBUTING.md](../../CONTRIBUTING.md) file for details on how to contribute to this project.  
 If you are interested in internal design, please refer to the [Design Document](./design/).

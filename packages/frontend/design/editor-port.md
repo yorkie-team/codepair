@@ -127,27 +127,26 @@ The serialization and immutability checks in `store.ts` are updated accordingly.
 
 After this change, `"codemirror"` and `"@codemirror"` imports only appear in:
 
-- `features/editor/codemirror/**` — expected, this is the CM implementation
-- `features/intelligence/utils/intelligencePivot.ts` — a CM ViewPlugin (moving it to `codemirror/` is a follow-up)
+- `packages/codemirror/**` — the self-contained CodeMirror package
 
-No other feature, shared component, or page imports from CodeMirror directly.
+No other package, feature, shared component, or page imports from CodeMirror directly. The `intelligencePivot` CM extension has also been moved into `@codepair/codemirror`.
 
 ## Adding a New Editor
 
 To add a new editor (e.g., ProseMirror), you would:
 
-1. Create `features/editor/prosemirror/` with its own components, hooks, and utils
+1. Create `packages/prosemirror/` as a new package with its own components, hooks, and utils
 2. Create `PMEditorAdapter.ts` implementing `EditorPort`
-3. Dispatch `setEditorPort(new PMEditorAdapter(...))` from the ProseMirror editor component
-4. Wire the new editor into `DocumentView` via `index.ts`
+3. Call `onEditorPortChange(new PMEditorAdapter(...))` from the ProseMirror editor component
+4. Wire the new editor into the frontend app shell via `DocumentView`
 
-All external consumers (intelligence, presence, speech-to-text) work unchanged.
+All external consumers (intelligence, presence, speech-to-text) work unchanged. See [`docs/editor-port-architecture.md`](../../../docs/editor-port-architecture.md) for the full step-by-step guide.
 
 ## Out of Scope
 
 The following items are intentionally left for follow-up work:
 
-- **`imageUploader.ts` / `urlHyperlinkInserter.ts`**: CM plugins that receive `view` from CM's event system; they still dual-write internally but are already inside `codemirror/`
-- **`intelligencePivot.ts`**: A CM ViewPlugin currently in `intelligence/`; moving it to `codemirror/` is a separate task
+- **`imageUploader.ts` / `urlHyperlinkInserter.ts`**: CM plugins that receive `view` from CM's event system; they still dual-write internally but are already inside `@codepair/codemirror`
+- ~~**`intelligencePivot.ts`**: Moved to `@codepair/codemirror` — completed~~
+- ~~**Extracting `codemirror/` as an external package**: Completed — now `@codepair/codemirror`~~
 - **Renaming `YorkieCodeMirrorDocType`**: Making the Yorkie document type name editor-agnostic
-- **Extracting `codemirror/` as an external package**: For use in other Yorkie-based projects

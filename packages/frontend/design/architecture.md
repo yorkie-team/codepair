@@ -14,7 +14,7 @@ The primary goal of this architecture is to **make implementation swappable**.
 
 Each feature encapsulates its implementation details behind a clean public API (`index.ts`). This means:
 
-- **Editor replacement**: The `editor` feature separates CodeMirror-specific code (`codemirror/`) from editor-agnostic shared components (`shared/`). This means adding a new editor (e.g., ProseMirror, ProseMirror) only requires creating a new subdirectory alongside `codemirror/` and wiring it into `DocumentView` — shared components like `ModeSwitcher` and `EditorBottomBar` can be reused as-is. The rest of the application only imports from `@/features/editor` and doesn't know or care about which editor is used internally.
+- **Editor replacement**: CodeMirror-specific code has been extracted into a separate `@codepair/codemirror` package (see [`docs/editor-port-architecture.md`](../../../docs/editor-port-architecture.md)). Adding a new editor (e.g., ProseMirror) means creating a new sibling package (`packages/prosemirror/`) that implements the `EditorPort` interface from `@codepair/ui`. The app shell renders editors through the `EditorPort` abstraction — shared components like `ModeSwitcher` work unchanged regardless of which editor is active.
 
 - **AI provider swap**: The `intelligence` feature handles AI/LLM integration. Switching from one AI provider to another only requires changes within `features/intelligence/`.
 
@@ -48,27 +48,29 @@ Each feature encapsulates its implementation details behind a clean public API (
 
 If we decide to replace CodeMirror with a different editor:
 
-| Without modular architecture                                                   | With modular architecture                                    |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `features/editor/codemirror/`      |
-| Update 15+ files in different directories                                      | Replace one subdirectory, shared components remain untouched |
-| Risk breaking unrelated features                                               | Changes isolated to editor feature                           |
-| Hard to test incrementally                                                     | Can test editor feature in isolation                         |
+| Without modular architecture                                                   | With modular architecture                                        |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `packages/codemirror/`                 |
+| Update 15+ files in different directories                                      | Create a new package, shared components remain untouched         |
+| Risk breaking unrelated features                                               | Changes isolated to the new editor package                       |
+| Hard to test incrementally                                                     | Can test editor package in isolation                             |
 
 For example, to add a ProseMirror editor:
 
 ```
-features/editor/
-├── codemirror/       # Existing CodeMirror implementation
-├── prosemirror/           # New — same structure as codemirror/
-│   ├── components/
-│   ├── hooks/
-│   └── utils/
-├── shared/           # Reused by both editors
-└── index.ts          # Switch which editor to export
+packages/
+├── codemirror/       # Existing CodeMirror package (@codepair/codemirror)
+├── prosemirror/      # New editor package (@codepair/prosemirror)
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── PMEditorAdapter.ts   # Implements EditorPort
+│   └── package.json
+├── ui/               # Shared types (EditorPort, EditorModeType)
+└── frontend/         # App shell — renders whichever editor via EditorPort
 ```
 
-This is the core value: **features are replaceable units** with stable interfaces.
+This is the core value: **editor packages are replaceable units** with a stable `EditorPort` interface. See [`docs/editor-port-architecture.md`](../../../docs/editor-port-architecture.md) for the full guide.
 
 ## Before vs After
 
@@ -126,17 +128,15 @@ src/
 │   │   ├── providers/
 │   │   ├── store/
 │   │   └── index.ts
-│   ├── editor/                  # Editor feature (largest)
-│   │   ├── codemirror/          # CodeMirror-specific implementation
-│   │   │   ├── components/      #   Editor, Preview, ToolBar
-│   │   │   ├── hooks/           #   useFormatUtils, useToolBar, useSpeechToText
-│   │   │   └── utils/           #   imageUploader, yorkie sync, etc.
+│   ├── editor/                  # Editor feature
 │   │   ├── shared/              # Editor-agnostic shared components
-│   │   │   └── components/      #   DocumentView, ModeSwitcher, EditorBottomBar
+│   │   │   └── components/      #   DocumentView, ModeSwitcher
 │   │   ├── components/          # Revision-related components
 │   │   ├── hooks/               # useYorkieDocument, useYorkieRevisions, useUserPresence
-│   │   ├── store/
+│   │   ├── store/               #   editorSlice (EditorPort, mode, doc, client)
 │   │   └── index.ts
+│   │   # Note: CodeMirror-specific code (Editor, Preview, ToolBar,
+│   │   # yorkie sync, etc.) now lives in packages/codemirror/
 │   ├── document/                # Document management & sharing
 │   ├── intelligence/            # AI features
 │   ├── settings/                # App settings
@@ -194,7 +194,7 @@ features/<feature-name>/
 | Feature        | Description                    | Main Contents                                                                                             |
 | -------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | `auth`         | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute                                                       |
-| `editor`       | Core markdown editor           | CodeMirror (Editor, Preview, ToolBar), shared (DocumentView, ModeSwitcher), Yorkie integration, Revisions |
+| `editor`       | Core markdown editor           | shared (DocumentView, ModeSwitcher), Yorkie integration, Revisions. CodeMirror code is in `@codepair/codemirror` |
 | `document`     | Document state & utilities     | documentSlice, ShareRole, soft line break utils                                                           |
 | `intelligence` | AI/LLM features                | YorkieIntelligence UI, hooks, CodeMirror extensions                                                       |
 | `settings`     | App configuration              | configSlice (theme, keybinding, scroll sync), featureSettingSlice                                         |
@@ -210,10 +210,9 @@ intelligence ──▶ editor    (uses doc, EditorPort for AI content insertion)
 intelligence ──▶ document  (uses addSoftLineBreak)
 intelligence ──▶ settings  (uses selectFeatureSetting for feature flags)
 editor ──▶ document        (uses ShareRole type)
-editor ──▶ intelligence    (uses intelligencePivot extension)
 ```
 
-> **Note**: `editor` owns the Yorkie `doc`, `client`, and `editorPort` (an [`EditorPort`](./editor-port.md) instance). The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
+> **Note**: `editor` owns the Yorkie `doc`, `client`, and `editorPort` (an [`EditorPort`](./editor-port.md) instance). The `intelligence` feature accesses these through `selectEditor` to insert AI-generated content into the document. The `intelligencePivot` CM extension now lives in `@codepair/codemirror`, and the intelligence UI is injected via the `intelligenceSlot` prop pattern. If collaboration features grow beyond the editor, consider extracting a `collaboration` feature.
 
 ## Decision Guide: Feature vs Shared
 
