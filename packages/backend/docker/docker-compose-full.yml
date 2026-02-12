@@ -38,6 +38,10 @@ services:
                 condition: service_healthy
             qdrant:
                 condition: service_healthy
+            yorkie:
+                condition: service_started
+            yorkie-intelligence:
+                condition: service_healthy
         restart: unless-stopped
 
     yorkie:

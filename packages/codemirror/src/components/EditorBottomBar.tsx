@@ -1,5 +1,5 @@
 import { Button, Menu, MenuItem, Paper } from "@mui/material";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useCMEditorContext } from "../CMEditorContext";
 import { CodeKeyType } from "../types";
 
@@ -15,7 +15,7 @@ function EditorBottomBar(props: EditorBottomBarProps) {
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const open = Boolean(anchorEl);
 
-	const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+	const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
 

@@ -4,8 +4,10 @@ import prettierPlugin from "eslint-plugin-prettier";
 
 export default [
 	{
+		ignores: ["dist/**", "eslint.config.mjs"],
+	},
+	{
 		files: ["**/*.ts", "**/*.tsx"],
-		ignores: ["dist", "eslint.config.mjs"],
 		languageOptions: {
 			parser: typescriptParser,
 			parserOptions: {
