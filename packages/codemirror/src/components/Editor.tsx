@@ -39,7 +39,7 @@ function Editor(props: EditorProps) {
 		handleUploadImage,
 		intelligenceEnabled,
 	} = useCMEditorContext();
-	const { applyFormat, setKeymapConfig, setupVimKeybindings } = useFormatUtils();
+	const { setKeymapConfig, setupVimKeybindings } = useFormatUtils();
 	const { toolBarState, setToolBarState, updateFormatBar } = useToolBar();
 
 	const {
@@ -104,7 +104,6 @@ function Editor(props: EditorProps) {
 		fileUploadEnabled,
 		handleUploadImage,
 		intelligenceEnabled,
-		applyFormat,
 		updateFormatBar,
 		setKeymapConfig,
 		setupVimKeybindings,

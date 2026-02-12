@@ -49,6 +49,12 @@
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0"
 	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"pnpm run lint",
+			"pnpm run format"
+		]
+	},
 	"devDependencies": {
 		"react": "^18.3.1",
 		"@types/react": "^18.3.27",

@@ -22,7 +22,7 @@ function YorkieIntelligenceFooter(props: YorkieIntelligenceFooterProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 
 	const width = useMemo(
-		() => (editorStore.editorPort?.getContentWidth() ?? 0) - 12,
+		() => Math.max((editorStore.editorPort?.getContentWidth() ?? 0) - 12, 0),
 		[editorStore.editorPort]
 	);
 
