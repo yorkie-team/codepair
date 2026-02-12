@@ -1,0 +1,74 @@
+{
+	"name": "@codepair/codemirror",
+	"version": "0.2.0",
+	"type": "module",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
+	"scripts": {
+		"lint": "eslint . --report-unused-disable-directives",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@codepair/ui": "workspace:*",
+		"@codemirror/commands": "6.1.2",
+		"@codemirror/lang-markdown": "^6.5.0",
+		"@codemirror/state": "^6.5.4",
+		"@codemirror/view": "6.23.1",
+		"@replit/codemirror-vim": "^6.3.0",
+		"@uiw/codemirror-extensions-basic-setup": "^4.25.4",
+		"@uiw/codemirror-theme-xcode": "^4.25.4",
+		"@vscode/markdown-it-katex": "^1.1.2",
+		"@yorkie-js/sdk": "0.6.41",
+		"codemirror": "^6.0.2",
+		"codemirror-markdown-commands": "^0.0.3",
+		"codemirror-markdown-slug": "^0.0.3",
+		"codemirror-toolbar": "^0.0.4",
+		"hast-util-to-html": "^9.0.5",
+		"incremental-dom": "^0.6.0",
+		"katex": "^0.16.27",
+		"lib0": "^0.2.117",
+		"lodash": "^4.17.21",
+		"markdown-it": "^14.1.0",
+		"markdown-it-image-lazy-loading": "^2.0.1",
+		"markdown-it-incremental-dom": "^2.1.0",
+		"markdown-it-link-attributes": "^4.0.1",
+		"markdown-it-prism": "^2.3.1",
+		"markdown-it-sanitizer": "^0.4.3",
+		"markdown-it-task-checkbox": "^1.0.6",
+		"refractor": "^4.9.0",
+		"validator": "^13.15.26"
+	},
+	"peerDependencies": {
+		"react": "^18.3.0",
+		"react-resizable-layout": "^0.7.0",
+		"react-scroll-sync": "^0.11.0",
+		"react-use": "^17.6.0",
+		"@mui/material": "^6.5.0",
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0"
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"pnpm run lint",
+			"pnpm run format"
+		]
+	},
+	"devDependencies": {
+		"react": "^18.3.1",
+		"@types/react": "^18.3.27",
+		"@types/incremental-dom": "^0.5.0",
+		"@types/katex": "^0.16.8",
+		"@types/lodash": "^4.17.23",
+		"@types/markdown-it": "^14.1.2",
+		"@types/validator": "^13.15.10",
+		"@mui/material": "^6.5.0",
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0",
+		"react-resizable-layout": "^0.7.3",
+		"react-scroll-sync": "^0.11.3",
+		"react-use": "^17.6.0",
+		"typescript": "^5.9.3"
+	}
+}

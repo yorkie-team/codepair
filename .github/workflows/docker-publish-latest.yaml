@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - ".github/workflows/docker-publish-latest.yaml"
-      - "backend/**"
+      - "packages/backend/**"
       - "Dockerfile"
 jobs:
   call-base-docker-publish:
