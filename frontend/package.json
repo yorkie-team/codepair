@@ -40,7 +40,7 @@
 		"@uiw/codemirror-theme-xcode": "^4.25.4",
 		"@uiw/react-markdown-preview": "^5.1.5",
 		"@vscode/markdown-it-katex": "^1.1.2",
-		"@yorkie-js/sdk": "0.6.41",
+		"@yorkie-js/sdk": "0.6.48",
 		"axios": "^1.13.2",
 		"browser-image-resizer": "^2.4.1",
 		"clipboardy": "^4.0.0",
