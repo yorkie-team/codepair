@@ -1,29 +1,20 @@
 import { useCallback, useMemo, useState, useRef } from "react";
-import type { EditorPort } from "@codepair/ui";
-import { EditorModeType } from "@codepair/ui";
+import type { EditorPort, EditorSuiteProps } from "@codepair/ui";
+import { EditorModeType, CodeKeyType } from "@codepair/ui";
 import { CMEditorContext, CMEditorContextValue } from "./CMEditorContext";
 import type { CodePairDocType } from "./types";
-import { CodeKeyType } from "./types";
 import Editor from "./components/Editor";
 import Preview from "./components/Preview";
 import { Box, Paper } from "@mui/material";
 import Resizable from "react-resizable-layout";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
-export interface CMEditorSuiteProps {
-	doc: CodePairDocType;
-	client: import("@yorkie-js/sdk").Client;
-	mode: EditorModeType;
-	width: number | string;
-	themeMode: "light" | "dark";
-	codeKey: CodeKeyType;
-	onCodeKeyChange: (key: CodeKeyType) => void;
-	fileUploadEnabled: boolean;
-	handleUploadImage: ((file: File) => Promise<string>) | null;
-	intelligenceEnabled: boolean;
-	intelligenceSlot?: React.ReactNode;
+export interface CMEditorSuiteProps extends EditorSuiteProps<
+	CodePairDocType,
+	import("@yorkie-js/sdk").Client
+> {
+	/** Whether to disable scroll synchronization in split (BOTH) mode. */
 	disableScrollSync?: boolean;
-	onEditorPortChange?: (port: EditorPort | null) => void;
 }
 
 function CMEditorSuite({
@@ -32,7 +23,7 @@ function CMEditorSuite({
 	mode,
 	width,
 	themeMode,
-	codeKey,
+	codeKey = CodeKeyType.DEFAULT,
 	onCodeKeyChange,
 	fileUploadEnabled,
 	handleUploadImage,

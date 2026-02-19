@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { EditorPort } from "@codepair/ui";
+import { CodeKeyType } from "@codepair/ui";
 import type { CodePairDocType } from "./types";
-import { CodeKeyType } from "./types";
 
 export interface CMEditorContextValue {
 	doc: CodePairDocType;
@@ -10,7 +10,7 @@ export interface CMEditorContextValue {
 	setEditorPort: (port: EditorPort | null) => void;
 	themeMode: "light" | "dark";
 	codeKey: CodeKeyType;
-	setCodeKey: (key: CodeKeyType) => void;
+	setCodeKey?: (key: CodeKeyType) => void;
 	fileUploadEnabled: boolean;
 	handleUploadImage: ((file: File) => Promise<string>) | null;
 	intelligenceEnabled: boolean;

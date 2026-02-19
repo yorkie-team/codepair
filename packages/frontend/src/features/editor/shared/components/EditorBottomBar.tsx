@@ -1,7 +1,8 @@
 import { Button, Menu, MenuItem, Paper } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CodeKeyType, selectConfig, setCodeKeyType } from "../../../../features/settings";
+import { CodeKeyType } from "@codepair/ui";
+import { selectConfig, setCodeKeyType } from "../../../../features/settings";
 
 export const BOTTOM_BAR_HEIGHT = 25;
 

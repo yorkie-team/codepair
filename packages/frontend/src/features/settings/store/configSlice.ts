@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { CodeKeyType } from "@codepair/ui";
 import { RootState } from "../../../store/store";
 
 export enum ThemeType {
@@ -8,10 +9,7 @@ export enum ThemeType {
 	LIGHT = "light",
 }
 
-export enum CodeKeyType {
-	SUBLIME = "sublime",
-	VIM = "vim",
-}
+export { CodeKeyType };
 
 export interface ConfigState {
 	theme: ThemeType;
@@ -23,7 +21,7 @@ export interface ConfigState {
 const initialState: ConfigState = {
 	theme: ThemeType.DEFAULT,
 	drawerOpen: true,
-	codeKey: CodeKeyType.SUBLIME,
+	codeKey: CodeKeyType.DEFAULT,
 	disableScrollSync: false,
 };
 

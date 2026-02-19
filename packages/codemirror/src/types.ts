@@ -6,7 +6,5 @@ export type CodePairDocType = yorkie.Document<
 	YorkieCodeMirrorPresenceType
 >;
 
-export enum CodeKeyType {
-	DEFAULT = "default",
-	VIM = "vim",
-}
+// Re-export CodeKeyType from the shared package
+export { CodeKeyType } from "@codepair/ui";

@@ -19,7 +19,7 @@ import { urlHyperlinkInserter } from "../plugins/urlHyperlinkInserter";
 import { yorkieCodeMirror } from "../plugins/yorkie";
 import EditorBottomBar, { BOTTOM_BAR_HEIGHT } from "./EditorBottomBar";
 import ToolBar from "./ToolBar";
-import { CodeKeyType } from "../types";
+import { CodeKeyType } from "@codepair/ui";
 
 interface EditorProps {
 	width: number | string;

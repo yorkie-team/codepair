@@ -1,7 +1,7 @@
 import { Button, Menu, MenuItem, Paper } from "@mui/material";
 import { useState, type MouseEvent } from "react";
 import { useCMEditorContext } from "../CMEditorContext";
-import { CodeKeyType } from "../types";
+import { CodeKeyType } from "@codepair/ui";
 
 export const BOTTOM_BAR_HEIGHT = 25;
 
@@ -24,7 +24,7 @@ function EditorBottomBar(props: EditorBottomBarProps) {
 	};
 
 	const handleChangeCodeKey = (newKeyCode: CodeKeyType) => {
-		setCodeKey(newKeyCode);
+		setCodeKey?.(newKeyCode);
 		handleClose();
 	};
 

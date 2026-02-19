@@ -2,6 +2,8 @@
 export type { EditorPort } from "./types/EditorPort";
 export type { PresenceInfo } from "./types/PresenceInfo";
 export { EditorModeType } from "./types/EditorModeType";
+export { CodeKeyType } from "./types/CodeKeyType";
+export type { EditorSuiteProps } from "./types/EditorSuiteProps";
 
 // Constants
 export { TAGS, ALL_TAGS } from "./constants/tag";

@@ -1,7 +1,7 @@
 export { default as CMEditorSuite } from "./CMEditorSuite";
 export type { CMEditorSuiteProps } from "./CMEditorSuite";
 export { CMEditorAdapter } from "./CMEditorAdapter";
-export { CodeKeyType } from "./types";
+export { CodeKeyType } from "@codepair/ui";
 export type { CodePairDocType } from "./types";
 export type {
 	YorkieCodeMirrorDocType,

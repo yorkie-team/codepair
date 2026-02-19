@@ -2,19 +2,15 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import { useWindowWidth } from "@react-hook/window-size";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	selectConfig,
-	selectFeatureSetting,
-	CodeKeyType,
-	setCodeKeyType,
-} from "../../../../features/settings";
+import { selectConfig, selectFeatureSetting, setCodeKeyType } from "../../../../features/settings";
 import { selectEditor, setEditorPort } from "../../store/editorSlice";
 import { selectWorkspace } from "../../../../features/workspace";
 import { useCurrentTheme } from "../../../../hooks/useCurrentTheme";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../../../hooks/api/file";
-import { CMEditorSuite, CodeKeyType as CMCodeKeyType } from "@codepair/codemirror";
+import { CMEditorSuite } from "@codepair/codemirror";
 import { YorkieIntelligence } from "../../../../features/intelligence";
 import type { EditorPort } from "@codepair/ui";
+import { CodeKeyType } from "@codepair/ui";
 import ModeSwitcher from "./ModeSwitcher";
 
 function DocumentView() {
@@ -53,8 +49,8 @@ function DocumentView() {
 	);
 
 	const handleCodeKeyChange = useCallback(
-		(key: CMCodeKeyType) => {
-			dispatch(setCodeKeyType(key as unknown as CodeKeyType));
+		(key: CodeKeyType) => {
+			dispatch(setCodeKeyType(key));
 		},
 		[dispatch]
 	);
@@ -74,7 +70,7 @@ function DocumentView() {
 				mode={editorStore.mode}
 				width={windowWidth}
 				themeMode={themeMode}
-				codeKey={configStore.codeKey as unknown as CMCodeKeyType}
+				codeKey={configStore.codeKey}
 				onCodeKeyChange={handleCodeKeyChange}
 				fileUploadEnabled={featureSettingStore.fileUpload?.enable ?? false}
 				handleUploadImage={
