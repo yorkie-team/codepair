@@ -48,12 +48,12 @@ Each feature encapsulates its implementation details behind a clean public API (
 
 If we decide to replace CodeMirror with a different editor:
 
-| Without modular architecture                                                   | With modular architecture                                        |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `packages/codemirror/`                 |
-| Update 15+ files in different directories                                      | Create a new package, shared components remain untouched         |
-| Risk breaking unrelated features                                               | Changes isolated to the new editor package                       |
-| Hard to test incrementally                                                     | Can test editor package in isolation                             |
+| Without modular architecture                                                   | With modular architecture                                |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| Find all CodeMirror imports across `components/`, `hooks/`, `utils/`, `store/` | All CodeMirror code is in `packages/codemirror/`         |
+| Update 15+ files in different directories                                      | Create a new package, shared components remain untouched |
+| Risk breaking unrelated features                                               | Changes isolated to the new editor package               |
+| Hard to test incrementally                                                     | Can test editor package in isolation                     |
 
 For example, to add a ProseMirror editor:
 
@@ -130,10 +130,10 @@ src/
 │   │   └── index.ts
 │   ├── editor/                  # Editor feature
 │   │   ├── shared/              # Editor-agnostic shared components
-│   │   │   └── components/      #   DocumentView, ModeSwitcher
+│   │   │   └── components/      #   DocumentView, ModeSwitcher, EditorBottomBar
 │   │   ├── components/          # Revision-related components
 │   │   ├── hooks/               # useYorkieDocument, useYorkieRevisions, useUserPresence
-│   │   ├── store/               #   editorSlice (EditorPort, mode, doc, client)
+│   │   ├── store/               #   editorSlice (mode, shareRole, doc, client, editorPort)
 │   │   └── index.ts
 │   │   # Note: CodeMirror-specific code (Editor, Preview, ToolBar,
 │   │   # yorkie sync, etc.) now lives in packages/codemirror/
@@ -143,15 +143,21 @@ src/
 │   ├── user/                    # User profile
 │   └── workspace/               # Workspace management
 │
+├── providers/                   # Global providers (CollaborationProvider)
 ├── components/                  # Shared UI components (not feature-specific)
+│   ├── cards/
 │   ├── common/
+│   ├── drawers/
 │   ├── headers/
+│   ├── icons/
 │   ├── layouts/
 │   ├── modals/
-│   └── ...
+│   ├── popovers/
+│   ├── tags/
+│   └── workspace/
 ├── hooks/                       # Shared hooks
 │   ├── api/                     # API query hooks (React Query)
-│   └── useCurrentTheme.ts
+│   └── ...
 ├── store/                       # Redux store configuration only
 │   └── store.ts
 ├── utils/                       # Shared utilities
@@ -191,15 +197,15 @@ features/<feature-name>/
 
 ### Current Features
 
-| Feature        | Description                    | Main Contents                                                                                             |
-| -------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `auth`         | Authentication & authorization | AuthContext, AuthProvider, GuestRoute, PrivateRoute                                                       |
-| `editor`       | Core markdown editor           | shared (DocumentView, ModeSwitcher), Yorkie integration, Revisions. CodeMirror code is in `@codepair/codemirror` |
-| `document`     | Document state & utilities     | documentSlice, ShareRole, soft line break utils                                                           |
-| `intelligence` | AI/LLM features                | YorkieIntelligence UI, hooks, CodeMirror extensions                                                       |
-| `settings`     | App configuration              | configSlice (theme, keybinding, scroll sync), featureSettingSlice                                         |
-| `user`         | User profile                   | userSlice                                                                                                 |
-| `workspace`    | Workspace management           | workspaceSlice                                                                                            |
+| Feature        | Description                    | Main Contents                                                                                                                     |
+| -------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`         | Authentication & authorization | authSlice, AuthContext, AuthProvider, GuestRoute, PrivateRoute                                                                    |
+| `editor`       | Core markdown editor           | shared (DocumentView, ModeSwitcher, EditorBottomBar), Yorkie integration, Revisions. CodeMirror code is in `@codepair/codemirror` |
+| `document`     | Document state & utilities     | documentSlice, ShareRole, useFileExport, createDocumentKey, addSoftLineBreak                                                      |
+| `intelligence` | AI/LLM features                | YorkieIntelligence UI, hooks, constants                                                                                           |
+| `settings`     | App configuration              | configSlice (theme, keybinding, scroll sync), featureSettingSlice                                                                 |
+| `user`         | User profile                   | userSlice                                                                                                                         |
+| `workspace`    | Workspace management           | workspaceSlice, lastWorkspace utils                                                                                               |
 
 ### Feature Dependencies
 
