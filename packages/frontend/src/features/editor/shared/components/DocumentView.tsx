@@ -7,7 +7,7 @@ import { selectEditor, setEditorPort } from "../../store/editorSlice";
 import { selectWorkspace } from "../../../../features/workspace";
 import { useCurrentTheme } from "../../../../hooks/useCurrentTheme";
 import { useCreateUploadUrlMutation, useUploadFileMutation } from "../../../../hooks/api/file";
-import { CMEditorSuite } from "@codepair/codemirror";
+import { EditorSuite } from "@codepair/codemirror";
 import { YorkieIntelligence } from "../../../../features/intelligence";
 import type { EditorPort } from "@codepair/ui";
 import { CodeKeyType } from "@codepair/ui";
@@ -64,7 +64,7 @@ function DocumentView() {
 
 	return (
 		<>
-			<CMEditorSuite
+			<EditorSuite
 				doc={editorStore.doc}
 				client={editorStore.client}
 				mode={editorStore.mode}
