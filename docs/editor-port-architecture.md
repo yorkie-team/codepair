@@ -421,7 +421,7 @@ Add to `ci_frontend.yaml`:
 | `packages/codemirror/src/CMEditorSuite.tsx`                                | CodeMirror composite entry point (exported as `EditorSuite`)                  |
 | `packages/codemirror/src/CMEditorAdapter.ts`                               | CodeMirror's EditorPort implementation (exported as `EditorAdapter`)          |
 | `packages/codemirror/src/CMEditorContext.tsx`                              | Internal React Context (replaces Redux inside the package)                    |
-| `packages/codemirror/src/types.ts`                                         | `CodePairDocType` (yorkie.Text), re-exports `CodeKeyType` from `@codepair/ui` |
+| `packages/codemirror/src/types.ts`                                         | `CodePairDocType` (yorkie.Text), re-exports `CodeKeyType` from `@codepair/ui`  |
 | `packages/codemirror/src/plugins/yorkie/`                                  | Yorkie sync and remote selection CM plugins                                   |
 | `packages/frontend/src/features/editor/store/editorSlice.ts`               | Redux state holding mode, doc, client, editorPort                             |
 | `packages/frontend/src/features/editor/shared/components/DocumentView.tsx` | App shell component that renders EditorSuite                                  |

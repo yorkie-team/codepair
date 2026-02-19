@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { ActorID } from "@yorkie-js/sdk";
-import type { CodePairDocType, YorkieCodeMirrorPresenceType } from "@codepair/codemirror";
+import type { CodePairDocType, YorkiePresenceType } from "@codepair/codemirror";
 
 export type Presence = {
 	clientID: ActorID;
-	presence: YorkieCodeMirrorPresenceType;
+	presence: YorkiePresenceType;
 };
 
 export const useUserPresence = (doc: CodePairDocType | null) => {

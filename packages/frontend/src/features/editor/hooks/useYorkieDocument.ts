@@ -5,11 +5,7 @@ import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import * as yorkie from "@yorkie-js/sdk";
 import { selectAuth } from "../../auth";
-import type {
-	CodePairDocType,
-	YorkieCodeMirrorDocType,
-	YorkieCodeMirrorPresenceType,
-} from "@codepair/codemirror";
+import type { CodePairDocType, YorkieDocType, YorkiePresenceType } from "@codepair/codemirror";
 import { useRefreshTokenMutation } from "../../../hooks/api/user";
 import { selectUser } from "../../../features/user";
 
@@ -72,10 +68,10 @@ export const useYorkieDocument = (
 
 	const createYorkieDocument = useCallback(
 		(client: yorkie.Client, yorkieDocumentId: string, presenceName: string) => {
-			const newDocument = new yorkie.Document<
-				YorkieCodeMirrorDocType,
-				YorkieCodeMirrorPresenceType
-			>(yorkieDocumentId, { enableDevtools: false });
+			const newDocument = new yorkie.Document<YorkieDocType, YorkiePresenceType>(
+				yorkieDocumentId,
+				{ enableDevtools: false }
+			);
 			return client.attach(newDocument, {
 				initialPresence: {
 					name: presenceName,

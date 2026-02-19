@@ -2,21 +2,18 @@ import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as yorkie from "@yorkie-js/sdk";
 
-export type YorkieCodeMirrorDocType = {
+export type YorkieDocType = {
 	content: yorkie.Text<yorkie.Indexable>;
 };
 
-export type YorkieCodeMirrorPresenceType = {
+export type YorkiePresenceType = {
 	color: string;
 	name: string;
 	selection: yorkie.TextPosStructRange | null;
 	cursor: [number, number] | null;
 };
 
-export class YorkieSyncConfig<
-	T extends YorkieCodeMirrorDocType,
-	P extends YorkieCodeMirrorPresenceType,
-> {
+export class YorkieSyncConfig<T extends YorkieDocType, P extends YorkiePresenceType> {
 	doc: yorkie.Document<T, P>;
 	client: yorkie.Client;
 	constructor(doc: yorkie.Document<T, P>, client: yorkie.Client) {
@@ -26,8 +23,8 @@ export class YorkieSyncConfig<
 }
 
 export const yorkieSyncFacet: cmState.Facet<
-	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>,
-	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+	YorkieSyncConfig<YorkieDocType, YorkiePresenceType>,
+	YorkieSyncConfig<YorkieDocType, YorkiePresenceType>
 > = cmState.Facet.define({
 	combine(inputs) {
 		return inputs[inputs.length - 1];
@@ -35,13 +32,13 @@ export const yorkieSyncFacet: cmState.Facet<
 });
 
 export const yorkieSyncAnnotation: cmState.AnnotationType<
-	YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>
+	YorkieSyncConfig<YorkieDocType, YorkiePresenceType>
 > = cmState.Annotation.define();
 
 class YorkieSyncPluginValue implements cmView.PluginValue {
 	view: cmView.EditorView;
-	conf: YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
-	_doc: yorkie.Document<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	conf: YorkieSyncConfig<YorkieDocType, YorkiePresenceType>;
+	_doc: yorkie.Document<YorkieDocType, YorkiePresenceType>;
 
 	constructor(view: cmView.EditorView) {
 		this.view = view;

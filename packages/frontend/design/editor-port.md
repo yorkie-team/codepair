@@ -149,4 +149,4 @@ The following items are intentionally left for follow-up work:
 - **`imageUploader.ts` / `urlHyperlinkInserter.ts`**: CM plugins that receive `view` from CM's event system; they still dual-write internally but are already inside `@codepair/codemirror`
 - ~~**`intelligencePivot.ts`**: Moved to `@codepair/codemirror` — completed~~
 - ~~**Extracting `codemirror/` as an external package**: Completed — now `@codepair/codemirror`~~
-- **Renaming `YorkieCodeMirrorDocType`**: Making the Yorkie document type name editor-agnostic
+- ~~**Renaming `YorkieCodeMirrorDocType`**: Making the Yorkie document type name editor-agnostic — Completed: renamed to `YorkieDocType` and `YorkiePresenceType`~~

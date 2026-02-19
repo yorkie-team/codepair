@@ -1,10 +1,7 @@
 import * as yorkie from "@yorkie-js/sdk";
-import { YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType } from "./plugins/yorkie/yorkieSync";
+import { YorkieDocType, YorkiePresenceType } from "./plugins/yorkie/yorkieSync";
 
-export type CodePairDocType = yorkie.Document<
-	YorkieCodeMirrorDocType,
-	YorkieCodeMirrorPresenceType
->;
+export type CodePairDocType = yorkie.Document<YorkieDocType, YorkiePresenceType>;
 
 // Re-export CodeKeyType from the shared package
 export { CodeKeyType } from "@codepair/ui";

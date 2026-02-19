@@ -4,12 +4,7 @@ import * as dom from "lib0/dom";
 import * as pair from "lib0/pair";
 import _ from "lodash";
 import * as yorkie from "@yorkie-js/sdk";
-import {
-	YorkieCodeMirrorDocType,
-	YorkieCodeMirrorPresenceType,
-	YorkieSyncConfig,
-	yorkieSyncFacet,
-} from "./yorkieSync";
+import { YorkieDocType, YorkiePresenceType, YorkieSyncConfig, yorkieSyncFacet } from "./yorkieSync";
 
 export const yorkieRemoteSelectionsTheme = cmView.EditorView.baseTheme({
 	".cm-ySelection": {},
@@ -121,7 +116,7 @@ class YRemoteCaretWidget extends cmView.WidgetType {
 }
 
 export class YorkieRemoteSelectionsPluginValue {
-	conf: YorkieSyncConfig<YorkieCodeMirrorDocType, YorkieCodeMirrorPresenceType>;
+	conf: YorkieSyncConfig<YorkieDocType, YorkiePresenceType>;
 	decorations: cmView.DecorationSet;
 	unsubscribe: yorkie.Unsubscribe;
 
