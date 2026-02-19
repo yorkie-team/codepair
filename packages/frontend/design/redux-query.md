@@ -5,7 +5,7 @@ CodePair uses redux and react-query as state management tools. This document com
 
 ## [Redux](https://redux-toolkit.js.org/)
 
-Redux is utilized for storing globally used data such as user tokens and theme modes. In cases where data is not globally used in the project but is utilized by one or more sub-components, it is stored in Redux. The code for the Redux store can be found in [`../src/store`](../src/store/).
+Redux is utilized for storing globally used data such as user tokens and theme modes. In cases where data is not globally used in the project but is utilized by one or more sub-components, it is stored in Redux. The Redux store configuration lives in [`../src/store/store.ts`](../src/store/store.ts), while individual feature slices live within their respective feature directories (e.g., `../src/features/editor/store/editorSlice.ts`, `../src/features/settings/store/configSlice.ts`).
 
 ## [React Query](https://tanstack.com/query/v3/)
 

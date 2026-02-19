@@ -41,15 +41,15 @@ Dependencies flow strictly downward. Violations are caught by ESLint at lint tim
 ```typescript
 // packages/ui/src/types/EditorPort.ts
 export interface EditorPort {
-    getSelection(): { from: number; to: number };
-    replaceRange(
-        from: number,
-        to: number,
-        insert: string,
-        selection?: { anchor: number; head?: number }
-    ): void;
-    scrollIntoView(pos: number): void;
-    getContentWidth(): number;
+  getSelection(): { from: number; to: number };
+  replaceRange(
+    from: number,
+    to: number,
+    insert: string,
+    selection?: { anchor: number; head?: number },
+  ): void;
+  scrollIntoView(pos: number): void;
+  getContentWidth(): number;
 }
 ```
 
@@ -60,29 +60,67 @@ The app shell stores the active `EditorPort` in Redux (`editorSlice`). Features 
 ```typescript
 // packages/ui/src/types/EditorModeType.ts
 export enum EditorModeType {
-    EDIT = "edit",   // editor only
-    BOTH = "both",   // side-by-side editor + preview
-    READ = "read",   // preview only
+  EDIT = "edit", // editor only
+  BOTH = "both", // side-by-side editor + preview
+  READ = "read", // preview only
 }
 ```
 
 Each editor suite component receives the current mode and renders itself accordingly.
+
+### EditorSuiteProps — The shared props contract
+
+`EditorSuiteProps` is a generic interface in `@codepair/ui` that defines the common props every editor suite component must accept. Each editor package extends this with implementation-specific props.
+
+```typescript
+// packages/ui/src/types/EditorSuiteProps.ts
+export interface EditorSuiteProps<TDoc = unknown, TClient = unknown> {
+  doc: TDoc;
+  client: TClient;
+  mode: EditorModeType;
+  width: number | string;
+  themeMode: "light" | "dark";
+  codeKey?: CodeKeyType;
+  onCodeKeyChange?: (key: CodeKeyType) => void;
+  fileUploadEnabled: boolean;
+  handleUploadImage: ((file: File) => Promise<string>) | null;
+  intelligenceEnabled: boolean;
+  intelligenceSlot?: React.ReactNode;
+  onEditorPortChange?: (port: EditorPort | null) => void;
+}
+```
+
+This ensures that the app shell can render any editor suite component with the same set of base props, while each editor is free to add its own extras (e.g., `disableScrollSync` for CodeMirror).
+
+### CodeKeyType — Unified keybinding enum
+
+`CodeKeyType` is a shared enum in `@codepair/ui` for keybinding presets:
+
+```typescript
+// packages/ui/src/types/CodeKeyType.ts
+export enum CodeKeyType {
+  DEFAULT = "default",
+  VIM = "vim",
+}
+```
+
+Previously, the codemirror package and the frontend settings each had their own `CodeKeyType` enum. These have been unified into `@codepair/ui` to avoid type mismatches across packages.
 
 ### CMEditorAdapter — The CodeMirror implementation
 
 ```typescript
 // packages/codemirror/src/CMEditorAdapter.ts
 export class CMEditorAdapter implements EditorPort {
-    public readonly view: EditorView;
-    // ...wraps CodeMirror EditorView into the EditorPort interface
+  public readonly view: EditorView;
+  // ...wraps CodeMirror EditorView into the EditorPort interface
 }
 ```
 
 Within `@codepair/codemirror`, code that needs the raw `EditorView` (e.g., toolbar formatting) accesses it through `CMEditorAdapter.view`. This cast never escapes the package boundary.
 
-### CMEditorSuite — The composite entry point
+### EditorSuite (CMEditorSuite) — The composite entry point
 
-`CMEditorSuite` is the single React component that the app shell renders for CodeMirror editing. It encapsulates:
+`CMEditorSuite` is the CodeMirror editor suite component. It is exported as `EditorSuite` from `@codepair/codemirror` so that the app shell uses editor-agnostic import names. It encapsulates:
 
 - **Editor** — CodeMirror instance with yorkie.Text sync, image upload, vim mode
 - **Preview** — Markdown rendering with incremental-dom
@@ -93,10 +131,12 @@ Within `@codepair/codemirror`, code that needs the raw `EditorView` (e.g., toolb
 ```
 App Shell (DocumentView)
   |
-  +-- <CMEditorSuite
+  +-- <EditorSuite
   |       doc={yorkieDoc}
   |       client={yorkieClient}
   |       mode={EDIT | BOTH | READ}
+  |       codeKey={configStore.codeKey}
+  |       onCodeKeyChange={handleCodeKeyChange}
   |       onEditorPortChange={port => dispatch(setEditorPort(port))}
   |       intelligenceSlot={<YorkieIntelligence />}
   |       ...
@@ -109,13 +149,13 @@ Props instead of Redux: inside `@codepair/codemirror`, components use `CMEditorC
 
 ### The intelligenceSlot pattern
 
-The intelligence feature (AI-powered editing) lives in the app shell (`features/intelligence/`), not in the codemirror package. To avoid a reverse dependency, `CMEditorSuite` accepts an `intelligenceSlot` prop:
+The intelligence feature (AI-powered editing) lives in the app shell (`features/intelligence/`), not in the codemirror package. To avoid a reverse dependency, the editor suite accepts an `intelligenceSlot` prop (defined in `EditorSuiteProps`):
 
 ```tsx
 // App shell
-<CMEditorSuite
-    intelligenceSlot={<YorkieIntelligence />}
-    intelligenceEnabled={true}
+<EditorSuite
+  intelligenceSlot={<YorkieIntelligence />}
+  intelligenceEnabled={true}
 />
 ```
 
@@ -136,10 +176,10 @@ DocumentView
   |
   | reads editorStore.doc, editorStore.client from Redux
   | reads settings (theme, codeKey, fileUpload, intelligence)
-  | passes everything as props to CMEditorSuite
+  | passes everything as props to EditorSuite
   |
   v
-CMEditorSuite (in @codepair/codemirror)
+EditorSuite (CMEditorSuite in @codepair/codemirror)
   |
   | creates CMEditorAdapter when CodeMirror initializes
   | calls onEditorPortChange(adapter) to register with app shell
@@ -155,11 +195,11 @@ editorSlice.editorPort = adapter
 
 ```typescript
 interface EditorState {
-    mode: EditorModeType;         // from @codepair/ui
-    shareRole: ShareRole | null;  // viewer/editor/null
-    doc: CodePairDocType | null;  // Yorkie document (from @codepair/codemirror)
-    client: yorkie.Client | null; // Yorkie client
-    editorPort: EditorPort | null; // from @codepair/ui
+  mode: EditorModeType; // from @codepair/ui
+  shareRole: ShareRole | null; // viewer/editor/null
+  doc: CodePairDocType | null; // Yorkie document (from @codepair/codemirror)
+  client: yorkie.Client | null; // Yorkie client
+  editorPort: EditorPort | null; // from @codepair/ui
 }
 ```
 
@@ -169,11 +209,11 @@ The slice imports the `CodePairDocType` from `@codepair/codemirror` because the 
 
 ESLint `no-restricted-imports` rules enforce the architecture at lint time:
 
-| Package | Banned imports |
-|---|---|
-| `@codepair/ui` | `codemirror`, `@codemirror/*`, `@replit/*`, `@yorkie-js/*`, `@codepair/codemirror`, `@codepair/frontend` |
-| `@codepair/codemirror` | `@codepair/frontend` |
-| `@codepair/frontend` | `codemirror`, `@codemirror/*`, `@replit/*` |
+| Package                | Banned imports                                                                                           |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- |
+| `@codepair/ui`         | `codemirror`, `@codemirror/*`, `@replit/*`, `@yorkie-js/*`, `@codepair/codemirror`, `@codepair/frontend` |
+| `@codepair/codemirror` | `@codepair/frontend`                                                                                     |
+| `@codepair/frontend`   | `codemirror`, `@codemirror/*`, `@replit/*`                                                               |
 
 The CI pipeline (`ci_frontend.yaml`) runs lint for all three packages, so violations block merging.
 
@@ -201,15 +241,15 @@ packages/smart-editor/
 
 ```json
 {
-    "name": "@codepair/smart-editor",
-    "version": "0.2.0",
-    "type": "module",
-    "main": "src/index.ts",
-    "types": "src/index.ts",
-    "dependencies": {
-        "@codepair/ui": "workspace:*",
-        "@yorkie-js/sdk": "..."
-    }
+  "name": "@codepair/smart-editor",
+  "version": "0.2.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@codepair/ui": "workspace:*",
+    "@yorkie-js/sdk": "..."
+  }
 }
 ```
 
@@ -231,8 +271,8 @@ import * as yorkie from "@yorkie-js/sdk";
 
 // yorkie.Tree types for rich text
 export type SmartEditorDocType = yorkie.Document<
-    { content: yorkie.Tree },
-    { name: string; color: string; cursor: unknown }
+  { content: yorkie.Tree },
+  { name: string; color: string; cursor: unknown }
 >;
 ```
 
@@ -243,65 +283,63 @@ export type SmartEditorDocType = yorkie.Document<
 import type { EditorPort } from "@codepair/ui";
 
 export class SmartEditorAdapter implements EditorPort {
-    private editor: YourEditorInstance;
+  private editor: YourEditorInstance;
 
-    constructor(editor: YourEditorInstance) {
-        this.editor = editor;
-    }
+  constructor(editor: YourEditorInstance) {
+    this.editor = editor;
+  }
 
-    getSelection() {
-        // Map your editor's selection model to { from, to }
-    }
+  getSelection() {
+    // Map your editor's selection model to { from, to }
+  }
 
-    replaceRange(from: number, to: number, insert: string, selection?) {
-        // Map to your editor's editing API
-    }
+  replaceRange(from: number, to: number, insert: string, selection?) {
+    // Map to your editor's editing API
+  }
 
-    scrollIntoView(pos: number) {
-        // Map to your editor's scroll API
-    }
+  scrollIntoView(pos: number) {
+    // Map to your editor's scroll API
+  }
 
-    getContentWidth() {
-        return this.editor.dom.getBoundingClientRect().width;
-    }
+  getContentWidth() {
+    return this.editor.dom.getBoundingClientRect().width;
+  }
 }
 ```
 
 ### Step 4: Create the suite component
 
+Extend `EditorSuiteProps` from `@codepair/ui` with your editor's specific doc/client types and any extra props:
+
 ```typescript
 // packages/smart-editor/src/SmartEditorSuite.tsx
-import type { EditorPort } from "@codepair/ui";
-import { EditorModeType } from "@codepair/ui";
+import type { EditorSuiteProps } from "@codepair/ui";
 
-export interface SmartEditorSuiteProps {
-    doc: SmartEditorDocType;
-    client: yorkie.Client;
-    mode: EditorModeType;
-    width: number | string;
-    themeMode: "light" | "dark";
-    intelligenceEnabled: boolean;
-    intelligenceSlot?: React.ReactNode;
-    onEditorPortChange?: (port: EditorPort | null) => void;
-    // ...other props your editor needs
+export interface SmartEditorSuiteProps extends EditorSuiteProps<
+  SmartEditorDocType,
+  yorkie.Client
+> {
+  // ...any editor-specific extra props
 }
 
 function SmartEditorSuite(props: SmartEditorSuiteProps) {
-    // 1. Create internal context (like CMEditorContext)
-    // 2. Initialize your editor, create SmartEditorAdapter
-    // 3. Call onEditorPortChange(adapter) when ready
-    // 4. Render editor + toolbar + preview based on mode
-    // 5. Handle yorkie.Tree sync internally
+  // 1. Create internal context (like CMEditorContext)
+  // 2. Initialize your editor, create SmartEditorAdapter
+  // 3. Call onEditorPortChange(adapter) when ready
+  // 4. Render editor + toolbar + preview based on mode
+  // 5. Handle yorkie.Tree sync internally
 }
 ```
 
 ### Step 5: Export from the barrel
 
+Export the suite component as `EditorSuite` (not the internal class name) so the app shell can use the same import name regardless of which editor package is resolved:
+
 ```typescript
 // packages/smart-editor/src/index.ts
-export { default as SmartEditorSuite } from "./SmartEditorSuite";
+export { default as EditorSuite } from "./SmartEditorSuite";
 export type { SmartEditorSuiteProps } from "./SmartEditorSuite";
-export { SmartEditorAdapter } from "./SmartEditorAdapter";
+export { SmartEditorAdapter as EditorAdapter } from "./SmartEditorAdapter";
 export type { SmartEditorDocType } from "./types";
 ```
 
@@ -316,11 +354,11 @@ Add the dependency to the frontend:
 }
 ```
 
-Update `DocumentView.tsx` to select which editor to render:
+Update `DocumentView.tsx` to select which editor to render. Because both packages export `EditorSuite`, you use import aliases:
 
 ```typescript
-import { CMEditorSuite } from "@codepair/codemirror";
-import { SmartEditorSuite } from "@codepair/smart-editor";
+import { EditorSuite as CMEditorSuite } from "@codepair/codemirror";
+import { EditorSuite as SmartEditorSuite } from "@codepair/smart-editor";
 
 function DocumentView() {
     const editorType = useEditorType(); // determine from doc metadata or config
@@ -332,6 +370,8 @@ function DocumentView() {
     return <CMEditorSuite doc={...} onEditorPortChange={...} />;
 }
 ```
+
+Alternatively, if your deployment uses only one editor package (e.g., swapped via `.pnpmfile.cjs`), no alias is needed — just `import { EditorSuite } from "@codepair/codemirror"`.
 
 The rest of the app shell (user presence, file export, header, mode switcher) continues to work unchanged — it only interacts through `EditorPort`.
 
@@ -360,10 +400,10 @@ Add to `ci_frontend.yaml`:
 - [ ] Package scaffolded with `tsconfig.json`, `eslint.config.mjs`, `.prettierrc`
 - [ ] Document type defined with appropriate Yorkie CRDT (`yorkie.Tree`)
 - [ ] `EditorPort` implemented in an adapter class
-- [ ] Suite component accepts props matching the app shell's contract
+- [ ] Suite component's props interface extends `EditorSuiteProps` from `@codepair/ui`
 - [ ] `onEditorPortChange` callback wired to register the adapter
 - [ ] `intelligenceSlot` prop accepted and rendered (if intelligence is supported)
-- [ ] Barrel `index.ts` exports the suite, adapter, and types
+- [ ] Barrel `index.ts` exports the suite as `EditorSuite`, adapter as `EditorAdapter`, and types
 - [ ] ESLint boundary rule bans `@codepair/frontend` and other editor packages
 - [ ] `pnpm --filter=@codepair/smart-editor typecheck` passes
 - [ ] `pnpm --filter=@codepair/frontend build` passes
@@ -371,16 +411,18 @@ Add to `ci_frontend.yaml`:
 
 ## File Reference
 
-| File | Purpose |
-|---|---|
-| `packages/ui/src/types/EditorPort.ts` | The interface every editor adapter must implement |
-| `packages/ui/src/types/EditorModeType.ts` | EDIT / BOTH / READ enum |
-| `packages/ui/src/types/PresenceInfo.ts` | Editor-agnostic presence data |
-| `packages/codemirror/src/CMEditorSuite.tsx` | CodeMirror composite entry point |
-| `packages/codemirror/src/CMEditorAdapter.ts` | CodeMirror's EditorPort implementation |
-| `packages/codemirror/src/CMEditorContext.tsx` | Internal React Context (replaces Redux inside the package) |
-| `packages/codemirror/src/types.ts` | `CodePairDocType` (yorkie.Text) and `CodeKeyType` |
-| `packages/codemirror/src/plugins/yorkie/` | Yorkie sync and remote selection CM plugins |
-| `packages/frontend/src/features/editor/store/editorSlice.ts` | Redux state holding mode, doc, client, editorPort |
-| `packages/frontend/src/features/editor/shared/components/DocumentView.tsx` | App shell component that renders CMEditorSuite |
-| `packages/frontend/src/providers/CollaborationProvider.tsx` | React Context for Yorkie doc/client (prepared for future use) |
+| File                                                                       | Purpose                                                                       |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `packages/ui/src/types/EditorPort.ts`                                      | The interface every editor adapter must implement                             |
+| `packages/ui/src/types/EditorModeType.ts`                                  | EDIT / BOTH / READ enum                                                       |
+| `packages/ui/src/types/EditorSuiteProps.ts`                                | Shared props contract for all editor suite components                         |
+| `packages/ui/src/types/CodeKeyType.ts`                                     | Unified keybinding preset enum (DEFAULT / VIM)                                |
+| `packages/ui/src/types/PresenceInfo.ts`                                    | Editor-agnostic presence data                                                 |
+| `packages/codemirror/src/CMEditorSuite.tsx`                                | CodeMirror composite entry point (exported as `EditorSuite`)                  |
+| `packages/codemirror/src/CMEditorAdapter.ts`                               | CodeMirror's EditorPort implementation (exported as `EditorAdapter`)          |
+| `packages/codemirror/src/CMEditorContext.tsx`                              | Internal React Context (replaces Redux inside the package)                    |
+| `packages/codemirror/src/types.ts`                                         | `CodePairDocType` (yorkie.Text), re-exports `CodeKeyType` from `@codepair/ui` |
+| `packages/codemirror/src/plugins/yorkie/`                                  | Yorkie sync and remote selection CM plugins                                   |
+| `packages/frontend/src/features/editor/store/editorSlice.ts`               | Redux state holding mode, doc, client, editorPort                             |
+| `packages/frontend/src/features/editor/shared/components/DocumentView.tsx` | App shell component that renders EditorSuite                                  |
+| `packages/frontend/src/providers/CollaborationProvider.tsx`                | React Context for Yorkie doc/client (prepared for future use)                 |

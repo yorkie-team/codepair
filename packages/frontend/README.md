@@ -6,7 +6,7 @@ This project is the frontend part of the CodePair service developed using Vite a
 
 1. Set Up GitHub OAuth Key
 
-    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
+    For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](../../docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
     After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
 
@@ -94,25 +94,45 @@ Checks if the code is formatted correctly according to Prettier configurations. 
 
 ## Directory Structure
 
+The frontend uses a **feature-based architecture**. See [design/architecture.md](./design/architecture.md) for full details.
+
 ```
 frontend/
 ├── public/                 # Static files (index.html, images, etc.)
 ├── src/                    # Source code
-│   ├── components/         # React components
-│   ├── constants/          # Constants for project
-│   ├── contexts/           # React contexts
-│   ├── hooks/              # React hooks
-│   │   └── api/            # Hooks for `react-query`
-│   ├── pages/              # Page components
-│   ├── providers/          # React providers
-│   ├── utils/              # Utility functions, etc.
-│   ├── store/              # Redux stores
-│   ├── App.css             # Shared layout styles, theme settings, or common utility classes, etc.
+│   ├── features/           # Feature modules (self-contained)
+│   │   ├── auth/           # Authentication & authorization
+│   │   ├── document/       # Document state & utilities
+│   │   ├── editor/         # Core editor feature (shared components, hooks, store)
+│   │   ├── intelligence/   # AI/LLM features
+│   │   ├── settings/       # App configuration (theme, keybinding, scroll sync)
+│   │   ├── user/           # User profile
+│   │   └── workspace/      # Workspace management
+│   ├── components/         # Shared UI components (not feature-specific)
+│   │   ├── cards/
+│   │   ├── common/
+│   │   ├── drawers/
+│   │   ├── headers/
+│   │   ├── icons/
+│   │   ├── layouts/
+│   │   ├── modals/
+│   │   ├── popovers/
+│   │   ├── tags/
+│   │   └── workspace/
+│   ├── hooks/              # Shared hooks
+│   │   └── api/            # API query hooks (React Query)
+│   ├── providers/          # Global providers (CollaborationProvider)
+│   ├── store/              # Redux store configuration (store.ts)
+│   ├── constants/          # Shared constants
+│   ├── utils/              # Shared utilities
+│   ├── pages/              # Route pages
+│   ├── App.css             # Shared layout styles
 │   ├── App.tsx             # App component entry point
-│   ├── index.css           # Global styles for overall layout, font settings, basic colors, etc.
+│   ├── index.css           # Global styles
 │   ├── main.tsx            # Main rendering entry point
 │   ├── routes.tsx          # Routing settings
-│   └── vite-env.d.ts       # Types for environment variables.
+│   └── vite-env.d.ts       # Types for environment variables
+├── design/                 # Design documents
 ├── .env.example            # Example .env file with environment variable definitions
 ├── eslint.config.mjs       # ESLint configuration file in ES module format
 ├── .gitignore              # Git ignore settings file
