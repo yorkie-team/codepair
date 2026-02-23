@@ -39,4 +39,8 @@ export class CMEditorAdapter implements EditorPort {
 	getContentWidth(): number {
 		return this.view.contentDOM.getBoundingClientRect().width;
 	}
+
+	getContent(): string {
+		return this.view.state.doc.toString();
+	}
 }

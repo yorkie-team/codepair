@@ -1,5 +1,5 @@
 // Types
-export type { EditorPort } from "./types/EditorPort";
+export type { EditorPort, EditorPosition } from "./types/EditorPort";
 export type { PresenceInfo } from "./types/PresenceInfo";
 export { EditorModeType } from "./types/EditorModeType";
 export { CodeKeyType } from "./types/CodeKeyType";

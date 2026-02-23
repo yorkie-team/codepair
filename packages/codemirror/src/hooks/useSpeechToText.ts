@@ -88,7 +88,7 @@ export const useSpeechToText = (): SpeechToTextFeatureHook => {
 				finalTranscriptRef.current = finalTranscript;
 
 				const { from, to } = editorPort.getSelection();
-				const newCursorPos = from + finalTranscript.length;
+				const newCursorPos = (from as number) + finalTranscript.length;
 
 				editorPort.replaceRange(from, to, finalTranscript, {
 					anchor: newCursorPos,

@@ -1,11 +1,14 @@
+export type EditorPosition = number | number[];
+
 export interface EditorPort {
-	getSelection(): { from: number; to: number };
+	getSelection(): { from: EditorPosition; to: EditorPosition };
 	replaceRange(
-		from: number,
-		to: number,
+		from: EditorPosition,
+		to: EditorPosition,
 		insert: string,
-		selection?: { anchor: number; head?: number }
+		selection?: { anchor: EditorPosition; head?: EditorPosition }
 	): void;
-	scrollIntoView(pos: number): void;
+	scrollIntoView(pos: EditorPosition): void;
 	getContentWidth(): number;
+	getContent(): string;
 }

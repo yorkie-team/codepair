@@ -119,8 +119,8 @@ function YorkieIntelligenceFeature(props: YorkieIntelligenceFeatureProps) {
 			insert = `\n${insert}`;
 		}
 
-		const selectionFrom = replace ? from : from + 1;
-		const selectionTo = from + insert.length;
+		const selectionFrom = replace ? from : (from as number) + 1;
+		const selectionTo = (from as number) + insert.length;
 
 		editorStore.editorPort.replaceRange(from, to, insert, {
 			anchor: selectionFrom,
