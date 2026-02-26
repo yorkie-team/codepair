@@ -7,8 +7,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./frontend
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -22,22 +20,21 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Setup Sentry Env 🛠️
-        working-directory: ${{ env.working-directory }}
+        working-directory: ./packages/frontend
         run: |
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env.sentry-build-plugin
           echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> .env.sentry-build-plugin
           echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> .env.sentry-build-plugin
 
       - name: Install and Build 🔧
-        working-directory: ${{ env.working-directory }}
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
           pnpm install --frozen-lockfile
-          pnpm run build
+          pnpm --filter=@codepair/frontend build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           branch: gh-pages
-          folder: frontend/dist
+          folder: packages/frontend/dist

@@ -13,10 +13,10 @@ const WEBHOOK_URL =
   "http://localhost:3000/yorkie/document-events";
 const BACKEND_ENV_FILE =
   process.env.BACKEND_ENV_FILE ||
-  path.join(__dirname, "..", "backend", ".env.development");
+  path.join(__dirname, "..", "packages", "backend", ".env.development");
 const FRONTEND_ENV_FILE =
   process.env.FRONTEND_ENV_FILE ||
-  path.join(__dirname, "..", "frontend", ".env.development");
+  path.join(__dirname, "..", "packages", "frontend", ".env.development");
 
 function execCommand(command) {
   try {
@@ -153,7 +153,7 @@ async function setupYorkieWebhook() {
     if (fs.existsSync(BACKEND_ENV_FILE)) {
       envContent = fs.readFileSync(BACKEND_ENV_FILE, "utf8");
     } else {
-      const templatePath = path.join(__dirname, "..", "backend", ".env");
+      const templatePath = path.join(__dirname, "..", "packages", "backend", ".env");
       if (fs.existsSync(templatePath)) {
         envContent = fs.readFileSync(templatePath, "utf8");
       }
