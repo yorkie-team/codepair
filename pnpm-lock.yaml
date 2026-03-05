@@ -221,8 +221,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@yorkie-js/sdk':
-        specifier: 0.6.48
-        version: 0.6.48
+        specifier: 0.7.0
+        version: 0.7.0
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
@@ -390,8 +390,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@yorkie-js/sdk':
-        specifier: 0.6.48
-        version: 0.6.48
+        specifier: 0.7.0
+        version: 0.7.0
       axios:
         specifier: ^1.13.2
         version: 1.13.2(debug@4.4.3)
@@ -4093,11 +4093,11 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@yorkie-js/schema@0.6.48':
-    resolution: {integrity: sha512-RbA1sk7v9UPwqfxCWPiaOlN5imZ4QosJzyKI4n25yuGvyHphXUBUVVtql9VrIGLZ5Op9oTcylJMcfxguAsNRSw==}
+  '@yorkie-js/schema@0.7.0':
+    resolution: {integrity: sha512-OUboi0oL40pfxObQiIUCni3OAME98aSjGAbsqCv47pw33GTt0MJQAnCLTn7Q3T4QhvTIgRDFNu3IiwdyliF4+Q==}
 
-  '@yorkie-js/sdk@0.6.48':
-    resolution: {integrity: sha512-WIjI0mi4fvyFuUwYIbDP+mMcX+F4q/t0RWty7EPu6Lcj58Yc+tRmvuCjsK2xoN3deIRjxE1mznZoZsPqXxAorg==}
+  '@yorkie-js/sdk@0.7.0':
+    resolution: {integrity: sha512-m2njYJh+JLZl4mx6UqD5+DLohaP3AohzhYKBL68IPtEuAs6qTm3RLzeUs5nY8ri+odyD06CIAeCoQe+5Kk9Ufg==}
     engines: {node: '>=18.0.0', npm: '>=7.1.0', pnpm: '>=9.6.0'}
 
   abbrev@3.0.1:
@@ -13447,14 +13447,14 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@yorkie-js/schema@0.6.48': {}
+  '@yorkie-js/schema@0.7.0': {}
 
-  '@yorkie-js/sdk@0.6.48':
+  '@yorkie-js/sdk@0.7.0':
     dependencies:
       '@bufbuild/protobuf': 2.10.2
       '@connectrpc/connect': 2.1.1(@bufbuild/protobuf@2.10.2)
       '@connectrpc/connect-web': 2.1.1(@bufbuild/protobuf@2.10.2)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.10.2))
-      '@yorkie-js/schema': 0.6.48
+      '@yorkie-js/schema': 0.7.0
       long: 5.3.2
 
   abbrev@3.0.1: {}

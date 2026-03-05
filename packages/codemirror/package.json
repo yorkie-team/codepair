@@ -20,7 +20,7 @@
 		"@uiw/codemirror-extensions-basic-setup": "^4.25.4",
 		"@uiw/codemirror-theme-xcode": "^4.25.4",
 		"@vscode/markdown-it-katex": "^1.1.2",
-		"@yorkie-js/sdk": "0.6.48",
+		"@yorkie-js/sdk": "0.7.0",
 		"codemirror": "^6.0.2",
 		"codemirror-markdown-commands": "^0.0.3",
 		"codemirror-markdown-slug": "^0.0.3",
