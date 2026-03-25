@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Strip comment lines (lines starting with #)
 msg=$(sed '/^#/d' "$1")
 
+# Skip empty messages (git handles this separately)
 if [ -z "$msg" ]; then
   exit 0
 fi

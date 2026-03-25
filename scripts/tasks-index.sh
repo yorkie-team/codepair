@@ -6,6 +6,7 @@ ACTIVE_DIR="$TASKS_DIR/active"
 ARCHIVE_DIR="$TASKS_DIR/archive"
 TODAY=$(date +%Y-%m-%d)
 
+# --- active/README.md ---
 {
   echo "---"
   echo "updated: $TODAY"
@@ -25,6 +26,7 @@ TODAY=$(date +%Y-%m-%d)
 } > "$ACTIVE_DIR/README.md"
 echo "Updated $ACTIVE_DIR/README.md"
 
+# --- archive/README.md ---
 {
   echo "---"
   echo "updated: $TODAY"
@@ -54,6 +56,7 @@ echo "Updated $ACTIVE_DIR/README.md"
 } > "$ARCHIVE_DIR/README.md"
 echo "Updated $ARCHIVE_DIR/README.md"
 
+# --- docs/tasks/README.md ---
 {
   echo "---"
   echo "updated: $TODAY"

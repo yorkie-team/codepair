@@ -4,42 +4,42 @@ updated: YYYY-MM-DD
 tags: []
 ---
 
-# 제목
+# Title
 
 ## Problem
 
-해결하려는 문제. 현재 상태의 불편함이나 한계를 구체적으로 기술한다.
+Describe the problem. What is the current limitation or pain point?
 
 ### Goals
 
-이 설계가 성공했는지 판단하는 기준을 나열한다.
+List the criteria for success.
 
 ### Non-Goals
 
-범위 밖을 명시해서 스코프 크립을 방지한다.
+State what is out of scope to prevent scope creep.
 
 ## Design
 
-설계의 핵심 아이디어. 다이어그램, 구조, 흐름 등을 포함한다.
+Core idea of the design. Include diagrams, structure, and flow as needed.
 
 ### Risks and Mitigation
 
-| 위험 | 대응 |
-|------|------|
-| 이 설계의 위험 요소 | 어떻게 대응하는지 |
+| Risk | Mitigation |
+|------|------------|
+| Risk of this design | How to mitigate |
 
-### 설계 판단
+### Design Decisions
 
-| 판단 | 이유 |
-|------|------|
-| 무엇을 결정했는지 | 왜 그렇게 결정했는지 |
+| Decision | Reason |
+|----------|--------|
+| What was decided | Why |
 
 ## Alternatives Considered
 
-| 대안 | 기각 이유 |
-|------|-----------|
-| 검토했지만 선택하지 않은 대안 | 왜 기각했는지 |
+| Alternative | Why not |
+|-------------|---------|
+| Alternative that was not chosen | Why it was rejected |
 
 ## Tasks
 
-실행 계획이 있으면 `docs/tasks/active/`의 태스크 문서를 `[[wikilink]]`로 연결한다.
+Link to task documents in `docs/tasks/active/` if an execution plan exists.

@@ -15,10 +15,12 @@ archived=0
 for todo in "$ACTIVE_DIR"/*-todo.md; do
   [ -f "$todo" ] || continue
 
+  # 미완료 체크박스가 있으면 건너뛰기
   if grep -q '\- \[ \]' "$todo"; then
     continue
   fi
 
+  # Created 날짜 파싱
   created_line=$(grep -m1 '^\*\*Created\*\*:' "$todo" || true)
   if [ -z "$created_line" ]; then
     echo "Warning: no **Created** line in $(basename "$todo"), skipping" >&2
@@ -37,10 +39,12 @@ for todo in "$ACTIVE_DIR"/*-todo.md; do
   dest="$ARCHIVE_DIR/$year/$month"
   mkdir -p "$dest"
 
+  # todo 파일 이동
   slug=$(basename "$todo" -todo.md)
   git mv "$todo" "$dest/"
   archived=$((archived + 1))
 
+  # 매칭 lessons 파일이 있으면 함께 이동
   lessons="$ACTIVE_DIR/${slug}-lessons.md"
   if [ -f "$lessons" ]; then
     git mv "$lessons" "$dest/"
