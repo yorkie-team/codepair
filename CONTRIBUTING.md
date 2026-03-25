@@ -12,6 +12,7 @@ If you have any questions along the way, please don’t hesitate to ask us
 
 - Fork the repository on GitHub
 - Read the README.md for build instructions
+- Run `bash scripts/setup.sh` to enable the commit message validation hook
 
 ## Contribution flow
 
