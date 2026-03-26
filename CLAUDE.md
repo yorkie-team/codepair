@@ -37,6 +37,12 @@ pnpm lint && pnpm format:check && pnpm backend test
 For database schema changes: `pnpm backend db:generate`
 For API changes: `pnpm generate:frontend` to regenerate the frontend API client.
 
+## Project Docs
+
+- **Design docs**: `docs/design/` for architectural context. New docs use [TEMPLATE.md](docs/design/TEMPLATE.md).
+- **Task tracking**: `docs/tasks/active/` for in-progress, `docs/tasks/archive/` for completed. Use `YYYYMMDD-<slug>-{todo,lessons}.md` pairs.
+- **Setup**: Husky manages git hooks. Run `pnpm install` to set up automatically.
+
 ## Gotchas
 
 - Prettier config: tabs, 4-space width, 100 chars, double quotes, semicolons — different from other yorkie projects
