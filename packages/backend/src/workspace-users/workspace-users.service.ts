@@ -37,6 +37,7 @@ export class WorkspaceUsersService {
 			select: {
 				id: true,
 				nickname: true,
+				profileIcon: true,
 				updatedAt: true,
 				createdAt: true,
 			},
