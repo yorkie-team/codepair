@@ -42,6 +42,8 @@ export class UsersService {
 		});
 
 		if (foundUser) {
+			// TODO: When user profile image change feature is added,
+			// this should be revisited to avoid overwriting user-uploaded images on re-login.
 			if (profileIcon && foundUser.profileIcon !== profileIcon) {
 				return await this.prismaService.user.update({
 					where: { id: foundUser.id },
