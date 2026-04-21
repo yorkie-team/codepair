@@ -208,11 +208,15 @@ export class WorkspaceDocumentsService {
 
 	async findManyFromYorkie(
 		documentKeyList: Array<string>
-	): Promise<FindDocumentsFromYorkieResponse | undefined> {
-		return new Promise((resolve, reject) => {
-			const client = connect(`${this.configService.get<string>("YORKIE_API_ADDR")}`);
+	): Promise<FindDocumentsFromYorkieResponse> {
+		return new Promise((resolve) => {
+			const yorkieAddr = this.configService.get<string>("YORKIE_API_ADDR");
+			const client = connect(yorkieAddr);
 
-			client.on("error", (err) => reject(err));
+			client.on("error", (err) => {
+				console.error(`Yorkie HTTP2 connection error (${yorkieAddr}):`, err.message);
+				resolve({ documents: [] });
+			});
 
 			const requestBody = JSON.stringify({
 				document_keys: documentKeyList,
@@ -232,6 +236,11 @@ export class WorkspaceDocumentsService {
 			req.write(requestBody);
 			req.setEncoding("utf8");
 			let data = "";
+			let statusCode: number | undefined;
+
+			req.on("response", (headers) => {
+				statusCode = headers[":status"];
+			});
 
 			req.on("data", (chunk) => {
 				data += chunk;
@@ -239,7 +248,29 @@ export class WorkspaceDocumentsService {
 
 			req.on("end", () => {
 				client.close();
-				resolve(JSON.parse(data) as FindDocumentsFromYorkieResponse);
+
+				if (statusCode && statusCode >= 400) {
+					console.error(
+						`Yorkie GetDocuments failed with status ${statusCode}: ${data.substring(0, 200)}`
+					);
+					resolve({ documents: [] });
+					return;
+				}
+
+				try {
+					resolve(JSON.parse(data) as FindDocumentsFromYorkieResponse);
+				} catch {
+					console.error(
+						`Yorkie GetDocuments response parse error: ${data.substring(0, 200)}`
+					);
+					resolve({ documents: [] });
+				}
+			});
+
+			req.on("error", (err) => {
+				client.close();
+				console.error(`Yorkie GetDocuments request error:`, err.message);
+				resolve({ documents: [] });
 			});
 
 			req.end();
