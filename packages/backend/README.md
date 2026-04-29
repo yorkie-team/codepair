@@ -154,4 +154,5 @@ packages/backend/
 ## Contributing
 
 Please see the [CONTRIBUTING.md](../../CONTRIBUTING.md) file for details on how to contribute to this project.  
-If you are interested in internal design, please refer to the [Design Document](./design/).
+If you are interested in internal design, please refer to the [Design Document](./design/README.md).
+For the local MongoDB replica set used in development, see [docker/mongodb_replica/README.md](./docker/mongodb_replica/README.md).
