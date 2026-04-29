@@ -25,7 +25,7 @@ CodePair provides the following features:
 
 This repository contains multiple packages that make up our project, organized as a pnpm workspace under `packages/`.
 
-- **`@codepair/frontend`**: App shell — routing, auth, workspace, editor slot. See [packages/frontend/](packages/frontend/) for details.
+- **`@codepair/frontend`**: App shell — routing, auth, workspace, editor slot. See [packages/frontend/README.md](packages/frontend/README.md) for details.
 - **`@codepair/backend`**: NestJS API server. See [packages/backend/README.md](packages/backend/README.md) for details.
 - **`@codepair/codemirror`**: CodeMirror 6 editor with Yorkie sync, toolbar, preview. Self-contained vertical slice.
 - **`@codepair/ui`**: Shared types (`EditorPort`, `EditorModeType`, `PresenceInfo`) and pure UI components.
@@ -126,6 +126,17 @@ We offer two options. Choose the one that best suits your needs:
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+
+## Documentation
+
+- [docs/design/](docs/design/README.md) — Architectural design documents
+- [docs/tasks/](docs/tasks/README.md) — Task tracking (active and archived)
+- [docs/editor-port-architecture.md](docs/editor-port-architecture.md) — Editor port architecture overview
+- [packages/frontend/design/](packages/frontend/design/README.md) — Frontend-specific design docs
+- [packages/backend/design/](packages/backend/design/README.md) — Backend-specific design docs
+- [CHANGELOG.md](CHANGELOG.md) — Release notes
+- [MAINTAINING.md](MAINTAINING.md) — Release and maintenance procedures
+- [CLAUDE.md](CLAUDE.md) — Agent instructions for AI-assisted development
 
 ## Contributors ✨
 
