@@ -19,9 +19,20 @@ class FileUploadConfig {
 	enable: boolean;
 }
 
+class DocumentSyncConfig {
+	@ApiProperty({
+		type: Boolean,
+		description: "Enable syncing Yorkie document metadata from webhook events",
+	})
+	enable: boolean;
+}
+
 export class GetSettingsResponse {
 	@ApiProperty({ type: YorkieIntelligenceConfig, description: "Yorkie Intelligence Config" })
 	yorkieIntelligence: YorkieIntelligenceConfig;
+
+	@ApiProperty({ type: DocumentSyncConfig, description: "Yorkie document sync config" })
+	documentSync: DocumentSyncConfig;
 
 	@ApiProperty({ type: FileUploadConfig, description: "File Upload Config" })
 	fileUpload: FileUploadConfig;

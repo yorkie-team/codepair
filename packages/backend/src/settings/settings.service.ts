@@ -15,6 +15,9 @@ export class SettingsService {
 					features: generateFeatureList(this.configService),
 				},
 			},
+			documentSync: {
+				enable: this.configService.get("YORKIE_DOCUMENT_SYNC") === "true",
+			},
 			fileUpload: {
 				enable: this.configService.get("FILE_UPLOAD") !== "false",
 			},

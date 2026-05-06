@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/db/prisma.service";
 import { IndexingQueueService } from "src/rag/indexing/indexing-queue.service";
 import { QdrantService } from "src/rag/qdrant/qdrant.service";
@@ -17,7 +18,8 @@ export class YorkieEventService {
 	constructor(
 		private prismaService: PrismaService,
 		private indexingQueueService: IndexingQueueService,
-		private qdrantService: QdrantService
+		private qdrantService: QdrantService,
+		private configService: ConfigService
 	) {}
 
 	/**
@@ -29,9 +31,17 @@ export class YorkieEventService {
 			`Received document event: ${eventDto.type} for document key: ${eventDto.attributes.key}`
 		);
 
+		if (!this.isDocumentSyncEnabled()) {
+			this.logger.log("Document sync is disabled; skipping Yorkie document event");
+			return;
+		}
+
 		switch (eventDto.type) {
 			case DocumentEventType.DocumentRootChanged:
-				await this.handleDocumentChanged(eventDto.attributes.key);
+				await this.handleDocumentChanged(
+					eventDto.attributes.key,
+					eventDto.attributes.issuedAt
+				);
 				break;
 			default:
 				this.logger.warn(`Unknown event type: ${eventDto.type}`);
@@ -42,7 +52,10 @@ export class YorkieEventService {
 	 * Handle document changed event - queue it for indexing
 	 * @param yorkieDocumentKey - Yorkie document key
 	 */
-	private async handleDocumentChanged(yorkieDocumentKey: string): Promise<void> {
+	private async handleDocumentChanged(
+		yorkieDocumentKey: string,
+		issuedAt: string
+	): Promise<void> {
 		try {
 			// Find CodePair document by Yorkie document ID
 			const document = await this.prismaService.document.findFirst({
@@ -62,7 +75,18 @@ export class YorkieEventService {
 				return;
 			}
 
-			this.logger.log(`Found CodePair document ${document.id} to queue for indexing`);
+			const syncedUpdatedAt = this.resolveUpdatedAt(document.updatedAt, issuedAt);
+
+			await this.prismaService.document.update({
+				where: {
+					id: document.id,
+				},
+				data: {
+					updatedAt: syncedUpdatedAt,
+				},
+			});
+
+			this.logger.log(`Synced updatedAt for CodePair document ${document.id}`);
 
 			// Queue document for indexing with appropriate debounce
 			const debounceMs = await this.calculateDebounceTime(document.id);
@@ -79,6 +103,23 @@ export class YorkieEventService {
 			);
 			throw error;
 		}
+	}
+
+	private isDocumentSyncEnabled(): boolean {
+		return this.configService.get("YORKIE_DOCUMENT_SYNC") === "true";
+	}
+
+	private resolveUpdatedAt(currentUpdatedAt: Date, issuedAt: string): Date {
+		const webhookTimestamp = new Date(issuedAt);
+
+		if (Number.isNaN(webhookTimestamp.getTime())) {
+			this.logger.warn(
+				`Invalid issuedAt received from Yorkie webhook: ${issuedAt}. Falling back to current time.`
+			);
+			return new Date();
+		}
+
+		return webhookTimestamp > currentUpdatedAt ? webhookTimestamp : currentUpdatedAt;
 	}
 
 	/**

@@ -13,8 +13,14 @@ class FileUploadSetting {
 	enable: boolean;
 }
 
+class DocumentSyncSetting {
+	enable: boolean;
+}
+
 export class GetSettingsResponse {
 	yorkieIntelligence: YorkieIntelligenceSetting;
+
+	documentSync: DocumentSyncSetting;
 
 	fileUpload: FileUploadSetting;
 }

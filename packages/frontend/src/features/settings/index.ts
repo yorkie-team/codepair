@@ -16,6 +16,7 @@ export type { ConfigState } from "./store/configSlice";
 export { default as featureSettingReducer } from "./store/featureSettingSlice";
 export {
 	setYorkieIntelligence,
+	setDocumentSync,
 	setFileUpload,
 	selectFeatureSetting,
 	featureSettingSlice,

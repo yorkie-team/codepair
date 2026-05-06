@@ -108,20 +108,26 @@ We offer two options. Choose the one that best suits your needs:
    pnpm install
    ```
 
-4. Set up the Yorkie webhook:
+4. Enable Yorkie document syncing in `./packages/backend/.env.development`.
+
+   ```bash
+   YORKIE_DOCUMENT_SYNC=true
+   ```
+
+5. Set up the Yorkie webhook:
 
    ```bash
    pnpm setup:webhook
    ```
 
-5. Run the Backend application and the Frontend application:
+6. Run the Backend application and the Frontend application:
 
    ```bash
    pnpm backend start:dev
    pnpm frontend dev
    ```
 
-6. Visit http://localhost:5173 to enjoy your CodePair.
+7. Visit http://localhost:5173 to enjoy your CodePair.
 
 ## Contributing
 

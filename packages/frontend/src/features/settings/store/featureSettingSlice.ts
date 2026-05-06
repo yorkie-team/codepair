@@ -17,13 +17,19 @@ interface FileUploadSetting {
 	enable: boolean;
 }
 
+interface DocumentSyncSetting {
+	enable: boolean;
+}
+
 export interface FeatureSettingState {
 	yorkieIntelligence: YorkieIntelligenceSetting | null;
+	documentSync: DocumentSyncSetting | null;
 	fileUpload: FileUploadSetting | null;
 }
 
 const initialState: FeatureSettingState = {
 	yorkieIntelligence: null,
+	documentSync: null,
 	fileUpload: null,
 };
 
@@ -34,13 +40,17 @@ export const featureSettingSlice = createSlice({
 		setYorkieIntelligence: (state, action: PayloadAction<YorkieIntelligenceSetting>) => {
 			state.yorkieIntelligence = action.payload;
 		},
+		setDocumentSync: (state, action: PayloadAction<DocumentSyncSetting>) => {
+			state.documentSync = action.payload;
+		},
 		setFileUpload: (state, action: PayloadAction<FileUploadSetting>) => {
 			state.fileUpload = action.payload;
 		},
 	},
 });
 
-export const { setYorkieIntelligence, setFileUpload } = featureSettingSlice.actions;
+export const { setYorkieIntelligence, setDocumentSync, setFileUpload } =
+	featureSettingSlice.actions;
 
 export const selectFeatureSetting = (state: RootState) => state.featureSetting;
 
@@ -49,6 +59,7 @@ export const selectFeatureSetting = (state: RootState) => state.featureSetting;
  *
  *  * This slice handles:
  * - `yorkieIntelligence`: Settings for the Yorkie Intelligence feature
+ * - `documentSync`: Settings for Yorkie document state synchronization
  * - `fileUpload`: Settings for file upload functionality
  */
 const reducer = featureSettingSlice.reducer;

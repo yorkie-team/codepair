@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	selectFeatureSetting,
+	setDocumentSync,
 	setFileUpload,
 	setYorkieIntelligence,
 } from "../../features/settings";
@@ -20,6 +21,7 @@ export const useGetSettingsQuery = () => {
 		queryKey: generateGetSettingsQueryKey(),
 		enabled:
 			featureSettingStore.yorkieIntelligence === null &&
+			featureSettingStore.documentSync === null &&
 			featureSettingStore.fileUpload === null,
 		queryFn: async () => {
 			const res = await axios.get<GetSettingsResponse>("/settings");
@@ -33,6 +35,7 @@ export const useGetSettingsQuery = () => {
 
 		const data = query.data;
 		dispatch(setYorkieIntelligence(data.yorkieIntelligence));
+		dispatch(setDocumentSync(data.documentSync));
 		dispatch(setFileUpload(data.fileUpload));
 	}, [dispatch, query.data, query.isSuccess]);
 
