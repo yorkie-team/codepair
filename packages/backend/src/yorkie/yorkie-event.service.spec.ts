@@ -162,14 +162,29 @@ describe("YorkieEventService", () => {
 			},
 		});
 
-		expect(prismaService.document.update).toHaveBeenCalledWith({
-			where: {
-				id: "document-id",
-			},
-			data: {
-				updatedAt,
+		expect(prismaService.document.update).not.toHaveBeenCalled();
+		expect(indexingQueueService.scheduleIndexing).not.toHaveBeenCalled();
+	});
+
+	it("should keep updatedAt unchanged for invalid webhook timestamps", async () => {
+		const updatedAt = new Date("2026-01-20T12:00:00.000Z");
+		prismaService.document.findFirst.mockResolvedValue({
+			id: "document-id",
+			workspaceId: "workspace-id",
+			yorkieDocumentId: "doc-key",
+			updatedAt,
+		});
+
+		await service.handleDocumentEvent({
+			type: DocumentEventType.DocumentRootChanged,
+			attributes: {
+				key: "doc-key",
+				issuedAt: "not-a-date",
 			},
 		});
+
+		expect(prismaService.document.update).not.toHaveBeenCalled();
+		expect(indexingQueueService.scheduleIndexing).not.toHaveBeenCalled();
 	});
 
 	it("should skip indexing when the Yorkie document does not map to a CodePair document", async () => {

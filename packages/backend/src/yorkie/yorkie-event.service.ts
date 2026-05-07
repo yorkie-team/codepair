@@ -77,6 +77,13 @@ export class YorkieEventService {
 
 			const syncedUpdatedAt = this.resolveUpdatedAt(document.updatedAt, issuedAt);
 
+			if (syncedUpdatedAt <= document.updatedAt) {
+				this.logger.log(
+					`Skipping stale Yorkie event for CodePair document ${document.id}`
+				);
+				return;
+			}
+
 			await this.prismaService.document.update({
 				where: {
 					id: document.id,
@@ -114,9 +121,9 @@ export class YorkieEventService {
 
 		if (Number.isNaN(webhookTimestamp.getTime())) {
 			this.logger.warn(
-				`Invalid issuedAt received from Yorkie webhook: ${issuedAt}. Falling back to current time.`
+				`Invalid issuedAt received from Yorkie webhook: ${issuedAt}. Keeping current updatedAt.`
 			);
-			return new Date();
+			return currentUpdatedAt;
 		}
 
 		return webhookTimestamp > currentUpdatedAt ? webhookTimestamp : currentUpdatedAt;
