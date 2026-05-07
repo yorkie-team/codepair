@@ -78,9 +78,7 @@ export class YorkieEventService {
 			const syncedUpdatedAt = this.resolveUpdatedAt(document.updatedAt, issuedAt);
 
 			if (syncedUpdatedAt <= document.updatedAt) {
-				this.logger.log(
-					`Skipping stale Yorkie event for CodePair document ${document.id}`
-				);
+				this.logger.log(`Skipping stale Yorkie event for CodePair document ${document.id}`);
 				return;
 			}
 
