@@ -10,10 +10,15 @@ const DEFAULT_DEBOUNCE_MS = 30000; // 30 seconds
 const LONG_DEBOUNCE_MS = 120000; // 2 minutes
 const MANUAL_DEBOUNCE_MS = 5000; // 5 seconds
 const RECENT_INDEX_THRESHOLD_MINUTES = 10; // 10 minutes
+const UPDATED_AT_SYNC_DEBOUNCE_MS = 5000; // 5 seconds
 
 @Injectable()
 export class YorkieEventService {
 	private readonly logger = new Logger(YorkieEventService.name);
+	private readonly pendingUpdatedAtSyncs = new Map<
+		string,
+		{ issuedAt: Date; timeout: NodeJS.Timeout }
+	>();
 
 	constructor(
 		private prismaService: PrismaService,
@@ -30,11 +35,6 @@ export class YorkieEventService {
 		this.logger.log(
 			`Received document event: ${eventDto.type} for document key: ${eventDto.attributes.key}`
 		);
-
-		if (!this.isDocumentSyncEnabled()) {
-			this.logger.log("Document sync is disabled; skipping Yorkie document event");
-			return;
-		}
 
 		switch (eventDto.type) {
 			case DocumentEventType.DocumentRootChanged:
@@ -75,23 +75,9 @@ export class YorkieEventService {
 				return;
 			}
 
-			const syncedUpdatedAt = this.resolveUpdatedAt(document.updatedAt, issuedAt);
-
-			if (syncedUpdatedAt <= document.updatedAt) {
-				this.logger.log(`Skipping stale Yorkie event for CodePair document ${document.id}`);
-				return;
+			if (this.isDocumentSyncEnabled()) {
+				this.scheduleUpdatedAtSync(document.id, issuedAt);
 			}
-
-			await this.prismaService.document.update({
-				where: {
-					id: document.id,
-				},
-				data: {
-					updatedAt: syncedUpdatedAt,
-				},
-			});
-
-			this.logger.log(`Synced updatedAt for CodePair document ${document.id}`);
 
 			// Queue document for indexing with appropriate debounce
 			const debounceMs = await this.calculateDebounceTime(document.id);
@@ -114,17 +100,85 @@ export class YorkieEventService {
 		return this.configService.get("YORKIE_DOCUMENT_SYNC") === "true";
 	}
 
-	private resolveUpdatedAt(currentUpdatedAt: Date, issuedAt: string): Date {
+	private scheduleUpdatedAtSync(documentId: string, issuedAt: string): void {
 		const webhookTimestamp = new Date(issuedAt);
 
 		if (Number.isNaN(webhookTimestamp.getTime())) {
 			this.logger.warn(
 				`Invalid issuedAt received from Yorkie webhook: ${issuedAt}. Keeping current updatedAt.`
 			);
-			return currentUpdatedAt;
+			return;
 		}
 
-		return webhookTimestamp > currentUpdatedAt ? webhookTimestamp : currentUpdatedAt;
+		const existingSync = this.pendingUpdatedAtSyncs.get(documentId);
+
+		if (existingSync) {
+			clearTimeout(existingSync.timeout);
+		}
+
+		const latestIssuedAt =
+			existingSync && existingSync.issuedAt > webhookTimestamp
+				? existingSync.issuedAt
+				: webhookTimestamp;
+		const timeout = setTimeout(() => {
+			void this.flushUpdatedAtSync(documentId);
+		}, UPDATED_AT_SYNC_DEBOUNCE_MS);
+
+		this.pendingUpdatedAtSyncs.set(documentId, {
+			issuedAt: latestIssuedAt,
+			timeout,
+		});
+	}
+
+	private async flushUpdatedAtSync(documentId: string): Promise<void> {
+		const pendingSync = this.pendingUpdatedAtSyncs.get(documentId);
+
+		if (!pendingSync) {
+			return;
+		}
+
+		this.pendingUpdatedAtSyncs.delete(documentId);
+
+		try {
+			const document = await this.prismaService.document.findUnique({
+				where: {
+					id: documentId,
+				},
+				select: {
+					updatedAt: true,
+				},
+			});
+
+			if (!document) {
+				this.logger.warn(
+					`No CodePair document found while flushing updatedAt sync for ${documentId}`
+				);
+				return;
+			}
+
+			if (pendingSync.issuedAt <= document.updatedAt) {
+				this.logger.log(
+					`Skipping outdated updatedAt sync for CodePair document ${documentId}`
+				);
+				return;
+			}
+
+			await this.prismaService.document.update({
+				where: {
+					id: documentId,
+				},
+				data: {
+					updatedAt: pendingSync.issuedAt,
+				},
+			});
+
+			this.logger.log(`Synced updatedAt for CodePair document ${documentId}`);
+		} catch (error) {
+			this.logger.error(
+				`Error flushing updatedAt sync for document ${documentId}: ${error.message}`,
+				error.stack
+			);
+		}
 	}
 
 	/**
