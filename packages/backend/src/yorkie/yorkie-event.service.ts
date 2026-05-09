@@ -65,8 +65,6 @@ export class YorkieEventService {
 				select: {
 					id: true,
 					workspaceId: true,
-					yorkieDocumentId: true,
-					updatedAt: true,
 				},
 			});
 

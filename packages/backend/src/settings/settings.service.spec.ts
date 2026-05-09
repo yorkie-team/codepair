@@ -51,4 +51,21 @@ describe("SettingsService", () => {
 			},
 		});
 	});
+
+	it("should disable document sync when YORKIE_DOCUMENT_SYNC is not set", async () => {
+		configService.get.mockImplementation((key: string) => {
+			const config: Record<string, string> = {
+				YORKIE_INTELLIGENCE: "true",
+				FILE_UPLOAD: "s3",
+			};
+
+			return config[key];
+		});
+
+		await expect(service.getSettings()).resolves.toMatchObject({
+			documentSync: {
+				enable: false,
+			},
+		});
+	});
 });
