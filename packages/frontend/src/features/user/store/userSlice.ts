@@ -5,6 +5,8 @@ import { RootState } from "../../../store/store";
 export interface User {
 	id: string;
 	nickname: string | null;
+	profileIcon: string | null;
+	lastWorkspaceSlug: string;
 	updatedAt: Date;
 	createdAt: Date;
 }
@@ -38,6 +40,8 @@ export const selectUser = (state: RootState) => state.user;
  * - Storing user data, including:
  *   - `id`: Unique identifier for the user.
  *   - `nickname`: User's nickname, or `null` if not set.
+ *   - `profileIcon`: User's profile icon URL, or `null` if not set.
+ *   - `lastWorkspaceSlug`: The last accessed workspace's slug.
  *   - `updatedAt`: Timestamp of the last user update.
  *   - `createdAt`: Timestamp of when the user was created.
  */

@@ -14,6 +14,7 @@ export class Document {
 				color: string;
 				cursor: string | null;
 				name: string;
+				profileIcon?: string | null;
 				selection: string | null;
 			};
 		}
