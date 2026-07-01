@@ -7,6 +7,16 @@ and CodePair adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-07-02
+
+### Fixed
+
+- Fix Yorkie auth webhook failures and bump up @yorkie-js/sdk to v0.7.12 by @hackerwins in https://github.com/yorkie-team/codepair/pull/605
+
+### Changed
+
+- Align .nvmrc with supported Node.js versions by @hyunji1117 in https://github.com/yorkie-team/codepair/pull/603
+
 ## [0.2.2] - 2026-04-27
 
 ### Changed
