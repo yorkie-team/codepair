@@ -7,6 +7,14 @@ import { CheckYorkieDto, YorkieMethod } from "./dto/check-yorkie.dto";
 import { CheckNameConflicReponse } from "./types/check-name-conflict-response.type";
 import { CheckYorkieResponse } from "./types/check-yorkie-response.type";
 
+// Methods that are not scoped to a single document and therefore have no
+// document attribute to authorize against.
+const PASS_THROUGH_METHODS: ReadonlyArray<YorkieMethod> = [
+	YorkieMethod.ActivateClient,
+	YorkieMethod.DeactivateClient,
+	YorkieMethod.Watch,
+];
+
 @Injectable()
 export class CheckService {
 	constructor(
@@ -33,21 +41,28 @@ export class CheckService {
 	}
 
 	async checkYorkie(checkYorkieDto: CheckYorkieDto): Promise<CheckYorkieResponse> {
-		const [type, token] = checkYorkieDto.token.split(":");
-
-		// In `ActivateClient`, `DeactivateClient` methods, the `checkYorkieDto.attributes` is empty.
-		if (
-			[YorkieMethod.ActivateClient, YorkieMethod.DeactivateClient].includes(
-				checkYorkieDto.method
-			)
-		) {
+		// These methods are not scoped to a single document, so there is no
+		// document attribute to authorize against. `ActivateClient` and
+		// `DeactivateClient` operate at the client level, and Yorkie's unified
+		// `Watch` RPC verifies access before subscribing to any resource, so it
+		// carries no document attribute either. Pass them through.
+		if (PASS_THROUGH_METHODS.includes(checkYorkieDto.method)) {
 			return {
 				allowed: true,
 				reason: `Pass ${checkYorkieDto.method} method`,
 			};
 		}
 
-		const { key: yorkieDocumentId } = checkYorkieDto.attributes?.[0];
+		const [type, token] = (checkYorkieDto.token ?? "").split(":");
+
+		const yorkieDocumentId = checkYorkieDto.attributes?.[0]?.key;
+		if (!yorkieDocumentId) {
+			throw new ForbiddenException({
+				allowed: false,
+				reason: "Missing document attribute",
+			});
+		}
+
 		if (type == "default") {
 			await this.checkDefaultAccessToken(yorkieDocumentId, token);
 		} else if (type == "share") {
