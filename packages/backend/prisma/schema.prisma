@@ -61,6 +61,7 @@ model Document {
   documentSharingTokenList DocumentSharingToken[]
   intelligenceLogList      IntelligenceLog[]
 
+  @@index([yorkieDocumentId])
   @@map("documents")
 }
 

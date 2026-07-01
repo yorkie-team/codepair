@@ -10,7 +10,7 @@ export enum YorkieMethod {
 	"DeactivateClient" = "DeactivateClient",
 	"AttachDocument" = "AttachDocument",
 	"DetachDocument" = "DetachDocument",
-	"WatchDocuments" = "WatchDocuments",
+	"Watch" = "Watch",
 	"PushPull" = "PushPull",
 }
 
