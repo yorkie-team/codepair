@@ -221,8 +221,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@yorkie-js/sdk':
-        specifier: 0.7.7
-        version: 0.7.7
+        specifier: 0.7.12
+        version: 0.7.12
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
@@ -390,8 +390,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@yorkie-js/sdk':
-        specifier: 0.7.7
-        version: 0.7.7
+        specifier: 0.7.12
+        version: 0.7.12
       axios:
         specifier: ^1.13.2
         version: 1.13.2(debug@4.4.3)
@@ -4093,12 +4093,12 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@yorkie-js/schema@0.7.7':
-    resolution: {integrity: sha512-SKZHBE/yjOwF4v52J08PInxpKnOP/Y3tN8tDUbhjpG6bY/XbJZn1Ss6SNItLkUsvhW9oEz3Bb/9iSyoiO8D8HQ==}
+  '@yorkie-js/schema@0.7.12':
+    resolution: {integrity: sha512-lZzgK6o4AV3l6KeeVDbL3LKzxwfiVTGJBa4plI2ZfOlnct4iyh6jbzDso0XdUHmhksEpU1KPmTMlqXDTLSG/8w==}
 
-  '@yorkie-js/sdk@0.7.7':
-    resolution: {integrity: sha512-YJlH6SDQgmdfyBv7d/ZkIvLmYfy5YhxEu0h+XYqGNM4ElHH7x1MDBNuxEwUDIQNhKUCV/ID0lANnaTlG3U7Peg==}
-    engines: {node: '>=18.0.0', npm: '>=7.1.0', pnpm: '>=9.6.0'}
+  '@yorkie-js/sdk@0.7.12':
+    resolution: {integrity: sha512-37H6SfBOrLEd5RRAzv9CDHf275GwT+l9nihEbKOU4+T4+Hd5CYFGgioGMf1aDL0j2rvdcmBFlNiQHbqkSlfURA==}
+    engines: {node: ^20.19.0 || >=22.12.0, npm: '>=7.1.0', pnpm: '>=9.6.0'}
 
   abbrev@3.0.1:
     resolution: {integrity: sha512-AO2ac6pjRB3SJmGJo+v5/aK6Omggp6fsLrs6wN9bd35ulu4cCwaAU9+7ZhXjeqHVkaHThLuzH0nZr0YpCDhygg==}
@@ -5859,7 +5859,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
@@ -13447,14 +13447,14 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@yorkie-js/schema@0.7.7': {}
+  '@yorkie-js/schema@0.7.12': {}
 
-  '@yorkie-js/sdk@0.7.7':
+  '@yorkie-js/sdk@0.7.12':
     dependencies:
       '@bufbuild/protobuf': 2.10.2
       '@connectrpc/connect': 2.1.1(@bufbuild/protobuf@2.10.2)
       '@connectrpc/connect-web': 2.1.1(@bufbuild/protobuf@2.10.2)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.10.2))
-      '@yorkie-js/schema': 0.7.7
+      '@yorkie-js/schema': 0.7.12
 
   abbrev@3.0.1: {}
 
