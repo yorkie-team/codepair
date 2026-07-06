@@ -17,7 +17,8 @@ export class AuthService {
 	async loginWithSocialProvider(req: LoginRequest): Promise<LoginResponse> {
 		const user = await this.usersService.findOrCreate(
 			req.user.socialProvider,
-			req.user.socialUid
+			req.user.socialUid,
+			req.user.profileIcon
 		);
 
 		const accessToken = this.jwtAccessService.sign({ sub: user.id, nickname: user.nickname });
