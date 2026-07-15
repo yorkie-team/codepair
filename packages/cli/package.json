@@ -1,0 +1,68 @@
+{
+	"name": "@codepair/cli",
+	"version": "0.2.3",
+	"private": true,
+	"description": "Bootstrap and diagnose a self-hosted CodePair development environment",
+	"keywords": [
+		"codepair",
+		"yorkie",
+		"developer-tools"
+	],
+	"author": "yorkie-team",
+	"license": "Apache-2.0",
+	"homepage": "https://github.com/yorkie-team/codepair#readme",
+	"bugs": {
+		"url": "https://github.com/yorkie-team/codepair/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yorkie-team/codepair.git",
+		"directory": "packages/cli"
+	},
+	"type": "module",
+	"bin": {
+		"codepair": "dist/cli.js"
+	},
+	"exports": {
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"clean": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+		"build": "pnpm run clean && tsc -p tsconfig.json",
+		"dev": "pnpm run build && node dist/cli.js",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"test": "pnpm run build && node --test test/unit/env-file.test.mjs test/unit/options.test.mjs test/unit/process-services.test.mjs test/unit/url-redact.test.mjs test/unit/yorkie-cli.test.mjs",
+		"test:e2e": "pnpm run build && node --test test/e2e/cli.test.mjs && node --test test/e2e/setup.test.mjs && node --test test/e2e/package.test.mjs",
+		"test:integration": "pnpm run build && node --test test/integration/yorkie.test.mjs",
+		"prepack": "pnpm run build",
+		"pack:check": "npm pack --dry-run",
+		"verify": "pnpm run format:check && pnpm run lint:check && pnpm run typecheck && pnpm run test && pnpm run test:e2e && pnpm run pack:check",
+		"lint": "eslint src --report-unused-disable-directives --max-warnings 0",
+		"lint:check": "eslint src --report-unused-disable-directives --max-warnings 0",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
+	},
+	"engines": {
+		"node": "^20 || ^22 || ^24"
+	},
+	"lint-staged": {
+		"*.ts": [
+			"eslint --report-unused-disable-directives --max-warnings 0",
+			"prettier --write"
+		],
+		"*.{mjs,cjs,json}": [
+			"prettier --write"
+		]
+	},
+	"devDependencies": {
+		"@types/node": "^22.19.7",
+		"@typescript-eslint/eslint-plugin": "^8.53.0",
+		"@typescript-eslint/parser": "^8.53.0",
+		"eslint": "^9.39.2",
+		"prettier": "^3.8.0",
+		"typescript": "^5.9.3"
+	}
+}

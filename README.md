@@ -29,11 +29,44 @@ This repository contains multiple packages that make up our project, organized a
 - **`@codepair/backend`**: NestJS API server. See [packages/backend/README.md](packages/backend/README.md) for details.
 - **`@codepair/codemirror`**: CodeMirror 6 editor with Yorkie sync, toolbar, preview. Self-contained vertical slice.
 - **`@codepair/ui`**: Shared types (`EditorPort`, `EditorModeType`, `PresenceInfo`) and pure UI components.
+- **`@codepair/cli`**: Node.js CLI for local CodePair setup and Yorkie webhook configuration.
 
 ## Node.js Version Support
 
 - **Supported:** **20.x (LTS)**, **22.x (Active LTS)**, **24.x (Current)**
 - **Dropped:** **18.x** (End-of-life)
+
+## Command-Line Interface
+
+After installing the workspace dependencies, run the CLI from the repository root:
+
+```bash
+pnpm cli --help
+pnpm cli setup yorkie
+pnpm cli doctor
+```
+
+The setup command creates or reuses the local Yorkie project, configures its event webhook, and
+synchronizes the Yorkie addresses and project keys in the development environment files. Its
+default webhook URL is `http://host.docker.internal:3000/yorkie/document-events`, which lets the
+Yorkie container reach the backend through its published port. Override it when your backend is
+reachable elsewhere:
+
+```bash
+pnpm cli setup yorkie --webhook-url http://your-backend:3000/yorkie/document-events
+```
+
+This workflow is intended for **Full Stack Development Mode**, where the backend runs on the host.
+Frontend-only mode uses the services configured directly in `docker-compose-full.yml`.
+
+For backward compatibility, the non-interactive webhook setup command remains available:
+
+```bash
+pnpm setup:webhook
+```
+
+This delegates to the CLI non-interactively while retaining the legacy command's defaults. New
+automation should call `pnpm cli setup yorkie --yes` directly.
 
 ## Getting Started with Development
 
@@ -41,7 +74,8 @@ This repository contains multiple packages that make up our project, organized a
 
 For the Social Login feature, you need to obtain a GitHub OAuth key before running the project. Please refer to [this document](./docs/1_Set_Up_GitHub_OAuth_Key.md) for guidance.
 
-After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` values.
+After completing this step, you should have the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
+values.
 
 ### 2. Choose Running Mode
 
@@ -85,16 +119,20 @@ We offer two options. Choose the one that best suits your needs:
 
 ### 3-2. Full Stack Development Mode
 
-1. Update your `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to `./packages/backend/.env.development`.
+1. Copy the environment examples if they are missing, then add your GitHub OAuth values to
+   `./packages/backend/.env.development`.
 
    ```bash
-   vi ./packages/backend/.env.development
+   cp -n packages/backend/.env.example packages/backend/.env.development
+   cp -n packages/frontend/.env.example packages/frontend/.env.development
 
-   # In the file, update the following values:
-   # GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+   # Edit packages/backend/.env.development:
    GITHUB_CLIENT_ID=your_github_client_id_here
    GITHUB_CLIENT_SECRET=your_github_client_secret_here
    ```
+
+   The setup CLI only updates the Yorkie addresses and project keys. It preserves OAuth
+   credentials, JWT settings, and every other existing value.
 
 2. Run `./packages/backend/docker/docker-compose.yml`.
 
@@ -111,7 +149,7 @@ We offer two options. Choose the one that best suits your needs:
 4. Set up the Yorkie webhook:
 
    ```bash
-   pnpm setup:webhook
+   pnpm cli setup yorkie --yes
    ```
 
 5. Run the Backend application and the Frontend application:
@@ -130,6 +168,7 @@ See [CONTRIBUTING](CONTRIBUTING.md) for details on submitting patches and the co
 ## Documentation
 
 - [docs/design/](docs/design/README.md) — Architectural design documents
+- [docs/design/cli.md](docs/design/cli.md) — CLI design and integration
 - [docs/tasks/](docs/tasks/README.md) — Task tracking (active and archived)
 - [docs/editor-port-architecture.md](docs/editor-port-architecture.md) — Editor port architecture overview
 - [packages/frontend/design/](packages/frontend/design/README.md) — Frontend-specific design docs

@@ -1,0 +1,143 @@
+import { OperationalError } from "../core/errors.js";
+import { CommandRunner } from "../core/process.js";
+
+export const REQUIRED_EVENT = "DocumentRootChanged";
+
+export interface YorkieProject {
+	name: string;
+	secretKey?: string;
+	publicKey?: string;
+	eventWebhookUrl?: string;
+	eventWebhookEvents: string[];
+}
+
+function stringField(record: Record<string, unknown>, ...keys: string[]): string | undefined {
+	for (const key of keys) {
+		const value = record[key];
+		if (typeof value === "string") return value;
+	}
+	return undefined;
+}
+
+function stringListField(record: Record<string, unknown>, ...keys: string[]): string[] {
+	for (const key of keys) {
+		const value = record[key];
+		if (Array.isArray(value)) {
+			return value.filter((entry): entry is string => typeof entry === "string");
+		}
+		if (typeof value === "string") {
+			return value
+				.split(",")
+				.map((entry) => entry.trim())
+				.filter(Boolean);
+		}
+	}
+	return [];
+}
+
+function unwrapProjectRecords(value: unknown): Record<string, unknown>[] {
+	if (Array.isArray(value)) {
+		return value.filter(
+			(entry): entry is Record<string, unknown> =>
+				typeof entry === "object" && entry !== null && !Array.isArray(entry)
+		);
+	}
+	if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+		const record = value as Record<string, unknown>;
+		for (const key of ["projects", "items", "data"]) {
+			if (Array.isArray(record[key])) return unwrapProjectRecords(record[key]);
+		}
+	}
+	throw new OperationalError(
+		"Yorkie project list returned an unexpected JSON shape.",
+		"INVALID_YORKIE_PROJECT_OUTPUT"
+	);
+}
+
+export function parseYorkieProjects(output: string): YorkieProject[] {
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(output.trim());
+	} catch (error) {
+		throw new OperationalError(
+			"Yorkie project list did not return valid JSON.",
+			"INVALID_YORKIE_PROJECT_JSON",
+			{ cause: error }
+		);
+	}
+
+	return unwrapProjectRecords(parsed).map((record) => {
+		const name = stringField(record, "name");
+		if (!name) {
+			throw new OperationalError(
+				"Yorkie project data is missing a project name.",
+				"INVALID_YORKIE_PROJECT_OUTPUT"
+			);
+		}
+		return {
+			name,
+			secretKey: stringField(record, "secret_key", "secretKey"),
+			publicKey: stringField(record, "public_key", "publicKey"),
+			eventWebhookUrl: stringField(record, "event_webhook_url", "eventWebhookUrl"),
+			eventWebhookEvents: stringListField(
+				record,
+				"event_webhook_events",
+				"eventWebhookEvents"
+			),
+		};
+	});
+}
+
+export class YorkieCli {
+	constructor(
+		private readonly runner: CommandRunner,
+		private readonly rpcAddress: string
+	) {}
+
+	async assertAvailable(): Promise<void> {
+		await this.runner.run("yorkie", ["--help"], { timeoutMs: 5_000 });
+	}
+
+	async login(username: string, password: string, insecure: boolean): Promise<void> {
+		this.runner.addSecret(password);
+		const args = ["login", "-u", username, "-p", password];
+		if (insecure) args.push("--insecure");
+		args.push("--rpc-addr", this.rpcAddress);
+		await this.runner.run("yorkie", args, { timeoutMs: 20_000 });
+	}
+
+	async listProjects(): Promise<YorkieProject[]> {
+		const result = await this.runner.run(
+			"yorkie",
+			["project", "ls", "--verbose", "--output", "json", "--rpc-addr", this.rpcAddress],
+			{ timeoutMs: 15_000 }
+		);
+		return parseYorkieProjects(result.stdout);
+	}
+
+	async createProject(name: string): Promise<void> {
+		await this.runner.run(
+			"yorkie",
+			["project", "create", name, "--rpc-addr", this.rpcAddress],
+			{ timeoutMs: 15_000 }
+		);
+	}
+
+	async configureEventWebhook(name: string, webhookUrl: string): Promise<void> {
+		await this.runner.run(
+			"yorkie",
+			[
+				"project",
+				"update",
+				name,
+				"--event-webhook-url",
+				webhookUrl,
+				"--event-webhook-events-add",
+				REQUIRED_EVENT,
+				"--rpc-addr",
+				this.rpcAddress,
+			],
+			{ timeoutMs: 15_000 }
+		);
+	}
+}

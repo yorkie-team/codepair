@@ -5,7 +5,7 @@
 ### 1. Update the version number.
 
 - Update the `version` field in the root `package.json` file to reflect the overall version of the monorepo.
-- Also, update `version` fields in the [`frontend` package.json](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/frontend/package.json#L3) and [`backend` package.json](https://github.com/yorkie-team/codepair/blob/1f10dff1d9c253f921ba136c812383fbb292078f/backend/package.json#L3).
+- Also update the `version` fields in the frontend, backend, and private CLI package manifests.
 
 ### 2. Write changelog of this version in [CHANGELOG.md](https://github.com/yorkie-team/codepair/blob/main/CHANGELOG.md).
 

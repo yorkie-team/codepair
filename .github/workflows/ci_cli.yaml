@@ -1,0 +1,127 @@
+name: CI CLI
+on:
+  push:
+    branches: main
+    paths:
+      - ".github/workflows/ci_cli.yaml"
+      - "packages/backend/.env.example"
+      - "packages/backend/docker/docker-compose*.yml"
+      - "packages/cli/**"
+      - "packages/frontend/.env.example"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "scripts/setup-yorkie-webhook.js"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ci_cli.yaml"
+      - "packages/backend/.env.example"
+      - "packages/backend/docker/docker-compose*.yml"
+      - "packages/cli/**"
+      - "packages/frontend/.env.example"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "scripts/setup-yorkie-webhook.js"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node-version: 22.x
+            integration: true
+          - os: macos-latest
+            node-version: 20.x
+            integration: false
+          - os: windows-latest
+            node-version: 24.x
+            integration: false
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install packages
+        run: pnpm install --frozen-lockfile --filter @codepair/cli --ignore-scripts
+      - name: Prettier
+        run: pnpm --filter=@codepair/cli format:check
+      - name: Integration file formatting
+        run: >-
+          pnpm --filter=@codepair/cli exec prettier --check
+          ../../README.md
+          ../../docs/design/cli.md
+          ../../scripts/setup-yorkie-webhook.js
+          ../../.github/workflows/ci_cli.yaml
+      - name: Lint
+        run: pnpm --filter=@codepair/cli lint
+      - name: Typecheck
+        run: pnpm --filter=@codepair/cli typecheck
+      - name: Unit tests
+        run: pnpm --filter=@codepair/cli test
+      - name: End-to-end tests
+        run: pnpm --filter=@codepair/cli test:e2e
+      - name: Check package contents
+        run: pnpm --filter=@codepair/cli pack:check
+      - name: Validate Docker Compose files
+        if: matrix.integration
+        run: |
+          docker compose -f packages/backend/docker/docker-compose.yml config --quiet
+          docker compose -f packages/backend/docker/docker-compose-full.yml config --quiet
+      - name: Install Yorkie CLI
+        if: matrix.integration
+        shell: bash
+        run: |
+          archive="$RUNNER_TEMP/yorkie-v0.7.12-linux-amd64.tar.gz"
+          install_dir="$RUNNER_TEMP/yorkie-cli"
+          curl --fail --location --retry 3 \
+            --output "$archive" \
+            https://github.com/yorkie-team/yorkie/releases/download/v0.7.12/yorkie-v0.7.12-linux-amd64.tar.gz
+          echo "a111367beeee9925248c506c11a8a8c9cb8dca0b48c79d542dbce6b66f88a4d9  $archive" \
+            | sha256sum --check
+          mkdir -p "$install_dir"
+          tar --extract --gzip --file "$archive" --directory "$install_dir" \
+            --strip-components=1
+          echo "$install_dir" >> "$GITHUB_PATH"
+      - name: Start Yorkie server
+        if: matrix.integration
+        shell: bash
+        run: |
+          docker run --detach --name codepair-cli-yorkie \
+            --publish 18080:8080 \
+            yorkieteam/yorkie@sha256:f20f8d3604397156883bda4aa0e2951e5e537656af9a59fd1f34f591ac8206f3 \
+            server --pprof-enabled
+          for attempt in {1..30}; do
+            if (echo > /dev/tcp/127.0.0.1/18080) >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs codepair-cli-yorkie
+          exit 1
+      - name: Real Yorkie integration test
+        if: matrix.integration
+        env:
+          CODEPAIR_YORKIE_RPC_ADDR: 127.0.0.1:18080
+        run: pnpm --filter=@codepair/cli test:integration
+      - name: Yorkie logs
+        if: ${{ always() && matrix.integration }}
+        run: docker logs codepair-cli-yorkie || true
+      - name: Stop Yorkie server
+        if: ${{ always() && matrix.integration }}
+        run: docker rm --force codepair-cli-yorkie || true
