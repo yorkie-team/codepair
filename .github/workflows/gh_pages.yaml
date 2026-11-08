@@ -1,40 +1,24 @@
 name: GitHub Page Publish
 
+# CodePair is retired; codepair.yorkie.dev now serves a static notice that
+# points to Wafflebase. The app build is no longer published.
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+    paths:
+      - "sunset/**"
+      - ".github/workflows/gh_pages.yaml"
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup Node 🔧
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: "pnpm"
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Setup Sentry Env 🛠️
-        working-directory: ./packages/frontend
-        run: |
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env.sentry-build-plugin
-          echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> .env.sentry-build-plugin
-          echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> .env.sentry-build-plugin
-
-      - name: Install and Build 🔧
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm --filter=@codepair/frontend build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           branch: gh-pages
-          folder: packages/frontend/dist
+          folder: sunset

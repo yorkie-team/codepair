@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> CodePair was retired in November 2026 and every note moved to [Wafflebase](https://wafflebase.io). Sign in there with the same GitHub account. This repository is kept for reference.
+
 # CodePair
 
 <p align="center">
