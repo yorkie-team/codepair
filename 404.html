@@ -1,50 +1,156 @@
 <!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>Single Page Apps for GitHub Pages</title>
-		<script type="text/javascript">
-			// Single Page Apps for GitHub Pages
-			// MIT License
-			// https://github.com/rafgraph/spa-github-pages
-			// This script takes the current url and converts the path and query
-			// string into just a query string, and then redirects the browser
-			// to the new url with only a query string and hash fragment,
-			// e.g. https://www.foo.tld/one/two?a=b&c=d#qwe, becomes
-			// https://www.foo.tld/?/one/two&a=b~and~c=d#qwe
-			// Note: this 404.html file must be at least 512 bytes for it to work
-			// with Internet Explorer (it is currently > 512 bytes)
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CodePair has moved to Wafflebase</title>
+    <meta
+      name="description"
+      content="CodePair has been retired. Every CodePair note now lives in Wafflebase."
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1f2328;
+        --muted: #59636e;
+        --card: #f6f8fa;
+        --border: #d1d9e0;
+        --accent: #e8590c;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1117;
+          --fg: #e6edf3;
+          --muted: #9198a1;
+          --card: #151b23;
+          --border: #3d444d;
+          --accent: #ff8c42;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+          "Noto Sans KR", Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+      }
+      main {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 64px 16px;
+      }
+      h1 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+        margin: 0 0 16px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 32px 0 8px;
+      }
+      p,
+      li {
+        color: var(--muted);
+      }
+      strong {
+        color: var(--fg);
+      }
+      ul {
+        padding-left: 20px;
+      }
+      .cta {
+        display: inline-block;
+        margin: 16px 0 8px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .card {
+        margin-top: 40px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+      a {
+        color: var(--accent);
+      }
+      footer {
+        margin-top: 48px;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>CodePair has moved to Wafflebase</h1>
+      <p>
+        CodePair was retired in November 2026. Every CodePair note, including
+        its images and dates, now lives in <strong>Wafflebase</strong> as a
+        markdown note you can keep editing together.
+      </p>
+      <a class="cta" href="https://wafflebase.io">Open Wafflebase</a>
 
-			// If you're creating a Project Pages site and NOT using a custom domain,
-			// then set pathSegmentsToKeep to 1 (enterprise users may need to set it to > 1).
-			// This way the code will only replace the route part of the path, and not
-			// the real directory in which the app resides, for example:
-			// https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
-			// https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
-			// Otherwise, leave pathSegmentsToKeep as 0.
-			var pathSegmentsToKeep = 0;
+      <h2>Where are my notes?</h2>
+      <ul>
+        <li>
+          Sign in to <a href="https://wafflebase.io">wafflebase.io</a> with the
+          <strong>same GitHub account</strong> you used for CodePair. Your
+          workspaces are waiting for you there.
+        </li>
+        <li>
+          For a workspace you shared with others, the notes went to the
+          workspace <strong>owner</strong>. Ask the owner to invite you from
+          Wafflebase.
+        </li>
+        <li>
+          Old CodePair links and share links no longer open. Find the note in
+          Wafflebase by its title.
+        </li>
+        <li>The CodePair desktop app no longer works.</li>
+      </ul>
 
-			var l = window.location;
-			l.replace(
-				l.protocol +
-					"//" +
-					l.hostname +
-					(l.port ? ":" + l.port : "") +
-					l.pathname
-						.split("/")
-						.slice(0, 1 + pathSegmentsToKeep)
-						.join("/") +
-					"/?/" +
-					l.pathname
-						.slice(1)
-						.split("/")
-						.slice(pathSegmentsToKeep)
-						.join("/")
-						.replace(/&/g, "~and~") +
-					(l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
-					l.hash
-			);
-		</script>
-	</head>
-	<body></body>
+      <div class="card" lang="ko">
+        <h2 style="margin-top: 0">CodePair가 Wafflebase로 이전했습니다</h2>
+        <p>
+          CodePair는 2026년 11월에 서비스를 종료했습니다. CodePair의 모든
+          노트는 이미지와 날짜까지 그대로 <strong>Wafflebase</strong>로
+          옮겨졌고, 마크다운 노트로 계속 함께 편집할 수 있습니다.
+        </p>
+        <ul>
+          <li>
+            CodePair에서 쓰던 <strong>같은 GitHub 계정</strong>으로
+            <a href="https://wafflebase.io">wafflebase.io</a>에 로그인하면
+            워크스페이스가 보입니다.
+          </li>
+          <li>
+            여러 명이 함께 쓰던 워크스페이스는 <strong>owner</strong>에게
+            옮겨졌습니다. Wafflebase에서 owner에게 초대를 요청해 주세요.
+          </li>
+          <li>
+            예전 CodePair 링크와 공유 링크는 더 이상 열리지 않습니다.
+            Wafflebase에서 제목으로 찾아 주세요.
+          </li>
+          <li>CodePair 데스크톱 앱은 더 이상 동작하지 않습니다.</li>
+        </ul>
+      </div>
+
+      <footer>
+        Questions? Ask on
+        <a href="https://discord.com/invite/MVEAwz9sBy">Discord</a> or open an
+        issue in
+        <a href="https://github.com/yorkie-team/codepair">yorkie-team/codepair</a>.
+      </footer>
+    </main>
+  </body>
 </html>
