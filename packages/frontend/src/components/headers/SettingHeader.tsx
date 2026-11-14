@@ -33,7 +33,9 @@ function SettingHeader() {
 					alignItems="center"
 				>
 					<IconButton onClick={handleOpenProfilePopover}>
-						<Avatar>{userStore.data?.nickname?.charAt(0)}</Avatar>
+						<Avatar src={userStore.data?.profileIcon || ""}>
+							{userStore.data?.nickname?.charAt(0)}
+						</Avatar>
 					</IconButton>
 					<IconButton onClick={handleToWorkspace}>
 						<CodePairIcon />

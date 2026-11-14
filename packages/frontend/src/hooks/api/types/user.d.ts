@@ -1,6 +1,8 @@
 export class User {
 	id: string;
 	nickname?: string | null;
+	profileIcon?: string | null;
+	lastWorkspaceSlug?: string | null;
 	createdAt: Date;
 	updatedAt: Date;
 }

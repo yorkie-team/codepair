@@ -54,6 +54,7 @@ function ProfileIndex() {
 		<Container sx={{ height: "calc(100vh - 88px)", width: "100%" }}>
 			<Stack alignItems="center" justifyContent="center" gap={6} sx={{ height: 1 }}>
 				<Avatar
+					src={userStore.data?.profileIcon || ""}
 					sx={{
 						width: avatarSize,
 						height: avatarSize,
